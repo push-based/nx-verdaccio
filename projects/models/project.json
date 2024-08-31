@@ -1,0 +1,28 @@
+{
+  "name": "models",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "projects/models/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/projects/models",
+        "main": "projects/models/src/index.ts",
+        "tsConfig": "projects/models/tsconfig.lib.json",
+        "assets": ["projects/models/*.md"],
+        "generatePackageJson": true,
+        "format": ["esm"]
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "../../coverage/projects/models"
+      }
+    }
+  }
+}

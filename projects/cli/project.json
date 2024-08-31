@@ -1,0 +1,29 @@
+{
+  "name": "cli",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "projects/cli/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/projects/cli",
+        "main": "projects/cli/src/index.ts",
+        "tsConfig": "projects/cli/tsconfig.lib.json",
+        "assets": ["projects/cli/*.md"],
+        "generatePackageJson": true,
+        "additionalEntryPoints": ["projects/cli/src/bin.ts"],
+        "format": ["esm"]
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "../../coverage/projects/cli"
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "utils",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "projects/utils/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/projects/utils",
+        "main": "projects/utils/src/index.ts",
+        "tsConfig": "projects/utils/tsconfig.lib.json",
+        "assets": ["projects/utils/*.md"],
+        "generatePackageJson": true,
+        "format": ["esm"]
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "../../coverage/projects/utils"
+      }
+    }
+  }
+}
