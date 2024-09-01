@@ -3,7 +3,15 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "projects/utils/src",
   "projectType": "library",
-  "tags": [],
+  "release": {
+    "version": {
+      "generatorOptions": {
+        "packageRoot": "dist/{projectRoot}",
+        "currentVersionResolver": "git-tag"
+      }
+    }
+  },
+  "tags": ["publishable"],
   "targets": {
     "build": {
       "executor": "@nx/esbuild:esbuild",

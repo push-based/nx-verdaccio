@@ -1,9 +1,6 @@
 {
-  "name": "@nx-verdaccio-e2e-setup/cli",
+  "name": "@org/cli",
   "version": "0.0.1",
   "dependencies": {},
-  "type": "module",
-  "main": "./index.js",
-  "bin": "./bin.js",
-  "private": true
+  "bin": "bin.js"
 }

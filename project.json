@@ -1,5 +1,5 @@
 {
-  "name": "@nx-verdaccio-e2e-setup/source",
+  "name": "@org/source",
   "$schema": "node_modules/nx/schemas/project-schema.json",
   "targets": {
     "local-registry": {

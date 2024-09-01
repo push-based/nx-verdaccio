@@ -5,7 +5,10 @@
     "libsDir": "projects"
   },
   "namedInputs": {
-    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "default": [
+      "{projectRoot}/**/*",
+      "sharedGlobals"
+    ],
     "production": [
       "default",
       "!{projectRoot}/.eslintrc.json",
@@ -19,12 +22,26 @@
   "targetDefaults": {
     "@nx/esbuild:esbuild": {
       "cache": true,
-      "dependsOn": ["^build"],
-      "inputs": ["production", "^production"]
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "production",
+        "^production"
+      ]
     },
     "@nx/vite:test": {
       "cache": true,
-      "inputs": ["default", "^production"]
+      "inputs": [
+        "default",
+        "^production"
+      ]
+    },
+    "nx-release-publish": {
+      "dependsOn": [
+        {"projects": ["self"], "target": "build"},
+        {"projects": ["dependencies"], "target": "nx-release-publish"}
+      ]
     }
   },
   "plugins": [
@@ -33,6 +50,12 @@
       "options": {
         "targetName": "lint"
       }
+    },
+    "./tools/plugins/original-e2e.plugin.ts"
+  ],
+  "release": {
+    "version": {
+      "preVersionCommand": "npx nx run-many -t build"
     }
-  ]
+  }
 }

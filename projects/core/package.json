@@ -1,8 +1,5 @@
 {
-  "name": "@nx-verdaccio-e2e-setup/core",
+  "name": "@org/core",
   "version": "0.0.1",
-  "dependencies": {},
-  "type": "commonjs",
-  "main": "./index.cjs",
-  "private": true
+  "dependencies": {}
 }

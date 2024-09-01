@@ -1,29 +1,29 @@
-import yargs from 'yargs';
-import {sortUserFile} from "@nx-verdaccio-e2e-setup/core";
+import yargs, {Options} from 'yargs';
+import {sortUserFile} from "@org/core";
 
 export type CliArgs = {
-  file: string;
+  filePath: string;
 };
 
 export function cli(args: string[]) {
   return yargs(args)
     .version(false)
-    .help()
+    .help(true)
     .alias('help', 'h')
     .options({
-      file: {
+      filePath: {
         type: 'string',
-        description: 'The file to sort',
+        description: 'Path to the user file',
         demandOption: true,
       }
-    })
-    .usage('Usage: $0 <command> [options]')
+    } satisfies Record<keyof CliArgs, Options>)
+    //.command('*', 'Sort users', sortCommandHandle)
     .command('sort', 'Sort users', sortCommandHandle);
 };
 
-export async function sortCommandHandle(args: unknown) {
-  const {file} = args as CliArgs;
-  await sortUserFile(file);
-  console.log(`Sorted users in ${file}`);
+export async function sortCommandHandle(args: any) {
+  const {filePath} = args as CliArgs;
+  await sortUserFile(filePath);
+  console.log(`Sorted users in ${filePath}`);
 }
 

@@ -15,10 +15,11 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@nx-verdaccio-e2e-setup/cli": ["projects/cli/src/index.ts"],
-      "@nx-verdaccio-e2e-setup/core": ["projects/core/src/index.ts"],
-      "@nx-verdaccio-e2e-setup/models": ["projects/models/src/index.ts"],
-      "@nx-verdaccio-e2e-setup/utils": ["projects/utils/src/index.ts"]
+      "@org/cli": ["projects/cli/src/index.ts"],
+      "@org/core": ["projects/core/src/index.ts"],
+      "@org/models": ["projects/models/src/index.ts"],
+      "@org/utils": ["projects/utils/src/index.ts"],
+      "test-utils": ["testing/test-utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
