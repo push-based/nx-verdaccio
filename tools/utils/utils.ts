@@ -1,45 +1,13 @@
-import {execSync} from 'node:child_process';
-import {Registry} from './registry';
+import { mkdir } from 'node:fs/promises';
 
-export function configureRegistry({host, url, port}: Registry) {
-  /**
-   * Sets environment variables for NPM and Yarn registries, and optionally configures
-   * Yarn's unsafe HTTP whitelist.
-   *
-   * @param {string} registry - The registry URL to set for NPM and Yarn.
-   * @param {string} host - The hostname to whitelist for Yarn (optional).
-   *
-   * Variables Set:
-   * - `npm_config_registry`: NPM registry.
-   * - `YARN_REGISTRY`: Yarn v1 registry.
-   * - `YARN_NPM_REGISTRY_SERVER`: Yarn v2 registry.
-   * - `YARN_UNSAFE_HTTP_WHITELIST`: Yarn HTTP whitelist.
-   */
-  process.env.npm_config_registry = url;
-  process.env.YARN_REGISTRY = url;
-  process.env.YARN_NPM_REGISTRY_SERVER = url;
-  console.info(`Set NPM and yarn registry process.env`);
-
-  /**
-   * Optional: Set Yarn HTTP whitelist for non-HTTPS registries.
-   */
-  process.env.YARN_UNSAFE_HTTP_WHITELIST = host;
-  console.info(`Set yarn whitelíst process.env`);
-
-  /**
-   * Protocol-Agnostic Configuration: The use of // allows NPM to configure authentication for a registry without tying it to a specific protocol (http: or https:).
-   * This is particularly useful when the registry might be accessible via both HTTP and HTTPS.
-   *
-   * Example: //registry.npmjs.org/:_authToken=your-token
-   */
-  const urlNoProtocol = `//${host}:${port}`;
-  const token = 'secretVerdaccioToken';
-  execSync(`npm config set ${urlNoProtocol}/:_authToken "${token}"`);
-  console.info(`_authToken for ${url} set to ${token}`);
-}
-
-export function unconfigureRegistry({host, port}: Registry) {
-  const urlNoProtocol = `//${host}:${port}`;
-  execSync(`npm config delete ${urlNoProtocol}/:_authToken`);
-  console.info('delete npm authToken: ' + urlNoProtocol);
+export async function ensureDirectoryExists(baseDir: string) {
+  try {
+    await mkdir(baseDir, { recursive: true });
+    return;
+  } catch (error) {
+    console.error((error as { code: string; message: string }).message);
+    if ((error as { code: string }).code !== 'EEXIST') {
+      throw error;
+    }
+  }
 }

@@ -1,5 +1,5 @@
-import {gray, bold, red} from "ansis";
-import {executeProcess, objectToCliArgs} from 'test-utils';
+import { gray, bold, red } from 'ansis';
+import { executeProcess, objectToCliArgs } from '@org/test-utils';
 
 export type RegistryServer = {
   protocol: string;
@@ -20,7 +20,7 @@ export function parseRegistryData(stdout: string): RegistryServer {
 
   // Extract protocol, host, and port
   const match = output.match(
-    /(?<proto>https?):\/\/(?<host>[^:]+):(?<port>\d+)/,
+    /(?<proto>https?):\/\/(?<host>[^:]+):(?<port>\d+)/
   );
 
   if (!match?.groups) {
@@ -30,7 +30,7 @@ export function parseRegistryData(stdout: string): RegistryServer {
   const protocol = match.groups['proto'];
   if (!protocol || !['http', 'https'].includes(protocol)) {
     throw new Error(
-      `Invalid protocol ${protocol}. Only http and https are allowed.`,
+      `Invalid protocol ${protocol}. Only http and https are allowed.`
     );
   }
   const host = match.groups['host'];
@@ -51,7 +51,7 @@ export function parseRegistryData(stdout: string): RegistryServer {
   };
 }
 
-export type NxStarVerdaccioOnlyOptions = {
+export type StarVerdaccioOnlyOptions = {
   targetName?: string;
   projectName?: string;
   verbose?: boolean;
@@ -68,94 +68,98 @@ export type VerdaccioExecuterOptions = {
 };
 
 export type StarVerdaccioOptions = VerdaccioExecuterOptions &
-  NxStarVerdaccioOnlyOptions;
+  StarVerdaccioOnlyOptions;
 
 export async function startVerdaccioServer({
-                                             targetName = 'local-registry',
-                                             projectName = '',
-                                             storage,
-                                             port,
-                                             location,
-                                             clear,
-                                             verbose = false,
-                                           }: StarVerdaccioOptions): Promise<RegistryResult> {
+  targetName = 'local-registry',
+  projectName = '',
+  storage,
+  port,
+  location,
+  clear,
+  verbose = false,
+}: StarVerdaccioOptions): Promise<RegistryResult> {
   let startDetected = false;
 
-  return (
-    new Promise<RegistryResult>((resolve, reject) => {
-      executeProcess({
-        command: 'npm',
-        args: objectToCliArgs<
-          Partial<
-            VerdaccioExecuterOptions & { _: string[]; verbose: boolean; cwd: string }
-          >
-        >({
-          _: ['exec', 'nx', targetName, projectName ?? '', '--'],
-          storage,
-          port,
-          verbose,
-          location,
-          clear,
-        }),
-        shell: true,
-        observer: {
-          onStdout: (stdout: string, childProcess) => {
+  return new Promise<RegistryResult>((resolve, reject) => {
+    executeProcess({
+      command: 'npm',
+      args: objectToCliArgs<
+        Partial<
+          VerdaccioExecuterOptions & {
+            _: string[];
+            verbose: boolean;
+            cwd: string;
+          }
+        >
+      >({
+        _: ['exec', 'nx', targetName, projectName ?? '', '--'],
+        storage,
+        port,
+        verbose,
+        location,
+        clear,
+      }),
+      shell: true,
+      observer: {
+        onStdout: (stdout: string, childProcess) => {
+          if (verbose) {
+            process.stdout.write(
+              `${gray('>')} ${gray(bold('Verdaccio'))} ${stdout}`
+            );
+          }
+
+          // Log of interest: warn --- http address - http://localhost:<PORT-NUMBER>/ - verdaccio/5.31.1
+          if (!startDetected && stdout.includes('http://localhost:')) {
+            startDetected = true;
+
+            const result: RegistryResult = {
+              registry: {
+                storage,
+                ...parseRegistryData(stdout),
+              },
+              stop: () => {
+                try {
+                  childProcess?.kill();
+                } catch {
+                  console.error(
+                    `${red('>')} ${gray(
+                      bold('Verdaccio')
+                    )} Can't kill Verdaccio process with id: ${
+                      childProcess.pid
+                    }`
+                  );
+                }
+              },
+            };
+
+            console.info(
+              `${gray('>')} ${gray(
+                bold('Verdaccio')
+              )} Registry started on URL: ${bold(
+                result.registry.url
+              )}, ProcessID: ${bold(childProcess?.pid)}`
+            );
             if (verbose) {
-              process.stdout.write(
-                `${gray('>')} ${gray(bold('Verdaccio'))} ${stdout}`,
-              );
+              console.info(`${gray('>')} ${gray(bold('Verdaccio'))}`);
+              console.table(result);
             }
 
-            // Log of interest: warn --- http address - http://localhost:<PORT-NUMBER>/ - verdaccio/5.31.1
-            if (!startDetected && stdout.includes('http://localhost:')) {
-              startDetected = true;
-
-              const result: RegistryResult = {
-                registry: {
-                  storage,
-                  ...parseRegistryData(stdout),
-                },
-                stop: () => {
-                  try {
-                    childProcess?.kill();
-                  } catch {
-                    console.error(
-                      `${red('>')} ${gray(bold('Verdaccio'))} Can't kill Verdaccio process with id: ${childProcess.pid}`,
-                    );
-                  }
-                },
-              };
-
-              console.info(
-                `${gray('>')} ${gray(
-                  bold('Verdaccio'),
-                )} Registry started on URL: ${bold(
-                  result.registry.url,
-                )}, ProcessID: ${bold(childProcess?.pid)}`,
-              );
-              if (verbose) {
-                console.info(`${gray('>')} ${gray(bold('Verdaccio'))}`);
-                console.table(result);
-              }
-
-              resolve(result);
-            }
-          },
-          onStderr: (stderr: string) => {
-            if (verbose) {
-              process.stdout.write(
-                `${red('>')} ${red(bold('Verdaccio'))} ${stderr}`,
-              );
-            }
-          },
+            resolve(result);
+          }
         },
-      })
-        .catch(error => {
-          reject(error);
-        });
-    })
-      .catch((error: unknown) => {
-        throw error;
-      })
-  );
+        onStderr: (stderr: string) => {
+          if (verbose) {
+            process.stdout.write(
+              `${red('>')} ${red(bold('Verdaccio'))} ${stderr}`
+            );
+          }
+        },
+      },
+    }).catch((error) => {
+      reject(error);
+    });
+  }).catch((error: unknown) => {
+    throw error;
+  });
 }
