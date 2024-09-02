@@ -27,7 +27,6 @@ describe('CLI command - sort', () => {
           _: ['@org/cli', 'sort'],
           file: testPath,
         }),
-        cwd: workspaceRoot,
         verbose: true,
       })
     ).rejects.toThrow(

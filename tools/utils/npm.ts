@@ -1,9 +1,9 @@
-import { bold, gray, red, whiteBright, bgBlue } from 'ansis';
-import { execFileSync, execSync } from 'node:child_process';
-import { join } from 'node:path';
-import { objectToCliArgs } from '@org/test-utils';
-import { VercaddioServerResult, VerdaccioProcessResult } from './registry';
-import { ensureDirectoryExists } from './utils';
+import {bgBlue, bold, gray, red, whiteBright} from 'ansis';
+import {execFileSync, execSync} from 'node:child_process';
+import {join} from 'node:path';
+import {objectToCliArgs} from '@org/test-utils';
+import {VerdaccioProcessResult} from './registry';
+import {ensureDirectoryExists} from './utils';
 
 export function configureRegistry(
   {
@@ -14,6 +14,18 @@ export function configureRegistry(
   }: VerdaccioProcessResult & { userconfig?: string },
   verbose?: boolean
 ) {
+  const setRegistry = `npm config set registry="${url}" ${objectToCliArgs({
+    userconfig,
+  }).join(' ')}`;
+  if (verbose) {
+    console.info(
+      `${bgBlue(
+        whiteBright(bold(' Verdaccio-Env '))
+      )} Set registry:\n${setRegistry}`
+    );
+  }
+  execSync(setRegistry);
+
   /**
    * Protocol-Agnostic Configuration: The use of // allows NPM to configure authentication for a registry without tying it to a specific protocol (http: or https:).
    * This is particularly useful when the registry might be accessible via both HTTP and HTTPS.
@@ -33,18 +45,6 @@ export function configureRegistry(
     );
   }
   execSync(setAuthToken);
-
-  const setRegistry = `npm config set registry="${url}" ${objectToCliArgs({
-    userconfig,
-  }).join(' ')}`;
-  if (verbose) {
-    console.info(
-      `${bgBlue(
-        whiteBright(bold(' Verdaccio-Env '))
-      )} Set registry:\n${setRegistry}`
-    );
-  }
-  execSync(setRegistry);
 }
 
 export function unconfigureRegistry(

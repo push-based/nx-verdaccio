@@ -52,7 +52,7 @@ function npmTargets(projectConfiguration: ProjectConfiguration) {
   );
   return {
     'original-npm-install': {
-      command: `npm install -D ${packageName}@{args.pkgVersion}`,
+      command: `npm install -D ${packageName}@{args.pkgVersion} --force`,
       options: {
         pkgVersion,
       },

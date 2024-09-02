@@ -4,7 +4,7 @@ import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 
 export default defineConfig({
   root: __dirname,
-  cacheDir: '../../node_modules/.vite/projects/cli',
+  cacheDir: '../../node_modules/.vite/projects/cli-e2e-original',
 
   plugins: [nxViteTsPaths()],
 
@@ -21,7 +21,7 @@ export default defineConfig({
     reporters: ['default'],
     globalSetup: ['./setup/global-setup.ts'],
     coverage: {
-      reportsDirectory: '../../coverage/projects/cli',
+      reportsDirectory: '../../coverage/projects/cli-e2e-original',
       provider: 'v8',
     },
   },

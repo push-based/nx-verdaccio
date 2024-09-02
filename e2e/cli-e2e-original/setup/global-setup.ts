@@ -8,7 +8,7 @@ import {
   configureRegistry,
   unconfigureRegistry,
 } from '../../../tools/utils/npm';
-import * as process from 'process';
+import * as process from "process";
 
 const isVerbose: boolean = true; // process.env.NX_VERBOSE_LOGGING === 'true' ?? false;
 
@@ -26,25 +26,25 @@ export async function setup() {
 
   // configure env with verdaccio registry as default
   // exec commands:
-  // - `npm config set //${host}:${port}/:_authToken "secretVerdaccioToken"`
   // - `npm config set registry "${url}"`
+  // - `npm config set //${host}:${port}/:_authToken "secretVerdaccioToken"`
   configureRegistry(registry, isVerbose);
 
   // package publish all projects
   await executeProcess({
     command: 'nx',
-    args: objectToCliArgs({ _: ['run-many'], targets: 'nx-release-publish' }),
+    args: objectToCliArgs({ _: ['run-many'], targets: 'nx-release-publish,!tag:type:testing', exclude: 'tag:type:testing', skipNxCache: true }),
     verbose: isVerbose,
   });
 
   // package install all projects
   await executeProcess({
     command: 'nx',
-    args: objectToCliArgs({ _: ['run-many'], targets: 'original-npm-install' }),
+    args: objectToCliArgs({ _: ['run-many'], targets: 'original-npm-install', force: true, exclude: 'tag:type:testing', skipNxCache: true}),
     verbose: isVerbose,
   });
 }
-
+/*
 export async function teardown() {
   // uninstall all projects
   await executeProcess({
@@ -62,3 +62,4 @@ export async function teardown() {
   // unconfigureRegistry(activeRegistry, isVerbose);
   // await rm(activeRegistry.storage, {recursive: true, force: true});
 }
+*/
