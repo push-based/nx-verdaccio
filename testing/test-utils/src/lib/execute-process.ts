@@ -34,6 +34,7 @@ export type ProcessConfig = Omit<
 > & {
   command: string;
   args?: string[];
+  verbose?: boolean;
   observer?: ProcessObserver;
   ignoreExitCode?: boolean;
 };
@@ -46,7 +47,14 @@ export type ProcessObserver = {
 };
 
 export function executeProcess(cfg: ProcessConfig): Promise<ProcessResult> {
-  const { command, args, observer, ignoreExitCode = false, ...options } = cfg;
+  const {
+    command,
+    args,
+    observer,
+    verbose = false,
+    ignoreExitCode = false,
+    ...options
+  } = cfg;
   const { onStdout, onStderr, onError, onComplete } = observer ?? {};
   const date = new Date().toISOString();
   const start = performance.now();
@@ -61,21 +69,27 @@ export function executeProcess(cfg: ProcessConfig): Promise<ProcessResult> {
     let stdout = '';
     let stderr = '';
 
-    spawnedProcess.stdout.on('data', data => {
+    spawnedProcess.stdout.on('data', (data) => {
       stdout += String(data);
+      if (verbose) {
+        console.info(String(data));
+      }
       onStdout?.(String(data), spawnedProcess);
     });
 
-    spawnedProcess.stderr.on('data', data => {
+    spawnedProcess.stderr.on('data', (data) => {
       stderr += String(data);
+      if (verbose) {
+        console.error(String(data));
+      }
       onStderr?.(String(data), spawnedProcess);
     });
 
-    spawnedProcess.on('error', err => {
+    spawnedProcess.on('error', (err) => {
       stderr += err.toString();
     });
 
-    spawnedProcess.on('close', code => {
+    spawnedProcess.on('close', (code) => {
       const timings = { date, duration: performance.now() - start };
       if (code === 0 || ignoreExitCode) {
         onComplete?.();

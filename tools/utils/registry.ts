@@ -1,21 +1,23 @@
 import { gray, bold, red } from 'ansis';
 import { executeProcess, objectToCliArgs } from '@org/test-utils';
+import { join } from 'node:path';
 
-export type RegistryServer = {
+export type VerdaccioProcessResult = {
   protocol: string;
   port: string | number;
   host: string;
   url: string;
 };
-export type Registry = RegistryServer &
-  Required<Pick<VerdaccioExecuterOptions, 'storage'>>;
+export type VercaddioServerResult = VerdaccioProcessResult & {
+  pid: number;
+} & Required<Pick<VerdaccioExecuterOptions, 'storage'>>;
 
 export type RegistryResult = {
-  registry: Registry;
+  registry: VercaddioServerResult;
   stop: () => void;
 };
 
-export function parseRegistryData(stdout: string): RegistryServer {
+export function parseRegistryData(stdout: string): VerdaccioProcessResult {
   const output = stdout.toString();
 
   // Extract protocol, host, and port
@@ -73,27 +75,19 @@ export type StarVerdaccioOptions = VerdaccioExecuterOptions &
 export async function startVerdaccioServer({
   targetName = 'local-registry',
   projectName = '',
-  storage,
+  storage = join('tmp', targetName, 'storage'),
   port,
   location,
-  clear,
+  clear = true,
   verbose = false,
 }: StarVerdaccioOptions): Promise<RegistryResult> {
   let startDetected = false;
 
   return new Promise<RegistryResult>((resolve, reject) => {
     executeProcess({
-      command: 'npm',
-      args: objectToCliArgs<
-        Partial<
-          VerdaccioExecuterOptions & {
-            _: string[];
-            verbose: boolean;
-            cwd: string;
-          }
-        >
-      >({
-        _: ['exec', 'nx', targetName, projectName ?? '', '--'],
+      command: 'nx',
+      args: objectToCliArgs({
+        _: [targetName, projectName ?? '', '--'],
         storage,
         port,
         verbose,
@@ -115,6 +109,7 @@ export async function startVerdaccioServer({
 
             const result: RegistryResult = {
               registry: {
+                pid: childProcess?.pid,
                 storage,
                 ...parseRegistryData(stdout),
               },
@@ -126,7 +121,7 @@ export async function startVerdaccioServer({
                     `${red('>')} ${gray(
                       bold('Verdaccio')
                     )} Can't kill Verdaccio process with id: ${
-                      childProcess.pid
+                      childProcess?.pid
                     }`
                   );
                 }

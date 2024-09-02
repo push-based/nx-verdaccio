@@ -5,6 +5,9 @@ import {
 } from '@nx/devkit';
 import { dirname, join, relative } from 'node:path';
 import type { ProjectConfiguration } from 'nx/src/config/workspace-json-project-json';
+import { RunCommandsOptions } from 'nx/src/executors/run-commands/run-commands.impl';
+
+const tmpNpmEnv = join('tmp', 'npm-env');
 
 export const createNodes: CreateNodes = [
   '**/project.json',
@@ -25,7 +28,7 @@ export const createNodes: CreateNodes = [
       projects: {
         [root]: {
           targets: {
-            ...(isNpmEnv && verdaccioTargets()),
+            ...(isNpmEnv && verdaccioTargets(projectConfiguration)),
             ...(isPublishable && npmTargets({ ...projectConfiguration, root })),
           },
         },
@@ -34,46 +37,63 @@ export const createNodes: CreateNodes = [
   },
 ];
 
-function verdaccioTargets() {
+function verdaccioTargets(projectConfiguration: ProjectConfiguration) {
+  const { name: projectName } = projectConfiguration;
   return {
     'start-verdaccio': {
       executor: '@nx/js:verdaccio',
       options: {
         config: '.verdaccio/config.yml',
+        storage: join('tmp', 'local-registry', 'storage'),
+      },
+    },
+    'start-env': {
+      command: 'tsx --tsconfig=tools/tsconfig.tools.json tools/bin/npm-env.ts',
+      options: {
+        projectName,
+        targetName: 'start-verdaccio',
+        workspaceRoot: join(tmpNpmEnv, projectName),
+        location: 'none',
       },
     },
   };
 }
 
+const relativeFromPath = (dir) =>
+  relative(join(process.cwd(), dir), join(process.cwd()));
+
 function npmTargets(
   projectConfiguration: ProjectConfiguration
 ): Record<string, TargetConfiguration> {
-  const { root, name, targets } = projectConfiguration;
+  const { root, name: projectName, targets } = projectConfiguration;
   const { build } = targets;
   const { options } = build;
   const { outputPath } = options;
   if (outputPath == null) {
     throw new Error('outputPath is required');
   }
-  const relativeFromOutputPath = relative(
-    join(process.cwd(), outputPath),
-    join(process.cwd())
-  );
+
   const { name: packageName, version: pkgVersion } = readJsonFile(
     join(root, 'package.json')
   );
+
   return {
     'npm-publish': {
-      command: `npm publish --userconfig=${relativeFromOutputPath}/{args.userconfig}`,
+      command: `npm publish --userconfig=${relativeFromPath(
+        outputPath
+      )}/${tmpNpmEnv}/{args.envProjectName}/.npmrc`,
       options: {
         cwd: outputPath,
+        envProjectName: `${projectName}-npm-env`,
       },
     },
     'npm-install': {
-      command: `npm install --no-fund --no-shrinkwrap --no-save ${packageName}@{args.pkgVersion} --perfix={args.prefix} --userconfig={args.prefix}/.npmrc`,
+      command: `npm install --no-fund --no-shrinkwrap --save ${packageName}@{args.pkgVersion} --prefix=${tmpNpmEnv}/{args.envProjectName} --userconfig=${relativeFromPath(
+        outputPath
+      )}/${tmpNpmEnv}/{args.envProjectName}/.npmrc`,
       options: {
         pkgVersion,
-        prefix: '.',
+        envProjectName: `${projectName}-npm-env`,
       },
     },
     'npm-uninstall': {

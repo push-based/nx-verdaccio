@@ -1,12 +1,17 @@
-import { bold, gray, red } from 'ansis';
+import { bold, gray, red, whiteBright, bgBlue } from 'ansis';
 import { execFileSync, execSync } from 'node:child_process';
 import { join } from 'node:path';
 import { objectToCliArgs } from '@org/test-utils';
-import { Registry } from './registry';
+import { VercaddioServerResult, VerdaccioProcessResult } from './registry';
 import { ensureDirectoryExists } from './utils';
 
 export function configureRegistry(
-  { port, host, url, userconfig }: Registry & { userconfig: string },
+  {
+    port,
+    host,
+    url,
+    userconfig,
+  }: VerdaccioProcessResult & { userconfig?: string },
   verbose?: boolean
 ) {
   /**
@@ -34,7 +39,39 @@ export function configureRegistry(
   }).join(' ')}`;
   if (verbose) {
     console.info(
-      `${gray('>')} ${gray(bold('Verdaccio-Env'))} Set registry:\n${userconfig}`
+      `${bgBlue(
+        whiteBright(bold(' Verdaccio-Env '))
+      )} Set registry:\n${setRegistry}`
+    );
+  }
+  execSync(setRegistry);
+}
+
+export function unconfigureRegistry(
+  { port, host, userconfig }: VerdaccioProcessResult & { userconfig?: string },
+  verbose?: boolean
+) {
+  const urlNoProtocol = `//${host}:${port}`;
+  const setAuthToken = `npm config delete ${urlNoProtocol}/:_authToken ${objectToCliArgs(
+    { userconfig }
+  ).join(' ')}`;
+  if (verbose) {
+    console.info(
+      `${gray('>')} ${gray(
+        bold('Verdaccio-Env')
+      )} Delete authToken:\n${setAuthToken}`
+    );
+  }
+  execSync(setAuthToken);
+
+  const setRegistry = `npm config delete registry ${objectToCliArgs({
+    userconfig,
+  }).join(' ')}`;
+  if (verbose) {
+    console.info(
+      `${gray('>')} ${gray(
+        bold('Verdaccio-Env')
+      )} Delete registry:\n${setRegistry}`
     );
   }
   execSync(setRegistry);

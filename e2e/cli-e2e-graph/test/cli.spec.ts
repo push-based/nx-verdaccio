@@ -1,15 +1,13 @@
 import { dirname, join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { mkdir, rm, writeFile } from 'node:fs/promises';
-import { executeProcess, objectToCliArgs } from '@org/test-utils';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { execSync } from 'node:child_process';
 
 describe('CLI command - sort', () => {
-  const workspaceRoot = 'tmp/npm-env/cli-e2e-env';
-  const baseDir = join(workspaceRoot, 'sort');
-  const userconfig = join(baseDir, '.npmrc');
+  const baseDir = 'tmp/e2e/cli-e2e-graph/sort';
 
   afterEach(async () => {
-    await rm(baseDir, { recursive: true, force: true });
+    // await rm(baseDir, {recursive: true, force: true});
   });
 
   it('should execute CLI command sort when param file is given', async () => {
@@ -20,18 +18,8 @@ describe('CLI command - sort', () => {
       JSON.stringify([{ name: 'Michael' }, { name: 'Alice' }])
     );
 
-    await expect(
-      executeProcess({
-        command: 'npx',
-        args: objectToCliArgs({
-          _: ['@org/cli', 'sort'],
-          file: testPath,
-        }),
-        cwd: workspaceRoot,
-        verbose: true,
-      })
-    ).rejects.toThrow(
-      'The "path" argument must be of type string or an instance of Buffer or URL'
+    expect(() => execSync(`npx @org/cli sort --file="${testPath}"`)).toThrow(
+      'Command failed: npx @org/cli sort --file="tmp/cli-e2e-graph/sort/file-sort/users.json"'
     );
     /*
         const content = (await readFile(testPath)).toString();

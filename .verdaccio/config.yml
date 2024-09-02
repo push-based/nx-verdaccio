@@ -1,4 +1,5 @@
 # path to a directory with all packages
+# overwritten by --storage option
 storage: ../tmp/local-registry/storage
 
 # a list of other known repositories we can talk to

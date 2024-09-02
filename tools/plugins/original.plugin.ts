@@ -11,21 +11,39 @@ export const createNodes: CreateNodes = [
     );
 
     const isPublishable = (projectConfiguration?.tags ?? []).some(
-      (target) => target === 'publishable'
+      (tag) => tag === 'publishable'
     );
-    if (!isPublishable) {
-      return {};
-    }
+    const isRoot = root === '.';
 
     return {
       projects: {
         [root]: {
-          targets: npmTargets({ ...projectConfiguration, root }),
+          targets: {
+            ...(isRoot && verdaccioTargets({ ...projectConfiguration, root })),
+            ...(isPublishable && npmTargets({ ...projectConfiguration, root })),
+          },
         },
       },
     };
   },
 ];
+
+function verdaccioTargets(projectConfiguration: ProjectConfiguration) {
+  const { root, name } = projectConfiguration;
+  const { name: packageName, version: pkgVersion } = readJsonFile(
+    join(root, 'package.json')
+  );
+
+  return {
+    'local-registry': {
+      executor: '@nx/js:verdaccio',
+      options: {
+        config: '.verdaccio/config.yml',
+        storage: `tmp/local-registry/storage`,
+      },
+    },
+  };
+}
 
 function npmTargets(projectConfiguration: ProjectConfiguration) {
   const { root, name } = projectConfiguration;
@@ -33,13 +51,13 @@ function npmTargets(projectConfiguration: ProjectConfiguration) {
     join(root, 'package.json')
   );
   return {
-    'npm-install': {
+    'original-npm-install': {
       command: `npm install -D ${packageName}@{args.pkgVersion}`,
       options: {
         pkgVersion,
       },
     },
-    'npm-uninstall': {
+    'original-npm-uninstall': {
       command: `npm uninstall ${packageName}`,
     },
   };

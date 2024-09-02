@@ -1,19 +1,19 @@
 import { dirname, join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { mkdir, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { execSync } from 'node:child_process';
 import { executeProcess, objectToCliArgs } from '@org/test-utils';
 
 describe('CLI command - sort', () => {
-  const workspaceRoot = 'tmp/npm-env/cli-e2e-env';
-  const baseDir = join(workspaceRoot, 'sort');
-  const userconfig = join(baseDir, '.npmrc');
+  const workspaceRoot = join('tmp', 'cli-e2e-original');
+  const baseDir = join(workspaceRoot, 'cli-command-sort');
 
   afterEach(async () => {
-    await rm(baseDir, { recursive: true, force: true });
+    // await rm(baseDir, {recursive: true, force: true});
   });
 
   it('should execute CLI command sort when param file is given', async () => {
-    const testPath = join(baseDir, 'file-sort', 'users.json');
+    const testPath = join(baseDir, 'execute-sort-command', 'users.json');
     await mkdir(dirname(testPath), { recursive: true });
     await writeFile(
       testPath,

@@ -1,5 +1,5 @@
 {
-  "extends": "../tsconfig.base.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "module": "esnext",
     "forceConsistentCasingInFileNames": true,
@@ -13,7 +13,7 @@
   "include": [],
   "references": [
     {
-      "path": "./tsconfig.tools.json"
+      "path": "./tsconfig.spec.json"
     }
   ]
 }

@@ -1,10 +1,10 @@
 import { join } from 'node:path';
 import {
-  Registry,
+  VercaddioServerResult,
   startVerdaccioServer,
   StarVerdaccioOptions,
 } from './registry';
-import { rm } from 'node:fs/promises';
+import { rm, writeFile } from 'node:fs/promises';
 import { configureRegistry, setupNpmWorkspace } from './npm';
 
 export type VerdaccioEnv = {
@@ -17,20 +17,32 @@ export type StartVerdaccioAndSetupEnvOptions = Partial<
   Pick<StarVerdaccioOptions, 'projectName'>;
 
 export type NpmTestEnvResult = VerdaccioEnv & {
-  registry: Registry;
+  registry: VercaddioServerResult;
   stop: () => void;
 };
 
 export async function startNpmEnv({
   projectName,
-  targetName,
-  port,
   verbose = false,
-  workspaceRoot = '.',
+  targetName = 'start-verdaccio',
+  workspaceRoot = join('tmp', 'npm-env', projectName),
   location = 'none',
-  // reset or remove cached packages and/or metadata.
-  clear = true,
+  port,
+  clear,
 }: StartVerdaccioAndSetupEnvOptions): Promise<NpmTestEnvResult> {
+  if (verbose) {
+    console.info(
+      `Start NPM environment with params: ${{
+        projectName,
+        verbose,
+        targetName,
+        workspaceRoot,
+        location,
+        port,
+        clear,
+      }}`
+    );
+  }
   const storage = join(workspaceRoot, 'storage');
   const registryResult = await startVerdaccioServer({
     targetName,
@@ -47,10 +59,25 @@ export async function startNpmEnv({
   const userconfig = join(workspaceRoot, '.npmrc');
   configureRegistry({ ...registryResult.registry, userconfig }, verbose);
 
-  return {
+  const activeRegistry: NpmTestEnvResult = {
     ...registryResult,
     workspaceRoot,
-  } satisfies NpmTestEnvResult;
+  };
+
+  console.info(
+    `Save active verdaccio registry data to file: ${join(
+      activeRegistry.workspaceRoot
+    )}`
+  );
+  await writeFile(
+    join(activeRegistry.workspaceRoot, 'verdaccio-registry.json'),
+    JSON.stringify(activeRegistry.registry, null, 2)
+  );
+  console.info(
+    `Environment ready under: ${join(activeRegistry.workspaceRoot)}`
+  );
+
+  return activeRegistry;
 }
 
 export async function stopVerdaccioAndTeardownEnv(result: NpmTestEnvResult) {

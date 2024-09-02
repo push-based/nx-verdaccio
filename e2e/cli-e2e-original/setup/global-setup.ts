@@ -1,60 +1,64 @@
-import { join } from 'node:path';
-import { executeProcess } from '@org/test-utils';
-import { startVerdaccioServer } from '../../../tools/utils/registry';
+import { executeProcess, objectToCliArgs } from '@org/test-utils';
+import {
+  startVerdaccioServer,
+  VercaddioServerResult,
+} from '../../../tools/utils/registry';
+import { rm } from 'node:fs/promises';
+import {
+  configureRegistry,
+  unconfigureRegistry,
+} from '../../../tools/utils/npm';
+import * as process from 'process';
 
 const isVerbose: boolean = true; // process.env.NX_VERBOSE_LOGGING === 'true' ?? false;
-let stopRegistry;
+
+let activeRegistry: VercaddioServerResult;
+let stopRegistry: () => void;
 
 export async function setup() {
-  // start registry
-  stopRegistry = await startVerdaccioServer({
+  // start Verdaccio server and setup local registry storage
+  const { stop, registry } = await startVerdaccioServer({
     targetName: 'local-registry',
-    storage: join('tmp', 'cli-source', 'local-registry', 'storage'),
     verbose: isVerbose,
-    port: '4873',
   });
+  activeRegistry = registry;
+  stopRegistry = stop;
+
+  // configure env with verdaccio registry as default
+  // exec commands:
+  // - `npm config set //${host}:${port}/:_authToken "secretVerdaccioToken"`
+  // - `npm config set registry "${url}"`
+  configureRegistry(registry, isVerbose);
 
   // package publish all projects
   await executeProcess({
     command: 'nx',
-    args: [
-      'run-many',
-      '-t=nx-release-publish',
-      '--registry=http://localhost:4873',
-    ],
-    observer: {
-      onStdout: (stdout) => {
-        if (isVerbose) {
-          console.info(stdout);
-        }
-      },
-      onStderr: (stdout) => {
-        if (isVerbose) {
-          console.error(stdout);
-        }
-      },
-    },
+    args: objectToCliArgs({ _: ['run-many'], targets: 'nx-release-publish' }),
+    verbose: isVerbose,
   });
+
   // package install all projects
   await executeProcess({
     command: 'nx',
-    args: ['run-many', '-t=npm-install', '--registry=http://localhost:4873'],
-    observer: {
-      onStdout: (stdout) => {
-        if (isVerbose) {
-          console.info(stdout);
-        }
-      },
-      onStderr: (stdout) => {
-        if (isVerbose) {
-          console.error(stdout);
-        }
-      },
-    },
+    args: objectToCliArgs({ _: ['run-many'], targets: 'original-npm-install' }),
+    verbose: isVerbose,
   });
 }
 
 export async function teardown() {
-  // stop registry
-  stopRegistry();
+  // uninstall all projects
+  await executeProcess({
+    command: 'nx',
+    args: objectToCliArgs({
+      _: ['run-many'],
+      targets: 'original-npm-uninstall',
+    }),
+    verbose: isVerbose,
+  });
+  // stopRegistry();
+  // exec commands:
+  // - `npm config delete //${host}:${port}/:_authToken`
+  // - `npm config delete registry`
+  // unconfigureRegistry(activeRegistry, isVerbose);
+  // await rm(activeRegistry.storage, {recursive: true, force: true});
 }
