@@ -1,5 +1,6 @@
 {
   "name": "workspace-source",
   "$schema": "node_modules/nx/schemas/project-schema.json",
+  "// targets": "to see all targets run: nx show project workspace-source --web",
   "targets": {}
 }

@@ -6,7 +6,7 @@ const tmpNpmEnv = join('tmp', 'npm-env');
 
 export const createNodes: CreateNodes = [
   '**/project.json',
-  (projectConfigurationFile: string, opts: undefined | unknown) => {
+  (projectConfigurationFile: string) => {
     const root = dirname(projectConfigurationFile);
     const projectConfiguration: ProjectConfiguration = readJsonFile(
       join(process.cwd(), projectConfigurationFile)
@@ -23,6 +23,7 @@ export const createNodes: CreateNodes = [
       projects: {
         [root]: {
           targets: {
+            ...(isNpmEnv && e2eTargets(projectConfiguration)),
             ...(isNpmEnv && verdaccioTargets(projectConfiguration)),
             ...(isPublishable && npmTargets({...projectConfiguration, root})),
           },
@@ -32,34 +33,82 @@ export const createNodes: CreateNodes = [
   },
 ];
 
-function verdaccioTargets(projectConfiguration: ProjectConfiguration) {
+function e2eTargets(projectConfiguration: ProjectConfiguration) {
   const {name: projectName} = projectConfiguration;
   return {
-    'graph-start-verdaccio': {
+    'e2e': {
+      dependsOn: [
+        {
+          projects: 'self',
+          target: 'pretarget-setup-env',
+          params: 'forward',
+        },
+      ],
+      options: {
+        envProjectName: projectName,
+      },
+    },
+  };
+}
+
+function verdaccioTargets(projectConfiguration: ProjectConfiguration): Record<string, TargetConfiguration> {
+  const {name: projectName} = projectConfiguration;
+  return {
+    'pretarget-start-verdaccio': {
       executor: '@nx/js:verdaccio',
       options: {
         config: '.verdaccio/config.yml',
         storage: join(tmpNpmEnv, projectName, 'storage'),
-        clear: true
+        clear: true,
       },
     },
-    'graph-setup-npm-env': {
+    'pretarget-setup-npm-env': {
       command: 'tsx --tsconfig=tools/tsconfig.tools.json tools/bin/npm-env.ts',
       options: {
         projectName,
-        envProjectName: projectName,
-        targetName: 'graph-start-verdaccio',
+        targetName: 'pretarget-start-verdaccio',
         workspaceRoot: join(tmpNpmEnv, projectName),
-        location: 'none',
         readyWhen: 'Environment ready under',
       },
     },
-    'graph-install-npm-env': {
-      dependsOn: [
-        {projects: 'dependencies', target: 'graph-npm-install', params: 'forward'}
-      ],
-      command: 'echo Dependencies installed!'
+    'pretarget-teardown-env': {
+      command: 'tsx --tsconfig=tools/tsconfig.tools.json tools/bin/teardown-env.ts --workspaceRoot={args.workspaceRoot}',
+      options: {
+        workspaceRoot: join(tmpNpmEnv, projectName),
+      },
     },
+    'pretarget-setup-env': {
+      cache: true,
+      inputs: ["default", "^production", "!{projectRoot}/**/*.md"],
+      outputs: [
+        `{workspaceRoot}/${tmpNpmEnv}/${projectName}/node_modules`
+      ],
+      executor: "nx:run-commands",
+      options: {
+        commands: [
+          `nx pretarget-setup-npm-env ${projectName}`,
+          `nx pretarget-setup-deps ${projectName} --envProjectName={args.envProjectName}`,
+          `nx pretarget-teardown-env ${projectName} --workspaceRoot={args.workspaceRoot}`
+        ],
+        workspaceRoot: join(tmpNpmEnv, projectName),
+        forwardAllArgs: true,
+        envProjectName: projectName,
+        parallel: false,
+      },
+    },
+    'pretarget-setup-deps': {
+      dependsOn: [
+        {
+          projects: 'dependencies',
+          target: 'pretarget-npm-install',
+          params: 'forward',
+        }
+      ],
+      options: {
+        envProjectName: projectName,
+      },
+      command: 'echo Dependencies installed!',
+    }
   };
 }
 
@@ -82,23 +131,31 @@ function npmTargets(
   );
 
   return {
-    'graph-npm-publish': {
+    'pretarget-npm-publish': {
       dependsOn: [
         {projects: 'self', target: 'build', params: 'forward'},
-        {projects: 'dependencies', target: 'graph-npm-publish', params: 'forward'}
+        {
+          projects: 'dependencies',
+          target: 'pretarget-npm-publish',
+          params: 'forward',
+        },
       ],
       command: `npm publish --userconfig=${relativeFromPath(
         outputPath
       )}/${tmpNpmEnv}/{args.envProjectName}/.npmrc`,
       options: {
         cwd: outputPath,
-        envProjectName: `${projectName}-npm-env`,
+        envProjectName: `${projectName}`,
       },
     },
-    'graph-npm-install': {
+    'pretarget-npm-install': {
       dependsOn: [
-        {projects: 'self', target: 'graph-npm-publish', params: 'forward'},
-        {projects: 'dependencies', target: 'graph-npm-install', params: 'forward'}
+        {projects: 'self', target: 'pretarget-npm-publish', params: 'forward'},
+        {
+          projects: 'dependencies',
+          target: 'pretarget-npm-install',
+          params: 'forward',
+        },
       ],
       command: `npm install --no-fund --no-shrinkwrap --save ${packageName}@{args.pkgVersion} --prefix=${tmpNpmEnv}/{args.envProjectName} --userconfig=${relativeFromPath(
         outputPath
@@ -107,9 +164,6 @@ function npmTargets(
         pkgVersion,
         envProjectName: projectName,
       },
-    },
-    'graph-npm-uninstall': {
-      command: `npm uninstall ${packageName}`,
-    },
+    }
   };
 }

@@ -1,9 +1,9 @@
 {
-  "name": "cli-e2e-graph",
+  "name": "cli-e2e-original",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "projects/cli-e2e-graph/test",
+  "sourceRoot": "projects/cli-e2e-original/test",
   "projectType": "library",
-  "tags": ["npm-env"],
+  "tags": ["type:example"],
   "implicitDependencies": ["cli"],
   "targets": {
     "e2e": {
@@ -11,8 +11,7 @@
       "inputs": ["default", "^production"],
       "outputs": ["{options.reportsDirectory}"],
       "options": {
-        "globalSetup": ["e2e/cli-e2e-graph/setup/global-setup.ts"],
-        "reportsDirectory": "../../coverage/projects/cli-e2e-graph"
+        "reportsDirectory": "../../coverage/projects/cli-e2e-original"
       }
     }
   }

@@ -1,0 +1,35 @@
+{
+  "name": "cli-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "projects/cli-e2e/test",
+  "projectType": "library",
+  "tags": [
+    "type:example",
+    "npm-env"
+  ],
+  "implicitDependencies": [
+    "cli"
+  ],
+  "targets": {
+    "e2e": {
+      "dependsOn": [
+        {
+          "projects": "self",
+          "target": "setup-env",
+          "params": "forward"
+        }
+      ],
+      "executor": "@nx/vite:test",
+      "inputs": [
+        "default",
+        "^production"
+      ],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../coverage/projects/cli-e2e"
+      }
+    }
+  }
+}
