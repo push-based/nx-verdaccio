@@ -4,6 +4,7 @@
   "sourceRoot": "projects/cli-e2e-env/test",
   "projectType": "library",
   "tags": ["npm-env"],
+  "implicitDependencies": ["cli"],
   "targets": {
     "e2e": {
       "executor": "@nx/vite:test",

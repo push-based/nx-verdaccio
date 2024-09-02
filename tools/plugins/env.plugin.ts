@@ -40,18 +40,18 @@ export const createNodes: CreateNodes = [
 function verdaccioTargets(projectConfiguration: ProjectConfiguration) {
   const { name: projectName } = projectConfiguration;
   return {
-    'start-verdaccio': {
+    'env-start-verdaccio': {
       executor: '@nx/js:verdaccio',
       options: {
         config: '.verdaccio/config.yml',
         storage: join('tmp', 'local-registry', 'storage'),
       },
     },
-    'start-env': {
+    'env-setup-npm-env': {
       command: 'tsx --tsconfig=tools/tsconfig.tools.json tools/bin/npm-env.ts',
       options: {
         projectName,
-        targetName: 'start-verdaccio',
+        targetName: 'env-start-verdaccio',
         workspaceRoot: join(tmpNpmEnv, projectName),
         location: 'none',
       },
@@ -78,7 +78,7 @@ function npmTargets(
   );
 
   return {
-    'npm-publish': {
+    'env-npm-publish': {
       command: `npm publish --userconfig=${relativeFromPath(
         outputPath
       )}/${tmpNpmEnv}/{args.envProjectName}/.npmrc`,
@@ -87,7 +87,7 @@ function npmTargets(
         envProjectName: `${projectName}-npm-env`,
       },
     },
-    'npm-install': {
+    'env-npm-install': {
       command: `npm install --no-fund --no-shrinkwrap --save ${packageName}@{args.pkgVersion} --prefix=${tmpNpmEnv}/{args.envProjectName} --userconfig=${relativeFromPath(
         outputPath
       )}/${tmpNpmEnv}/{args.envProjectName}/.npmrc`,
@@ -96,7 +96,7 @@ function npmTargets(
         envProjectName: `${projectName}-npm-env`,
       },
     },
-    'npm-uninstall': {
+    'env-npm-uninstall': {
       command: `npm uninstall ${packageName}`,
     },
   };

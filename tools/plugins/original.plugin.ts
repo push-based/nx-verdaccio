@@ -35,7 +35,7 @@ function verdaccioTargets(projectConfiguration: ProjectConfiguration) {
   );
 
   return {
-    'local-registry': {
+    'original-local-registry': {
       executor: '@nx/js:verdaccio',
       options: {
         config: '.verdaccio/config.yml',
@@ -46,13 +46,26 @@ function verdaccioTargets(projectConfiguration: ProjectConfiguration) {
 }
 
 function npmTargets(projectConfiguration: ProjectConfiguration) {
-  const { root, name } = projectConfiguration;
+  const { root, name: projectName, targets } = projectConfiguration;
+  const { build } = targets;
+  const { options } = build;
+  const { outputPath } = options;
+  if (outputPath == null) {
+    throw new Error('outputPath is required');
+  }
+
   const { name: packageName, version: pkgVersion } = readJsonFile(
     join(root, 'package.json')
   );
   return {
+    'original-npm-publish': {
+      command: 'npm publish',
+      options: {
+        cwd: outputPath,
+      },
+    },
     'original-npm-install': {
-      command: `npm install -D ${packageName}@{args.pkgVersion} --force`,
+      command: `npm install -D ${packageName}@{args.pkgVersion}`,
       options: {
         pkgVersion,
       },

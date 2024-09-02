@@ -1,11 +1,11 @@
-import { dirname, join } from 'node:path';
+import { dirname, join, basename } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { executeProcess, objectToCliArgs } from '@org/test-utils';
 
 describe('CLI command - sort', () => {
-  const workspaceRoot = join('tmp', 'cli-e2e-original');
-  const baseDir = join(workspaceRoot, 'cli-command-sort');
+  const workspaceRoot = join('tmp', 'npm-env', 'cli-e2e-graph');
+  const baseDir = join(workspaceRoot, '__test_env__', 'cli-command-sort');
 
   afterEach(async () => {
     await rm(baseDir, { recursive: true, force: true });
@@ -23,8 +23,9 @@ describe('CLI command - sort', () => {
       command: 'npx',
       args: objectToCliArgs({
         _: ['@org/cli', 'sort'],
-        filePath: testPath,
+        filePath: basename(testPath),
       }),
+      cwd: dirname(testPath),
       verbose: true,
     });
 

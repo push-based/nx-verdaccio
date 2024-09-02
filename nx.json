@@ -41,7 +41,8 @@
       }
     },
     "./tools/plugins/original.plugin.ts",
-    "./tools/plugins/npm-env.plugin.ts"
+    "./tools/plugins/env.plugin.ts",
+    "./tools/plugins/graph.plugin.ts"
   ],
   "release": {
     "version": {

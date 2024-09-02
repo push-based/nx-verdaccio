@@ -7,8 +7,7 @@ import { rm } from 'node:fs/promises';
 import {
   configureRegistry,
   unconfigureRegistry,
-} from '../../../tools/utils/npm';
-import * as process from "process";
+} from '../../../tools/utils/env';
 
 const isVerbose: boolean = true; // process.env.NX_VERBOSE_LOGGING === 'true' ?? false;
 
@@ -18,8 +17,9 @@ let stopRegistry: () => void;
 export async function setup() {
   // start Verdaccio server and setup local registry storage
   const { stop, registry } = await startVerdaccioServer({
-    targetName: 'local-registry',
+    targetName: 'original-local-registry',
     verbose: isVerbose,
+    clear: true,
   });
   activeRegistry = registry;
   stopRegistry = stop;
@@ -33,18 +33,29 @@ export async function setup() {
   // package publish all projects
   await executeProcess({
     command: 'nx',
-    args: objectToCliArgs({ _: ['run-many'], targets: 'nx-release-publish,!tag:type:testing', exclude: 'tag:type:testing', skipNxCache: true }),
+    args: objectToCliArgs({
+      _: ['run-many'],
+      targets: 'original-npm-publish,!tag:type:testing',
+      exclude: 'tag:type:testing',
+      skipNxCache: true,
+    }),
+
     verbose: isVerbose,
   });
 
   // package install all projects
   await executeProcess({
     command: 'nx',
-    args: objectToCliArgs({ _: ['run-many'], targets: 'original-npm-install', force: true, exclude: 'tag:type:testing', skipNxCache: true}),
+    args: objectToCliArgs({
+      _: ['run-many'],
+      targets: 'original-npm-install',
+      exclude: 'tag:type:testing',
+      skipNxCache: true,
+    }),
     verbose: isVerbose,
   });
 }
-/*
+
 export async function teardown() {
   // uninstall all projects
   await executeProcess({
@@ -55,11 +66,11 @@ export async function teardown() {
     }),
     verbose: isVerbose,
   });
-  // stopRegistry();
+  stopRegistry();
   // exec commands:
   // - `npm config delete //${host}:${port}/:_authToken`
   // - `npm config delete registry`
-  // unconfigureRegistry(activeRegistry, isVerbose);
-  // await rm(activeRegistry.storage, {recursive: true, force: true});
+  unconfigureRegistry(activeRegistry, isVerbose);
+  await rm(activeRegistry.storage, { recursive: true, force: true });
+  await rm('local-registry', { recursive: true, force: true });
 }
-*/

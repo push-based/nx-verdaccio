@@ -25,7 +25,7 @@ export async function setup() {
         }
       >
     >({
-      _: ['start-env', projectName ?? '', '--'],
+      _: ['env-setup-npm-env', projectName ?? ''],
       verbose: isVerbose,
       clear: true,
       readyWhen: 'Environment ready under',
@@ -45,7 +45,7 @@ export async function setup() {
   await executeProcess({
     command: 'nx',
     args: objectToCliArgs({
-      _: ['run-many', '-t=npm-publish'],
+      _: ['run-many', '-t=env-npm-publish'],
       verbose: isVerbose,
       envProjectName: projectName,
     }),
@@ -56,7 +56,7 @@ export async function setup() {
   await executeProcess({
     command: 'nx',
     args: objectToCliArgs({
-      _: ['run-many', '-t=npm-install'],
+      _: ['run-many', '-t=env-npm-install'],
       verbose: isVerbose,
       envProjectName: projectName,
     }),
@@ -65,7 +65,6 @@ export async function setup() {
 }
 
 export async function teardown() {
-  console.table(activeRegistry);
   stopRegistry();
   if (teardownRegistry) {
   }

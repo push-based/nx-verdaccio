@@ -1,7 +1,14 @@
 import { gray, bold, red } from 'ansis';
 import { executeProcess, objectToCliArgs } from '@org/test-utils';
 import { join } from 'node:path';
+import { error, info } from './logging';
 
+export function logInfo(msg: string) {
+  info(msg, 'Verdaccio: ');
+}
+export function logError(msg: string) {
+  error(msg, 'Verdaccio: ');
+}
 export type VerdaccioProcessResult = {
   protocol: string;
   port: string | number;
@@ -117,26 +124,20 @@ export async function startVerdaccioServer({
                 try {
                   childProcess?.kill();
                 } catch {
-                  console.error(
-                    `${red('>')} ${gray(
-                      bold('Verdaccio')
-                    )} Can't kill Verdaccio process with id: ${
-                      childProcess?.pid
-                    }`
+                  logError(
+                    `Can't kill Verdaccio process with id: ${childProcess?.pid}`
                   );
                 }
               },
             };
 
-            console.info(
-              `${gray('>')} ${gray(
-                bold('Verdaccio')
-              )} Registry started on URL: ${bold(
+            logInfo(
+              `Registry started on URL: ${bold(
                 result.registry.url
               )}, ProcessID: ${bold(childProcess?.pid)}`
             );
             if (verbose) {
-              console.info(`${gray('>')} ${gray(bold('Verdaccio'))}`);
+              logInfo('');
               console.table(result);
             }
 

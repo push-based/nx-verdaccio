@@ -20,6 +20,11 @@ const args = yargs(process.argv.slice(2))
       description: 'Verbose logging',
       default: isVerbose,
     },
+    targetName: {
+      type: 'string',
+      description: 'Verbose logging',
+      default: isVerbose,
+    },
   } satisfies Partial<Record<keyof StartVerdaccioAndSetupEnvOptions, Options>>)
   .parse() as StartVerdaccioAndSetupEnvOptions;
 
