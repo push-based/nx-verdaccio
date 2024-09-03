@@ -5,7 +5,6 @@ import {
 } from '@nx/devkit';
 import { dirname, join, relative } from 'node:path';
 import type { ProjectConfiguration } from 'nx/src/config/workspace-json-project-json';
-import { RunCommandsOptions } from 'nx/src/executors/run-commands/run-commands.impl';
 
 const tmpNpmEnv = join('tmp', 'npm-env');
 
@@ -16,6 +15,15 @@ export const createNodes: CreateNodes = [
     const projectConfiguration: ProjectConfiguration = readJsonFile(
       join(process.cwd(), projectConfigurationFile)
     );
+
+    // only execute for the -env example projects e.g. `cli-e2e-env`, `e2e-models-env`
+    if (!projectConfiguration?.name?.endsWith('-env')) {
+      return {
+        projects: {
+          [root]: {},
+        },
+      };
+    }
 
     const tags = projectConfiguration?.tags ?? [];
     const isPublishable = tags.some((target) => target === 'publishable');
@@ -48,7 +56,8 @@ function verdaccioTargets(projectConfiguration: ProjectConfiguration) {
       },
     },
     'env-setup-npm-env': {
-      command: 'tsx --tsconfig=tools/tsconfig.tools.json tools/bin/setup-npm-env.ts',
+      command:
+        'tsx --tsconfig=tools/tsconfig.tools.json tools/tools-utils/src/bin/setup-npm-env.ts',
       options: {
         projectName,
         targetName: 'env-start-verdaccio',

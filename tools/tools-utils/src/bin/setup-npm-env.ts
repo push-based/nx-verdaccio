@@ -1,7 +1,11 @@
-import { setupNpmEnv, StartVerdaccioAndSetupEnvOptions } from '../utils/env';
+import {
+  setupNpmEnv,
+  StartVerdaccioAndSetupEnvOptions,
+} from '../lib/verdaccio/verdaccio-npm-env';
 import yargs, { Options } from 'yargs';
 
-const isVerbose: boolean = process.env.NX_VERBOSE_LOGGING === 'true' ?? false;
+const isVerbose: boolean =
+  process.env['NX_VERBOSE_LOGGING'] === 'true' ?? false;
 
 const args = yargs(process.argv.slice(2))
   .version(false)

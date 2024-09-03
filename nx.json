@@ -49,10 +49,10 @@
         "targetName": "lint"
       }
     },
-    "./tools/plugins/original.plugin.ts",
-    "./tools/plugins/env.plugin.ts",
-    "./tools/plugins/graph.plugin.ts",
-    "./tools/plugins/pretarget.plugin.ts",
+    "./tools/e2e-example-plugins/original.plugin.ts",
+    "./tools/e2e-example-plugins/env.plugin.ts",
+    "./tools/e2e-example-plugins/graph.plugin.ts",
+    "./tools/e2e-example-plugins/pretarget.plugin.ts",
     "./tools/plugins/verdaccio-test-env.plugin.ts"
   ],
   "release": {

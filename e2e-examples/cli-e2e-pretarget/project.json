@@ -6,7 +6,7 @@
   "tags": ["type:example", "npm-env"],
   "implicitDependencies": ["cli"],
   "targets": {
-    "e2e": {
+    "pretarget-e2e": {
       "executor": "@nx/vite:test",
       "inputs": ["default", "^production"],
       "outputs": ["{options.reportsDirectory}"],

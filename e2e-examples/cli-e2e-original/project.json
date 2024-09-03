@@ -6,7 +6,7 @@
   "tags": ["type:example"],
   "implicitDependencies": ["cli"],
   "targets": {
-    "e2e": {
+    "original-e2e": {
       "executor": "@nx/vite:test",
       "inputs": ["default", "^production"],
       "outputs": ["{options.reportsDirectory}"],

@@ -10,6 +10,15 @@ export const createNodes: CreateNodes = [
       join(process.cwd(), projectConfigurationFile)
     );
 
+    // only execute for the -original example projects e.g. `cli-e2e-original`, `e2e-models-original`
+    if (!projectConfiguration?.name?.endsWith('-original')) {
+      return {
+        projects: {
+          [root]: {},
+        },
+      };
+    }
+
     const isPublishable = (projectConfiguration?.tags ?? []).some(
       (tag) => tag === 'publishable'
     );

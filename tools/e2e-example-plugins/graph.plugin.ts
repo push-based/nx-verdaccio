@@ -1,16 +1,29 @@
-import {type CreateNodes, readJsonFile, TargetConfiguration,} from '@nx/devkit';
-import {dirname, join, relative} from 'node:path';
-import type {ProjectConfiguration} from 'nx/src/config/workspace-json-project-json';
+import {
+  type CreateNodes,
+  readJsonFile,
+  TargetConfiguration,
+} from '@nx/devkit';
+import { dirname, join, relative } from 'node:path';
+import type { ProjectConfiguration } from 'nx/src/config/workspace-json-project-json';
 
 const tmpNpmEnv = join('tmp', 'npm-env');
 
 export const createNodes: CreateNodes = [
   '**/project.json',
-  (projectConfigurationFile: string, opts: undefined | unknown) => {
+  (projectConfigurationFile: string) => {
     const root = dirname(projectConfigurationFile);
     const projectConfiguration: ProjectConfiguration = readJsonFile(
       join(process.cwd(), projectConfigurationFile)
     );
+
+    // only execute for the -graph example projects e.g. `cli-e2e-graph`, `e2e-models-graph`
+    if (!projectConfiguration?.name?.endsWith('-graph')) {
+      return {
+        projects: {
+          [root]: {},
+        },
+      };
+    }
 
     const tags = projectConfiguration?.tags ?? [];
     const isPublishable = tags.some((target) => target === 'publishable');
@@ -24,7 +37,7 @@ export const createNodes: CreateNodes = [
         [root]: {
           targets: {
             ...(isNpmEnv && verdaccioTargets(projectConfiguration)),
-            ...(isPublishable && npmTargets({...projectConfiguration, root})),
+            ...(isPublishable && npmTargets({ ...projectConfiguration, root })),
           },
         },
       },
@@ -33,18 +46,19 @@ export const createNodes: CreateNodes = [
 ];
 
 function verdaccioTargets(projectConfiguration: ProjectConfiguration) {
-  const {name: projectName} = projectConfiguration;
+  const { name: projectName } = projectConfiguration;
   return {
     'graph-start-verdaccio': {
       executor: '@nx/js:verdaccio',
       options: {
         config: '.verdaccio/config.yml',
         storage: join(tmpNpmEnv, projectName, 'storage'),
-        clear: true
+        clear: true,
       },
     },
     'graph-setup-npm-env': {
-      command: 'tsx --tsconfig=tools/tsconfig.tools.json tools/bin/setup-npm-env.ts',
+      command:
+        'tsx --tsconfig=tools/tsconfig.tools.json tools/tools-utils/src/bin/setup-npm-env.ts',
       options: {
         projectName,
         envProjectName: projectName,
@@ -56,9 +70,13 @@ function verdaccioTargets(projectConfiguration: ProjectConfiguration) {
     },
     'graph-install-npm-env': {
       dependsOn: [
-        {projects: 'dependencies', target: 'graph-npm-install', params: 'forward'}
+        {
+          projects: 'dependencies',
+          target: 'graph-npm-install',
+          params: 'forward',
+        },
       ],
-      command: 'echo Dependencies installed!'
+      command: 'echo Dependencies installed!',
     },
   };
 }
@@ -69,23 +87,27 @@ const relativeFromPath = (dir) =>
 function npmTargets(
   projectConfiguration: ProjectConfiguration
 ): Record<string, TargetConfiguration> {
-  const {root, name: projectName, targets} = projectConfiguration;
-  const {build} = targets;
-  const {options} = build;
-  const {outputPath} = options;
+  const { root, name: projectName, targets } = projectConfiguration;
+  const { build } = targets;
+  const { options } = build;
+  const { outputPath } = options;
   if (outputPath == null) {
     throw new Error('outputPath is required');
   }
 
-  const {name: packageName, version: pkgVersion} = readJsonFile(
+  const { name: packageName, version: pkgVersion } = readJsonFile(
     join(root, 'package.json')
   );
 
   return {
     'graph-npm-publish': {
       dependsOn: [
-        {projects: 'self', target: 'build', params: 'forward'},
-        {projects: 'dependencies', target: 'graph-npm-publish', params: 'forward'}
+        { projects: 'self', target: 'build', params: 'forward' },
+        {
+          projects: 'dependencies',
+          target: 'graph-npm-publish',
+          params: 'forward',
+        },
       ],
       command: `npm publish --userconfig=${relativeFromPath(
         outputPath
@@ -97,8 +119,12 @@ function npmTargets(
     },
     'graph-npm-install': {
       dependsOn: [
-        {projects: 'self', target: 'graph-npm-publish', params: 'forward'},
-        {projects: 'dependencies', target: 'graph-npm-install', params: 'forward'}
+        { projects: 'self', target: 'graph-npm-publish', params: 'forward' },
+        {
+          projects: 'dependencies',
+          target: 'graph-npm-install',
+          params: 'forward',
+        },
       ],
       command: `npm install --no-fund --no-shrinkwrap --save ${packageName}@{args.pkgVersion} --prefix=${tmpNpmEnv}/{args.envProjectName} --userconfig=${relativeFromPath(
         outputPath

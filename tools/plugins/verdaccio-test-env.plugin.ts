@@ -3,8 +3,8 @@ import {
   readJsonFile,
   TargetConfiguration,
 } from '@nx/devkit';
-import {dirname, join, relative} from 'node:path';
-import type {ProjectConfiguration} from 'nx/src/config/workspace-json-project-json';
+import { dirname, join, relative } from 'node:path';
+import type { ProjectConfiguration } from 'nx/src/config/workspace-json-project-json';
 
 const tmpNpmEnv = join('tmp', 'npm-env');
 
@@ -16,6 +16,13 @@ export const createNodes: CreateNodes = [
       join(process.cwd(), projectConfigurationFile)
     );
 
+    if (
+      !('name' in projectConfiguration) ||
+      typeof projectConfiguration.name !== 'string'
+    ) {
+      throw new Error('Project name is required');
+    }
+    const name = projectConfiguration?.name ?? '';
     const tags = projectConfiguration?.tags ?? [];
     const isPublishable = tags.some((target) => target === 'publishable');
     const isNpmEnv = tags.some((target) => target === 'npm-env');
@@ -26,12 +33,13 @@ export const createNodes: CreateNodes = [
           targets: {
             // === e2e project
             // start-verdaccio, stop-verdaccio
-            ...(isNpmEnv && verdaccioTargets(projectConfiguration)),
+            ...(isNpmEnv &&
+              verdaccioTargets({ ...projectConfiguration, name })),
             // setup-npm-env, setup-env, setup-deps
             ...(isNpmEnv && envTargets(projectConfiguration)),
             // === dependency project
             // npm-publish, npm-install
-            ...(isPublishable && npmTargets({...projectConfiguration, root})),
+            ...(isPublishable && npmTargets({ ...projectConfiguration, root })),
           },
         },
       },
@@ -40,9 +48,9 @@ export const createNodes: CreateNodes = [
 ];
 
 function verdaccioTargets(
-  projectConfiguration: ProjectConfiguration
+  projectConfiguration: Omit<ProjectConfiguration, 'name'> & { name: string }
 ): Record<string, TargetConfiguration> {
-  const {name: projectName} = projectConfiguration;
+  const { name: projectName } = projectConfiguration;
   return {
     'start-verdaccio': {
       executor: '@nx/js:verdaccio',
@@ -65,11 +73,11 @@ function verdaccioTargets(
 function envTargets(
   projectConfiguration: ProjectConfiguration
 ): Record<string, TargetConfiguration> {
-  const {name: projectName} = projectConfiguration;
+  const { name: projectName } = projectConfiguration;
   return {
     'setup-npm-env': {
       command:
-        'tsx --tsconfig=tools/tsconfig.tools.json tools/bin/setup-setup-npm-env.ts',
+        'tsx --tsconfig=tools/tsconfig.tools.json tools/bin/setup-npm-env.ts',
       options: {
         projectName,
         targetName: 'start-verdaccio',
@@ -78,14 +86,7 @@ function envTargets(
       },
     },
     'setup-env': {
-      /*
       inputs: ['default', '^production'],
-      outputs: [
-        `{workspaceRoot}/${tmpNpmEnv}/${projectName}/node_modules`,
-        `{workspaceRoot}/${tmpNpmEnv}/${projectName}/.npmrc`,
-        `{workspaceRoot}/${tmpNpmEnv}/${projectName}/package.json`,
-      ],
-      */
       executor: 'nx:run-commands',
       options: {
         commands: [
@@ -115,20 +116,23 @@ function envTargets(
   };
 }
 
-const relativeFromPath = (dir) => relative(join(process.cwd(), dir), join(process.cwd()));
+const relativeFromPath = (dir: string) =>
+  relative(join(process.cwd(), dir), join(process.cwd()));
 
 function npmTargets(
   projectConfiguration: ProjectConfiguration
 ): Record<string, TargetConfiguration> {
-  const {root, name: projectName, targets} = projectConfiguration;
-  const {build} = targets;
-  const {options} = build;
-  const {outputPath} = options;
+  const { root, name: projectName, targets } = projectConfiguration;
+  const { build } =
+    (targets as Record<'build', TargetConfiguration<{ outputPath: string }>>) ??
+    {};
+  const { options } = build ?? {};
+  const { outputPath } = options ?? {};
   if (outputPath == null) {
     throw new Error('outputPath is required');
   }
 
-  const {name: packageName, version: pkgVersion} = readJsonFile(
+  const { name: packageName, version: pkgVersion } = readJsonFile(
     join(root, 'package.json')
   );
   const userconfig = `${relativeFromPath(
@@ -140,7 +144,7 @@ function npmTargets(
   return {
     'npm-publish': {
       dependsOn: [
-        {projects: 'self', target: 'build', params: 'forward'},
+        { projects: 'self', target: 'build', params: 'forward' },
         {
           projects: 'dependencies',
           target: 'npm-publish',
@@ -157,7 +161,7 @@ function npmTargets(
     },
     'npm-install': {
       dependsOn: [
-        {projects: 'self', target: 'npm-publish', params: 'forward'},
+        { projects: 'self', target: 'npm-publish', params: 'forward' },
         {
           projects: 'dependencies',
           target: 'npm-install',

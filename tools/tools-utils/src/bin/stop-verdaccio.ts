@@ -1,23 +1,29 @@
 import {
-  logError,
-  logInfo,
-  setupNpmEnv,
+  verdaccioEnvLogger,
   StartVerdaccioAndSetupEnvOptions,
-} from '../utils/env';
+} from '@org/tools-utils';
 import yargs, { Options } from 'yargs';
 import { join } from 'node:path';
 import { readJsonFile } from '@nx/devkit';
-import { VercaddioServerResult } from '../utils/registry';
+import { VercaddioServerResult } from '../lib/verdaccio/verdaccio-registry';
 import { rm } from 'node:fs/promises';
 
-const isVerbose: boolean = process.env.NX_VERBOSE_LOGGING === 'true' ?? false;
+const isVerbose: boolean =
+  process.env['NX_VERBOSE_LOGGING'] === 'true' ?? false;
+const { info, error } = verdaccioEnvLogger;
 
 const args = yargs(process.argv.slice(2))
   .version(false)
   .options({
     workspaceRoot: {
       type: 'string',
+      demandOption: true,
       description: 'Location of test environment',
+    },
+    projectName: {
+      type: 'string',
+      description: 'Verbose logging',
+      default: isVerbose,
     },
     verbose: {
       type: 'boolean',
@@ -25,7 +31,7 @@ const args = yargs(process.argv.slice(2))
       default: isVerbose,
     },
   } satisfies Partial<Record<keyof StartVerdaccioAndSetupEnvOptions, Options>>)
-  .parse() as StartVerdaccioAndSetupEnvOptions;
+  .parse() as StartVerdaccioAndSetupEnvOptions & { workspaceRoot: string };
 
 (async () => {
   const { workspaceRoot } = args;
@@ -36,18 +42,18 @@ const args = yargs(process.argv.slice(2))
       registryConfigPath
     );
   } catch (e) {
-    logError(`No registry config file found at: ${registryConfigPath}`);
+    error(`No registry config file found at: ${registryConfigPath}`);
     return;
   }
 
-  logInfo('Tearing down environment');
+  info('Tearing down environment');
   console.table(registryServerResult);
   const { pid, storage } = registryServerResult;
   await rm(storage, { recursive: true, force: true });
   try {
     process.kill(Number(pid));
   } catch (e) {
-    logError(`Failed killing process with id: ${pid}\n${e}`);
+    error(`Failed killing process with id: ${pid}\n${e}`);
   } finally {
     await rm(registryConfigPath);
   }

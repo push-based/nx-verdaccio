@@ -1,6 +1,10 @@
-import {type CreateNodes, readJsonFile, TargetConfiguration,} from '@nx/devkit';
-import {dirname, join, relative} from 'node:path';
-import type {ProjectConfiguration} from 'nx/src/config/workspace-json-project-json';
+import {
+  type CreateNodes,
+  readJsonFile,
+  TargetConfiguration,
+} from '@nx/devkit';
+import { dirname, join, relative } from 'node:path';
+import type { ProjectConfiguration } from 'nx/src/config/workspace-json-project-json';
 
 const tmpNpmEnv = join('tmp', 'npm-env');
 
@@ -11,6 +15,15 @@ export const createNodes: CreateNodes = [
     const projectConfiguration: ProjectConfiguration = readJsonFile(
       join(process.cwd(), projectConfigurationFile)
     );
+
+    // only execute for the -pretarget example projects e.g. `cli-e2e-pretarget`, `e2e-models-pretarget`
+    if (!projectConfiguration?.name?.endsWith('-pretarget')) {
+      return {
+        projects: {
+          [root]: {},
+        },
+      };
+    }
 
     const tags = projectConfiguration?.tags ?? [];
     const isPublishable = tags.some((target) => target === 'publishable');
@@ -25,7 +38,7 @@ export const createNodes: CreateNodes = [
           targets: {
             ...(isNpmEnv && e2eTargets(projectConfiguration)),
             ...(isNpmEnv && verdaccioTargets(projectConfiguration)),
-            ...(isPublishable && npmTargets({...projectConfiguration, root})),
+            ...(isPublishable && npmTargets({ ...projectConfiguration, root })),
           },
         },
       },
@@ -34,9 +47,9 @@ export const createNodes: CreateNodes = [
 ];
 
 function e2eTargets(projectConfiguration: ProjectConfiguration) {
-  const {name: projectName} = projectConfiguration;
+  const { name: projectName } = projectConfiguration;
   return {
-    'e2e': {
+    e2e: {
       dependsOn: [
         {
           projects: 'self',
@@ -51,8 +64,10 @@ function e2eTargets(projectConfiguration: ProjectConfiguration) {
   };
 }
 
-function verdaccioTargets(projectConfiguration: ProjectConfiguration): Record<string, TargetConfiguration> {
-  const {name: projectName} = projectConfiguration;
+function verdaccioTargets(
+  projectConfiguration: ProjectConfiguration
+): Record<string, TargetConfiguration> {
+  const { name: projectName } = projectConfiguration;
   return {
     'pretarget-start-verdaccio': {
       executor: '@nx/js:verdaccio',
@@ -63,7 +78,8 @@ function verdaccioTargets(projectConfiguration: ProjectConfiguration): Record<st
       },
     },
     'pretarget-setup-npm-env': {
-      command: 'tsx --tsconfig=tools/tsconfig.tools.json tools/bin/setup-npm-env.ts',
+      command:
+        'tsx --tsconfig=tools/tsconfig.tools.json tools/tools-utils/src/bin/setup-npm-env.ts',
       options: {
         projectName,
         targetName: 'pretarget-start-verdaccio',
@@ -72,23 +88,22 @@ function verdaccioTargets(projectConfiguration: ProjectConfiguration): Record<st
       },
     },
     'pretarget-teardown-env': {
-      command: 'tsx --tsconfig=tools/tsconfig.tools.json tools/bin/stop-verdaccio.ts --workspaceRoot={args.workspaceRoot}',
+      command:
+        'tsx --tsconfig=tools/tsconfig.tools.json tools/tools-utils/src/bin/stop-verdaccio.ts --workspaceRoot={args.workspaceRoot}',
       options: {
         workspaceRoot: join(tmpNpmEnv, projectName),
       },
     },
     'pretarget-setup-env': {
       cache: true,
-      inputs: ["default", "^production", "!{projectRoot}/**/*.md"],
-      outputs: [
-        `{workspaceRoot}/${tmpNpmEnv}/${projectName}/node_modules`
-      ],
-      executor: "nx:run-commands",
+      inputs: ['default', '^production', '!{projectRoot}/**/*.md'],
+      outputs: [`{workspaceRoot}/${tmpNpmEnv}/${projectName}/node_modules`],
+      executor: 'nx:run-commands',
       options: {
         commands: [
           `nx pretarget-setup-npm-env ${projectName}`,
           `nx pretarget-setup-deps ${projectName} --envProjectName={args.envProjectName}`,
-          `nx pretarget-teardown-env ${projectName} --workspaceRoot={args.workspaceRoot}`
+          `nx pretarget-teardown-env ${projectName} --workspaceRoot={args.workspaceRoot}`,
         ],
         workspaceRoot: join(tmpNpmEnv, projectName),
         forwardAllArgs: true,
@@ -102,13 +117,13 @@ function verdaccioTargets(projectConfiguration: ProjectConfiguration): Record<st
           projects: 'dependencies',
           target: 'pretarget-npm-install',
           params: 'forward',
-        }
+        },
       ],
       options: {
         envProjectName: projectName,
       },
       command: 'echo Dependencies installed!',
-    }
+    },
   };
 }
 
@@ -118,22 +133,22 @@ const relativeFromPath = (dir) =>
 function npmTargets(
   projectConfiguration: ProjectConfiguration
 ): Record<string, TargetConfiguration> {
-  const {root, name: projectName, targets} = projectConfiguration;
-  const {build} = targets;
-  const {options} = build;
-  const {outputPath} = options;
+  const { root, name: projectName, targets } = projectConfiguration;
+  const { build } = targets;
+  const { options } = build;
+  const { outputPath } = options;
   if (outputPath == null) {
     throw new Error('outputPath is required');
   }
 
-  const {name: packageName, version: pkgVersion} = readJsonFile(
+  const { name: packageName, version: pkgVersion } = readJsonFile(
     join(root, 'package.json')
   );
 
   return {
     'pretarget-npm-publish': {
       dependsOn: [
-        {projects: 'self', target: 'build', params: 'forward'},
+        { projects: 'self', target: 'build', params: 'forward' },
         {
           projects: 'dependencies',
           target: 'pretarget-npm-publish',
@@ -150,7 +165,11 @@ function npmTargets(
     },
     'pretarget-npm-install': {
       dependsOn: [
-        {projects: 'self', target: 'pretarget-npm-publish', params: 'forward'},
+        {
+          projects: 'self',
+          target: 'pretarget-npm-publish',
+          params: 'forward',
+        },
         {
           projects: 'dependencies',
           target: 'pretarget-npm-install',
@@ -164,6 +183,6 @@ function npmTargets(
         pkgVersion,
         envProjectName: projectName,
       },
-    }
+    },
   };
 }

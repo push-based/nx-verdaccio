@@ -1,6 +1,9 @@
 {
   "name": "@org/cli",
   "version": "0.0.1",
-  "dependencies": {},
+  "dependencies": {
+    "yargs": "^17.7.2",
+    "@org/core": "0.0.1"
+  },
   "bin": "bin.js"
 }
