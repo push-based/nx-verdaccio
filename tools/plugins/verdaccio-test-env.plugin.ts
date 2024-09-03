@@ -3,8 +3,8 @@ import {
   readJsonFile,
   TargetConfiguration,
 } from '@nx/devkit';
-import { dirname, join, relative } from 'node:path';
-import type { ProjectConfiguration } from 'nx/src/config/workspace-json-project-json';
+import {dirname, join, relative} from 'node:path';
+import type {ProjectConfiguration} from 'nx/src/config/workspace-json-project-json';
 
 const tmpNpmEnv = join('tmp', 'npm-env');
 
@@ -31,7 +31,7 @@ export const createNodes: CreateNodes = [
             ...(isNpmEnv && envTargets(projectConfiguration)),
             // === dependency project
             // npm-publish, npm-install
-            ...(isPublishable && npmTargets({ ...projectConfiguration, root })),
+            ...(isPublishable && npmTargets({...projectConfiguration, root})),
           },
         },
       },
@@ -42,7 +42,7 @@ export const createNodes: CreateNodes = [
 function verdaccioTargets(
   projectConfiguration: ProjectConfiguration
 ): Record<string, TargetConfiguration> {
-  const { name: projectName } = projectConfiguration;
+  const {name: projectName} = projectConfiguration;
   return {
     'start-verdaccio': {
       executor: '@nx/js:verdaccio',
@@ -54,7 +54,7 @@ function verdaccioTargets(
     },
     'stop-verdaccio': {
       command:
-        'tsx --tsconfig=tools/tsconfig.tools.json tools/bin/teardown-npm-env.ts --workspaceRoot={args.workspaceRoot}',
+        'tsx --tsconfig=tools/tsconfig.tools.json tools/bin/stop-verdaccio.ts --workspaceRoot={args.workspaceRoot}',
       options: {
         workspaceRoot: join(tmpNpmEnv, projectName),
       },
@@ -65,7 +65,7 @@ function verdaccioTargets(
 function envTargets(
   projectConfiguration: ProjectConfiguration
 ): Record<string, TargetConfiguration> {
-  const { name: projectName } = projectConfiguration;
+  const {name: projectName} = projectConfiguration;
   return {
     'setup-npm-env': {
       command:
@@ -78,12 +78,14 @@ function envTargets(
       },
     },
     'setup-env': {
-      inputs: ['default', '^production', '!{projectRoot}/**/*.md'],
+      /*
+      inputs: ['default', '^production'],
       outputs: [
         `{workspaceRoot}/${tmpNpmEnv}/${projectName}/node_modules`,
         `{workspaceRoot}/${tmpNpmEnv}/${projectName}/.npmrc`,
         `{workspaceRoot}/${tmpNpmEnv}/${projectName}/package.json`,
       ],
+      */
       executor: 'nx:run-commands',
       options: {
         commands: [
@@ -113,21 +115,20 @@ function envTargets(
   };
 }
 
-const relativeFromPath = (dir) =>
-  relative(join(process.cwd(), dir), join(process.cwd()));
+const relativeFromPath = (dir) => relative(join(process.cwd(), dir), join(process.cwd()));
 
 function npmTargets(
   projectConfiguration: ProjectConfiguration
 ): Record<string, TargetConfiguration> {
-  const { root, name: projectName, targets } = projectConfiguration;
-  const { build } = targets;
-  const { options } = build;
-  const { outputPath } = options;
+  const {root, name: projectName, targets} = projectConfiguration;
+  const {build} = targets;
+  const {options} = build;
+  const {outputPath} = options;
   if (outputPath == null) {
     throw new Error('outputPath is required');
   }
 
-  const { name: packageName, version: pkgVersion } = readJsonFile(
+  const {name: packageName, version: pkgVersion} = readJsonFile(
     join(root, 'package.json')
   );
   const userconfig = `${relativeFromPath(
@@ -139,13 +140,15 @@ function npmTargets(
   return {
     'npm-publish': {
       dependsOn: [
-        { projects: 'self', target: 'build', params: 'forward' },
+        {projects: 'self', target: 'build', params: 'forward'},
         {
           projects: 'dependencies',
           target: 'npm-publish',
           params: 'forward',
         },
       ],
+      // cache: true,
+      // outputs: [`{workspaceRoot}/${tmpNpmEnv}/${envProjectName}/storage/@org/${packageName}`],
       command: `npm publish --userconfig=${userconfig}`,
       options: {
         cwd: outputPath,
@@ -154,7 +157,7 @@ function npmTargets(
     },
     'npm-install': {
       dependsOn: [
-        { projects: 'self', target: 'npm-publish', params: 'forward' },
+        {projects: 'self', target: 'npm-publish', params: 'forward'},
         {
           projects: 'dependencies',
           target: 'npm-install',

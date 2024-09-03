@@ -1,0 +1,35 @@
+{
+  "name": "core-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "projects/core-e2e/test",
+  "projectType": "library",
+  "tags": [
+    "type:example",
+    "npm-env"
+  ],
+  "implicitDependencies": [
+    "core"
+  ],
+  "targets": {
+    "e2e": {
+      "dependsOn": [
+        {
+          "projects": "self",
+          "target": "setup-env",
+          "params": "forward"
+        }
+      ],
+      "executor": "@nx/vite:test",
+      "inputs": [
+        "default",
+        "^production"
+      ],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../coverage/projects/core-e2e"
+      }
+    }
+  }
+}
