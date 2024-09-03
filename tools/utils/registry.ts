@@ -9,6 +9,7 @@ export function logInfo(msg: string) {
 export function logError(msg: string) {
   error(msg, 'Verdaccio: ');
 }
+
 export type VerdaccioProcessResult = {
   protocol: string;
   port: string | number;

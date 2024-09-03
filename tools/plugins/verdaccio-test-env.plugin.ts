@@ -1,6 +1,10 @@
-import {type CreateNodes, readJsonFile, TargetConfiguration,} from '@nx/devkit';
-import {dirname, join, relative} from 'node:path';
-import type {ProjectConfiguration} from 'nx/src/config/workspace-json-project-json';
+import {
+  type CreateNodes,
+  readJsonFile,
+  TargetConfiguration,
+} from '@nx/devkit';
+import { dirname, join, relative } from 'node:path';
+import type { ProjectConfiguration } from 'nx/src/config/workspace-json-project-json';
 
 const tmpNpmEnv = join('tmp', 'npm-env');
 
@@ -20,11 +24,14 @@ export const createNodes: CreateNodes = [
       projects: {
         [root]: {
           targets: {
-            // e2e project
+            // === e2e project
+            // start-verdaccio, stop-verdaccio
             ...(isNpmEnv && verdaccioTargets(projectConfiguration)),
+            // setup-npm-env, setup-env, setup-deps
             ...(isNpmEnv && envTargets(projectConfiguration)),
-            // dependency project
-            ...(isPublishable && npmTargets({...projectConfiguration, root})),
+            // === dependency project
+            // npm-publish, npm-install
+            ...(isPublishable && npmTargets({ ...projectConfiguration, root })),
           },
         },
       },
@@ -32,8 +39,10 @@ export const createNodes: CreateNodes = [
   },
 ];
 
-function verdaccioTargets(projectConfiguration: ProjectConfiguration): Record<string, TargetConfiguration> {
-  const {name: projectName} = projectConfiguration;
+function verdaccioTargets(
+  projectConfiguration: ProjectConfiguration
+): Record<string, TargetConfiguration> {
+  const { name: projectName } = projectConfiguration;
   return {
     'start-verdaccio': {
       executor: '@nx/js:verdaccio',
@@ -44,19 +53,23 @@ function verdaccioTargets(projectConfiguration: ProjectConfiguration): Record<st
       },
     },
     'stop-verdaccio': {
-      command: 'tsx --tsconfig=tools/tsconfig.tools.json tools/bin/teardown-env.ts --workspaceRoot={args.workspaceRoot}',
+      command:
+        'tsx --tsconfig=tools/tsconfig.tools.json tools/bin/teardown-npm-env.ts --workspaceRoot={args.workspaceRoot}',
       options: {
         workspaceRoot: join(tmpNpmEnv, projectName),
       },
     },
-  }
+  };
 }
 
-function envTargets(projectConfiguration: ProjectConfiguration): Record<string, TargetConfiguration> {
-  const {name: projectName} = projectConfiguration;
+function envTargets(
+  projectConfiguration: ProjectConfiguration
+): Record<string, TargetConfiguration> {
+  const { name: projectName } = projectConfiguration;
   return {
     'setup-npm-env': {
-      command: 'tsx --tsconfig=tools/tsconfig.tools.json tools/bin/npm-env.ts',
+      command:
+        'tsx --tsconfig=tools/tsconfig.tools.json tools/bin/setup-npm-env.ts',
       options: {
         projectName,
         targetName: 'start-verdaccio',
@@ -65,17 +78,18 @@ function envTargets(projectConfiguration: ProjectConfiguration): Record<string, 
       },
     },
     'setup-env': {
-      cache: true,
-      inputs: ["default", "^production", "!{projectRoot}/**/*.md"],
+      inputs: ['default', '^production', '!{projectRoot}/**/*.md'],
       outputs: [
-        `{workspaceRoot}/${tmpNpmEnv}/${projectName}/node_modules`
+        `{workspaceRoot}/${tmpNpmEnv}/${projectName}/node_modules`,
+        `{workspaceRoot}/${tmpNpmEnv}/${projectName}/.npmrc`,
+        `{workspaceRoot}/${tmpNpmEnv}/${projectName}/package.json`,
       ],
-      executor: "nx:run-commands",
+      executor: 'nx:run-commands',
       options: {
         commands: [
           `nx setup-npm-env ${projectName}`,
           `nx setup-deps ${projectName} --envProjectName={args.envProjectName}`,
-          `nx stop-verdaccio ${projectName} --workspaceRoot={args.workspaceRoot}`
+          `nx stop-verdaccio ${projectName} --workspaceRoot={args.workspaceRoot}`,
         ],
         workspaceRoot: join(tmpNpmEnv, projectName),
         forwardAllArgs: true,
@@ -89,13 +103,13 @@ function envTargets(projectConfiguration: ProjectConfiguration): Record<string, 
           projects: 'dependencies',
           target: 'npm-install',
           params: 'forward',
-        }
+        },
       ],
       options: {
         envProjectName: projectName,
       },
       command: 'echo Dependencies installed!',
-    }
+    },
   };
 }
 
@@ -105,25 +119,27 @@ const relativeFromPath = (dir) =>
 function npmTargets(
   projectConfiguration: ProjectConfiguration
 ): Record<string, TargetConfiguration> {
-  const {root, name: projectName, targets} = projectConfiguration;
-  const {build} = targets;
-  const {options} = build;
-  const {outputPath} = options;
+  const { root, name: projectName, targets } = projectConfiguration;
+  const { build } = targets;
+  const { options } = build;
+  const { outputPath } = options;
   if (outputPath == null) {
     throw new Error('outputPath is required');
   }
 
-  const {name: packageName, version: pkgVersion} = readJsonFile(
+  const { name: packageName, version: pkgVersion } = readJsonFile(
     join(root, 'package.json')
   );
-  const userconfig =  `${relativeFromPath(outputPath)}/${tmpNpmEnv}/{args.envProjectName}/.npmrc`;
-  const prefix =  `${tmpNpmEnv}/{args.envProjectName}`;
+  const userconfig = `${relativeFromPath(
+    outputPath
+  )}/${tmpNpmEnv}/{args.envProjectName}/.npmrc`;
+  const prefix = `${tmpNpmEnv}/{args.envProjectName}`;
   const envProjectName = projectName;
 
   return {
     'npm-publish': {
       dependsOn: [
-        {projects: 'self', target: 'build', params: 'forward'},
+        { projects: 'self', target: 'build', params: 'forward' },
         {
           projects: 'dependencies',
           target: 'npm-publish',
@@ -138,7 +154,7 @@ function npmTargets(
     },
     'npm-install': {
       dependsOn: [
-        {projects: 'self', target: 'npm-publish', params: 'forward'},
+        { projects: 'self', target: 'npm-publish', params: 'forward' },
         {
           projects: 'dependencies',
           target: 'npm-install',
@@ -150,6 +166,6 @@ function npmTargets(
         pkgVersion,
         envProjectName,
       },
-    }
+    },
   };
 }

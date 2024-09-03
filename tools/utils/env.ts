@@ -33,7 +33,7 @@ export type NpmTestEnvResult = VerdaccioEnv & {
   stop: () => void;
 };
 
-export async function startNpmEnv({
+export async function setupNpmEnv({
   projectName,
   verbose = false,
   targetName = 'start-verdaccio',

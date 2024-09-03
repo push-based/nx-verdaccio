@@ -1,4 +1,4 @@
-import { startNpmEnv, StartVerdaccioAndSetupEnvOptions } from '../utils/env';
+import { setupNpmEnv, StartVerdaccioAndSetupEnvOptions } from '../utils/env';
 import yargs, { Options } from 'yargs';
 
 const isVerbose: boolean = process.env.NX_VERBOSE_LOGGING === 'true' ?? false;
@@ -29,5 +29,5 @@ const args = yargs(process.argv.slice(2))
   .parse() as StartVerdaccioAndSetupEnvOptions;
 
 (async () => {
-  await startNpmEnv(args);
+  await setupNpmEnv(args);
 })();
