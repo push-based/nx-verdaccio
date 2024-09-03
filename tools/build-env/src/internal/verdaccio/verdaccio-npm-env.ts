@@ -24,16 +24,16 @@ export const verdaccioEnvLogger = {
   error: errorLog,
 };
 
-export type VerdaccioEnv = {
+export type Environment = {
   workspaceRoot: string;
 };
 
 export type StartVerdaccioAndSetupEnvOptions = Partial<
-  StarVerdaccioOptions & VerdaccioEnv
+  StarVerdaccioOptions & Environment
 > &
   Required<Pick<StarVerdaccioOptions, 'projectName'>>;
 
-export type NpmTestEnvResult = VerdaccioEnv & {
+export type NpmTestEnvResult = Environment & {
   registry: VercaddioServerResult;
   stop: () => void;
 };

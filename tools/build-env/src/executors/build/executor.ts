@@ -26,7 +26,7 @@ export default async function runBuildExecutor(
     )}`
   );
   try {
-    const envResult = await setupNpmEnv(normalizedOptions);
+    const envResult = await setupNpmEnv({ ...normalizedOptions, projectName });
     logger.info(`envResult: ${JSON.stringify(envResult, null, 2)}`);
   } catch (error) {
     logger.error(error);

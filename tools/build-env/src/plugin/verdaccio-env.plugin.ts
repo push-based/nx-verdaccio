@@ -3,14 +3,25 @@ import {
   readJsonFile,
   type TargetConfiguration,
   type ProjectConfiguration,
+  logger,
 } from '@nx/devkit';
 import { dirname, join, relative } from 'node:path';
+import { DEFAULT_ENVIRONMENT_OUTPUT_DIR } from '../internal/constants';
+import {
+  Environment,
+  StartVerdaccioAndSetupEnvOptions,
+} from '../internal/verdaccio/verdaccio-npm-env';
+import { StarVerdaccioOptions } from '../internal/verdaccio/verdaccio-registry';
 
-const tmpNpmEnv = join('tmp', 'npm-env');
-
+export type BuildEnvPluginCreateNodeOptions = {
+  environmentsDir?: string;
+};
 export const createNodes: CreateNodes = [
   '**/project.json',
-  (projectConfigurationFile: string) => {
+  (projectConfigurationFile: string, opt: unknown) => {
+    const { environmentsDir = DEFAULT_ENVIRONMENT_OUTPUT_DIR } =
+      (opt as BuildEnvPluginCreateNodeOptions) ?? {};
+
     console.log('projectConfigurationFile', projectConfigurationFile);
     const root = dirname(projectConfigurationFile);
     const projectConfiguration: ProjectConfiguration = readJsonFile(
@@ -25,16 +36,11 @@ export const createNodes: CreateNodes = [
     }
     const { name: envProjectName } =
       readJsonFile<ProjectConfiguration>('project.json');
-    const name = projectConfiguration?.name ?? '';
+    const projectName = projectConfiguration.name;
     const tags = projectConfiguration?.tags ?? [];
     const isPublishable = tags.some((target) => target === 'publishable');
     const isNpmEnv = tags.some((target) => target === 'npm-env');
-
-    return {
-      projects: {
-        [root]: {},
-      },
-    };
+    const workspaceRoot = join(environmentsDir, projectName);
 
     return {
       projects: {
@@ -42,14 +48,16 @@ export const createNodes: CreateNodes = [
           targets: {
             // === e2e project
             // start-verdaccio, stop-verdaccio
-            ...(isNpmEnv &&
-              verdaccioTargets({ ...projectConfiguration, name })),
+            ...(isNpmEnv && verdaccioTargets({ workspaceRoot })),
             // setup-npm-env, setup-env, setup-deps
-            ...(isNpmEnv && envTargets(projectConfiguration)),
+            ...(isNpmEnv && envTargets({ workspaceRoot, projectName })),
             // === dependency project
             // npm-publish, npm-install
             ...(isPublishable &&
-              npmTargets({ ...projectConfiguration, root }, envProjectName)),
+              npmTargets(
+                { ...projectConfiguration, root, environmentsDir },
+                envProjectName
+              )),
           },
         },
       },
@@ -57,32 +65,36 @@ export const createNodes: CreateNodes = [
   },
 ];
 
-function verdaccioTargets(
-  projectConfiguration: Omit<ProjectConfiguration, 'name'> & { name: string }
-): Record<string, TargetConfiguration> {
-  const { name: projectName } = projectConfiguration;
+function verdaccioTargets({
+  workspaceRoot,
+  ...options
+}: Environment & StarVerdaccioOptions): Record<string, TargetConfiguration> {
   return {
     'start-verdaccio': {
       executor: '@nx/js:verdaccio',
       options: {
         config: '.verdaccio/config.yml',
-        storage: join(tmpNpmEnv, projectName, 'storage'),
+        storage: join(workspaceRoot, 'storage'),
         clear: true,
+        ...options,
       },
     },
     'stop-verdaccio': {
       executor: '@org/build-env:kill-process',
       options: {
-        filePath: join(tmpNpmEnv, projectName),
+        filePath: join(workspaceRoot, 'verdaccio-registry.json'),
+        ...options,
       },
     },
   };
 }
 
-function envTargets(
-  projectConfiguration: ProjectConfiguration
-): Record<string, TargetConfiguration> {
-  const { name: projectName } = projectConfiguration;
+function envTargets({
+  workspaceRoot,
+  projectName,
+}: Environment & {
+  projectName: string;
+}): Record<string, TargetConfiguration> {
   return {
     'setup-npm-env': {
       command:
@@ -90,7 +102,7 @@ function envTargets(
       options: {
         projectName,
         targetName: 'start-verdaccio',
-        envProjectName: join(tmpNpmEnv, projectName),
+        envProjectName: projectName,
         readyWhen: 'Environment ready under',
       },
     },
@@ -101,9 +113,9 @@ function envTargets(
         commands: [
           `nx setup-npm-env ${projectName} --workspaceRoot={args.envProjectName}`,
           `nx install-deps ${projectName} --envProjectName={args.envProjectName}`,
-          `nx stop-verdaccio ${projectName} --workspaceRoot={args.workspaceRoot}`,
+          `nx stop-verdaccio ${projectName}`,
         ],
-        workspaceRoot: join(tmpNpmEnv, projectName),
+        workspaceRoot,
         forwardAllArgs: true,
         // @TODO rename to more intuitive name
         envProjectName: projectName,
@@ -130,10 +142,13 @@ const relativeFromPath = (dir: string) =>
   relative(join(process.cwd(), dir), join(process.cwd()));
 
 function npmTargets(
-  projectConfiguration: ProjectConfiguration,
-  envProjectName: string
+  projectConfiguration: ProjectConfiguration & {
+    root: string;
+    environmentsDir: string;
+  },
+  environmentProject: string
 ): Record<string, TargetConfiguration> {
-  const { root, targets } = projectConfiguration;
+  const { root, targets, environmentsDir } = projectConfiguration;
   const { build } =
     (targets as Record<'build', TargetConfiguration<{ outputPath: string }>>) ??
     {};
@@ -148,10 +163,11 @@ function npmTargets(
   );
   const userconfig = `${relativeFromPath(
     outputPath
-  )}/${tmpNpmEnv}/{args.envProjectName}/.npmrc`;
-  const prefix = `${tmpNpmEnv}/{args.envProjectName}`;
+  )}/${environmentsDir}/{args.environmentProject}/.npmrc`;
+  const prefix = `${environmentProject}/{args.environmentProject}`;
 
   return {
+    // nx npm-publish models --environmentProject=cli-e2e
     'npm-publish': {
       dependsOn: [
         { projects: 'self', target: 'build', params: 'forward' },
@@ -163,15 +179,14 @@ function npmTargets(
       ],
       // dist/projects/models
       inputs: [{ dependentTasksOutputFiles: `**/{options.outputPath}/**` }],
-      outputs: [
+      /*outputs: [
         //
-        `{workspaceRoot}/${tmpNpmEnv}/{args.envProjectName}/storage/@org/${packageName}`,
-      ],
+        `{workspaceRoot}/${environmentsDir}/{args.environmentProject}/storage/@org/${packageName}`,
+      ],*/
       cache: true,
       command: `npm publish --userconfig=${userconfig}`,
       options: {
         cwd: outputPath,
-        envProjectName,
       },
     },
     'npm-install': {
@@ -186,7 +201,7 @@ function npmTargets(
       command: `npm install --no-fund --no-shrinkwrap --save ${packageName}@{args.pkgVersion} --prefix=${prefix} --userconfig=${userconfig}`,
       options: {
         pkgVersion,
-        envProjectName,
+        environmentProject: environmentProject,
       },
     },
   };

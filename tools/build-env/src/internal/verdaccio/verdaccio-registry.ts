@@ -1,9 +1,10 @@
 import { gray, bold, red } from 'ansis';
 import { join } from 'node:path';
 import { error, info } from '../utils/logging';
-import {logger} from "@nx/devkit";
-import {objectToCliArgs} from "../utils/terminal-command";
-import {executeProcess} from "../utils/execute-process";
+import { logger } from '@nx/devkit';
+import { objectToCliArgs } from '../utils/terminal-command';
+import { executeProcess } from '../utils/execute-process';
+import { uniquePort } from '../utils/utils';
 
 export function logInfo(msg: string) {
   info(msg, 'Verdaccio: ');
@@ -100,7 +101,7 @@ export async function startVerdaccioServer({
       args: objectToCliArgs({
         _: [targetName, projectName ?? '', '--'],
         storage,
-        port,
+        port: port ?? uniquePort(),
         verbose,
         location,
         clear,

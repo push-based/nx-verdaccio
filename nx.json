@@ -63,7 +63,7 @@
       }
     }
   },
-  "plugins": [],
+  "plugins": ["./tools/build-env/src/index.ts"],
   "release": {
     "version": {
       "preVersionCommand": "npx nx run-many -t build"
