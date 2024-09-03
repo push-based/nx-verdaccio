@@ -22,6 +22,8 @@ export const createNodes: CreateNodes = [
     ) {
       throw new Error('Project name is required');
     }
+    const { name: envProjectName } =
+      readJsonFile<ProjectConfiguration>('project.json');
     const name = projectConfiguration?.name ?? '';
     const tags = projectConfiguration?.tags ?? [];
     const isPublishable = tags.some((target) => target === 'publishable');
@@ -39,7 +41,8 @@ export const createNodes: CreateNodes = [
             ...(isNpmEnv && envTargets(projectConfiguration)),
             // === dependency project
             // npm-publish, npm-install
-            ...(isPublishable && npmTargets({ ...projectConfiguration, root })),
+            ...(isPublishable &&
+              npmTargets({ ...projectConfiguration, root }, envProjectName)),
           },
         },
       },
@@ -77,11 +80,11 @@ function envTargets(
   return {
     'setup-npm-env': {
       command:
-        'tsx --tsconfig=tools/tsconfig.tools.json tools/bin/setup-npm-env.ts',
+        'tsx --tsconfig=tools/tsconfig.tools.json tools/tools-utils/src/bin/setup-npm-env.ts',
       options: {
         projectName,
         targetName: 'start-verdaccio',
-        workspaceRoot: join(tmpNpmEnv, projectName),
+        envProjectName: join(tmpNpmEnv, projectName),
         readyWhen: 'Environment ready under',
       },
     },
@@ -90,17 +93,18 @@ function envTargets(
       executor: 'nx:run-commands',
       options: {
         commands: [
-          `nx setup-npm-env ${projectName}`,
-          `nx setup-deps ${projectName} --envProjectName={args.envProjectName}`,
+          `nx setup-npm-env ${projectName} --workspaceRoot={args.envProjectName}`,
+          `nx install-deps ${projectName} --envProjectName={args.envProjectName}`,
           `nx stop-verdaccio ${projectName} --workspaceRoot={args.workspaceRoot}`,
         ],
         workspaceRoot: join(tmpNpmEnv, projectName),
         forwardAllArgs: true,
+        // @TODO rename to more intuitive name
         envProjectName: projectName,
         parallel: false,
       },
     },
-    'setup-deps': {
+    'install-deps': {
       dependsOn: [
         {
           projects: 'dependencies',
@@ -120,7 +124,8 @@ const relativeFromPath = (dir: string) =>
   relative(join(process.cwd(), dir), join(process.cwd()));
 
 function npmTargets(
-  projectConfiguration: ProjectConfiguration
+  projectConfiguration: ProjectConfiguration,
+  envProjectName: string
 ): Record<string, TargetConfiguration> {
   const { root, name: projectName, targets } = projectConfiguration;
   const { build } =
@@ -139,7 +144,6 @@ function npmTargets(
     outputPath
   )}/${tmpNpmEnv}/{args.envProjectName}/.npmrc`;
   const prefix = `${tmpNpmEnv}/{args.envProjectName}`;
-  const envProjectName = projectName;
 
   return {
     'npm-publish': {
@@ -151,8 +155,13 @@ function npmTargets(
           params: 'forward',
         },
       ],
-      // cache: true,
-      // outputs: [`{workspaceRoot}/${tmpNpmEnv}/${envProjectName}/storage/@org/${packageName}`],
+      // dist/projects/models
+      inputs: [{ dependentTasksOutputFiles: `**/{options.outputPath}/**` }],
+      outputs: [
+        //
+        `{workspaceRoot}/${tmpNpmEnv}/{args.envProjectName}/storage/@org/${packageName}`,
+      ],
+      cache: true,
       command: `npm publish --userconfig=${userconfig}`,
       options: {
         cwd: outputPath,
