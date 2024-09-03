@@ -1,0 +1,65 @@
+{
+  "name": "build-env",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "tools/build-env/src",
+  "projectType": "library",
+  "implicitDependencies": ["cli"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/tools/build-env",
+        "main": "tools/build-env/src/index.ts",
+        "tsConfig": "tools/build-env/tsconfig.lib.json",
+        "assets": [
+          "tools/build-env/*.md",
+          {
+            "input": "./tools/build-env/src",
+            "glob": "**/!(*.ts)",
+            "output": "./src"
+          },
+          {
+            "input": "./tools/build-env/src",
+            "glob": "**/*.d.ts",
+            "output": "./src"
+          },
+          {
+            "input": "./tools/build-env",
+            "glob": "generators.json",
+            "output": "."
+          },
+          {
+            "input": "./tools/build-env",
+            "glob": "executors.json",
+            "output": "."
+          }
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "tools/build-env/**/*.ts",
+          "tools/build-env/package.json",
+          "tools/build-env/generators.json"
+        ]
+      }
+    },
+    "unit-test": {
+      "executor": "@nx/vite:test",
+      "options": {
+        "configFile": "tools/build-env/vite.config.unit.ts"
+      }
+    },
+    "integration-test": {
+      "executor": "@nx/vite:test",
+      "options": {
+        "configFile": "tools/build-env/vite.config.integration.ts"
+      }
+    }
+  },
+  "tags": ["scope:tooling", "type:feature", "publishable"]
+}

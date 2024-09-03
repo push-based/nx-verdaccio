@@ -11,6 +11,12 @@
     "cli"
   ],
   "targets": {
+    "build-env": {
+      "executor": "@org/build-env:build",
+      "options": {
+        "workspaceRoot": "tmp/cli-e2e"
+      }
+    },
     "e2e": {
       "dependsOn": [
         {
