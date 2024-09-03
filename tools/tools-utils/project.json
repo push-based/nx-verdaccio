@@ -1,0 +1,36 @@
+{
+  "name": "tools-utils",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "projects/tools-utils/src",
+  "projectType": "library",
+  "release": {
+    "version": {
+      "generatorOptions": {
+        "packageRoot": "dist/{projectRoot}",
+        "currentVersionResolver": "git-tag"
+      }
+    }
+  },
+  "tags": ["publishable"],
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/projects/tools-utils",
+        "main": "projects/tools-utils/src/index.ts",
+        "tsConfig": "projects/tools-utils/tsconfig.lib.json",
+        "assets": ["projects/tools-utils/*.md"],
+        "generatePackageJson": true,
+        "format": ["esm"]
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "../../coverage/projects/tools-utils"
+      }
+    }
+  }
+}

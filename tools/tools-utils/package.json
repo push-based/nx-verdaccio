@@ -1,0 +1,11 @@
+{
+  "name": "@org/tools-utils",
+  "version": "0.0.1",
+  "dependencies": {
+    "ansis": "^3.3.2",
+    "test-utils": "0.0.1",
+    "@nx/devkit": "18.2.4",
+    "nx": "18.2.4",
+    "yargs": "^17.7.2"
+  }
+}
