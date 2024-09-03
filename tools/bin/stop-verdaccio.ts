@@ -47,7 +47,7 @@ const args = yargs(process.argv.slice(2))
   try {
     process.kill(Number(pid));
   } catch (e) {
-    logError(`Failes kipplng process with id: ${pid}\n${e}`);
+    logError(`Failed killing process with id: ${pid}\n${e}`);
   } finally {
     await rm(registryConfigPath);
   }

@@ -48,7 +48,7 @@ function verdaccioTargets(projectConfiguration: ProjectConfiguration) {
       },
     },
     'env-setup-npm-env': {
-      command: 'tsx --tsconfig=tools/tsconfig.tools.json tools/bin/npm-env.ts',
+      command: 'tsx --tsconfig=tools/tsconfig.tools.json tools/bin/setup-npm-env.ts',
       options: {
         projectName,
         targetName: 'env-start-verdaccio',

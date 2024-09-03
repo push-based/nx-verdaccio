@@ -63,7 +63,7 @@ function verdaccioTargets(projectConfiguration: ProjectConfiguration): Record<st
       },
     },
     'pretarget-setup-npm-env': {
-      command: 'tsx --tsconfig=tools/tsconfig.tools.json tools/bin/npm-env.ts',
+      command: 'tsx --tsconfig=tools/tsconfig.tools.json tools/bin/setup-npm-env.ts',
       options: {
         projectName,
         targetName: 'pretarget-start-verdaccio',
@@ -72,7 +72,7 @@ function verdaccioTargets(projectConfiguration: ProjectConfiguration): Record<st
       },
     },
     'pretarget-teardown-env': {
-      command: 'tsx --tsconfig=tools/tsconfig.tools.json tools/bin/teardown-env.ts --workspaceRoot={args.workspaceRoot}',
+      command: 'tsx --tsconfig=tools/tsconfig.tools.json tools/bin/stop-verdaccio.ts --workspaceRoot={args.workspaceRoot}',
       options: {
         workspaceRoot: join(tmpNpmEnv, projectName),
       },

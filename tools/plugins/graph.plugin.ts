@@ -44,7 +44,7 @@ function verdaccioTargets(projectConfiguration: ProjectConfiguration) {
       },
     },
     'graph-setup-npm-env': {
-      command: 'tsx --tsconfig=tools/tsconfig.tools.json tools/bin/npm-env.ts',
+      command: 'tsx --tsconfig=tools/tsconfig.tools.json tools/bin/setup-npm-env.ts',
       options: {
         projectName,
         envProjectName: projectName,
