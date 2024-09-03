@@ -39,14 +39,15 @@ export type NpmTestEnvResult = VerdaccioEnv & {
 };
 
 export async function setupNpmEnv({
-  projectName,
   verbose = false,
-  workspaceRoot = join('tmp', 'npm-env', projectName),
+  workspaceRoot,
   ...opts
-}: StartVerdaccioAndSetupEnvOptions): Promise<NpmTestEnvResult> {
+}: StarVerdaccioOptions & {
+  workspaceRoot: string;
+}): Promise<NpmTestEnvResult> {
   const storage = join(workspaceRoot, 'storage');
+
   const registryResult = await startVerdaccioServer({
-    projectName,
     storage,
     verbose,
     ...opts,

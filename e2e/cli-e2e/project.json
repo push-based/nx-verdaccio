@@ -3,14 +3,15 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "projects/cli-e2e/test",
   "projectType": "library",
-  "tags": [
-    "type:example",
-    "npm-env"
-  ],
-  "implicitDependencies": [
-    "cli"
-  ],
+  "tags": ["npm-env"],
+  "implicitDependencies": ["cli"],
   "targets": {
+    "setup": {
+      "executor": "environment-plugin:setup-env",
+      "options": {
+        "workspaceRoot": "tmp/e2e/cli-e2e"
+      }
+    },
     "e2e": {
       "dependsOn": [
         {
@@ -20,13 +21,8 @@
         }
       ],
       "executor": "@nx/vite:test",
-      "inputs": [
-        "default",
-        "^production"
-      ],
-      "outputs": [
-        "{options.reportsDirectory}"
-      ],
+      "inputs": ["default", "^production"],
+      "outputs": ["{options.reportsDirectory}"],
       "options": {
         "reportsDirectory": "../../coverage/projects/cli-e2e"
       }
