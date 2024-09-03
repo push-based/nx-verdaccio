@@ -17,6 +17,12 @@
         "workspaceRoot": "tmp/cli-e2e"
       }
     },
+    "kill-process": {
+      "executor": "@org/build-env:kill-process",
+      "options": {
+        "workspaceRoot": "tmp/cli-e2e"
+      }
+    },
     "e2e": {
       "dependsOn": [
         {

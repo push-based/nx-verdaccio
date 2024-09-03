@@ -4,6 +4,11 @@
       "implementation": "./src/executors/build/executor",
       "schema": "./src/executors/build/schema.json",
       "description": "Generate test environments in your workspace. Cached and ready for use."
+    },
+    "kill-process": {
+      "implementation": "./src/executors/kill-process/executor",
+      "schema": "./src/executors/kill-process/schema.json",
+      "description": "´Kills process by PID, command or file path."
     }
   }
 }
