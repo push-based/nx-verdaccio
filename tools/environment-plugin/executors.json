@@ -1,9 +1,0 @@
-{
-  "executors": {
-    "setup-env": {
-      "implementation": "./src/executors/setup-env/executor",
-      "schema": "./src/executors/setup-env/schema.json",
-      "description": "setup-env executor"
-    }
-  }
-}

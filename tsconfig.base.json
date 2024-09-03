@@ -17,7 +17,6 @@
     "paths": {
       "@org/cli": ["projects/cli/src/index.ts"],
       "@org/core": ["projects/core/src/index.ts"],
-      "@org/environment-plugin": ["tools/environment-plugin/src/index.ts"],
       "@org/models": ["projects/models/src/index.ts"],
       "@org/test-utils": ["testing/test-utils/src/index.ts"],
       "@org/tools-utils": ["tools/tools-utils/src/index.ts"],
