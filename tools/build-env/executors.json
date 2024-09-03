@@ -1,5 +1,10 @@
 {
   "executors": {
+    "setup-env": {
+      "implementation": "./src/executors/setup-env/executor",
+      "schema": "./src/executors/setup-env/schema.json",
+      "description": "Generate and install test environments in your workspace. Cached and ready for use."
+    },
     "build": {
       "implementation": "./src/executors/build/executor",
       "schema": "./src/executors/build/schema.json",

@@ -72,6 +72,7 @@ export type StarVerdaccioOnlyOptions = {
 };
 
 export type VerdaccioExecuterOptions = {
+  readyWhen?: string;
   storage?: string;
   port?: string;
   p?: string;
@@ -86,12 +87,13 @@ export type StarVerdaccioOptions = VerdaccioExecuterOptions &
 
 export async function startVerdaccioServer({
   targetName = 'start-verdaccio',
-  projectName,
+  port = String(uniquePort()),
   storage = join('tmp', targetName, 'storage'),
-  port,
   location = 'none',
   clear = true,
   verbose = true,
+  projectName,
+  ...opt
 }: StarVerdaccioOptions): Promise<RegistryResult> {
   let startDetected = false;
 
@@ -101,11 +103,14 @@ export async function startVerdaccioServer({
       args: objectToCliArgs({
         _: [targetName, projectName ?? '', '--'],
         storage,
-        port: port ?? uniquePort(),
+        port,
         verbose,
         location,
         clear,
+        ...opt,
       }),
+      // This ensures the process runs independently and does not get closed on parent process exit
+      detached: true,
       shell: true,
       observer: {
         onStdout: (stdout: string, childProcess) => {
@@ -158,6 +163,7 @@ export async function startVerdaccioServer({
         },
       },
     }).catch((error) => {
+      logger.error(error);
       reject(error);
     });
   }).catch((error: unknown) => {

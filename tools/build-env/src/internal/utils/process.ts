@@ -1,7 +1,15 @@
-import {logger, readJsonFile} from "@nx/devkit";
-import {rm} from "node:fs/promises";
+import { logger, readJsonFile } from '@nx/devkit';
+import { rm } from 'node:fs/promises';
 
-export async function killProcessFromPid(filePath: string, cleanFs = true): Promise<void> {
+export async function killProcessFromPid(
+  filePath: string,
+  options?: {
+    cleanFs?: boolean;
+    dryRun?: boolean;
+    verbose?: boolean;
+  }
+): Promise<void> {
+  const { cleanFs = true, dryRun = false, verbose = false } = options ?? {};
   let pid: string | number | undefined;
   try {
     const json = readJsonFile<{ pid?: string | number }>(filePath);
@@ -15,13 +23,20 @@ export async function killProcessFromPid(filePath: string, cleanFs = true): Prom
   }
 
   try {
-    process.kill(Number(pid));
+    if (dryRun) {
+      if (verbose) {
+        logger.warn(
+          `Would kill process with id: ${pid}. But dryRun is enabled.`
+        );
+      }
+    } else {
+      process.kill(Number(pid));
+    }
   } catch (e) {
     logger.error(`Failed killing process with id: ${pid}\n${e}`);
   } finally {
-    if(cleanFs) {
+    if (cleanFs) {
       await rm(filePath);
     }
   }
-
 }

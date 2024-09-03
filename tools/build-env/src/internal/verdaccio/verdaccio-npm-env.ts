@@ -1,4 +1,4 @@
-import { join } from 'node:path';
+import { basename, join } from 'node:path';
 import {
   startVerdaccioServer,
   type StarVerdaccioOptions,
@@ -10,6 +10,10 @@ import { setupNpmWorkspace } from '../utils/npm';
 import { error, info } from '../utils/logging';
 import { objectToCliArgs } from '../utils/terminal-command';
 import { execSync } from 'node:child_process';
+import runKillProcessExecutor from '../../executors/kill-process/executor';
+import { boolean } from 'yargs';
+import * as process from 'process';
+import { logger } from '@nx/devkit';
 
 function logInfo(msg: string) {
   info(msg, 'Verdaccio Env: ');
@@ -42,7 +46,7 @@ export async function setupNpmEnv({
   verbose = false,
   workspaceRoot,
   ...opts
-}: StarVerdaccioOptions & {
+}: StartVerdaccioAndSetupEnvOptions & {
   workspaceRoot: string;
 }): Promise<NpmTestEnvResult> {
   const storage = join(workspaceRoot, 'storage');
@@ -70,15 +74,10 @@ export async function setupNpmEnv({
     join(activeRegistry.workspaceRoot, 'verdaccio-registry.json'),
     JSON.stringify(activeRegistry.registry, null, 2)
   );
+
   logInfo(`Environment ready under: ${activeRegistry.workspaceRoot}`);
 
   return activeRegistry;
-}
-
-export async function stopVerdaccioAndTeardownEnv(result: NpmTestEnvResult) {
-  const { stop, workspaceRoot } = result;
-  stop();
-  await rm(workspaceRoot, { recursive: true, force: true });
 }
 
 export function configureRegistry(

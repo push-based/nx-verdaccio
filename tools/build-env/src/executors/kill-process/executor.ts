@@ -3,6 +3,7 @@ import { type ExecutorContext, logger } from '@nx/devkit';
 import type { KillProcessExecutorOptions } from './schema';
 import { join } from 'node:path';
 import { killProcessFromPid } from '../../internal/utils/process';
+import * as process from 'process';
 
 export type ExecutorOutput = {
   success: boolean;
@@ -15,7 +16,14 @@ export default async function runKillProcessExecutor(
   context: ExecutorContext
 ) {
   const { projectName } = context;
-  const { workspaceRoot } = {
+  const {
+    workspaceRoot,
+    filePath = join(workspaceRoot ?? '', 'process.json'),
+    pid,
+    cleanFs = true,
+    dryRun = false,
+    verbose = false,
+  } = {
     ...terminalAndExecutorOptions,
     workspaceRoot: join('tmp', 'environments', projectName),
   };
@@ -28,10 +36,11 @@ export default async function runKillProcessExecutor(
     )}`
   );
   try {
-    const envResult = await killProcessFromPid(
-      join(workspaceRoot, 'verdaccio-registry.json')
-    );
-    logger.info(`envResult: ${JSON.stringify(envResult, null, 2)}`);
+    if (pid) {
+      process.kill(Number(pid));
+    } else {
+      killProcessFromPid(filePath, { cleanFs, dryRun, verbose });
+    }
   } catch (error) {
     logger.error(error);
   }

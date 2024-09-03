@@ -96,32 +96,17 @@ function envTargets({
   projectName: string;
 }): Record<string, TargetConfiguration> {
   return {
-    'setup-npm-env': {
-      command:
-        'tsx --tsconfig=tools/tsconfig.tools.json tools/tools-utils/src/bin/setup-npm-env.ts',
+    'build-env': {
+      executor: '@org/build-env:build',
       options: {
-        projectName,
-        targetName: 'start-verdaccio',
-        envProjectName: projectName,
-        readyWhen: 'Environment ready under',
+        workspaceRoot,
       },
     },
     'setup-env': {
       inputs: ['default', '^production'],
-      executor: 'nx:run-commands',
-      options: {
-        commands: [
-          `nx setup-npm-env ${projectName} --workspaceRoot={args.envProjectName}`,
-          `nx install-deps ${projectName} --envProjectName={args.envProjectName}`,
-          `nx stop-verdaccio ${projectName}`,
-        ],
-        workspaceRoot,
-        forwardAllArgs: true,
-        // @TODO rename to more intuitive name
-        envProjectName: projectName,
-        parallel: false,
-      },
+      executor: '@org/build-env:setup-env',
     },
+    // just here to execute dependent npm-install tasks with the correct environmentProject
     'install-deps': {
       dependsOn: [
         {
@@ -131,7 +116,8 @@ function envTargets({
         },
       ],
       options: {
-        envProjectName: projectName,
+        workspaceRoot,
+        environmentProject: projectName,
       },
       command: 'echo Dependencies installed!',
     },
@@ -164,7 +150,7 @@ function npmTargets(
   const userconfig = `${relativeFromPath(
     outputPath
   )}/${environmentsDir}/{args.environmentProject}/.npmrc`;
-  const prefix = `${environmentProject}/{args.environmentProject}`;
+  const prefix = `${environmentsDir}/{args.environmentProject}`;
 
   return {
     // nx npm-publish models --environmentProject=cli-e2e
@@ -183,7 +169,7 @@ function npmTargets(
         //
         `{workspaceRoot}/${environmentsDir}/{args.environmentProject}/storage/@org/${packageName}`,
       ],*/
-      cache: true,
+      // cache: true,
       command: `npm publish --userconfig=${userconfig}`,
       options: {
         cwd: outputPath,

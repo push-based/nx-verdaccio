@@ -2,6 +2,7 @@ import { type ExecutorContext, logger } from '@nx/devkit';
 import type { BuildExecutorOptions } from './schema';
 import { setupNpmEnv } from '../../internal/verdaccio/verdaccio-npm-env';
 import { join } from 'node:path';
+import * as process from 'process';
 
 export type ExecutorOutput = {
   success: boolean;
@@ -25,14 +26,25 @@ export default async function runBuildExecutor(
       2
     )}`
   );
+
+  let envResult;
   try {
-    const envResult = await setupNpmEnv({ ...normalizedOptions, projectName });
-    logger.info(`envResult: ${JSON.stringify(envResult, null, 2)}`);
+    envResult = await setupNpmEnv({
+      ...normalizedOptions,
+      projectName,
+      readyWhen: 'Environment ready under',
+    });
   } catch (error) {
+    // nx build-env cli-e2e
     logger.error(error);
+    return {
+      success: false,
+      command: error,
+    };
   }
+
   return Promise.resolve({
     success: true,
-    command: '????????',
+    command: JSON.stringify(envResult, null, 2),
   } satisfies ExecutorOutput);
 }
