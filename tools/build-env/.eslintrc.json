@@ -43,7 +43,7 @@
       "files": ["./package.json", "./generators.json"],
       "parser": "jsonc-eslint-parser",
       "rules": {
-        "@nx/build-env-checks": "error"
+        "@nx/nx-plugin-checks": "error"
       }
     }
   ]

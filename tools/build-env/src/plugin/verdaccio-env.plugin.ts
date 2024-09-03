@@ -1,18 +1,18 @@
 import {
   type CreateNodes,
   readJsonFile,
-  TargetConfiguration,
-  ProjectConfiguration
+  type TargetConfiguration,
+  type ProjectConfiguration,
 } from '@nx/devkit';
-import {dirname, join, relative} from 'node:path';
+import { dirname, join, relative } from 'node:path';
 
 const tmpNpmEnv = join('tmp', 'npm-env');
 
 export const createNodes: CreateNodes = [
   '**/project.json',
   (projectConfigurationFile: string) => {
-  console.log('projectConfigurationFile', projectConfigurationFile);
-  const root = dirname(projectConfigurationFile);
+    console.log('projectConfigurationFile', projectConfigurationFile);
+    const root = dirname(projectConfigurationFile);
     const projectConfiguration: ProjectConfiguration = readJsonFile(
       join(process.cwd(), projectConfigurationFile)
     );
@@ -23,7 +23,7 @@ export const createNodes: CreateNodes = [
     ) {
       throw new Error('Project name is required');
     }
-    const {name: envProjectName} =
+    const { name: envProjectName } =
       readJsonFile<ProjectConfiguration>('project.json');
     const name = projectConfiguration?.name ?? '';
     const tags = projectConfiguration?.tags ?? [];
@@ -32,8 +32,8 @@ export const createNodes: CreateNodes = [
 
     return {
       projects: {
-        [root]: {}
-      }
+        [root]: {},
+      },
     };
 
     return {
@@ -43,12 +43,13 @@ export const createNodes: CreateNodes = [
             // === e2e project
             // start-verdaccio, stop-verdaccio
             ...(isNpmEnv &&
-              verdaccioTargets({...projectConfiguration, name})),
+              verdaccioTargets({ ...projectConfiguration, name })),
             // setup-npm-env, setup-env, setup-deps
-            //...(isNpmEnv && envTargets(projectConfiguration)),
+            ...(isNpmEnv && envTargets(projectConfiguration)),
             // === dependency project
             // npm-publish, npm-install
-            //...(isPublishable && npmTargets({ ...projectConfiguration, root }, envProjectName)),
+            ...(isPublishable &&
+              npmTargets({ ...projectConfiguration, root }, envProjectName)),
           },
         },
       },
@@ -59,7 +60,7 @@ export const createNodes: CreateNodes = [
 function verdaccioTargets(
   projectConfiguration: Omit<ProjectConfiguration, 'name'> & { name: string }
 ): Record<string, TargetConfiguration> {
-  const {name: projectName} = projectConfiguration;
+  const { name: projectName } = projectConfiguration;
   return {
     'start-verdaccio': {
       executor: '@nx/js:verdaccio',
@@ -81,7 +82,7 @@ function verdaccioTargets(
 function envTargets(
   projectConfiguration: ProjectConfiguration
 ): Record<string, TargetConfiguration> {
-  const {name: projectName} = projectConfiguration;
+  const { name: projectName } = projectConfiguration;
   return {
     'setup-npm-env': {
       command:
@@ -132,17 +133,17 @@ function npmTargets(
   projectConfiguration: ProjectConfiguration,
   envProjectName: string
 ): Record<string, TargetConfiguration> {
-  const {root, name: projectName, targets} = projectConfiguration;
-  const {build} =
-  (targets as Record<'build', TargetConfiguration<{ outputPath: string }>>) ??
-  {};
-  const {options} = build ?? {};
-  const {outputPath} = options ?? {};
+  const { root, targets } = projectConfiguration;
+  const { build } =
+    (targets as Record<'build', TargetConfiguration<{ outputPath: string }>>) ??
+    {};
+  const { options } = build ?? {};
+  const { outputPath } = options ?? {};
   if (outputPath == null) {
     throw new Error('outputPath is required');
   }
 
-  const {name: packageName, version: pkgVersion} = readJsonFile(
+  const { name: packageName, version: pkgVersion } = readJsonFile(
     join(root, 'package.json')
   );
   const userconfig = `${relativeFromPath(
@@ -153,7 +154,7 @@ function npmTargets(
   return {
     'npm-publish': {
       dependsOn: [
-        {projects: 'self', target: 'build', params: 'forward'},
+        { projects: 'self', target: 'build', params: 'forward' },
         {
           projects: 'dependencies',
           target: 'npm-publish',
@@ -161,7 +162,7 @@ function npmTargets(
         },
       ],
       // dist/projects/models
-      inputs: [{dependentTasksOutputFiles: `**/{options.outputPath}/**`}],
+      inputs: [{ dependentTasksOutputFiles: `**/{options.outputPath}/**` }],
       outputs: [
         //
         `{workspaceRoot}/${tmpNpmEnv}/{args.envProjectName}/storage/@org/${packageName}`,
@@ -175,7 +176,7 @@ function npmTargets(
     },
     'npm-install': {
       dependsOn: [
-        {projects: 'self', target: 'npm-publish', params: 'forward'},
+        { projects: 'self', target: 'npm-publish', params: 'forward' },
         {
           projects: 'dependencies',
           target: 'npm-install',

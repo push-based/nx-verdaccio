@@ -1,9 +1,9 @@
 import { join } from 'node:path';
 import {
   startVerdaccioServer,
-  StarVerdaccioOptions,
-  VercaddioServerResult,
-  VerdaccioProcessResult,
+  type StarVerdaccioOptions,
+  type VercaddioServerResult,
+  type VerdaccioProcessResult,
 } from './verdaccio-registry';
 import { rm, writeFile } from 'node:fs/promises';
 import { setupNpmWorkspace } from '../utils/npm';

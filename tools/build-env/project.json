@@ -51,13 +51,13 @@
     "unit-test": {
       "executor": "@nx/vite:test",
       "options": {
-        "configFile": "tools/build-env/vite.config.unit.ts"
+        "configFile": "tools/build-env/vite.config.ts"
       }
     },
     "integration-test": {
       "executor": "@nx/vite:test",
       "options": {
-        "configFile": "tools/build-env/vite.config.integration.ts"
+        "configFile": "tools/build-env/vite.config.ts"
       }
     }
   },

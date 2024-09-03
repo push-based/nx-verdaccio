@@ -1,7 +1,7 @@
-import {ExecutorContext, logger} from '@nx/devkit';
-// eslint-disable-next-line n/no-sync
-import {execSync} from 'node:child_process';
-import {afterEach, beforeEach, expect, vi} from 'vitest';
+import { type ExecutorContext, logger } from '@nx/devkit';
+
+import { execSync } from 'node:child_process';
+import { afterEach, beforeEach, expect, vi } from 'vitest';
 import runBuildExecutor from './executor';
 
 vi.mock('node:child_process', async () => {
@@ -9,7 +9,7 @@ vi.mock('node:child_process', async () => {
 
   return {
     ...actual,
-    // eslint-disable-next-line n/no-sync
+
     execSync: vi.fn((command: string) => {
       if (command.includes('THROW_ERROR')) {
         throw new Error(command);
@@ -36,10 +36,10 @@ describe('runAutorunExecutor', () => {
     const output = await runBuildExecutor({}, {} as ExecutorContext);
     expect(output.success).toBe(true);
     expect(output.command).toMatch('npx @org/cli build');
-    // eslint-disable-next-line n/no-sync
+
     expect(execSync).toHaveBeenCalledWith(
       expect.stringContaining('npx @org/cli build'),
-      { cwd: '/test' },
+      { cwd: '/test' }
     );
   });
 
@@ -47,13 +47,13 @@ describe('runAutorunExecutor', () => {
     const output = await runBuildExecutor(
       {},
       {
-        ...{} as ExecutorContext,
+        ...({} as ExecutorContext),
         cwd: 'cwd-form-context',
-      },
+      }
     );
     expect(output.success).toBe(true);
     expect(output.command).toMatch('utils');
-    // eslint-disable-next-line n/no-sync
+
     expect(execSync).toHaveBeenCalledWith(expect.stringContaining('utils'), {
       cwd: 'cwd-form-context',
     });
@@ -62,7 +62,7 @@ describe('runAutorunExecutor', () => {
   it('should process executorOptions', async () => {
     const output = await runBuildExecutor(
       { workspaceRoot: '.' },
-      {} as ExecutorContext,
+      {} as ExecutorContext
     );
     expect(output.success).toBe(true);
     expect(output.command).toMatch('--persist.filename="REPORT"');
@@ -76,7 +76,7 @@ describe('runAutorunExecutor', () => {
     );
     expect(output.command).toMatch('--persist.filename="REPORT"');
     expect(output.command).toMatch(
-      '--persist.format="md" --persist.format="json"',
+      '--persist.format="md" --persist.format="json"'
     );
     expect(output.command).toMatch('--upload.project="CLI"');
   });
@@ -84,19 +84,19 @@ describe('runAutorunExecutor', () => {
   it('should log information if verbose is set', async () => {
     const output = await runBuildExecutor(
       { verbose: true },
-      { ...{} as ExecutorContext, cwd: '<CWD>' },
+      { ...({} as ExecutorContext), cwd: '<CWD>' }
     );
-    // eslint-disable-next-line n/no-sync
+
     expect(execSync).toHaveBeenCalledTimes(1);
 
     expect(output.command).toMatch('--verbose');
     expect(loggerWarnSpy).toHaveBeenCalledTimes(0);
     expect(loggerInfoSpy).toHaveBeenCalledTimes(2);
     expect(loggerInfoSpy).toHaveBeenCalledWith(
-      expect.stringContaining('Run build executor'),
+      expect.stringContaining('Run build executor')
     );
     expect(loggerInfoSpy).toHaveBeenCalledWith(
-      expect.stringContaining('Command: npx @org/cli build'),
+      expect.stringContaining('Command: npx @org/cli build')
     );
   });
 
@@ -107,8 +107,8 @@ describe('runAutorunExecutor', () => {
     expect(loggerWarnSpy).toHaveBeenCalledTimes(1);
     expect(loggerWarnSpy).toHaveBeenCalledWith(
       expect.stringContaining(
-        'DryRun execution of: npx @org/cli build --dryRun',
-      ),
+        'DryRun execution of: npx @org/cli build --dryRun'
+      )
     );
   });
 });

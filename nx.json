@@ -5,10 +5,7 @@
     "libsDir": "projects"
   },
   "namedInputs": {
-    "default": [
-      "{projectRoot}/**/*",
-      "sharedGlobals"
-    ],
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
     "production": [
       "default",
       "!{projectRoot}/.eslintrc.json",
@@ -25,60 +22,36 @@
   "targetDefaults": {
     "@nx/esbuild:esbuild": {
       "cache": true,
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "production",
-        "^production"
-      ]
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
     },
     "@nx/vite:test": {
       "cache": true,
-      "inputs": [
-        "default",
-        "^production"
-      ]
+      "inputs": ["default", "^production"]
     },
     "nx-release-publish": {
       "dependsOn": [
         {
-          "projects": [
-            "self"
-          ],
+          "projects": ["self"],
           "target": "build"
         },
         {
-          "projects": [
-            "dependencies"
-          ],
+          "projects": ["dependencies"],
           "target": "nx-release-publish"
         }
       ]
     },
     "build": {
-      "inputs": [
-        "production",
-        "^production"
-      ]
+      "inputs": ["production", "^production"]
     },
     "@nx/js:tsc": {
       "cache": true,
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "production",
-        "^production"
-      ]
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
     },
     "@nx/jest:jest": {
       "cache": true,
-      "inputs": [
-        "default",
-        "^production",
-        "{workspaceRoot}/jest.preset.js"
-      ],
+      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
       "options": {
         "passWithNoTests": true
       },
@@ -90,28 +63,7 @@
       }
     }
   },
-  "plugins": [
-    {
-      "plugin": "@nx/eslint/plugin",
-      "options": {
-        "targetName": "lint"
-      }
-    },
-    {
-      "plugin": "@nx/jest/plugin",
-      "options": {
-        "jestConfig": "{projectRoot}/jest.config.js",
-        "tsConfig": "{projectRoot}/tsconfig.spec.json",
-        "babelConfig": "{projectRoot}/babel.config.js"
-      }
-    },
-    {
-      "plugin": "@nx/esbuild/plugin",
-      "options": {
-        "config": "{projectRoot}/esbuild.config.js"
-      }
-    }
-  ],
+  "plugins": [],
   "release": {
     "version": {
       "preVersionCommand": "npx nx run-many -t build"
