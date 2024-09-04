@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "BootstrapExecutorOptions",
+  "title": "Environment bootstrap executor options",
+  "type": "object",
+  "properties": {
+    "workspaceRoot": {
+      "type": "string",
+      "description": "The root directory of the environment"
+    },
+    "dryRun": {
+      "type": "boolean",
+      "description": "Print the commands that would be run, but don't actually run them"
+    },
+    "verbose": {
+      "type": "boolean",
+      "description": "Print additional logs"
+    }
+  },
+  "additionalProperties": true
+}

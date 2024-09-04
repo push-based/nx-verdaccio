@@ -1,13 +1,12 @@
 import { type ExecutorContext, logger, readJsonFile } from '@nx/devkit';
-import type { SetupEnvironmentExecutorOptions } from './schema';
 import { join } from 'node:path';
 import * as process from 'process';
-import runBuildExecutor from '../build/executor';
+import runBuildExecutor from '../bootstrap/executor';
 import runKillProcessExecutor from '../kill-process/executor';
 import { executeProcess } from '../../internal/utils/execute-process';
 import { objectToCliArgs } from '../../internal/utils/terminal-command';
-import { VerdaccioEnv } from '@org/tools-utils';
 import { VerdaccioProcessResult } from '../../internal/verdaccio/verdaccio-registry';
+import { SetupEnvironmentExecutorOptions } from './schema';
 
 export type ExecutorOutput = {
   success: boolean;
@@ -22,7 +21,7 @@ export default async function runSetupEnvironmentExecutor(
   const { projectName } = context;
   const normalizedOptions = {
     ...terminalAndExecutorOptions,
-    workspaceRoot: join('tmp', 'environments', projectName),
+    environmentRoot: join('tmp', 'environments', projectName),
   };
 
   try {
@@ -38,7 +37,7 @@ export default async function runSetupEnvironmentExecutor(
       args: objectToCliArgs({
         _: ['install-deps', projectName],
         environmentProject: projectName,
-        workspaceRoot: normalizedOptions.workspaceRoot,
+        environmentRoot: normalizedOptions.environmentRoot,
       }),
       cwd: process.cwd(),
       verbose: true,
@@ -49,7 +48,7 @@ export default async function runSetupEnvironmentExecutor(
         {
           ...normalizedOptions,
           filePath: join(
-            normalizedOptions.workspaceRoot,
+            normalizedOptions.environmentRoot,
             'verdaccio-registry.json'
           ),
         },
@@ -57,7 +56,7 @@ export default async function runSetupEnvironmentExecutor(
       );
     } else {
       const { url } = readJsonFile<VerdaccioProcessResult>(
-        join(normalizedOptions.workspaceRoot, 'verdaccio-registry.json')
+        join(normalizedOptions.environmentRoot, 'verdaccio-registry.json')
       );
       logger.info(`Verdaccio server kept running under : ${url}`);
     }

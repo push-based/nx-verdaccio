@@ -29,28 +29,27 @@ export const verdaccioEnvLogger = {
 };
 
 export type Environment = {
-  workspaceRoot: string;
+  root: string;
 };
 
-export type StartVerdaccioAndSetupEnvOptions = Partial<
+export type BootstrapEnvironmentOptions = Partial<
   StarVerdaccioOptions & Environment
 > &
   Required<Pick<StarVerdaccioOptions, 'projectName'>>;
 
-export type NpmTestEnvResult = Environment & {
+export type BootstrapEnvironmentResult = Environment & {
   registry: VercaddioServerResult;
   stop: () => void;
 };
 
-export async function setupNpmEnv({
+export async function bootstrapEnvironment({
   verbose = false,
-  workspaceRoot,
+  environmentRoot,
   ...opts
-}: StartVerdaccioAndSetupEnvOptions & {
-  workspaceRoot: string;
-}): Promise<NpmTestEnvResult> {
-  const storage = join(workspaceRoot, 'storage');
-
+}: BootstrapEnvironmentOptions & {
+  environmentRoot: string;
+}): Promise<BootstrapEnvironmentResult> {
+  const storage = join(environmentRoot, 'storage');
   const registryResult = await startVerdaccioServer({
     storage,
     verbose,
@@ -58,24 +57,24 @@ export async function setupNpmEnv({
   });
 
   // set up NPM workspace environment
-  await setupNpmWorkspace(workspaceRoot, verbose);
-  const userconfig = join(workspaceRoot, '.npmrc');
+  await setupNpmWorkspace(environmentRoot, verbose);
+  const userconfig = join(environmentRoot, '.npmrc');
   configureRegistry({ ...registryResult.registry, userconfig }, verbose);
 
-  const activeRegistry: NpmTestEnvResult = {
+  const activeRegistry: BootstrapEnvironmentResult = {
     ...registryResult,
-    workspaceRoot,
+    root: environmentRoot,
   };
 
   logInfo(
-    `Save active verdaccio registry data to file: ${activeRegistry.workspaceRoot}`
+    `Save active verdaccio registry data to file: ${activeRegistry.root}`
   );
   await writeFile(
-    join(activeRegistry.workspaceRoot, 'verdaccio-registry.json'),
+    join(activeRegistry.root, 'verdaccio-registry.json'),
     JSON.stringify(activeRegistry.registry, null, 2)
   );
 
-  logInfo(`Environment ready under: ${activeRegistry.workspaceRoot}`);
+  logInfo(`Environment ready under: ${activeRegistry.root}`);
 
   return activeRegistry;
 }

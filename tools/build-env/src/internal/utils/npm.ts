@@ -11,13 +11,16 @@ export function logError(msg: string) {
   error(msg, 'Npm Env: ');
 }
 
-export async function setupNpmWorkspace(directory: string, verbose?: boolean) {
+export async function setupNpmWorkspace(
+  environmentRoot: string,
+  verbose?: boolean
+) {
   if (verbose) {
-    logInfo(`Execute: npm init in directory ${directory}`);
+    logInfo(`Execute: npm init in directory ${environmentRoot}`);
   }
   const cwd = process.cwd();
-  await ensureDirectoryExists(directory);
-  process.chdir(join(cwd, directory));
+  await ensureDirectoryExists(environmentRoot);
+  process.chdir(join(cwd, environmentRoot));
   try {
     execFileSync('npm', ['init', '--force']).toString();
   } catch (error) {

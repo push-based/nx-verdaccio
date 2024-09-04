@@ -5,15 +5,20 @@
       "schema": "./src/executors/setup-env/schema.json",
       "description": "Generate and install test environments in your workspace. Cached and ready for use."
     },
-    "build": {
-      "implementation": "./src/executors/build/executor",
-      "schema": "./src/executors/build/schema.json",
-      "description": "Generate test environments in your workspace. Cached and ready for use."
+    "bootstrap": {
+      "implementation": "./src/executors/bootstrap/executor",
+      "schema": "./src/executors/bootstrap/schema.json",
+      "description": "Bootstraps a test environments in your workspace. Cached and ready for use."
     },
     "kill-process": {
       "implementation": "./src/executors/kill-process/executor",
       "schema": "./src/executors/kill-process/schema.json",
-      "description": "´Kills process by PID, command or file path."
+      "description": "Kills process by PID, command or file path."
+    },
+    "npm-install": {
+      "implementation": "./src/executors/npm-install/executor",
+      "schema": "./src/executors/npm-install/schema.json",
+      "description": "Installs npm packages in your workspace."
     }
   }
 }

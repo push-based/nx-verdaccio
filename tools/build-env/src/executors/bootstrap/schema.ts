@@ -1,6 +1,5 @@
-export type BuildExecutorOptions = Partial<{
+export type BootstrapExecutorOptions = Partial<{
   workspaceRoot: string;
   dryRun: boolean;
-  progress: boolean;
   verbose: boolean;
 }>;

@@ -1,1 +1,2 @@
-export const DEFAULT_ENVIRONMENT_OUTPUT_DIR = 'tmp/environments';
+import { join } from 'node:path';
+export const DEFAULT_ENVIRONMENTS_OUTPUT_DIR = join('tmp', 'environments');

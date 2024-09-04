@@ -3,7 +3,6 @@ import { type ExecutorContext, logger } from '@nx/devkit';
 import type { KillProcessExecutorOptions } from './schema';
 import { join } from 'node:path';
 import { killProcessFromPid } from '../../internal/utils/process';
-import * as process from 'process';
 
 export type ExecutorOutput = {
   success: boolean;

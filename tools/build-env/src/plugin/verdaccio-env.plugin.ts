@@ -6,10 +6,10 @@ import {
   logger,
 } from '@nx/devkit';
 import { dirname, join, relative } from 'node:path';
-import { DEFAULT_ENVIRONMENT_OUTPUT_DIR } from '../internal/constants';
+import { DEFAULT_ENVIRONMENTS_OUTPUT_DIR } from '../internal/constants';
 import {
   Environment,
-  StartVerdaccioAndSetupEnvOptions,
+  BootstrapEnvironmentOptions,
 } from '../internal/verdaccio/verdaccio-npm-env';
 import { StarVerdaccioOptions } from '../internal/verdaccio/verdaccio-registry';
 
@@ -19,7 +19,7 @@ export type BuildEnvPluginCreateNodeOptions = {
 export const createNodes: CreateNodes = [
   '**/project.json',
   (projectConfigurationFile: string, opt: unknown) => {
-    const { environmentsDir = DEFAULT_ENVIRONMENT_OUTPUT_DIR } =
+    const { environmentsDir = DEFAULT_ENVIRONMENTS_OUTPUT_DIR } =
       (opt as BuildEnvPluginCreateNodeOptions) ?? {};
 
     console.log('projectConfigurationFile', projectConfigurationFile);
@@ -48,9 +48,9 @@ export const createNodes: CreateNodes = [
           targets: {
             // === e2e project
             // start-verdaccio, stop-verdaccio
-            ...(isNpmEnv && verdaccioTargets({ workspaceRoot })),
+            ...(isNpmEnv && verdaccioTargets({ root: workspaceRoot })),
             // setup-npm-env, setup-env, setup-deps
-            ...(isNpmEnv && envTargets({ workspaceRoot, projectName })),
+            ...(isNpmEnv && envTargets({ root: workspaceRoot, projectName })),
             // === dependency project
             // npm-publish, npm-install
             ...(isPublishable &&
@@ -66,7 +66,7 @@ export const createNodes: CreateNodes = [
 ];
 
 function verdaccioTargets({
-  workspaceRoot,
+  root,
   ...options
 }: Environment & StarVerdaccioOptions): Record<string, TargetConfiguration> {
   return {
@@ -74,7 +74,7 @@ function verdaccioTargets({
       executor: '@nx/js:verdaccio',
       options: {
         config: '.verdaccio/config.yml',
-        storage: join(workspaceRoot, 'storage'),
+        storage: join(root, 'storage'),
         clear: true,
         ...options,
       },
@@ -82,7 +82,7 @@ function verdaccioTargets({
     'stop-verdaccio': {
       executor: '@org/build-env:kill-process',
       options: {
-        filePath: join(workspaceRoot, 'verdaccio-registry.json'),
+        filePath: join(root, 'verdaccio-registry.json'),
         ...options,
       },
     },
@@ -90,7 +90,7 @@ function verdaccioTargets({
 }
 
 function envTargets({
-  workspaceRoot,
+  root: environmentRoot,
   projectName,
 }: Environment & {
   projectName: string;
@@ -99,7 +99,7 @@ function envTargets({
     'build-env': {
       executor: '@org/build-env:build',
       options: {
-        workspaceRoot,
+        environmentRoot,
       },
     },
     'setup-env': {
@@ -116,7 +116,7 @@ function envTargets({
         },
       ],
       options: {
-        workspaceRoot,
+        environmentRoot,
         environmentProject: projectName,
       },
       command: 'echo Dependencies installed!',
@@ -153,6 +153,7 @@ function npmTargets(
   const prefix = `${environmentsDir}/{args.environmentProject}`;
 
   return {
+    // @TODO: try leverage nx-release-publish
     // nx npm-publish models --environmentProject=cli-e2e
     'npm-publish': {
       dependsOn: [
@@ -163,7 +164,6 @@ function npmTargets(
           params: 'forward',
         },
       ],
-      // dist/projects/models
       inputs: [{ dependentTasksOutputFiles: `**/{options.outputPath}/**` }],
       /*outputs: [
         //
@@ -178,11 +178,17 @@ function npmTargets(
     'npm-install': {
       dependsOn: [
         { projects: 'self', target: 'npm-publish', params: 'forward' },
-        {
-          projects: 'dependencies',
-          target: 'npm-install',
-          params: 'forward',
-        },
+        { projects: 'dependencies', target: 'npm-install', params: 'forward' },
+      ],
+      executor: '@org/build-env:npm-install',
+      options: {
+        environmentProject,
+      },
+    },
+    'npm-install-old': {
+      dependsOn: [
+        { projects: 'self', target: 'npm-publish', params: 'forward' },
+        { projects: 'dependencies', target: 'npm-install', params: 'forward' },
       ],
       command: `npm install --no-fund --no-shrinkwrap --save ${packageName}@{args.pkgVersion} --prefix=${prefix} --userconfig=${userconfig}`,
       options: {

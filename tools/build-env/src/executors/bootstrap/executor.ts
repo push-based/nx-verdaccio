@@ -1,23 +1,23 @@
 import { type ExecutorContext, logger } from '@nx/devkit';
-import type { BuildExecutorOptions } from './schema';
-import { setupNpmEnv } from '../../internal/verdaccio/verdaccio-npm-env';
+import type { BootstrapExecutorOptions } from './schema';
+import { bootstrapEnvironment } from '../../internal/verdaccio/verdaccio-npm-env';
 import { join } from 'node:path';
-import * as process from 'process';
+import { DEFAULT_ENVIRONMENTS_OUTPUT_DIR } from '../../internal/constants';
 
-export type ExecutorOutput = {
+export type BootstrapExecutorOutput = {
   success: boolean;
   command?: string;
   error?: Error;
 };
 
-export default async function runBuildExecutor(
-  terminalAndExecutorOptions: BuildExecutorOptions,
+export default async function runBootstrapExecutor(
+  terminalAndExecutorOptions: BootstrapExecutorOptions,
   context: ExecutorContext
 ) {
   const { projectName } = context;
   const normalizedOptions = {
     ...terminalAndExecutorOptions,
-    workspaceRoot: join('tmp', 'environments', projectName),
+    environmentRoot: join(DEFAULT_ENVIRONMENTS_OUTPUT_DIR, projectName),
   };
   logger.info(
     `Execute @org/build-env:build with options: ${JSON.stringify(
@@ -29,7 +29,7 @@ export default async function runBuildExecutor(
 
   let envResult;
   try {
-    envResult = await setupNpmEnv({
+    envResult = await bootstrapEnvironment({
       ...normalizedOptions,
       projectName,
       readyWhen: 'Environment ready under',
@@ -46,5 +46,5 @@ export default async function runBuildExecutor(
   return Promise.resolve({
     success: true,
     command: JSON.stringify(envResult, null, 2),
-  } satisfies ExecutorOutput);
+  } satisfies BootstrapExecutorOutput);
 }
