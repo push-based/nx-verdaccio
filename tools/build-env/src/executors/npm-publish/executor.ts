@@ -1,10 +1,9 @@
-import { logger, type ExecutorContext } from '@nx/devkit';
+import { type ExecutorContext, logger } from '@nx/devkit';
 
 import type { NpmPublishExecutorOptions } from './schema';
 import { join, relative } from 'node:path';
 import { executeProcess } from '../../internal/utils/execute-process';
 import { objectToCliArgs } from '../../internal/utils/terminal-command';
-import { DEFAULT_ENVIRONMENTS_OUTPUT_DIR } from '../../internal/constants';
 import { getBuildOutput } from '../../internal/utils/utils';
 import { normalizeOptions } from '../internal/normalize-options';
 
@@ -39,16 +38,29 @@ export default async function runNpmPublishExecutor(
     `Publishing package from ${packageDistPath} to ${environmentRoot} with userconfig ${userconfig}`
   );
 
-  // @TODO: try leverage nx-release-publish
-  await executeProcess({
-    command: 'npm',
-    args: objectToCliArgs({
-      _: ['publish'],
-      userconfig,
-    }),
-    cwd: packageDistPath,
-    verbose: true,
-  });
+  try {
+    // @TODO: try leverage nx-release-publish
+    await executeProcess({
+      command: 'npm',
+      args: objectToCliArgs({
+        _: ['publish'],
+        userconfig,
+      }),
+      cwd: packageDistPath,
+      verbose: true,
+    });
+  } catch (error) {
+    // if package already exists, log and go on
+    if (error.message.includes('EPUBLISHCONFLICT')) {
+      logger.warn(`Package for ${projectName} already published. Proceeding.`);
+      return {
+        success: false,
+        command: error,
+      };
+    } else {
+      throw error;
+    }
+  }
 
   return Promise.resolve({
     success: true,

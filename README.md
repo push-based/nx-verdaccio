@@ -4,7 +4,78 @@
 
 ✨ **This workspace maintains enterprise grade E2E steup for vitest and verdaccio** ✨
 
+This workspace maintains a scalable and maintainable E2E setup for Vite tests and Verdaccio.
+
+## Test it
+
+Production usage:
+
+- `nx run cli-e2e:e2e` - setup environment and then run E2E tests for `cli-e2e`
+
+Debug environment:
+
+- `nx run cli-e2e:setup-env` - setup environment for `cli-e2e`
+- `nx run cli-e2e:setup-env --keepServerRunning` - keeps verdaccio running after setup
+
+Debug full setup:
+
+- `nx run cli-e2e:bootstrap-env` - setup folders and starts verdaccio for `cli-e2e`
+- `nx run cli-e2e:install-env` - bootstraps and installs all dependencies for `cli-e2e`
+
+Debug packages:
+
+- `nx run utils:npm-publish --environmentProject cli-e2e` - publishes `utils` and `models` to the verdaccio registry configured for `cli-e2e`
+- `nx run utils:npm-install --environmentProject cli-e2e` - installs `utils` and `models` from the verdaccio registry configured for `cli-e2e`
+- `nx run cli-e2e:stop-verdaccio` - stops the verdaccio server for `cli-e2e`
+
+## Plugins
+
+Configure the plugins in `nx.json`:
+
+```json
+{
+  "plugins": [
+    {
+      "plugin": "@org/build.env",
+      "options": {
+        "environmentsDir": "tmp/environments"
+      }
+    }
+  ]
+}
+```
+
+### Dynamic targets
+
+The plugins registered in `nx.json` are used to derive dynamic targets for different projects types:
+
+- projects that need a environment to e.g. E2E test their dependencies
+- packages maintaining the library code
+
+@TODO
+
+## Example projects and plugins
+
+This repository maintains the following example projects and plugins to showcase a refactoring from existing E2E setup to a more maintainable and scalable setup:
+
+- original
+- project `e2e-example/original-e2e`
+  - setup script `e2e-example/original-e2e/setup/global-setup.e2e.ts`
+- plugin `tools/e2e-example-plugins/original.plugin.ts`
+- env
+  - project `e2e-example/env-e2e`
+    - setup script `e2e-example/env-e2e/setup/global-setup.e2e.ts`
+  - plugin `tools/e2e-example-plugins/env.plugin.ts`
+- graph
+  - project `e2e-example/graph-e2e`
+    - setup script `e2e-example/graph-e2e/setup/global-setup.e2e.ts`
+  - plugin `tools/e2e-example-plugins/graph.plugin.ts`
+- pretarget
+  - project `e2e-example/pretarget-e2e`
+    - setup script `e2e-example/pretarget-e2e/setup/global-setup.e2e.ts`
+  - plugin `tools/e2e-example-plugins/pretarget.plugin.ts`
+
 ## Connect with us!
 
-- [Check  out our services](https://push-based.io)
+- [Check out our services](https://push-based.io)
 - [Follow us on Twitter](https://twitter.com/pushbased)

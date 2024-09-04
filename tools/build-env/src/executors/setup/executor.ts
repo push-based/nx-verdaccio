@@ -1,12 +1,11 @@
 import { type ExecutorContext, logger, readJsonFile } from '@nx/devkit';
 import { join } from 'node:path';
-import * as process from 'process';
 import runBuildExecutor from '../bootstrap/executor';
 import runKillProcessExecutor from '../kill-process/executor';
 import { executeProcess } from '../../internal/utils/execute-process';
 import { objectToCliArgs } from '../../internal/utils/terminal-command';
-import { VerdaccioProcessResult } from '../../internal/verdaccio/verdaccio-registry';
-import { SetupEnvironmentExecutorOptions } from './schema';
+import type { VerdaccioProcessResult } from '../../internal/verdaccio/verdaccio-registry';
+import type { SetupEnvironmentExecutorOptions } from './schema';
 import { normalizeOptions } from '../internal/normalize-options';
 
 export type ExecutorOutput = {

@@ -1,10 +1,10 @@
 import { type ExecutorContext, logger, readJsonFile } from '@nx/devkit';
 
 import type { NpmInstallExecutorOptions } from './schema';
-import { join, relative } from 'node:path';
+import { join } from 'node:path';
 import { executeProcess } from '../../internal/utils/execute-process';
 import { objectToCliArgs } from '../../internal/utils/terminal-command';
-import { PackageJson } from 'nx/src/utils/package-json';
+import type { PackageJson } from 'nx/src/utils/package-json';
 import { getBuildOutput } from '../../internal/utils/utils';
 import { normalizeOptions } from '../internal/normalize-options';
 

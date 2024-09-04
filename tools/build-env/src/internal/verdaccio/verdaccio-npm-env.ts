@@ -1,19 +1,15 @@
-import { basename, join } from 'node:path';
+import { join } from 'node:path';
 import {
   startVerdaccioServer,
   type StarVerdaccioOptions,
   type VercaddioServerResult,
   type VerdaccioProcessResult,
 } from './verdaccio-registry';
-import { rm, writeFile } from 'node:fs/promises';
+import { writeFile } from 'node:fs/promises';
 import { setupNpmWorkspace } from '../utils/npm';
 import { error, info } from '../utils/logging';
 import { objectToCliArgs } from '../utils/terminal-command';
 import { execSync } from 'node:child_process';
-import runKillProcessExecutor from '../../executors/kill-process/executor';
-import { boolean } from 'yargs';
-import * as process from 'process';
-import { logger } from '@nx/devkit';
 
 function logInfo(msg: string) {
   info(msg, 'Verdaccio Env: ');

@@ -1,8 +1,6 @@
 import { type ExecutorContext, logger } from '@nx/devkit';
 import type { BootstrapExecutorOptions } from './schema';
 import { bootstrapEnvironment } from '../../internal/verdaccio/verdaccio-npm-env';
-import { join } from 'node:path';
-import { DEFAULT_ENVIRONMENTS_OUTPUT_DIR } from '../../internal/constants';
 import { normalizeOptions } from '../internal/normalize-options';
 
 export type BootstrapExecutorOutput = {

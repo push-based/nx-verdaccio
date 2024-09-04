@@ -7,7 +7,8 @@
     "ansis": "^3.3.2",
     "vite": "~5.0.0",
     "@nx/vite": "18.2.4",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "nx": "18.2.4"
   },
   "type": "commonjs",
   "main": "./src/index.js",

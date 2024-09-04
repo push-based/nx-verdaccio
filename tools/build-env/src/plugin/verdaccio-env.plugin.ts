@@ -1,17 +1,12 @@
 import {
   type CreateNodes,
+  type ProjectConfiguration,
   readJsonFile,
   type TargetConfiguration,
-  type ProjectConfiguration,
-  logger,
 } from '@nx/devkit';
-import { dirname, join, relative } from 'node:path';
+import { dirname, join } from 'node:path';
 import { DEFAULT_ENVIRONMENTS_OUTPUT_DIR } from '../internal/constants';
-import {
-  Environment,
-  BootstrapEnvironmentOptions,
-} from '../internal/verdaccio/verdaccio-npm-env';
-import { StarVerdaccioOptions } from '../internal/verdaccio/verdaccio-registry';
+import type { StarVerdaccioOptions } from '../internal/verdaccio/verdaccio-registry';
 
 export function isPublishable(tags: string[]): boolean {
   return tags.some((target) => target === 'publishable');
@@ -100,10 +95,6 @@ function envTargets({
     'bootstrap-env': {
       executor: '@org/build-env:bootstrap',
     },
-    'setup-env': {
-      executor: '@org/build-env:setup',
-      options: { environmentRoot },
-    },
     // just here to execute dependent npm-install tasks with the correct environmentProject
     'install-env': {
       dependsOn: [
@@ -115,6 +106,11 @@ function envTargets({
       ],
       options: { environmentProject: projectName },
       command: 'echo Dependencies installed!',
+    },
+    // runs bootstrap-env, install-env and stop-verdaccio
+    'setup-env': {
+      executor: '@org/build-env:setup',
+      options: { environmentRoot },
     },
   };
 }
