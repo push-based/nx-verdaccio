@@ -2,7 +2,7 @@
   "name": "cli-e2e-pretarget",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "projects/cli-e2e-pretarget/test",
-  "projectType": "library",
+  "projectType": "application",
   "tags": ["type:e2e", "scope:internal", "type:example", "npm-env"],
   "implicitDependencies": ["cli"],
   "targets": {

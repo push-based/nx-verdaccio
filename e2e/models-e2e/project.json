@@ -2,7 +2,7 @@
   "name": "models-e2e",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "projects/models-e2e/test",
-  "projectType": "library",
+  "projectType": "application",
   "tags": ["type:e2e", "type:e2e-vi", "npm-env"],
   "implicitDependencies": ["models"],
   "targets": {
