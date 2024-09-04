@@ -47,18 +47,28 @@ npx nx build cli
 # lint projects affected by changes (compared to main branch)
 npx nx affected:lint
 
-# run Code PushUp command on this repository
-npx nx code-pushup -- collect
+# run CLI command on this repository
+npx nx cli -- collect
 ```
 
 ## Testing
 
 Some of the plugins have a longer runtime. In order to ensure better DX, longer tests are excluded by default when executing tests locally.
 
-You can control the execution of long-running tests over the `INCLUDE_SLOW_TESTS` environment variable.
+Nx targets are used to encapsulate test related processes.
 
-To change this setup, open (or create) the `.env` file in the root folder.
-Edit or add the environment variable there as follows: `INCLUDE_SLOW_TESTS=true`.
+Projects have the following testing targets:
+
+| tag                | description                |
+|:-------------------|:---------------------------|
+| `test`             | General testing target     |
+| `unit-test`        | Unit tests                 |
+| `integration-test` | Integration tests          |
+| `e2e`              | General E2E testing target |
+| `e2e-cy`           | Cypress E2E testing        |
+| `e2e-vi`           | Vitest E2E testing         |
+| `e2e-pl`           | Playwrite E2E testing      |
+
 
 ## Git
 
@@ -83,7 +93,6 @@ Projects are tagged in two different dimensions - scope and type:
 | tag                 | description                                                                  | allowed dependencies                               |
 | :------------------ | :--------------------------------------------------------------------------- | :------------------------------------------------- |
 | `scope:core`        | core features and CLI (agnostic towards specific plugins)                    | `scope:core` or `scope:shared`                     |
-| `scope:plugin`      | a specific plugin implementation (contract with core defined by data models) | `scope:shared`                                     |
 | `scope:shared`      | data models, utility functions, etc. (not specific to core or plugins)       | `scope:shared`                                     |
 | `scope:tooling`     | supplementary tooling, e.g. code generation                                  | `scope:tooling`, `scope:shared`                    |
 | `scope:internal`    | internal project, e.g. example plugin                                        | any                                                |
@@ -93,12 +102,6 @@ Projects are tagged in two different dimensions - scope and type:
 | `type:e2e`          | E2E testing                                                                  | `type:app`, `type:feature` or `type:testing-util`  |
 | `type:testing-util` | testing utilities                                                            | `type:util`                                        |
 
-## Special targets
-
-The repository includes a couple of common optional targets:
-
-- `perf` - runs micro benchmarks of a project e.g. `nx perf utils` or `nx affected -t perf`
-
 ## Special folders
 
 The repository standards organize reusable code specific to a target in dedicated folders at project root level.
@@ -106,7 +109,7 @@ This helps to organize and share target related code.
 
 The following optional folders can be present in a project root;
 
-- `perf` - micro benchmarks related code
+- `setup` - test setup code specific for a given project
 - `mocks` - test fixtures and utilities specific for a given project
-- `docs` - files related to documentation
-- `tooling` - tooling related code
+- `docs` - documentation files specific for a given project
+- `tooling` - tooling related code specific for a given project
