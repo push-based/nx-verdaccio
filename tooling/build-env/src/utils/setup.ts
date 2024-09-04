@@ -4,7 +4,7 @@ import { DEFAULT_ENVIRONMENTS_OUTPUT_DIR } from '../internal/constants';
 export function getEnvironmentsRoot(
   environmentsDir: string = DEFAULT_ENVIRONMENTS_OUTPUT_DIR
 ) {
-  return join('tmp', environmentsDir);
+  return  environmentsDir;
 }
 
 /**
