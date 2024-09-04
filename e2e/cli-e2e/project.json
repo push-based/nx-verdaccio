@@ -3,26 +3,9 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "projects/cli-e2e/test",
   "projectType": "library",
-  "tags": [
-    "type:example",
-    "npm-env"
-  ],
-  "implicitDependencies": [
-    "cli"
-  ],
+  "tags": ["npm-env"],
+  "implicitDependencies": ["cli"],
   "targets": {
-    "build-env": {
-      "executor": "@org/build-env:build",
-      "options": {
-        "workspaceRoot": "tmp/cli-e2e"
-      }
-    },
-    "kill-process": {
-      "executor": "@org/build-env:kill-process",
-      "options": {
-        "workspaceRoot": "tmp/cli-e2e"
-      }
-    },
     "e2e": {
       "dependsOn": [
         {
@@ -32,13 +15,8 @@
         }
       ],
       "executor": "@nx/vite:test",
-      "inputs": [
-        "default",
-        "^production"
-      ],
-      "outputs": [
-        "{options.reportsDirectory}"
-      ],
+      "inputs": ["default", "^production"],
+      "outputs": ["{options.reportsDirectory}"],
       "options": {
         "reportsDirectory": "../../coverage/projects/cli-e2e"
       }

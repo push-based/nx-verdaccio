@@ -3,13 +3,8 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "projects/models-e2e/test",
   "projectType": "library",
-  "tags": [
-    "type:example",
-    "npm-env"
-  ],
-  "implicitDependencies": [
-    "models"
-  ],
+  "tags": ["npm-env"],
+  "implicitDependencies": ["models"],
   "targets": {
     "e2e": {
       "dependsOn": [
@@ -20,13 +15,8 @@
         }
       ],
       "executor": "@nx/vite:test",
-      "inputs": [
-        "default",
-        "^production"
-      ],
-      "outputs": [
-        "{options.reportsDirectory}"
-      ],
+      "inputs": ["default", "^production"],
+      "outputs": ["{options.reportsDirectory}"],
       "options": {
         "reportsDirectory": "../../coverage/projects/models-e2e"
       }

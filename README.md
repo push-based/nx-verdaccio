@@ -8,6 +8,10 @@ This workspace maintains a scalable and maintainable E2E setup for Vite tests an
 
 ## Test it
 
+Publishable project have a `publishable` tag.
+Projects that need an environment have a `npm-env` tag.
+Targets that need an environment set up before running depend on `{ "projects": "self", "target": "setup-env", "params": "forward"}`.
+
 Production usage:
 
 - `nx run cli-e2e:e2e` - setup environment and then run E2E tests for `cli-e2e`
