@@ -1,7 +1,7 @@
 import {
   verdaccioEnvLogger,
   StartVerdaccioAndSetupEnvOptions,
-} from '@org/tools-utils';
+} from '../lib/verdaccio/verdaccio-npm-env';
 import yargs, { Options } from 'yargs';
 import { join } from 'node:path';
 import { readJsonFile } from '@nx/devkit';

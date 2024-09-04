@@ -1,6 +1,6 @@
-import {sortUserFile} from './core';
-import {vol} from 'memfs';
-import {afterEach, beforeEach, type MockInstance, vi} from 'vitest';
+import { sortUserFile } from './core';
+import { vol } from 'memfs';
+import { afterEach, beforeEach, type MockInstance, vi } from 'vitest';
 
 vi.mock('fs', async () => {
   const memfs: typeof import('memfs') = await vi.importActual('memfs');
@@ -22,11 +22,7 @@ afterEach(() => {
   cwdSpy.mockRestore();
 });
 
-
 describe('sortUserFile', () => {
-  beforeEach(() => {
-
-  })
   it('should sort json file of users', async () => {
     vol.fromJSON({
       '/test/users.json': JSON.stringify([
@@ -35,7 +31,9 @@ describe('sortUserFile', () => {
       ]),
     });
     await sortUserFile('users.json');
-    const usersFromFile = vol.readFileSync('/test/users.json', 'utf8').toString();
+    const usersFromFile = vol
+      .readFileSync('/test/users.json', 'utf8')
+      .toString();
     expect(JSON.parse(usersFromFile)).toEqual([
       { name: 'Alice' },
       { name: 'Michael' },

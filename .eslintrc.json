@@ -21,7 +21,14 @@
               }
             ]
           }
-        ]
+        ],
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          {
+            "argsIgnorePattern": "^_"
+          }
+        ],
+        "@typescript-eslint/no-import-type-side-effects": "error"
       }
     },
     {

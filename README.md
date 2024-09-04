@@ -63,22 +63,26 @@ The plugins registered in `nx.json` are used to derive dynamic targets for diffe
 
 This repository maintains the following example projects and plugins to showcase a refactoring from existing E2E setup to a more maintainable and scalable setup:
 
-- original
+- Run original: `nx original-cli-e2e:original-e2e`
 - project `e2e-example/original-e2e`
   - setup script `e2e-example/original-e2e/setup/global-setup.e2e.ts`
 - plugin `tools/e2e-example-plugins/original.plugin.ts`
-- env
+- Run env: `nx env-cli-e2e:env-e2e`
   - project `e2e-example/env-e2e`
     - setup script `e2e-example/env-e2e/setup/global-setup.e2e.ts`
   - plugin `tools/e2e-example-plugins/env.plugin.ts`
-- graph
+- Run graph: `nx graph-cli-e2e:graph-e2e`
   - project `e2e-example/graph-e2e`
     - setup script `e2e-example/graph-e2e/setup/global-setup.e2e.ts`
   - plugin `tools/e2e-example-plugins/graph.plugin.ts`
-- pretarget
+- Run pretarget: `nx pretarget-cli-e2e:pretarget-e2e`
   - project `e2e-example/pretarget-e2e`
     - setup script `e2e-example/pretarget-e2e/setup/global-setup.e2e.ts`
   - plugin `tools/e2e-example-plugins/pretarget.plugin.ts`
+
+## TODO
+
+- remove usage of generatePackageJson in esbuild build targets
 
 ## Connect with us!
 

@@ -13,6 +13,7 @@
   },
   "tags": ["publishable"],
   "targets": {
+    "lint": {},
     "build": {
       "executor": "@nx/esbuild:esbuild",
       "outputs": ["{options.outputPath}"],

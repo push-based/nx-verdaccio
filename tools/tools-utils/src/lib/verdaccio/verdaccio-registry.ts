@@ -1,7 +1,9 @@
 import { gray, bold, red } from 'ansis';
-import { executeProcess, objectToCliArgs } from '@org/test-utils';
+
 import { join } from 'node:path';
 import { error, info } from '../utils/logging';
+import { VerdaccioExecutorSchema } from '@nx/js/src/executors/verdaccio/schema';
+import { executeProcess, objectToCliArgs } from '@org/test-utils';
 
 export function logInfo(msg: string) {
   info(msg, 'Verdaccio: ');
@@ -19,7 +21,7 @@ export type VerdaccioProcessResult = {
 };
 export type VercaddioServerResult = VerdaccioProcessResult & {
   pid: number;
-} & Required<Pick<VerdaccioExecuterOptions, 'storage'>>;
+} & Required<Pick<VerdaccioExecutorSchema, 'storage'>>;
 
 export type RegistryResult = {
   registry: VercaddioServerResult;
@@ -68,17 +70,7 @@ export type StarVerdaccioOnlyOptions = {
   verbose?: boolean;
 };
 
-export type VerdaccioExecuterOptions = {
-  storage?: string;
-  port?: string;
-  p?: string;
-  config?: string;
-  c?: string;
-  location?: string;
-  clear?: boolean;
-};
-
-export type StarVerdaccioOptions = VerdaccioExecuterOptions &
+export type StarVerdaccioOptions = Partial<VerdaccioExecutorSchema> &
   StarVerdaccioOnlyOptions;
 
 export async function startVerdaccioServer({

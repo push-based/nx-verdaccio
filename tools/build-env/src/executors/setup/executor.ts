@@ -44,7 +44,7 @@ export default async function runSetupEnvironmentExecutor(
       verbose: true,
     });
 
-    if (!normalizedOptions.keepServerOn) {
+    if (!normalizedOptions.keepServerRunning) {
       await runKillProcessExecutor(
         {
           ...normalizedOptions,

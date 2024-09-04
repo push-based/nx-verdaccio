@@ -30,12 +30,19 @@ const args = yargs(process.argv.slice(2))
       default: isVerbose,
     },
     port: {
-      type: 'string',
+      type: 'number',
       default: 55555,
     },
   } satisfies Partial<Record<keyof StartVerdaccioAndSetupEnvOptions, Options>>)
   .parse() as StartVerdaccioAndSetupEnvOptions;
 
 (async () => {
-  await setupNpmEnv(args);
+  const workspaceRoot = args.workspaceRoot;
+  if (workspaceRoot == null) {
+    throw new Error('Workspace root required.');
+  }
+  await setupNpmEnv({
+    ...args,
+    workspaceRoot,
+  });
 })();

@@ -2,17 +2,20 @@ import { dirname, join, basename } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { executeProcess, objectToCliArgs } from '@org/test-utils';
+import { getEnvironmentRoot } from '@org/build-env';
+import { getTestFixturesDist } from '@org/test-utils';
 
 describe('CLI command - sort', () => {
-  const workspaceRoot = join('tmp', 'npm-env', 'cli-e2e');
-  const baseDir = join(workspaceRoot, '__test_env__', 'cli-command-sort');
+  const fixturesDist = getTestFixturesDist('cli-command-sort', {
+    root: getEnvironmentRoot(),
+  });
 
   afterEach(async () => {
-    await rm(baseDir, { recursive: true, force: true });
+    await rm(fixturesDist, { recursive: true, force: true });
   });
 
   it('should execute CLI command sort when param file is given', async () => {
-    const testPath = join(baseDir, 'execute-sort-command', 'users.json');
+    const testPath = join(fixturesDist, 'execute-sort-command', 'users.json');
     await mkdir(dirname(testPath), { recursive: true });
     await writeFile(
       testPath,

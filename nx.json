@@ -41,6 +41,21 @@
         }
       ]
     },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "inputs": [
+        "default",
+        "{workspaceRoot}/.eslintrc.json",
+        "{workspaceRoot}/.eslintignore"
+      ],
+      "options": {
+        "maxWarnings": 0,
+        "reportUnusedDisableDirectives": "warn",
+        "lintFilePatterns": ["{projectRoot}/**/*.ts"]
+      },
+      "cache": true
+    },
     "build": {
       "inputs": ["production", "^production"]
     },
@@ -63,7 +78,10 @@
       }
     }
   },
-  "plugins": ["./tools/build-env/src/plugin/verdaccio-env.plugin.ts"],
+  "plugins": [
+    "./tools/build-env/src/plugin/verdaccio-env.plugin.ts",
+    "./e2e-examples/cli-e2e-env/tools/env.plugin.ts"
+  ],
   "release": {
     "version": {
       "preVersionCommand": "npx nx run-many -t build"

@@ -9,7 +9,7 @@ const teardownRegistry = true; //process.env.E2E_TEARDOWN_REGISTRY !== 'false';
 
 let activeRegistry: NpmTestEnvResult;
 const projectName = process.env['NX_TASK_TARGET_PROJECT'];
-let stopRegistry;
+let stopRegistry: () => void;
 
 export async function setup() {
   // start registry

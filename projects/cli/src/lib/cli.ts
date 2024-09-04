@@ -1,10 +1,11 @@
-import yargs, { Options } from 'yargs';
+import yargs, { ArgumentsCamelCase, Options } from 'yargs';
 import { sortUserFile } from '@org/core';
 
 export type CliArgs = {
   filePath: string;
 };
 
+const NOOP_BUILDER = undefined;
 export function cli(args: string[]) {
   return (
     yargs(args)
@@ -19,12 +20,12 @@ export function cli(args: string[]) {
         },
       } satisfies Record<keyof CliArgs, Options>)
       //.command('*', 'Sort users', sortCommandHandle)
-      .command('sort', 'Sort users', sortCommandHandle)
+      .command('sort', 'Sort users', NOOP_BUILDER, sortCommandHandle)
   );
 }
 
-export async function sortCommandHandle({ argv }: any) {
-  const { filePath } = argv as CliArgs;
+export async function sortCommandHandle(args: ArgumentsCamelCase<CliArgs>) {
+  const { filePath } = args;
   await sortUserFile(filePath);
   console.log(`Sorted users in ${filePath}`);
 }

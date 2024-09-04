@@ -13,6 +13,7 @@
   "include": [
     "vite.config.ts",
     "vitest.config.ts",
+    "setup/**/*.ts",
     "test/**/*.test.ts",
     "test/**/*.spec.ts",
     "test/**/*.test.tsx",

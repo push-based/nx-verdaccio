@@ -1,17 +1,27 @@
-import { type CreateNodes, readJsonFile } from '@nx/devkit';
+import {
+  type CreateNodes,
+  readJsonFile,
+  TargetConfiguration,
+} from '@nx/devkit';
 import { dirname, join } from 'node:path';
 import type { ProjectConfiguration } from 'nx/src/config/workspace-json-project-json';
+import { getBuildOutputPathFromBuildTarget } from '@org/tools-utils';
 
 export const createNodes: CreateNodes = [
   '**/project.json',
-  (projectConfigurationFile: string, opts: undefined | unknown) => {
+  (projectConfigurationFile: string, _: undefined | unknown) => {
     const root = dirname(projectConfigurationFile);
     const projectConfiguration: ProjectConfiguration = readJsonFile(
       join(process.cwd(), projectConfigurationFile)
     );
 
+    const projectName = projectConfiguration.name;
+    if (projectName == null) {
+      throw new Error('Project name required');
+    }
+
     // only execute for the -original example projects e.g. `cli-e2e-original`, `e2e-models-original`
-    if (!projectConfiguration?.name?.endsWith('-original')) {
+    if (!projectName.endsWith('-original')) {
       return {
         projects: {
           [root]: {},
@@ -28,8 +38,9 @@ export const createNodes: CreateNodes = [
       projects: {
         [root]: {
           targets: {
-            ...(isRoot && verdaccioTargets({ ...projectConfiguration, root })),
-            ...(isPublishable && npmTargets({ ...projectConfiguration, root })),
+            ...(isRoot && verdaccioTargets()),
+            ...(isPublishable &&
+              npmTargets({ ...projectConfiguration, root, name: projectName })),
           },
         },
       },
@@ -37,12 +48,7 @@ export const createNodes: CreateNodes = [
   },
 ];
 
-function verdaccioTargets(projectConfiguration: ProjectConfiguration) {
-  const { root, name } = projectConfiguration;
-  const { name: packageName, version: pkgVersion } = readJsonFile(
-    join(root, 'package.json')
-  );
-
+function verdaccioTargets(): Record<string, TargetConfiguration> {
   return {
     'original-local-registry': {
       executor: '@nx/js:verdaccio',
@@ -54,14 +60,11 @@ function verdaccioTargets(projectConfiguration: ProjectConfiguration) {
   };
 }
 
-function npmTargets(projectConfiguration: ProjectConfiguration) {
-  const { root, name: projectName, targets } = projectConfiguration;
-  const { build } = targets;
-  const { options } = build;
-  const { outputPath } = options;
-  if (outputPath == null) {
-    throw new Error('outputPath is required');
-  }
+function npmTargets(
+  projectConfiguration: ProjectConfiguration & { name: string }
+): Record<string, TargetConfiguration> {
+  const { root } = projectConfiguration;
+  const outputPath = getBuildOutputPathFromBuildTarget(projectConfiguration);
 
   const { name: packageName, version: pkgVersion } = readJsonFile(
     join(root, 'package.json')

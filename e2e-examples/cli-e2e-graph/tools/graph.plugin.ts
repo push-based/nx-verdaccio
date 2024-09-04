@@ -5,6 +5,7 @@ import {
 } from '@nx/devkit';
 import { dirname, join, relative } from 'node:path';
 import type { ProjectConfiguration } from 'nx/src/config/workspace-json-project-json';
+import { getBuildOutputPathFromBuildTarget } from '@org/tools-utils';
 
 const tmpNpmEnv = join('tmp', 'npm-env');
 
@@ -16,8 +17,13 @@ export const createNodes: CreateNodes = [
       join(process.cwd(), projectConfigurationFile)
     );
 
+    const projectName = projectConfiguration.name;
+    if (projectName == null) {
+      throw new Error('Project name required');
+    }
+
     // only execute for the -graph example projects e.g. `cli-e2e-graph`, `e2e-models-graph`
-    if (!projectConfiguration?.name?.endsWith('-graph')) {
+    if (!projectName.endsWith('-graph')) {
       return {
         projects: {
           [root]: {},
@@ -36,8 +42,10 @@ export const createNodes: CreateNodes = [
       projects: {
         [root]: {
           targets: {
-            ...(isNpmEnv && verdaccioTargets(projectConfiguration)),
-            ...(isPublishable && npmTargets({ ...projectConfiguration, root })),
+            ...(isNpmEnv &&
+              verdaccioTargets({ ...projectConfiguration, name: projectName })),
+            ...(isPublishable &&
+              npmTargets({ ...projectConfiguration, root, name: projectName })),
           },
         },
       },
@@ -45,7 +53,9 @@ export const createNodes: CreateNodes = [
   },
 ];
 
-function verdaccioTargets(projectConfiguration: ProjectConfiguration) {
+function verdaccioTargets(
+  projectConfiguration: ProjectConfiguration & { name: string }
+): Record<string, TargetConfiguration> {
   const { name: projectName } = projectConfiguration;
   return {
     'graph-start-verdaccio': {
@@ -81,19 +91,14 @@ function verdaccioTargets(projectConfiguration: ProjectConfiguration) {
   };
 }
 
-const relativeFromPath = (dir) =>
+const relativeFromPath = (dir: string) =>
   relative(join(process.cwd(), dir), join(process.cwd()));
 
 function npmTargets(
-  projectConfiguration: ProjectConfiguration
+  projectConfiguration: ProjectConfiguration & { name: string }
 ): Record<string, TargetConfiguration> {
-  const { root, name: projectName, targets } = projectConfiguration;
-  const { build } = targets;
-  const { options } = build;
-  const { outputPath } = options;
-  if (outputPath == null) {
-    throw new Error('outputPath is required');
-  }
+  const { root, name: projectName } = projectConfiguration;
+  const outputPath = getBuildOutputPathFromBuildTarget(projectConfiguration);
 
   const { name: packageName, version: pkgVersion } = readJsonFile(
     join(root, 'package.json')

@@ -6,6 +6,7 @@
   "tags": ["type:example", "npm-env"],
   "implicitDependencies": ["cli"],
   "targets": {
+    "lint": {},
     "graph-e2e": {
       "executor": "@nx/vite:test",
       "inputs": ["default", "^production"],

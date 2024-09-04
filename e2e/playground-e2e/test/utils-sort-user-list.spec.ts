@@ -1,6 +1,6 @@
 import { basename, dirname, join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { mkdir, rm, writeFile } from 'node:fs/promises';
+import { mkdir, writeFile, rm } from 'node:fs/promises';
 import { executeProcess, getTestFixturesDist } from '@org/test-utils';
 import { getEnvironmentRoot } from '@org/build-env';
 
@@ -8,6 +8,7 @@ describe('utils - sort user list', () => {
   const fixturesDist = getTestFixturesDist('sort-user-list', {
     root: getEnvironmentRoot(),
   });
+
   afterEach(async () => {
     await rm(fixturesDist, { recursive: true, force: true });
   });

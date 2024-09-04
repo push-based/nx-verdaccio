@@ -6,6 +6,7 @@
   "tags": ["type:example"],
   "implicitDependencies": ["cli"],
   "targets": {
+    "lint": {},
     "original-e2e": {
       "executor": "@nx/vite:test",
       "inputs": ["default", "^production"],

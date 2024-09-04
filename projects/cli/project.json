@@ -13,6 +13,7 @@
   },
   "tags": ["publishable"],
   "targets": {
+    "lint": {},
     "build": {
       "executor": "@nx/esbuild:esbuild",
       "outputs": ["{options.outputPath}"],
@@ -26,7 +27,7 @@
         "format": ["esm"]
       }
     },
-    "test": {
+    "unit-test": {
       "executor": "@nx/vite:test",
       "outputs": ["{options.reportsDirectory}"],
       "options": {

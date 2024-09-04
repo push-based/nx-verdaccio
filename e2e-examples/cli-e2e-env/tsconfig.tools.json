@@ -10,18 +10,11 @@
       "vitest"
     ]
   },
-  "include": [
+  "include": ["tools/**/*.ts"],
+  "exclude": [
     "vite.config.ts",
-    "vitest.config.ts",
     "setup/**/*.ts",
-    "test/**/*.test.ts",
     "test/**/*.spec.ts",
-    "test/**/*.test.tsx",
-    "test/**/*.spec.tsx",
-    "test/**/*.test.js",
-    "test/**/*.spec.js",
-    "test/**/*.test.jsx",
-    "test/**/*.spec.jsx",
-    "test/**/*.d.ts"
+    "test/**/*.test.ts"
   ]
 }

@@ -1,6 +1,6 @@
 export type SetupEnvironmentExecutorOptions = Partial<{
   environmentRoot: string;
-  keepServerOn: boolean;
+  keepServerRunning: boolean;
   progress: boolean;
   verbose: boolean;
 }>;

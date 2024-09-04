@@ -6,6 +6,7 @@
   "tags": ["npm-env"],
   "implicitDependencies": ["core"],
   "targets": {
+    "lint": {},
     "e2e": {
       "dependsOn": [
         {
