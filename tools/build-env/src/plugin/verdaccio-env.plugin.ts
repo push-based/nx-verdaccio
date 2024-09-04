@@ -46,7 +46,7 @@ export const createNodes: CreateNodes = [
           targets: {
             // start-verdaccio, stop-verdaccio
             ...(isNpmEnv(tags) && verdaccioTargets({ environmentRoot })),
-            // bootstrap-env, setup-env, install-deps (intermediate task to run dependency tasks)
+            // bootstrap-env, setup-env, install-env (intermediate task to run dependency tasks)
             ...(isNpmEnv(tags) && envTargets({ environmentRoot, projectName })),
             // === dependency project
             // npm-publish, npm-install

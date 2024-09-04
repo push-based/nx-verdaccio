@@ -1,0 +1,28 @@
+{
+  "name": "playground-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "projects/playground-e2e/test",
+  "projectType": "library",
+  "tags": ["npm-env"],
+  "implicitDependencies": ["models", "utils", "core", "cli"],
+  "targets": {
+    "e2e": {
+      "dependsOn": [
+        {
+          "projects": "self",
+          "target": "setup-env",
+          "params": "forward"
+        }
+      ],
+      "executor": "@nx/vite:test",
+      "inputs": ["default", "^production"],
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "../../coverage/projects/playground-e2e"
+      }
+    },
+    "open-e2e-env": {
+      "command": "cd tpm/environments/playground-e2e"
+    }
+  }
+}

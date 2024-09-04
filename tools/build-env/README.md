@@ -6,7 +6,7 @@
 
 - build (to stop verdaccio server process)
 - kill-process (to stop verdaccio server process)
-- install-deps (to install NPM packages from within environments)
+- install-env (to install NPM packages from within environments)
 
 ## To Research
 

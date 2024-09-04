@@ -16,18 +16,19 @@ Production usage:
 
 - `nx run cli-e2e:e2e` - setup environment and then run E2E tests for `cli-e2e`
 
-Debug environment:
+Debug full environment setup:
 
 - `nx run cli-e2e:setup-env` - setup environment for `cli-e2e`
 - `nx run cli-e2e:setup-env --keepServerRunning` - keeps verdaccio running after setup
 
-Debug full setup:
+Debug full environment in 2 steps:
 
 - `nx run cli-e2e:bootstrap-env` - setup folders and starts verdaccio for `cli-e2e`
 - `nx run cli-e2e:install-env` - bootstraps and installs all dependencies for `cli-e2e`
 
 Debug packages:
 
+- `nx run cli-e2e:bootstrap-env` - setup folders and starts verdaccio for `cli-e2e`
 - `nx run utils:npm-publish --environmentProject cli-e2e` - publishes `utils` and `models` to the verdaccio registry configured for `cli-e2e`
 - `nx run utils:npm-install --environmentProject cli-e2e` - installs `utils` and `models` from the verdaccio registry configured for `cli-e2e`
 - `nx run cli-e2e:stop-verdaccio` - stops the verdaccio server for `cli-e2e`

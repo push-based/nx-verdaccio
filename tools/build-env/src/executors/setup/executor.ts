@@ -36,7 +36,7 @@ export default async function runSetupEnvironmentExecutor(
     await executeProcess({
       command: 'nx',
       args: objectToCliArgs({
-        _: ['install-deps', projectName],
+        _: ['install-env', projectName],
         environmentProject: projectName,
         environmentRoot: normalizedOptions.environmentRoot,
       }),
