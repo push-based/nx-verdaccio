@@ -99,6 +99,9 @@ Projects are tagged in two different dimensions - scope and type:
 | `type:feature`      | library with business logic for a specific feature                     | `type:util` or `type:testing-util`                 |
 | `type:util`         | general purpose utilities and types intended for reuse                 | `type:util` or `type:testing-util`                 |
 | `type:e2e`          | E2E testing                                                            | `type:app`, `type:feature` or `type:testing-util`  |
+| `type:e2e-vi`       | E2E testing with vitest                                                | `type:app`, `type:feature` or `type:testing-util`  |
+| `type:e2e-cy`       | E2E testing with cypress                                               | `type:app`, `type:feature` or `type:testing-util`  |
+| `type:e2e-pr`       | E2E testing with playwrite                                             | `type:app`, `type:feature` or `type:testing-util`  |
 | `type:testing-util` | testing utilities                                                      | `type:util`                                        |
 
 ## Special folders
