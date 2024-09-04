@@ -3,7 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "projects/cli-e2e-graph/test",
   "projectType": "library",
-  "tags": ["type:example", "npm-env"],
+  "tags": ["type:e2e", "scope:internal", "type:example", "npm-env"],
   "implicitDependencies": ["cli"],
   "targets": {
     "lint": {},

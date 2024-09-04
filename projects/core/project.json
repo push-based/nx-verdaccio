@@ -11,7 +11,7 @@
       }
     }
   },
-  "tags": ["publishable"],
+  "tags": ["scope:core", "publishable"],
   "targets": {
     "lint": {},
     "build": {

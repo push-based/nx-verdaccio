@@ -60,7 +60,7 @@ Nx targets are used to encapsulate test related processes.
 Projects have the following testing targets:
 
 | tag                | description                |
-|:-------------------|:---------------------------|
+| :----------------- | :------------------------- |
 | `test`             | General testing target     |
 | `unit-test`        | Unit tests                 |
 | `integration-test` | Integration tests          |
@@ -68,7 +68,6 @@ Projects have the following testing targets:
 | `e2e-cy`           | Cypress E2E testing        |
 | `e2e-vi`           | Vitest E2E testing         |
 | `e2e-pl`           | Playwrite E2E testing      |
-
 
 ## Git
 
@@ -90,17 +89,17 @@ Therefore, PRs are merged via one of two strategies:
 
 Projects are tagged in two different dimensions - scope and type:
 
-| tag                 | description                                                                  | allowed dependencies                               |
-| :------------------ | :--------------------------------------------------------------------------- | :------------------------------------------------- |
-| `scope:core`        | core features and CLI (agnostic towards specific plugins)                    | `scope:core` or `scope:shared`                     |
-| `scope:shared`      | data models, utility functions, etc. (not specific to core or plugins)       | `scope:shared`                                     |
-| `scope:tooling`     | supplementary tooling, e.g. code generation                                  | `scope:tooling`, `scope:shared`                    |
-| `scope:internal`    | internal project, e.g. example plugin                                        | any                                                |
-| `type:app`          | application, e.g. CLI or example web app                                     | `type:feature`, `type:util` or `type:testing-util` |
-| `type:feature`      | library with business logic for a specific feature                           | `type:util` or `type:testing-util`                 |
-| `type:util`         | general purpose utilities and types intended for reuse                       | `type:util` or `type:testing-util`                 |
-| `type:e2e`          | E2E testing                                                                  | `type:app`, `type:feature` or `type:testing-util`  |
-| `type:testing-util` | testing utilities                                                            | `type:util`                                        |
+| tag                 | description                                                            | allowed dependencies                               |
+| :------------------ | :--------------------------------------------------------------------- | :------------------------------------------------- |
+| `scope:core`        | core features and CLI (agnostic towards specific plugins)              | `scope:core` or `scope:shared`                     |
+| `scope:shared`      | data models, utility functions, etc. (not specific to core or plugins) | `scope:shared`                                     |
+| `scope:tooling`     | supplementary tooling, e.g. code generation                            | `scope:tooling`, `scope:shared`                    |
+| `scope:internal`    | internal project, e.g. example e2e                                     | any                                                |
+| `type:app`          | application, e.g. CLI or example web app                               | `type:feature`, `type:util` or `type:testing-util` |
+| `type:feature`      | library with business logic for a specific feature                     | `type:util` or `type:testing-util`                 |
+| `type:util`         | general purpose utilities and types intended for reuse                 | `type:util` or `type:testing-util`                 |
+| `type:e2e`          | E2E testing                                                            | `type:app`, `type:feature` or `type:testing-util`  |
+| `type:testing-util` | testing utilities                                                      | `type:util`                                        |
 
 ## Special folders
 

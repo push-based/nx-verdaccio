@@ -78,10 +78,7 @@
       }
     }
   },
-  "plugins": [
-    "./tools/build-env/src/plugin/verdaccio-env.plugin.ts",
-    "./e2e-examples/cli-e2e-env/tools/env.plugin.ts"
-  ],
+  "plugins": ["./tools/build-env/src/plugin/verdaccio-env.plugin.ts"],
   "release": {
     "version": {
       "preVersionCommand": "npx nx run-many -t build"

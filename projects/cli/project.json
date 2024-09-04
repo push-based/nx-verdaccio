@@ -11,7 +11,7 @@
       }
     }
   },
-  "tags": ["publishable"],
+  "tags": ["type:app", "publishable"],
   "targets": {
     "lint": {},
     "build": {
