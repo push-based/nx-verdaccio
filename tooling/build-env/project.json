@@ -1,7 +1,7 @@
 {
   "name": "build-env",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "tools/build-env/src",
+  "sourceRoot": "tooling/build-env/src",
   "projectType": "library",
   "implicitDependencies": [],
   "targets": {
@@ -9,28 +9,28 @@
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/tools/build-env",
-        "main": "tools/build-env/src/index.ts",
-        "tsConfig": "tools/build-env/tsconfig.lib.json",
+        "outputPath": "dist/tooling/build-env",
+        "main": "tooling/build-env/src/index.ts",
+        "tsConfig": "tooling/build-env/tsconfig.lib.json",
         "assets": [
-          "tools/build-env/*.md",
+          "tooling/build-env/*.md",
           {
-            "input": "./tools/build-env/src",
+            "input": "./tooling/build-env/src",
             "glob": "**/!(*.ts)",
             "output": "./src"
           },
           {
-            "input": "./tools/build-env/src",
+            "input": "./tooling/build-env/src",
             "glob": "**/*.d.ts",
             "output": "./src"
           },
           {
-            "input": "./tools/build-env",
+            "input": "./tooling/build-env",
             "glob": "generators.json",
             "output": "."
           },
           {
-            "input": "./tools/build-env",
+            "input": "./tooling/build-env",
             "glob": "executors.json",
             "output": "."
           }
@@ -49,13 +49,13 @@
     "unit-test": {
       "executor": "@nx/vite:test",
       "options": {
-        "configFile": "tools/build-env/vite.config.ts"
+        "configFile": "tooling/build-env/vite.config.ts"
       }
     },
     "integration-test": {
       "executor": "@nx/vite:test",
       "options": {
-        "configFile": "tools/build-env/vite.config.ts"
+        "configFile": "tooling/build-env/vite.config.ts"
       }
     }
   },

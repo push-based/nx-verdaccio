@@ -78,7 +78,7 @@
       }
     }
   },
-  "plugins": ["./tools/build-env/src/plugin/verdaccio-env.plugin.ts"],
+  "plugins": ["./tooling/build-env/src/plugin/verdaccio-env.plugin.ts"],
   "release": {
     "version": {
       "preVersionCommand": "npx nx run-many -t build"
