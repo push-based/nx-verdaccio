@@ -7,6 +7,7 @@ import { executeProcess } from '../../internal/utils/execute-process';
 import { objectToCliArgs } from '../../internal/utils/terminal-command';
 import { VerdaccioProcessResult } from '../../internal/verdaccio/verdaccio-registry';
 import { SetupEnvironmentExecutorOptions } from './schema';
+import { normalizeOptions } from '../internal/normalize-options';
 
 export type ExecutorOutput = {
   success: boolean;
@@ -19,10 +20,11 @@ export default async function runSetupEnvironmentExecutor(
   context: ExecutorContext
 ) {
   const { projectName } = context;
-  const normalizedOptions = {
-    ...terminalAndExecutorOptions,
-    environmentRoot: join('tmp', 'environments', projectName),
-  };
+  const normalizedContext = normalizeOptions(
+    context,
+    terminalAndExecutorOptions
+  );
+  const { options: normalizedOptions } = normalizedContext;
 
   try {
     await runBuildExecutor(

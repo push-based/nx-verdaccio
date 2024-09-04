@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "KillProcessExecutorOptions",
+  "title": "A executor to kill processes by PID, command, or file",
+  "type": "object",
+  "properties": {
+    "dryRun": {
+      "type": "boolean",
+      "description": "Print the commands that would be run, but don't actually run them",
+      "default": false
+    },
+    "environmentProject": {
+      "type": "string",
+      "description": "The project to use for the environment"
+    },
+    "verbose": {
+      "type": "boolean",
+      "description": "Print additional logs"
+    }
+  },
+  "additionalProperties": true
+}

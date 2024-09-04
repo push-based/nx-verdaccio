@@ -3,6 +3,7 @@ import { type ExecutorContext, logger } from '@nx/devkit';
 import type { KillProcessExecutorOptions } from './schema';
 import { join } from 'node:path';
 import { killProcessFromPid } from '../../internal/utils/process';
+import { normalizeOptions } from '../internal/normalize-options';
 
 export type ExecutorOutput = {
   success: boolean;
@@ -11,25 +12,22 @@ export type ExecutorOutput = {
 };
 
 export default async function runKillProcessExecutor(
-  terminalAndExecutorOptions: KillProcessExecutorOptions,
+  options: KillProcessExecutorOptions,
   context: ExecutorContext
 ) {
-  const { projectName } = context;
+  const { options: opt } = normalizeOptions(context, options);
   const {
-    workspaceRoot,
-    filePath = join(workspaceRoot ?? '', 'process.json'),
+    environmentRoot,
     pid,
     cleanFs = true,
     dryRun = false,
     verbose = false,
-  } = {
-    ...terminalAndExecutorOptions,
-    workspaceRoot: join('tmp', 'environments', projectName),
-  };
+    filePath = join(environmentRoot ?? '', 'process.json'),
+  } = opt;
 
   logger.info(
     `Execute @org/stop-verdaccio-env:kill-process with options: ${JSON.stringify(
-      terminalAndExecutorOptions,
+      options,
       null,
       2
     )}`
@@ -45,6 +43,6 @@ export default async function runKillProcessExecutor(
   }
   return Promise.resolve({
     success: true,
-    command: '????????',
+    command: 'Process killed successfully.',
   } satisfies ExecutorOutput);
 }

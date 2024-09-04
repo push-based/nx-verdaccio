@@ -13,6 +13,14 @@ import {
 } from '../internal/verdaccio/verdaccio-npm-env';
 import { StarVerdaccioOptions } from '../internal/verdaccio/verdaccio-registry';
 
+export function isPublishable(tags: string[]): boolean {
+  return tags.some((target) => target === 'publishable');
+}
+
+export function isNpmEnv(tags: string[]): boolean {
+  return tags.some((tag) => tag === 'npm-env');
+}
+
 export type BuildEnvPluginCreateNodeOptions = {
   environmentsDir?: string;
 };
@@ -22,8 +30,6 @@ export const createNodes: CreateNodes = [
     const { environmentsDir = DEFAULT_ENVIRONMENTS_OUTPUT_DIR } =
       (opt as BuildEnvPluginCreateNodeOptions) ?? {};
 
-    console.log('projectConfigurationFile', projectConfigurationFile);
-    const root = dirname(projectConfigurationFile);
     const projectConfiguration: ProjectConfiguration = readJsonFile(
       join(process.cwd(), projectConfigurationFile)
     );
@@ -34,30 +40,22 @@ export const createNodes: CreateNodes = [
     ) {
       throw new Error('Project name is required');
     }
-    const { name: envProjectName } =
-      readJsonFile<ProjectConfiguration>('project.json');
     const projectName = projectConfiguration.name;
     const tags = projectConfiguration?.tags ?? [];
-    const isPublishable = tags.some((target) => target === 'publishable');
-    const isNpmEnv = tags.some((target) => target === 'npm-env');
-    const workspaceRoot = join(environmentsDir, projectName);
 
+    const projectRoot = dirname(projectConfigurationFile);
+    const environmentRoot = join(environmentsDir, projectName);
     return {
       projects: {
-        [root]: {
+        [projectRoot]: {
           targets: {
-            // === e2e project
             // start-verdaccio, stop-verdaccio
-            ...(isNpmEnv && verdaccioTargets({ root: workspaceRoot })),
-            // setup-npm-env, setup-env, setup-deps
-            ...(isNpmEnv && envTargets({ root: workspaceRoot, projectName })),
+            ...(isNpmEnv(tags) && verdaccioTargets({ environmentRoot })),
+            // bootstrap-env, setup-env, install-deps (intermediate task to run dependency tasks)
+            ...(isNpmEnv(tags) && envTargets({ environmentRoot, projectName })),
             // === dependency project
             // npm-publish, npm-install
-            ...(isPublishable &&
-              npmTargets(
-                { ...projectConfiguration, root, environmentsDir },
-                envProjectName
-              )),
+            ...(isPublishable(tags) && npmTargets(projectName)),
           },
         },
       },
@@ -66,15 +64,18 @@ export const createNodes: CreateNodes = [
 ];
 
 function verdaccioTargets({
-  root,
+  environmentRoot,
   ...options
-}: Environment & StarVerdaccioOptions): Record<string, TargetConfiguration> {
+}: StarVerdaccioOptions & {
+  environmentRoot: string;
+}): Record<string, TargetConfiguration> {
   return {
+    // @TODO: consider using the executor function directly to reduce the number of targets
     'start-verdaccio': {
       executor: '@nx/js:verdaccio',
       options: {
         config: '.verdaccio/config.yml',
-        storage: join(root, 'storage'),
+        storage: join(environmentRoot, 'storage'),
         clear: true,
         ...options,
       },
@@ -82,7 +83,7 @@ function verdaccioTargets({
     'stop-verdaccio': {
       executor: '@org/build-env:kill-process',
       options: {
-        filePath: join(root, 'verdaccio-registry.json'),
+        filePath: join(environmentRoot, 'verdaccio-registry.json'),
         ...options,
       },
     },
@@ -90,24 +91,21 @@ function verdaccioTargets({
 }
 
 function envTargets({
-  root: environmentRoot,
+  environmentRoot,
   projectName,
-}: Environment & {
+}: { environmentRoot: string } & {
   projectName: string;
 }): Record<string, TargetConfiguration> {
   return {
-    'build-env': {
-      executor: '@org/build-env:build',
-      options: {
-        environmentRoot,
-      },
+    'bootstrap-env': {
+      executor: '@org/build-env:bootstrap',
     },
     'setup-env': {
-      inputs: ['default', '^production'],
-      executor: '@org/build-env:setup-env',
+      executor: '@org/build-env:setup',
+      options: { environmentRoot },
     },
     // just here to execute dependent npm-install tasks with the correct environmentProject
-    'install-deps': {
+    'install-env': {
       dependsOn: [
         {
           projects: 'dependencies',
@@ -115,65 +113,23 @@ function envTargets({
           params: 'forward',
         },
       ],
-      options: {
-        environmentRoot,
-        environmentProject: projectName,
-      },
+      options: { environmentProject: projectName },
       command: 'echo Dependencies installed!',
     },
   };
 }
 
-const relativeFromPath = (dir: string) =>
-  relative(join(process.cwd(), dir), join(process.cwd()));
-
 function npmTargets(
-  projectConfiguration: ProjectConfiguration & {
-    root: string;
-    environmentsDir: string;
-  },
   environmentProject: string
 ): Record<string, TargetConfiguration> {
-  const { root, targets, environmentsDir } = projectConfiguration;
-  const { build } =
-    (targets as Record<'build', TargetConfiguration<{ outputPath: string }>>) ??
-    {};
-  const { options } = build ?? {};
-  const { outputPath } = options ?? {};
-  if (outputPath == null) {
-    throw new Error('outputPath is required');
-  }
-
-  const { name: packageName, version: pkgVersion } = readJsonFile(
-    join(root, 'package.json')
-  );
-  const userconfig = `${relativeFromPath(
-    outputPath
-  )}/${environmentsDir}/{args.environmentProject}/.npmrc`;
-  const prefix = `${environmentsDir}/{args.environmentProject}`;
-
   return {
-    // @TODO: try leverage nx-release-publish
-    // nx npm-publish models --environmentProject=cli-e2e
     'npm-publish': {
       dependsOn: [
         { projects: 'self', target: 'build', params: 'forward' },
-        {
-          projects: 'dependencies',
-          target: 'npm-publish',
-          params: 'forward',
-        },
+        { projects: 'dependencies', target: 'npm-publish', params: 'forward' },
       ],
-      inputs: [{ dependentTasksOutputFiles: `**/{options.outputPath}/**` }],
-      /*outputs: [
-        //
-        `{workspaceRoot}/${environmentsDir}/{args.environmentProject}/storage/@org/${packageName}`,
-      ],*/
-      // cache: true,
-      command: `npm publish --userconfig=${userconfig}`,
-      options: {
-        cwd: outputPath,
-      },
+      executor: '@org/build-env:npm-publish',
+      options: { environmentProject },
     },
     'npm-install': {
       dependsOn: [
@@ -181,20 +137,7 @@ function npmTargets(
         { projects: 'dependencies', target: 'npm-install', params: 'forward' },
       ],
       executor: '@org/build-env:npm-install',
-      options: {
-        environmentProject,
-      },
-    },
-    'npm-install-old': {
-      dependsOn: [
-        { projects: 'self', target: 'npm-publish', params: 'forward' },
-        { projects: 'dependencies', target: 'npm-install', params: 'forward' },
-      ],
-      command: `npm install --no-fund --no-shrinkwrap --save ${packageName}@{args.pkgVersion} --prefix=${prefix} --userconfig=${userconfig}`,
-      options: {
-        pkgVersion,
-        environmentProject: environmentProject,
-      },
+      options: { environmentProject },
     },
   };
 }

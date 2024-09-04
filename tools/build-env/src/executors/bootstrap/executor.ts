@@ -3,6 +3,7 @@ import type { BootstrapExecutorOptions } from './schema';
 import { bootstrapEnvironment } from '../../internal/verdaccio/verdaccio-npm-env';
 import { join } from 'node:path';
 import { DEFAULT_ENVIRONMENTS_OUTPUT_DIR } from '../../internal/constants';
+import { normalizeOptions } from '../internal/normalize-options';
 
 export type BootstrapExecutorOutput = {
   success: boolean;
@@ -11,31 +12,28 @@ export type BootstrapExecutorOutput = {
 };
 
 export default async function runBootstrapExecutor(
-  terminalAndExecutorOptions: BootstrapExecutorOptions,
+  options: BootstrapExecutorOptions,
   context: ExecutorContext
 ) {
-  const { projectName } = context;
-  const normalizedOptions = {
-    ...terminalAndExecutorOptions,
-    environmentRoot: join(DEFAULT_ENVIRONMENTS_OUTPUT_DIR, projectName),
-  };
+  const { projectName, options: normalizedOptions } = normalizeOptions(
+    context,
+    options
+  );
   logger.info(
     `Execute @org/build-env:build with options: ${JSON.stringify(
-      terminalAndExecutorOptions,
+      options,
       null,
       2
     )}`
   );
 
-  let envResult;
   try {
-    envResult = await bootstrapEnvironment({
+    await bootstrapEnvironment({
       ...normalizedOptions,
       projectName,
       readyWhen: 'Environment ready under',
     });
   } catch (error) {
-    // nx build-env cli-e2e
     logger.error(error);
     return {
       success: false,
@@ -45,6 +43,6 @@ export default async function runBootstrapExecutor(
 
   return Promise.resolve({
     success: true,
-    command: JSON.stringify(envResult, null, 2),
+    command: 'Bootstraped environemnt successfully.',
   } satisfies BootstrapExecutorOutput);
 }

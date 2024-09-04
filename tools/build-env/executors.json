@@ -1,24 +1,29 @@
 {
   "executors": {
-    "setup-env": {
-      "implementation": "./src/executors/setup-env/executor",
-      "schema": "./src/executors/setup-env/schema.json",
-      "description": "Generate and install test environments in your workspace. Cached and ready for use."
-    },
     "bootstrap": {
       "implementation": "./src/executors/bootstrap/executor",
       "schema": "./src/executors/bootstrap/schema.json",
       "description": "Bootstraps a test environments in your workspace. Cached and ready for use."
     },
-    "kill-process": {
-      "implementation": "./src/executors/kill-process/executor",
-      "schema": "./src/executors/kill-process/schema.json",
-      "description": "Kills process by PID, command or file path."
+    "setup": {
+      "implementation": "./src/executors/setup/executor",
+      "schema": "./src/executors/setup/schema.json",
+      "description": "Generate and install test environments in your workspace. Cached and ready for use."
+    },
+    "npm-publish": {
+      "implementation": "./src/executors/npm-publish/executor",
+      "schema": "./src/executors/npm-publish/schema.json",
+      "description": "Publishes npm packages to a configured registry."
     },
     "npm-install": {
       "implementation": "./src/executors/npm-install/executor",
       "schema": "./src/executors/npm-install/schema.json",
       "description": "Installs npm packages in your workspace."
+    },
+    "kill-process": {
+      "implementation": "./src/executors/kill-process/executor",
+      "schema": "./src/executors/kill-process/schema.json",
+      "description": "Kills process by PID, command or file path."
     }
   }
 }

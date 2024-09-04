@@ -26,6 +26,7 @@
   - outputs
     - list of packages in registry under `.../storage/.verdaccio-db.json` e.g.: `{"list":["<package-name>"],"secret":"esKM34zA53wetObgi5f0Uu1e7iObmm+f"}``
     - tarball of package under `.../storage/@org/<package-name>-<version>.tgz`
+      e.g.: `{workspaceRoot}/${environmentsDir}/{args.environmentProject}/storage/@org/${packageName}`,
     - `package.json` of package under `.../storage/@org/<package-name>/package.json`
 - `npm-install`
   - outputs
