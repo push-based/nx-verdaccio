@@ -84,6 +84,39 @@ This repository maintains the following example projects and plugins to showcase
 
 - remove usage of generatePackageJson in esbuild build targets
 
+- make verdaccio-registry.json a constant!
+
+- in `npm-install` executor:
+
+  - make buildTarget configurable in the executor options, default to 'build'
+  - use getPackageManagerCommand().install instead to be able to support yarn installation as well
+  - use detectPackageManager() and getPackageManagerVersion() to deduce the userconfig path (e.g. .yarnrc, .npmrc, etc.)
+
+- use [createNodesV2](https://nx.dev/nx-api/devkit/documents/CreateNodesV2) instead of [createNodes](https://nx.dev/nx-api/devkit/documents/CreateNodes) in `tooling/build-env/src/plugin/verdaccio-env.plugin.ts`
+
+- in the plugin code, (maybe I got it wrong) it looks like some targets should only be added to the e2e project, but they are added to all projects.
+```ts
+export const createNodes: CreateNodes = [
+  '**/project.json',
+  (projectConfigurationFile) => {
+    const projectConfiguration: ProjectConfiguration = readJsonFile(
+      join(process.cwd(), projectConfigurationFile)
+    );
+    const projectName = projectConfiguration.name;
+    const graph = readCachedProjectGraph();
+    const projectNode = graph.nodes[projectConfiguration.name];
+    if (projectNode.type !== 'e2e') {
+      return {
+        // npmTargets
+      };
+    }
+    return {
+      // verdaccioTargets, envTargets
+    };
+  },
+];
+```
+
 ## Connect with us!
 
 - [Check out our services](https://push-based.io)

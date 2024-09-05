@@ -75,6 +75,13 @@ export async function bootstrapEnvironment({
   return activeRegistry;
 }
 
+/**
+ * configure env with verdaccio registry as default
+ * exec commands:
+ * - `npm config set registry "${url}"
+ * - `npm config set //${host}:${port}/:_authToken "secretVerdaccioToken"`
+ * @see {@link VerdaccioProcessResult}
+ */
 export function configureRegistry(
   {
     port,
@@ -109,6 +116,13 @@ export function configureRegistry(
   execSync(setAuthToken);
 }
 
+/**
+ * unconfigure env with verdaccio registry as default
+ * exec commands:
+ * - `npm config delete //${host}:${port}/:_authToken`
+ * - `npm config delete registry`
+ * @see {@link VerdaccioProcessResult}
+ **/
 export function unconfigureRegistry(
   { port, host, userconfig }: VerdaccioProcessResult & { userconfig?: string },
   verbose?: boolean
