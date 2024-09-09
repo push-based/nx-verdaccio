@@ -25,7 +25,7 @@ export const createNodes: CreateNodes = [
     const tags = projectConfiguration?.tags ?? [];
     const isPublishable = tags.some((target) => target === 'publishable');
     const isNpmEnv = tags.some((target) => target === 'npm-env');
-    isPublishable && console.info('npmTargets' + projectName);
+
     return {
       projects: {
         [root]: {
