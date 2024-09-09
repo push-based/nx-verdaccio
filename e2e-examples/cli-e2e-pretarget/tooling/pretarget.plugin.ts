@@ -90,7 +90,7 @@ function verdaccioTargets(
     },
     'pretarget-teardown-env': {
       command:
-        'tsx --tsconfig=tools/tsconfig.tools.json tools/tools-utils/src/bin/stop-verdaccio.ts --workspaceRoot={args.workspaceRoot}',
+        'tsx --tsconfig=e2e-examples/cli-e2e-pretarget/tsconfig.tools.json e2e-examples/cli-e2e-pretarget/tooling/bin/stop-verdaccio.ts --workspaceRoot={args.workspaceRoot}',
       options: {
         workspaceRoot: join(tmpEnv, projectName),
       },

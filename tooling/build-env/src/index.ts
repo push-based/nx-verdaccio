@@ -1,2 +1,2 @@
 export { getEnvironmentsRoot, getEnvironmentRoot } from './shared/setup';
-export { createNodes } from './plugin/verdaccio-env.plugin';
+export { createNodes } from './plugin/plugin';
