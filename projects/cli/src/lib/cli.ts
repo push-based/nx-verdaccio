@@ -1,11 +1,11 @@
-import yargs, { Options } from 'yargs';
+import yargs, {Argv, Options} from 'yargs';
 import { sortUserFile } from '@org/core';
 
 export type CliArgs = {
   filePath: string;
 };
 
-const NOOP_BUILDER = undefined;
+const NOOP_BUILDER = <T>(_: Argv<T>) => {};
 export function cli(args: string[]) {
   return yargs(args)
     .version(false)

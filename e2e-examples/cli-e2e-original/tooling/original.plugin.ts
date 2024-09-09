@@ -45,7 +45,7 @@ function verdaccioTargets(): Record<string, TargetConfiguration> {
       options: {
         config: '.verdaccio/config.yml',
         storage: `tmp/local-registry/storage`,
-        port: 4200,
+        port: 4210,
       },
     },
   };

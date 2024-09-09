@@ -8,7 +8,8 @@ export function getEnvironmentsRoot(
 }
 
 /**
- * bx default takes the project name of the current task target
+ * Nx by default takes the project name of the current task target (env.NX_TASK_TARGET_PROJECT)
+ *
  * @param projectName
  * @param environmentsDir
  */
