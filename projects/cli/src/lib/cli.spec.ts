@@ -1,46 +1,23 @@
 import { join } from 'node:path';
+import { sortUserFile } from '@org/core';
 import { sortCommandHandle } from './cli';
-import { afterEach, beforeEach, type MockInstance, vi } from 'vitest';
-import { vol } from 'memfs';
+import { vi } from 'vitest';
 
-vi.mock('fs', async () => {
-  const memfs: typeof import('memfs') = await vi.importActual('memfs');
-  return memfs.fs;
-});
-vi.mock('fs/promises', async () => {
-  const memfs: typeof import('memfs') = await vi.importActual('memfs');
-  return memfs.fs.promises;
+vi.mock('@org/core', async () => {
+  const actual = await vi.importActual<typeof import('@org/core')>('@org/core');
+  return {
+    ...actual,
+    sortUserFile: vi.fn(async () => {}),
+  };
 });
 
 describe('sortCommandHandle', () => {
-  const MEMFS_VOLUME = '/test';
-  let cwdSpy: MockInstance<[], string>;
-
-  beforeEach(() => {
-    cwdSpy = vi.spyOn(process, 'cwd').mockReturnValue(MEMFS_VOLUME);
-  });
-
-  afterEach(() => {
-    cwdSpy.mockRestore();
-  });
-
   it('should sort file of users', async () => {
-    const testPath = join(MEMFS_VOLUME, 'sort', 'users.json');
-    vol.fromJSON(
-      {
-        [testPath]: JSON.stringify([{ name: 'Michael' }, { name: 'Alice' }]),
-      },
-      MEMFS_VOLUME
-    );
-
+    const testPath = join('sort', 'users.json');
     await expect(
       sortCommandHandle({ filePath: testPath })
     ).resolves.not.toThrow();
 
-    const content = vol.readFileSync(testPath).toString();
-    expect(JSON.parse(content)).toEqual([
-      { name: 'Alice' },
-      { name: 'Michael' },
-    ]);
+    expect(sortUserFile).toHaveBeenCalledWith(testPath);
   });
 });
