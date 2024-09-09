@@ -7,7 +7,7 @@ import { dirname, join, relative } from 'node:path';
 import type { ProjectConfiguration } from 'nx/src/config/workspace-json-project-json';
 import { getBuildOutputPathFromBuildTarget } from '@org/tools-utils';
 
-const tmpNpmEnv = join('tmp', 'npm-env');
+const tmpEnv = join('tmp', 'environment');
 
 export const createNodes: CreateNodes = [
   '**/project.json',
@@ -20,15 +20,6 @@ export const createNodes: CreateNodes = [
     const projectName = projectConfiguration.name;
     if (projectName == null) {
       throw new Error('Project name required');
-    }
-
-    // only execute for the -pretarget example projects e.g. `cli-e2e-pretarget`, `e2e-models-pretarget`
-    if (!projectName?.endsWith('-pretarget')) {
-      return {
-        projects: {
-          [root]: {},
-        },
-      };
     }
 
     const tags = projectConfiguration?.tags ?? [];
@@ -83,17 +74,17 @@ function verdaccioTargets(
       executor: '@nx/js:verdaccio',
       options: {
         config: '.verdaccio/config.yml',
-        storage: join(tmpNpmEnv, projectName, 'storage'),
+        storage: join(tmpEnv, projectName, 'storage'),
         clear: true,
       },
     },
     'pretarget-setup-npm-env': {
       command:
-        'tsx --tsconfig=tools/tsconfig.tools.json tools/tools-utils/src/bin/setup-npm-env.ts',
+        'tsx --tsconfig=e2e-examples/cli-e2e-pretarget/tsconfig.tools.json e2e-examples/cli-e2e-pretarget/tooling/bin/setup-npm-env.ts',
       options: {
         projectName,
         targetName: 'pretarget-start-verdaccio',
-        workspaceRoot: join(tmpNpmEnv, projectName),
+        workspaceRoot: join(tmpEnv, projectName),
         readyWhen: 'Environment ready under',
       },
     },
@@ -101,13 +92,13 @@ function verdaccioTargets(
       command:
         'tsx --tsconfig=tools/tsconfig.tools.json tools/tools-utils/src/bin/stop-verdaccio.ts --workspaceRoot={args.workspaceRoot}',
       options: {
-        workspaceRoot: join(tmpNpmEnv, projectName),
+        workspaceRoot: join(tmpEnv, projectName),
       },
     },
     'pretarget-setup-env': {
       cache: true,
       inputs: ['default', '^production', '!{projectRoot}/**/*.md'],
-      outputs: [`{workspaceRoot}/${tmpNpmEnv}/${projectName}/node_modules`],
+      outputs: [`{workspaceRoot}/${tmpEnv}/${projectName}/node_modules`],
       executor: 'nx:run-commands',
       options: {
         commands: [
@@ -115,7 +106,7 @@ function verdaccioTargets(
           `nx pretarget-setup-deps ${projectName} --envProjectName={args.envProjectName}`,
           `nx pretarget-teardown-env ${projectName} --workspaceRoot={args.workspaceRoot}`,
         ],
-        workspaceRoot: join(tmpNpmEnv, projectName),
+        workspaceRoot: join(tmpEnv, projectName),
         forwardAllArgs: true,
         envProjectName: projectName,
         parallel: false,
@@ -162,7 +153,7 @@ function npmTargets(
       ],
       command: `npm publish --userconfig=${relativeFromPath(
         outputPath
-      )}/${tmpNpmEnv}/{args.envProjectName}/.npmrc`,
+      )}/${tmpEnv}/{args.envProjectName}/.npmrc`,
       options: {
         cwd: outputPath,
         envProjectName: `${projectName}`,
@@ -181,9 +172,9 @@ function npmTargets(
           params: 'forward',
         },
       ],
-      command: `npm install --no-fund --no-shrinkwrap --save ${packageName}@{args.pkgVersion} --prefix=${tmpNpmEnv}/{args.envProjectName} --userconfig=${relativeFromPath(
+      command: `npm install --no-fund --no-shrinkwrap --save ${packageName}@{args.pkgVersion} --prefix=${tmpEnv}/{args.envProjectName} --userconfig=${relativeFromPath(
         outputPath
-      )}/${tmpNpmEnv}/{args.envProjectName}/.npmrc`,
+      )}/${tmpEnv}/{args.envProjectName}/.npmrc`,
       options: {
         pkgVersion,
         envProjectName: projectName,

@@ -81,6 +81,8 @@
   "plugins": [
     "./e2e-examples/cli-e2e-original/tooling/original.plugin.ts",
     "./e2e-examples/cli-e2e-env/tooling/env.plugin.ts",
+    "./e2e-examples/cli-e2e-graph/tooling/graph.plugin.ts",
+    "./e2e-examples/cli-e2e-pretarget/tooling/pretarget.plugin.ts",
     "./tooling/build-env/src/plugin/verdaccio-env.plugin.ts"
   ],
   "release": {

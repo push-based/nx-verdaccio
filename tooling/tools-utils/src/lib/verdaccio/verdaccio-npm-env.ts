@@ -52,7 +52,6 @@ export async function setupNpmEnv({
     verbose,
     ...opts,
   });
-
   // set up NPM workspace environment
   await setupNpmWorkspace(workspaceRoot, verbose);
   const userconfig = join(workspaceRoot, '.npmrc');

@@ -59,7 +59,7 @@ function verdaccioTargets(
     },
     'graph-setup-npm-env': {
       command:
-        'tsx --tsconfig=tools/tsconfig.tools.json tools/tools-utils/src/bin/setup-npm-env.ts',
+        'tsx --tsconfig=e2e-examples/cli-e2e-graph/tsconfig.tools.json e2e-examples/cli-e2e-graph/tooling/bin/setup-npm-env.ts',
       options: {
         projectName,
         envProjectName: projectName,

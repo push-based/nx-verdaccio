@@ -1,11 +1,8 @@
+import yargs, { Options } from 'yargs';
 import {
   setupNpmEnv,
   StartVerdaccioAndSetupEnvOptions,
-} from '../lib/verdaccio/verdaccio-npm-env';
-import yargs, { Options } from 'yargs';
-
-const isVerbose: boolean =
-  process.env['NX_VERBOSE_LOGGING'] === 'true' ?? false;
+} from '@org/tools-utils';
 
 const args = yargs(process.argv.slice(2))
   .version(false)
@@ -22,16 +19,14 @@ const args = yargs(process.argv.slice(2))
     verbose: {
       type: 'boolean',
       description: 'Verbose logging',
-      default: isVerbose,
+      default: false,
     },
     targetName: {
       type: 'string',
-      description: 'Verbose logging',
-      default: isVerbose,
+      description: "Target name for Verdaccio's configuration",
     },
     port: {
       type: 'number',
-      default: 55555,
     },
   } satisfies Partial<Record<keyof StartVerdaccioAndSetupEnvOptions, Options>>)
   .parse() as StartVerdaccioAndSetupEnvOptions;

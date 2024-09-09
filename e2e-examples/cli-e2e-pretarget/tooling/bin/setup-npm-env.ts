@@ -4,9 +4,6 @@ import {
   StartVerdaccioAndSetupEnvOptions,
 } from '@org/tools-utils';
 
-const isVerbose: boolean =
-  process.env['NX_VERBOSE_LOGGING'] === 'true' ?? false;
-
 const args = yargs(process.argv.slice(2))
   .version(false)
   .options({
@@ -22,7 +19,7 @@ const args = yargs(process.argv.slice(2))
     verbose: {
       type: 'boolean',
       description: 'Verbose logging',
-      default: isVerbose,
+      default: false,
     },
     targetName: {
       type: 'string',
