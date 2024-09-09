@@ -50,8 +50,7 @@
   "optionalDependencies": {
     "@nx/nx-darwin-arm64": "^19.6.6",
     "@nx/nx-darwin-x64": "^19.6.6",
-    "@nx/nx-linux-x64-gnu": "^19.6.6",
-    "@swc/core-linux-x64-gnu": "^1.7.22"
+    "@nx/nx-linux-x64-gnu": "^19.6.6"
   },
   "nx": {
     "includedScripts": []
