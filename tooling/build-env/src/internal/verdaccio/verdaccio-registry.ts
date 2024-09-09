@@ -5,7 +5,7 @@ import { logger } from '@nx/devkit';
 import { objectToCliArgs } from '../utils/terminal-command';
 import { executeProcess } from '../utils/execute-process';
 import { uniquePort } from '../utils/utils';
-import {getEnvironmentsRoot} from "@org/build-env";
+import { getEnvironmentsRoot } from '../../shared/setup';
 
 export function logInfo(msg: string) {
   info(msg, 'Verdaccio: ');
@@ -88,12 +88,12 @@ export type StarVerdaccioOptions = VerdaccioExecuterOptions &
 
 export async function startVerdaccioServer({
   targetName = 'start-verdaccio',
-                                             projectName,
-                                             port = String(uniquePort()),
-                                             storage = join(getEnvironmentsRoot(projectName), targetName, 'storage'),
-                                             location = 'none',
-                                             clear = true,
-                                             verbose = true,
+  projectName,
+  port = String(uniquePort()),
+  storage = join(getEnvironmentsRoot(projectName), targetName, 'storage'),
+  location = 'none',
+  clear = true,
+  verbose = true,
   ...opt
 }: StarVerdaccioOptions): Promise<RegistryResult> {
   let startDetected = false;

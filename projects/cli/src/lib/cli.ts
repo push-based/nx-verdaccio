@@ -1,4 +1,4 @@
-import yargs, { ArgumentsCamelCase, Options } from 'yargs';
+import yargs, { Options } from 'yargs';
 import { sortUserFile } from '@org/core';
 
 export type CliArgs = {
@@ -7,24 +7,22 @@ export type CliArgs = {
 
 const NOOP_BUILDER = undefined;
 export function cli(args: string[]) {
-  return (
-    yargs(args)
-      .version(false)
-      .help(true)
-      .alias('help', 'h')
-      .options({
-        filePath: {
-          type: 'string',
-          description: 'Path to the user file',
-          demandOption: true,
-        },
-      } satisfies Record<keyof CliArgs, Options>)
-      //.command('*', 'Sort users', sortCommandHandle)
-      .command('sort', 'Sort users', NOOP_BUILDER, sortCommandHandle)
-  );
+  return yargs(args)
+    .version(false)
+    .help(true)
+    .alias('help', 'h')
+    .options({
+      filePath: {
+        type: 'string',
+        description: 'Path to the user file',
+        demandOption: true,
+      },
+    } satisfies Record<keyof CliArgs, Options>)
+    .command('*', 'Sort users', NOOP_BUILDER, sortCommandHandle)
+    .command('sort', 'Sort users', NOOP_BUILDER, sortCommandHandle);
 }
 
-export async function sortCommandHandle(args: ArgumentsCamelCase<CliArgs>) {
+export async function sortCommandHandle(args: CliArgs) {
   const { filePath } = args;
   await sortUserFile(filePath);
   console.log(`Sorted users in ${filePath}`);

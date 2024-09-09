@@ -24,13 +24,13 @@ export const createNodes: CreateNodes = [
       (tag) => tag === 'publishable'
     );
 
-
     return {
       projects: {
         [root]: {
           targets: {
             ...(isRoot && verdaccioTargets()),
-            ...(isPublishable && npmTargets({ ...projectConfiguration, root, name: projectName })),
+            ...(isPublishable &&
+              npmTargets({ ...projectConfiguration, root, name: projectName })),
           },
         },
       },
@@ -45,7 +45,7 @@ function verdaccioTargets(): Record<string, TargetConfiguration> {
       options: {
         config: '.verdaccio/config.yml',
         storage: `tmp/local-registry/storage`,
-        port: 4200
+        port: 4200,
       },
     },
   };
@@ -68,7 +68,7 @@ function npmTargets(
       },
     },
     'original-npm-install': {
-      command: `npm install -D ${packageName}@{args.pkgVersion}`,
+      command: `npm install -D --no-fund --no-package-lock ${packageName}@{args.pkgVersion}`,
       options: {
         pkgVersion,
       },

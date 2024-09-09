@@ -79,8 +79,9 @@
     }
   },
   "plugins": [
-    "./tooling/build-env/src/plugin/verdaccio-env.plugin.ts",
-    "./e2e-examples/cli-e2e-original/tooling/original.plugin.ts"
+    "./e2e-examples/cli-e2e-original/tooling/original.plugin.ts",
+    "./e2e-examples/cli-e2e-env/tooling/env.plugin.ts",
+    "./tooling/build-env/src/plugin/verdaccio-env.plugin.ts"
   ],
   "release": {
     "version": {

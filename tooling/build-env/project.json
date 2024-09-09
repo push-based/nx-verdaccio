@@ -26,11 +26,6 @@
           },
           {
             "input": "./tooling/build-env",
-            "glob": "generators.json",
-            "output": "."
-          },
-          {
-            "input": "./tooling/build-env",
             "glob": "executors.json",
             "output": "."
           }
@@ -47,12 +42,6 @@
       }
     },
     "unit-test": {
-      "executor": "@nx/vite:test",
-      "options": {
-        "configFile": "tooling/build-env/vite.config.ts"
-      }
-    },
-    "integration-test": {
       "executor": "@nx/vite:test",
       "options": {
         "configFile": "tooling/build-env/vite.config.ts"

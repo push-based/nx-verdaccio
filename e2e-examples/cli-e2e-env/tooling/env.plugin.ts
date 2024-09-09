@@ -7,7 +7,7 @@ import { dirname, join, relative } from 'node:path';
 import type { ProjectConfiguration } from 'nx/src/config/workspace-json-project-json';
 import { getBuildOutputPathFromBuildTarget } from '@org/tools-utils';
 
-const tmpNpmEnv = join('tmp', 'npm-env');
+const tmpEnv = join('tmp', 'environments');
 
 export const createNodes: CreateNodes = [
   '**/project.json',
@@ -20,15 +20,6 @@ export const createNodes: CreateNodes = [
     const projectName = projectConfiguration.name;
     if (projectName == null) {
       throw new Error('Project name required');
-    }
-
-    // only execute for the -env example projects e.g. `cli-e2e-env`, `e2e-models-env`
-    if (!projectName.endsWith('-env')) {
-      return {
-        projects: {
-          [root]: {},
-        },
-      };
     }
 
     const tags = projectConfiguration?.tags ?? [];
@@ -67,11 +58,11 @@ function verdaccioTargets(
     },
     'env-setup-npm-env': {
       command:
-        'tsx --tsconfig=tools/tsconfig.tools.json tools/tools-utils/src/bin/setup-npm-env.ts',
+        'tsx --tsconfig=e2e-examples/cli-e2e-env/tsconfig.tools.json e2e-examples/cli-e2e-env/tooling/bin/setup-npm-env.ts',
       options: {
         projectName,
         targetName: 'env-start-verdaccio',
-        workspaceRoot: join(tmpNpmEnv, projectName),
+        workspaceRoot: join(tmpEnv, projectName),
         location: 'none',
       },
     },
@@ -95,16 +86,16 @@ function npmTargets(
     'env-npm-publish': {
       command: `npm publish --userconfig=${relativeFromPath(
         outputPath
-      )}/${tmpNpmEnv}/{args.envProjectName}/.npmrc`,
+      )}/${tmpEnv}/{args.envProjectName}/.npmrc`,
       options: {
         cwd: outputPath,
         envProjectName: `${projectName}-npm-env`,
       },
     },
     'env-npm-install': {
-      command: `npm install --no-fund --no-shrinkwrap --save ${packageName}@{args.pkgVersion} --prefix=${tmpNpmEnv}/{args.envProjectName} --userconfig=${relativeFromPath(
+      command: `npm install --no-fund --no-shrinkwrap --save ${packageName}@{args.pkgVersion} --prefix=${tmpEnv}/{args.envProjectName} --userconfig=${relativeFromPath(
         outputPath
-      )}/${tmpNpmEnv}/{args.envProjectName}/.npmrc`,
+      )}/${tmpEnv}/{args.envProjectName}/.npmrc`,
       options: {
         pkgVersion,
         envProjectName: `${projectName}-npm-env`,

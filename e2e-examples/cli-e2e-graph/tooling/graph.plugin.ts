@@ -22,15 +22,6 @@ export const createNodes: CreateNodes = [
       throw new Error('Project name required');
     }
 
-    // only execute for the -graph example projects e.g. `cli-e2e-graph`, `e2e-models-graph`
-    if (!projectName.endsWith('-graph')) {
-      return {
-        projects: {
-          [root]: {},
-        },
-      };
-    }
-
     const tags = projectConfiguration?.tags ?? [];
     const isPublishable = tags.some((target) => target === 'publishable');
     const isNpmEnv = tags.some((target) => target === 'npm-env');
@@ -87,6 +78,7 @@ function verdaccioTargets(
         },
       ],
       command: 'echo Dependencies installed!',
+      options: {},
     },
   };
 }

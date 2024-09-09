@@ -5,11 +5,12 @@
   "scripts": {},
   "private": true,
   "dependencies": {
+    "memfs": "^4.11.1",
     "tslib": "^2.3.0",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@nx/devkit": "^19.6.4",
+    "@nx/devkit": "^19.6.5",
     "@nx/esbuild": "18.2.4",
     "@nx/eslint": "18.2.4",
     "@nx/eslint-plugin": "18.2.4",
