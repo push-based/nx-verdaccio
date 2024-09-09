@@ -53,3 +53,5 @@ jobs:
         run: npx nx run cli-e2e-graph:graph-e2e
       - name: pretarget E2E test project
         run: npx nx run cli-e2e-graph:pretarget-e2e
+      - name: E2E test all projects with buildable environmnets
+        run: npx nx run-many -t e2e --parallel 10
