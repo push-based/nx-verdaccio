@@ -19,6 +19,7 @@
       "@org/cli": ["projects/cli/src/index.ts"],
       "@org/core": ["projects/core/src/index.ts"],
       "@org/models": ["projects/models/src/index.ts"],
+      "@org/test-setup": ["testing/test-setup/src/index.ts"],
       "@org/test-utils": ["testing/test-utils/src/index.ts"],
       "@org/tools-utils": ["tooling/tools-utils/src/index.ts"],
       "@org/utils": ["projects/utils/src/index.ts"]

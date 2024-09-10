@@ -14,7 +14,7 @@ export function logError(msg: string) {
 export async function setupNpmWorkspace(
   environmentRoot: string,
   verbose?: boolean
-) {
+): Promise<void> {
   if (verbose) {
     logInfo(`Execute: npm init in directory ${environmentRoot}`);
   }

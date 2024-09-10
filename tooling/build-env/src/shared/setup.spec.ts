@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getEnvironmentRoot, getEnvironmentsRoot } from '@org/build-env';
+import { getEnvironmentRoot, getEnvironmentsRoot } from './setup';
 
 describe('getEnvironmentsRoot', () => {
   it('should return default env dir', () => {
