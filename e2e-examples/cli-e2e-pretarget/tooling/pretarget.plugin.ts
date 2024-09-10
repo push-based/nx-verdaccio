@@ -93,9 +93,6 @@ function verdaccioTargets(
       },
     },
     'pretarget-setup-env': {
-      cache: true,
-      inputs: ['default', '^production', '!{projectRoot}/**/*.md'],
-      outputs: [`{workspaceRoot}/${tmpEnv}/${projectName}/node_modules`],
       executor: 'nx:run-commands',
       options: {
         commands: [
