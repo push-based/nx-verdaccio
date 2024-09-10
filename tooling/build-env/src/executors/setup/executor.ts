@@ -7,6 +7,7 @@ import { objectToCliArgs } from '../../internal/utils/terminal-command';
 import type { VerdaccioProcessResult } from '../../internal/verdaccio/verdaccio-registry';
 import type { SetupEnvironmentExecutorOptions } from './schema';
 import { normalizeOptions } from '../internal/normalize-options';
+import { VERDACCIO_REGISTRY_JSON } from '../../internal/verdaccio/verdaccio-npm-env';
 
 export type ExecutorOutput = {
   success: boolean;
@@ -50,14 +51,14 @@ export default async function runSetupEnvironmentExecutor(
           ...normalizedOptions,
           filePath: join(
             normalizedOptions.environmentRoot,
-            'verdaccio-registry.json'
+            VERDACCIO_REGISTRY_JSON
           ),
         },
         context
       );
     } else {
       const { url } = readJsonFile<VerdaccioProcessResult>(
-        join(normalizedOptions.environmentRoot, 'verdaccio-registry.json')
+        join(normalizedOptions.environmentRoot, VERDACCIO_REGISTRY_JSON)
       );
       logger.info(`Verdaccio server kept running under : ${url}`);
     }

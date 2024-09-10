@@ -19,6 +19,8 @@ function errorLog(msg: string) {
   error(msg, 'Verdaccio Env: ');
 }
 
+export const VERDACCIO_REGISTRY_JSON = 'verdaccio-registry.json';
+
 export const verdaccioEnvLogger = {
   info: logInfo,
   error: errorLog,
@@ -66,7 +68,7 @@ export async function bootstrapEnvironment({
     `Save active verdaccio registry data to file: ${activeRegistry.root}`
   );
   await writeFile(
-    join(activeRegistry.root, 'verdaccio-registry.json'),
+    join(activeRegistry.root, VERDACCIO_REGISTRY_JSON),
     JSON.stringify(activeRegistry.registry, null, 2)
   );
 
