@@ -7,7 +7,7 @@ import {
   unconfigureRegistry,
 } from '@org/tools-utils';
 
-const isVerbose = true; // process.env.NX_VERBOSE_LOGGING === 'true' ?? false;
+const isVerbose = process.env['NX_VERBOSE_LOGGING'] === 'true' ?? false;
 const projectName = process.env['NX_TASK_TARGET_PROJECT'];
 
 export async function setup() {
@@ -31,9 +31,9 @@ export async function setup() {
       targets: 'original-npm-publish',
       exclude: 'tag:type:testing',
       skipNxCache: true,
+      verbose: isVerbose
     }),
-
-    verbose: isVerbose,
+    verbose: isVerbose
   });
 
   // package install all projects
@@ -43,9 +43,11 @@ export async function setup() {
       _: ['run-many'],
       targets: 'original-npm-install',
       exclude: 'tag:type:testing',
+      parallel: 1,
       skipNxCache: true,
+      verbose: isVerbose
     }),
-    verbose: isVerbose,
+    verbose: isVerbose
   });
 
   // @TODO figure out why named exports don't work https://vitest.dev/config/#globalsetup
