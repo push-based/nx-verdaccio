@@ -33,32 +33,33 @@ export default async function runSetupEnvironmentExecutor(
       },
       context
     );
+    const {environmentRoot, keepServerRunning, verbose = true} = normalizedOptions;
 
     await executeProcess({
       command: 'nx',
       args: objectToCliArgs({
         _: ['install-env', projectName],
         environmentProject: projectName,
-        environmentRoot: normalizedOptions.environmentRoot,
+        environmentRoot,
       }),
       cwd: process.cwd(),
-      verbose: true,
+      verbose,
     });
 
-    if (!normalizedOptions.keepServerRunning) {
+    if (!keepServerRunning) {
       await runKillProcessExecutor(
         {
           ...normalizedOptions,
           filePath: join(
-            normalizedOptions.environmentRoot,
+            environmentRoot,
             VERDACCIO_REGISTRY_JSON
           ),
         },
         context
       );
     } else {
-      const { url } = readJsonFile<VerdaccioProcessResult>(
-        join(normalizedOptions.environmentRoot, VERDACCIO_REGISTRY_JSON)
+      const {url} = readJsonFile<VerdaccioProcessResult>(
+        join(environmentRoot, VERDACCIO_REGISTRY_JSON)
       );
       logger.info(`Verdaccio server kept running under : ${url}`);
     }
