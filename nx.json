@@ -83,7 +83,13 @@
     "./e2e-examples/cli-e2e-env/tooling/env.plugin.ts",
     "./e2e-examples/cli-e2e-graph/tooling/graph.plugin.ts",
     "./e2e-examples/cli-e2e-pretarget/tooling/pretarget.plugin.ts",
-    "@org/build-env"
+    "@org/build-env",
+    {
+      "plugin": "@nx/eslint/plugin",
+      "options": {
+        "targetName": "lint"
+      }
+    }
   ],
   "release": {
     "version": {
