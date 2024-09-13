@@ -53,7 +53,7 @@ To elaborate on the performance issues, we show the different cases while writin
 ##### Changes in source
 
 ```mermaid
-flowchart LR
+flowchart TB
 P[project-e2e:e2e]:::e2e-.implicit.->E[project:build]:::build;
 classDef e2e stroke:#f00
 classDef build stroke:#f00
@@ -71,6 +71,7 @@ classDef build stroke:#f00
 ##### Changes in tests
 
 ```mermaid
+flowchart TB
 P[project-e2e:e2e]:::e2e-.implicit.->E[project:build]:::build;
 classDef e2e stroke:#f00
 ```
@@ -111,7 +112,7 @@ To elaborate on the performance improvements, we show the different cases while 
 ##### Changes in source
 
 ```mermaid
-flowchart LR
+flowchart TB
 P[project-e2e:e2e]:::e2e-.implicit.->S[project-e2e:setup-env]:::build;
 S-.implicit.->E[project:build]:::build;
 classDef e2e stroke:#f00
@@ -122,8 +123,8 @@ classDef build stroke:#f00
 ##### Changes in the test environments
 
 ```mermaid
-flowchart LR
-P[project-e2e:e2e]:::e2e-.implicit.->S[project-e2e:setup-env]:::build;
+flowchart TB
+P[project-e2e:e2e]:::e2e-.implicit.->S[project-e2e:setup-env]:::setup-env;
 S-.implicit.->E[project:build]:::build;
 classDef e2e stroke:#f00
 classDef setup-env stroke:#f00
@@ -132,7 +133,7 @@ classDef setup-env stroke:#f00
 ##### Changes in tests
 
 ```mermaid
-flowchart LR
+flowchart TB
 P[project-e2e:e2e]:::e2e-.implicit.->S[project-e2e:setup-env]:::build;
 S-.implicit.->E[project:build]:::build;
 classDef e2e stroke:#f00
