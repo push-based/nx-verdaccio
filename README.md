@@ -63,7 +63,7 @@ classDef project stroke:#f00
 
 ```mermaid
 flowchart TB
-project-e2e-and-environment:::project-e2e-.implicit.->project:::project;
+project-e2e-and-environment:::project-e2e-and-environment-.implicit.->project:::project;
 classDef project-e2e-and-environment stroke:#f00
 classDef project stroke:#f00
 ```
@@ -72,7 +72,7 @@ classDef project stroke:#f00
 
 ```mermaid
 flowchart TB
-project-e2e-and-environment:::project-e2e-.implicit.->project:::project;
+project-e2e-and-environment:::project-e2e-and-environment-.implicit.->project:::project;
 classDef project-e2e-and-environment stroke:#f00
 ```
 
