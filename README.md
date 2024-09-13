@@ -46,34 +46,33 @@ User/
         └── package.json # 🔓 npm install/uninstall installs into workspace root
 ```
 
-#### Performance
+#### Task Performance
 
 To elaborate on the performance issues, we show the different cases while writing tests.
 
 ##### Changes in source
 
 ```mermaid
-flowchart TB
-project-e2e-and-environment:::project-e2e-.implicit.->project:::project;
-classDef project-e2e-and-environment stroke:#f00
-classDef project stroke:#f00
+flowchart LR
+P[project-e2e:e2e]:::e2e-.implicit.->E[project:build]:::build;
+classDef e2e stroke:#f00
+classDef build stroke:#f00
 ```
 
 ##### Changes in the test environments
 
 ```mermaid
 flowchart TB
-project-e2e-and-environment:::project-e2e-and-environment-.implicit.->project:::project;
-classDef project-e2e-and-environment stroke:#f00
-classDef project stroke:#f00
+P[project-e2e:e2e]:::e2e-.implicit.->E[project:build]:::build;
+classDef e2e stroke:#f00
+classDef build stroke:#f00
 ```
 
 ##### Changes in tests
 
 ```mermaid
-flowchart TB
-project-e2e-and-environment:::project-e2e-and-environment-.implicit.->project:::project;
-classDef project-e2e-and-environment stroke:#f00
+P[project-e2e:e2e]:::e2e-.implicit.->E[project:build]:::build;
+classDef e2e stroke:#f00
 ```
 
 ### Solution
@@ -105,41 +104,38 @@ Root/ # 👈 this is your CWD
             └── package.json # npm install/uninstall
 ```
 
-#### Performance
+#### Task Performance
 
 To elaborate on the performance improvements, we show the different cases while writing tests.
 
 ##### Changes in source
 
 ```mermaid
-flowchart TB
-project-e2e:::project-e2e-.implicit.->e2e-environment:::e2e-environment;
-e2e-environment-.implicit.->project:::project;
-
-classDef project-e2e stroke:#f00
-classDef e2e-environment stroke:#f00
-classDef project stroke:#f00
+flowchart LR
+P[project-e2e:e2e]:::e2e-.implicit.->S[project-e2e:setup-env]:::build;
+S-.implicit.->E[project:build]:::build;
+classDef e2e stroke:#f00
+classDef setup-env stroke:#f00
+classDef build stroke:#f00
 ```
 
 ##### Changes in the test environments
 
 ```mermaid
-flowchart TB
-project-e2e:::project-e2e-.implicit.->e2e-environment:::e2e-environment;
-e2e-environment-.implicit.->project:::project;
-
-classDef project-e2e stroke:#f00
-classDef e2e-environment stroke:#f00
+flowchart LR
+P[project-e2e:e2e]:::e2e-.implicit.->S[project-e2e:setup-env]:::build;
+S-.implicit.->E[project:build]:::build;
+classDef e2e stroke:#f00
+classDef setup-env stroke:#f00
 ```
 
 ##### Changes in tests
 
 ```mermaid
-flowchart TB
-project-e2e:::project-e2e-.implicit.->e2e-environment:::e2e-environment;
-e2e-environment-.implicit.->project:::project;
-
-classDef project-e2e stroke:#f00
+flowchart LR
+P[project-e2e:e2e]:::e2e-.implicit.->S[project-e2e:setup-env]:::build;
+S-.implicit.->E[project:build]:::build;
+classDef e2e stroke:#f00
 ```
 
 ## Test it
