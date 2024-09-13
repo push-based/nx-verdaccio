@@ -33,7 +33,6 @@ describe('logError', () => {
   });
 });
 
-// @TODO understand why chdir is not mocked
 describe.skip('setupNpmWorkspace', () => {
   let cwdSpy;
   let chdirSpy;
@@ -42,11 +41,13 @@ describe.skip('setupNpmWorkspace', () => {
   beforeEach(() => {
     cwdSpy = vi.spyOn(process, 'cwd').mockReturnValue(MEMFS_VOLUME);
     chdirSpy = vi.spyOn(process, 'chdir').mockImplementation(vi.fn());
+    logInfoSpy = vi.mocked(logInfo).mockImplementation(vi.fn());
   });
 
   afterEach(() => {
     cwdSpy.mockRestore();
     chdirSpy.mockRestore();
+    logInfoSpy.mockRestore();
   });
 
   it('should create npm workspace in given folder', () => {

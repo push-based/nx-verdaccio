@@ -76,13 +76,11 @@ export async function bootstrapEnvironment({
   return activeRegistry;
 }
 
+export type ConfigureRegistryOptions = VerdaccioProcessResult & {
+  userconfig?: string;
+};
 export function configureRegistry(
-  {
-    port,
-    host,
-    url,
-    userconfig,
-  }: VerdaccioProcessResult & { userconfig?: string },
+  { port, host, url, userconfig }: ConfigureRegistryOptions,
   verbose?: boolean
 ) {
   const setRegistry = `npm config set registry="${url}" ${objectToCliArgs({

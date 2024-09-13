@@ -12,14 +12,14 @@ describe('getTargetOutputPath', () => {
   });
 
   it('should throw if no outputPath is given in options', () => {
-    expect(
+    expect(() =>
       getTargetOutputPath({
         options: {},
       })
     ).toThrow('outputPath is required');
   });
 
-  it('should throw if empty onject is passed', () => {
-    expect(getTargetOutputPath({})).toThrow('outputPath is required');
+  it('should throw if empty object is passed', () => {
+    expect(() => getTargetOutputPath({})).toThrow('outputPath is required');
   });
 });

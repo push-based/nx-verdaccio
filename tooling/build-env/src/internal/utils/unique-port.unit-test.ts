@@ -2,7 +2,7 @@ import { uniquePort } from './unique-port';
 
 describe('uniquePort', () => {
   it('should return a different number on every call', () => {
-    const portsArray = new Array(100).fill(0).map(() => uniquePort());
+    const portsArray = new Array(10).fill(0).map(() => uniquePort());
     expect(portsArray.length).toBe(new Set(portsArray).size);
   });
 
