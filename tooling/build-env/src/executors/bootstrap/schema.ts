@@ -1,5 +1,5 @@
 export type BootstrapExecutorOptions = Partial<{
-  workspaceRoot: string;
+  environmentRoot: string;
   dryRun: boolean;
   verbose: boolean;
 }>;

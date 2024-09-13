@@ -4,7 +4,10 @@ import type { ExecutorContext } from '@nx/devkit';
 
 export function normalizeOptions<
   T extends ExecutorContext,
-  I extends Record<string, unknown> & { environmentProject?: string }
+  I extends Record<string, unknown> & {
+    environmentProject?: string;
+    environmentRoot?: string;
+  }
 >(
   context: T,
   options: I
@@ -12,17 +15,15 @@ export function normalizeOptions<
   options: I & { environmentRoot: string };
 } {
   const { projectName } = context;
-  const { environmentProject = projectName } = options;
+  const { environmentProject = projectName, environmentRoot } = options;
   return {
     ...context,
     options: {
       ...options,
-      // @TODO reconsider if this should stay here
       environmentProject,
-      environmentRoot: join(
-        DEFAULT_ENVIRONMENTS_OUTPUT_DIR,
-        environmentProject
-      ),
+      environmentRoot:
+        environmentRoot ??
+        join(DEFAULT_ENVIRONMENTS_OUTPUT_DIR, environmentProject),
     },
   };
 }

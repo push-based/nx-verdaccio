@@ -4,7 +4,7 @@
   "title": "Environment bootstrap executor options",
   "type": "object",
   "properties": {
-    "workspaceRoot": {
+    "environmentRoot": {
       "type": "string",
       "description": "The root directory of the environment"
     },
