@@ -2,9 +2,9 @@ import { gray, bold, red } from 'ansis';
 import { join } from 'node:path';
 import { error, info } from '../utils/logging';
 import { logger } from '@nx/devkit';
-import { objectToCliArgs } from '../utils/terminal-command';
+import { objectToCliArgs } from '../utils/terminal';
 import { executeProcess } from '../utils/execute-process';
-import { uniquePort } from '../utils/utils';
+import { uniquePort } from '../utils/unique-port';
 import { getEnvironmentsRoot } from '../../shared/setup';
 
 export function logInfo(msg: string) {

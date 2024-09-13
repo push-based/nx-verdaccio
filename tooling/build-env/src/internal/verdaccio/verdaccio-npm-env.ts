@@ -8,8 +8,9 @@ import {
 import { writeFile } from 'node:fs/promises';
 import { setupNpmWorkspace } from '../utils/npm';
 import { error, info } from '../utils/logging';
-import { objectToCliArgs } from '../utils/terminal-command';
+import { objectToCliArgs } from '../utils/terminal';
 import { execSync } from 'node:child_process';
+import { VERDACCIO_REGISTRY_JSON } from './constants';
 
 function logInfo(msg: string) {
   info(msg, 'Verdaccio Env: ');
@@ -18,8 +19,6 @@ function logInfo(msg: string) {
 function errorLog(msg: string) {
   error(msg, 'Verdaccio Env: ');
 }
-
-export const VERDACCIO_REGISTRY_JSON = 'verdaccio-registry.json';
 
 export const verdaccioEnvLogger = {
   info: logInfo,
