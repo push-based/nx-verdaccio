@@ -199,10 +199,6 @@ The plugins registered in `nx.json` are used to derive dynamic targets for diffe
 
 @TODO
 
-## TODO
-
-- remove usage of generatePackageJson in esbuild build targets
-
 ## Connect with us!
 
 - [Check out our services](https://push-based.io)
