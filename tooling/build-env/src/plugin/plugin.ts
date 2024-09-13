@@ -7,7 +7,8 @@ import {
 import { dirname, join } from 'node:path';
 import { DEFAULT_ENVIRONMENTS_OUTPUT_DIR } from '../internal/constants';
 import type { StarVerdaccioOptions } from '../internal/verdaccio/verdaccio-registry';
-import { VERDACCIO_REGISTRY_JSON } from '../internal/verdaccio/verdaccio-npm-env';
+
+import { VERDACCIO_REGISTRY_JSON } from '../internal/verdaccio/constants';
 
 export function isPublishable(tags: string[]): boolean {
   return tags.some((target) => target === 'publishable');
