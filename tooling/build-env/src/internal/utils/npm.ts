@@ -1,18 +1,13 @@
 import { execFileSync } from 'node:child_process';
 import { join } from 'node:path';
 import { ensureDirectoryExists } from './file-system';
-import { error, info } from './logging';
-import * as process from 'process';
+import { formatError, formatInfo } from './logging';
+import { logger } from '@nx/devkit';
 
-export function logInfo(msg: string) {
-  info(msg, 'Npm Env: ');
-}
-
-export function logError(msg: string) {
-  error(msg, 'Npm Env: ');
-}
+export const NPM_ENV_TOKEN = 'Npm Env: ';
 
 /*
+@TODO:
 This is here to be able to better mock chdir.
 We should definitely find a better solution that mocks it directly and avoids this wrapper completely.
 */
@@ -25,7 +20,12 @@ export async function setupNpmWorkspace(
   verbose?: boolean
 ): Promise<void> {
   if (verbose) {
-    logInfo(`Execute: npm init in directory ${environmentRoot}`);
+    logger.info(
+      formatInfo(
+        `Execute: npm init in directory ${environmentRoot}`,
+        NPM_ENV_TOKEN
+      )
+    );
   }
   const cwd = process.cwd();
   await ensureDirectoryExists(environmentRoot);
@@ -33,7 +33,12 @@ export async function setupNpmWorkspace(
   try {
     execFileSync('npm', ['init', '--force']).toString();
   } catch (error) {
-    logError(`Error creating NPM workspace: ${(error as Error).message}`);
+    logger.error(
+      formatError(
+        `Error creating NPM workspace: ${(error as Error).message}`,
+        NPM_ENV_TOKEN
+      )
+    );
   } finally {
     chdir(cwd);
   }

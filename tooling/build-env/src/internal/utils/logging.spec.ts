@@ -1,27 +1,18 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { error, info } from './logging';
+import { describe, expect, it } from 'vitest';
 import { bold, gray, red } from 'ansis';
+import { formatError, formatInfo } from './logging';
 
-describe('info', () => {
-  let consoleInfoSpy;
-  let consoleErrorSpy;
-  beforeEach(() => {
-    consoleInfoSpy = vi.spyOn(console, 'info').mockImplementation(vi.fn());
-    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(vi.fn());
-  });
-
-  it('should log info', () => {
-    info('message', 'token');
-    expect(consoleInfoSpy).toHaveBeenCalledTimes(1);
-    expect(consoleInfoSpy).toHaveBeenCalledWith(
+describe('formatInfo', () => {
+  it('should format info message correctly', () => {
+    expect(formatInfo('message', 'token')).toBe(
       `${gray('>')} ${gray(bold('token'))} ${'message'}`
     );
   });
+});
 
-  it('should log error', () => {
-    error('message', 'token');
-    expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
+describe('formatError', () => {
+  it('should format error message correctly', () => {
+    expect(formatError('message', 'token')).toBe(
       `${red('>')} ${red(bold('token'))} ${'message'}`
     );
   });

@@ -1,43 +1,36 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { configureRegistry, verdaccioEnvLogger } from './verdaccio-npm-env';
-import { bold, gray, red } from 'ansis';
+import { describe, expect, it, vi } from 'vitest';
+import {
+  configureRegistry,
+  ConfigureRegistryOptions,
+  VERDACCIO_ENV_TOKEN,
+} from './verdaccio-npm-env';
 import { execSync } from 'node:child_process';
-import { objectToCliArgs } from '../utils/terminal';
-import type { VerdaccioProcessResult } from './verdaccio-registry';
+import { logger } from '@nx/devkit';
+import { formatInfo } from '../utils/logging';
 
-describe('verdaccioEnvLogger.info', () => {
-  let consoleInfoSpy;
-  beforeEach(() => {
-    consoleInfoSpy = vi.spyOn(console, 'info').mockImplementation(vi.fn());
-  });
-
-  it('should log info', () => {
-    verdaccioEnvLogger.info('message');
-    expect(consoleInfoSpy).toHaveBeenCalledTimes(1);
-    expect(consoleInfoSpy).toHaveBeenCalledWith(
-      `${gray('>')} ${gray(bold('Verdaccio Env: '))} ${'message'}`
-    );
-  });
+vi.mock('child_process', async () => {
+  const actual = await vi.importActual<typeof import('child_process')>(
+    'child_process'
+  );
+  return {
+    ...actual,
+    execSync: vi.fn(),
+  };
 });
 
-describe('logError', () => {
-  let consoleErrorSpy;
-  beforeEach(() => {
-    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(vi.fn());
-  });
-
-  it('should log error', () => {
-    verdaccioEnvLogger.error('message');
-    expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      `${red('>')} ${red(bold('Verdaccio Env: '))} ${'message'}`
-    );
-  });
+vi.mock('@nx/devkit', async () => {
+  const actual = await vi.importActual('@nx/devkit');
+  return {
+    ...actual,
+    logger: {
+      info: vi.fn(),
+    },
+  };
 });
 
 describe('configureRegistry', () => {
   it('should set the npm registry and authToken', () => {
-    const processResult: VerdaccioProcessResult & { userconfig?: string } = {
+    const processResult: ConfigureRegistryOptions = {
       port: 4873,
       host: 'localhost',
       protocol: 'http',
@@ -45,37 +38,41 @@ describe('configureRegistry', () => {
       userconfig: 'test-config',
     };
 
-    configureRegistry(processResult, false);
+    configureRegistry(processResult);
 
-    expect(objectToCliArgs).toHaveBeenCalledWith({ userconfig: 'test-config' });
-
+    expect(execSync).toHaveBeenCalledTimes(2);
     expect(execSync).toHaveBeenCalledWith(
-      'npm config set registry="http://localhost:4873" --userconfig=test-config'
+      'npm config set registry="http://localhost:4873" --userconfig="test-config"'
     );
 
     expect(execSync).toHaveBeenCalledWith(
-      'npm config set //localhost:4873/:_authToken "secretVerdaccioToken" --userconfig=test-config'
+      'npm config set //localhost:4873/:_authToken "secretVerdaccioToken" --userconfig="test-config"'
     );
   });
 
   it('should log registry and authToken commands if verbose is true', () => {
-    const processResult = {
+    const processResult: ConfigureRegistryOptions = {
       port: 4873,
       host: 'localhost',
+      protocol: 'http',
       url: 'http://localhost:4873',
       userconfig: 'test-config',
     };
 
     configureRegistry(processResult, true);
 
-    expect(verdaccioEnvLogger.info).toHaveBeenCalledWith(
-      'Set registry:\nnpm config set registry="http://localhost:4873" --userconfig=test-config'
-    );
-
-    expect(verdaccioEnvLogger.info).toHaveBeenCalledWith(
-      'Set authToken:\nnpm config set //localhost:4873/:_authToken "secretVerdaccioToken" --userconfig=test-config'
-    );
-
     expect(execSync).toHaveBeenCalledTimes(2);
+    expect(logger.info).toHaveBeenCalledWith(
+      formatInfo(
+        'Set registry:\nnpm config set registry="http://localhost:4873" --userconfig="test-config"',
+        VERDACCIO_ENV_TOKEN
+      )
+    );
+    expect(logger.info).toHaveBeenCalledWith(
+      formatInfo(
+        'Set authToken:\nnpm config set //localhost:4873/:_authToken "secretVerdaccioToken" --userconfig="test-config"',
+        VERDACCIO_ENV_TOKEN
+      )
+    );
   });
 });
