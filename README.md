@@ -16,7 +16,7 @@ This workspace maintains a scalable and maintainable E2E setup for Vite tests an
 {
   "plugins": [
     {
-      "plugin": "@org/build.env",
+      "plugin": "@org/build-env",
       "options": {
         "environmentsDir": "tmp/environments"
       }
