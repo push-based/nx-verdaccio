@@ -23,8 +23,31 @@ jobs:
           cache: npm
       - name: Audit production dependencies
         run: npm audit --omit=dev --omit=optional
+  unit-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    name: Unit tests
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Set base and head for Nx affected commands
+        uses: nrwl/nx-set-shas@v4
+      - name: Install dependencies
+        run: npm ci
+      - name: Unit test affected projects
+        run: npx nx affected -t unit-test --parallel=3 --coverage.enabled
 
-  e2e-original:
+  e2e:
     strategy:
       fail-fast: false
       matrix:
