@@ -109,10 +109,7 @@ describe('startVerdaccioServer', () => {
   });
 
   it('should handle errors during process execution', async () => {
-    const mockError = new Error('Execution failed');
-    vi.mocked(executeProcess).mockImplementation(() => {
-      throw mockError;
-    });
+    vi.mocked(executeProcess).mockRejectedValue(new Error('Execution failed'));
 
     await expect(
       startVerdaccioServer({
