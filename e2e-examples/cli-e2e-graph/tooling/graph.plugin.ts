@@ -22,22 +22,10 @@ export const createNodes: CreateNodes = [
       throw new Error('Project name required');
     }
 
-    // only execute for the -graph example projects e.g. `cli-e2e-graph`, `e2e-models-graph`
-    if (!projectName.endsWith('-graph')) {
-      return {
-        projects: {
-          [root]: {},
-        },
-      };
-    }
-
     const tags = projectConfiguration?.tags ?? [];
     const isPublishable = tags.some((target) => target === 'publishable');
     const isNpmEnv = tags.some((target) => target === 'npm-env');
-    if (isNpmEnv) {
-      console.info('verdaccioTargets' + projectConfiguration.name);
-    }
-    isPublishable && console.info('npmTargets' + projectConfiguration.name);
+
     return {
       projects: {
         [root]: {
@@ -68,7 +56,7 @@ function verdaccioTargets(
     },
     'graph-setup-npm-env': {
       command:
-        'tsx --tsconfig=tools/tsconfig.tools.json tools/tools-utils/src/bin/setup-npm-env.ts',
+        'tsx --tsconfig=e2e-examples/cli-e2e-graph/tsconfig.tools.json e2e-examples/cli-e2e-graph/tooling/bin/setup-npm-env.ts',
       options: {
         projectName,
         envProjectName: projectName,
@@ -87,6 +75,7 @@ function verdaccioTargets(
         },
       ],
       command: 'echo Dependencies installed!',
+      options: {},
     },
   };
 }

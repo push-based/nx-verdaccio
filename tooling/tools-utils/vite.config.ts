@@ -19,6 +19,11 @@ export default defineConfig({
     environment: 'node',
     include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     reporters: ['default'],
+    setupFiles: [
+      'testing/test-setup/src/lib/console.mock.ts',
+      'testing/test-setup/src/lib/fs.mock.ts',
+      'testing/test-setup/src/lib/reset.mock.ts',
+    ],
     coverage: {
       reportsDirectory: '../../coverage/projects/tools-utils',
       provider: 'v8',

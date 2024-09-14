@@ -77,7 +77,7 @@ export async function startVerdaccioServer({
   targetName = 'start-verdaccio',
   projectName,
   storage = join('tmp', targetName, 'storage'),
-  port,
+  port = 4873,
   location = 'none',
   clear = true,
   verbose = false,

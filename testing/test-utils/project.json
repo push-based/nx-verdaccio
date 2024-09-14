@@ -3,7 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "projects/test-utils/src",
   "projectType": "library",
-  "tags": ["scope:utils", "type:testing-util"],
+  "tags": ["scope:shared", "type:testing"],
   "targets": {
     "build": {
       "executor": "@nx/esbuild:esbuild",

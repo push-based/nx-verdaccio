@@ -1,5 +1,5 @@
 import { executeProcess, objectToCliArgs } from '@org/test-utils';
-import { NpmTestEnvResult, VerdaccioExecuterOptions } from '@org/tools-utils';
+import { NpmTestEnvResult } from '@org/tools-utils';
 import { join } from 'node:path';
 import { rm } from 'node:fs/promises';
 import { readJsonFile } from '@nx/devkit';
@@ -21,13 +21,7 @@ export async function setup() {
   // start registry
   await executeProcess({
     command: 'nx',
-    args: objectToCliArgs<
-      Partial<
-        VerdaccioExecuterOptions & {
-          _: string[];
-        }
-      >
-    >({
+    args: objectToCliArgs({
       _: ['env-setup-npm-env', projectName ?? ''],
       verbose: isVerbose,
       clear: true,
@@ -37,12 +31,12 @@ export async function setup() {
     shell: true,
   });
 
-  const workspaceRoot = join('tmp', 'npm-env', projectName);
+  const workspaceRoot = join('tmp', 'environments', projectName);
   activeRegistry = await readJsonFile(
     join(workspaceRoot, 'verdaccio-registry.json')
   );
   const { registry } = activeRegistry;
-  stopRegistry = () => process.kill(Number(registry.pid));
+  stopRegistry = () => process.kill(Number(registry?.pid));
 
   // package publish all projects
   await executeProcess({

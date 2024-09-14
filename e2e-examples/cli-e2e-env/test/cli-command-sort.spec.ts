@@ -4,7 +4,7 @@ import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { executeProcess, objectToCliArgs } from '@org/test-utils';
 
 describe('CLI command - sort', () => {
-  const workspaceRoot = join('tmp', 'npm-env', 'cli-e2e-env');
+  const workspaceRoot = join('tmp', 'environments', 'cli-e2e-env');
   const baseDir = join(workspaceRoot, '__test_env__', 'cli-command-sort');
 
   afterEach(async () => {

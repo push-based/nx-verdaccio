@@ -1,0 +1,55 @@
+name: CI example
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  NX_NON_NATIVE_HASHER: true
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    name: Audit
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --omit=optional
+
+  e2e-original:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    name: E2E tests
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Set base and head for Nx affected commands
+        uses: nrwl/nx-set-shas@v4
+      - name: Install dependencies
+        run: npm i
+      - name: pretarget E2E test project
+        run: npx nx run cli-e2e-pretarget:pretarget-e2e --parallel=1 --verbose
+      - name: graph E2E test project
+        run: npx nx run cli-e2e-graph:graph-e2e --parallel=1 --verbose
+      - name: env E2E test project
+        run: npx nx run cli-e2e-env:env-e2e --parallel=1 --verbose
+      - name: Original E2E test project
+        run: npx nx run cli-e2e-original:original-e2e --parallel=1 --verbose

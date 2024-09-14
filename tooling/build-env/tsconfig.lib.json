@@ -10,7 +10,11 @@
     "vite.config.ts",
     "src/**/__snapshots__/*.ts",
     "src/**/*.test.ts",
+    "src/**/*.unit-test.ts",
+    "src/**/*.integration-test.ts",
+    "src/**/*.spec.ts",
     "src/**/*.mock.ts",
-    "test/**/*.ts"
+    "test/**/*.ts",
+    "mock/**/*.ts"
   ]
 }

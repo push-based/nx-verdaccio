@@ -2,7 +2,7 @@ import { type ExecutorContext, logger } from '@nx/devkit';
 
 import type { KillProcessExecutorOptions } from './schema';
 import { join } from 'node:path';
-import { killProcessFromPid } from '../../internal/utils/process';
+import { killProcessFromPid } from '../../internal/utils/kill-process';
 import { normalizeOptions } from '../internal/normalize-options';
 
 export type ExecutorOutput = {

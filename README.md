@@ -1,47 +1,16 @@
-# NxVerdaccioE2eSetup
+# Buildable Test Environment Plugin
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+This plugin provides a way zeros configuration setup to run e2e tests in a package manager environment.
 
-✨ **This workspace maintains enterprise grade E2E steup for vitest and verdaccio** ✨
+## Getting started
 
-This workspace maintains a scalable and maintainable E2E setup for Vite tests and Verdaccio.
-
-## Test it
-
-Publishable project have a `publishable` tag.
-Projects that need an environment have a `npm-env` tag.
-Targets that need an environment set up before running depend on `{ "projects": "self", "target": "setup-env", "params": "forward"}`.
-
-Production usage:
-
-- `nx run cli-e2e:e2e` - setup environment and then run E2E tests for `cli-e2e`
-
-Debug full environment setup:
-
-- `nx run cli-e2e:setup-env` - setup environment for `cli-e2e`
-- `nx run cli-e2e:setup-env --keepServerRunning` - keeps verdaccio running after setup
-
-Debug full environment in 2 steps:
-
-- `nx run cli-e2e:bootstrap-env` - setup folders and starts verdaccio for `cli-e2e`
-- `nx run cli-e2e:install-env` - bootstraps and installs all dependencies for `cli-e2e`
-
-Debug packages:
-
-- `nx run cli-e2e:bootstrap-env` - setup folders and starts verdaccio for `cli-e2e`
-- `nx run utils:npm-publish --environmentProject cli-e2e` - publishes `utils` and `models` to the verdaccio registry configured for `cli-e2e`
-- `nx run utils:npm-install --environmentProject cli-e2e` - installs `utils` and `models` from the verdaccio registry configured for `cli-e2e`
-- `nx run cli-e2e:stop-verdaccio` - stops the verdaccio server for `cli-e2e`
-
-## Plugins
-
-Configure the plugins in `nx.json`:
+1. Register and configure the plugins in `nx.json`:
 
 ```json
 {
   "plugins": [
     {
-      "plugin": "@org/build.env",
+      "plugin": "@org/build-env",
       "options": {
         "environmentsDir": "tmp/environments"
       }
@@ -50,39 +19,84 @@ Configure the plugins in `nx.json`:
 }
 ```
 
-### Dynamic targets
+Now you can configure the project you want to e2e test as published package.
 
-The plugins registered in `nx.json` are used to derive dynamic targets for different projects types:
+2. Add a `publishable` tag to the package under test
 
-- projects that need a environment to e.g. E2E test their dependencies
-- packages maintaining the library code
+```jsonc
+// projects/my-lib/project.json
+{
+  "name": "my-lib",
+  "tags": ["publishable"]
+  // ...
+}
+```
 
-@TODO
+Next you need to configure the e2e project to use the package under test.
 
-## Example projects and plugins
+3. Add the package under test as `implicitDependency` to your e2e project.
 
-This repository maintains the following example projects and plugins to showcase a refactoring from existing E2E setup to a more maintainable and scalable setup:
+```jsonc
+// projects/my-lib-e2e/project.json
+{
+  "name": "my-lib-e2e",
+  "implicitDependency": ["my-lib"]
+}
+```
 
-- Run original: `nx original-cli-e2e:original-e2e`
-- project `e2e-example/original-e2e`
-  - setup script `e2e-example/original-e2e/setup/global-setup.e2e.ts`
-- plugin `tools/e2e-example-plugins/original.plugin.ts`
-- Run env: `nx env-cli-e2e:env-e2e`
-  - project `e2e-example/env-e2e`
-    - setup script `e2e-example/env-e2e/setup/global-setup.e2e.ts`
-  - plugin `tools/e2e-example-plugins/env.plugin.ts`
-- Run graph: `nx graph-cli-e2e:graph-e2e`
-  - project `e2e-example/graph-e2e`
-    - setup script `e2e-example/graph-e2e/setup/global-setup.e2e.ts`
-  - plugin `tools/e2e-example-plugins/graph.plugin.ts`
-- Run pretarget: `nx pretarget-cli-e2e:pretarget-e2e`
-  - project `e2e-example/pretarget-e2e`
-    - setup script `e2e-example/pretarget-e2e/setup/global-setup.e2e.ts`
-  - plugin `tools/e2e-example-plugins/pretarget.plugin.ts`
+4. Configure the `setup-env` target as dependent target in your e2e test project by using `dependsOn`
 
-## TODO
+```jsonc
+{
+  "name": "my-lib-e2e",
+  "targets": {
+    "e2e": {
+      "dependsOn": [
+        {
+          "projects": "self",
+          "target": "setup-env",
+          "params": "forward"
+        }
+      ]
+      // ...
+    }
+  }
+  // ...
+}
+```
 
-- remove usage of generatePackageJson in esbuild build targets
+Now you are ready to go.
+
+5. Run your e2e test with `nx run my-lib-e2e:e2e`
+
+Tadaaaa! 🎉
+
+## DX while debuggins e2e tests
+
+### Production usage:
+
+- `nx run cli-e2e:e2e` - setup environment and then run E2E tests for `cli-e2e`
+  @TODO figure out why we can't set the environmentRoot in the target options in `project.json`
+- `nx run cli-static-e2e:e2e --environmentRoot static-environments/user-lists` - setup NPM stuff in existing environment and then run E2E tests for `cli-static-e2e`
+
+Debug full environment in 1 setup:
+
+- `nx run cli-e2e:setup-env` - setup environment for `cli-e2e`
+  - `nx run cli-e2e:setup-env --keepServerRunning` - keeps verdaccio running after setup
+- `nx run cli-e2e:stop-verdaccio` - stops the verdaccio server for `cli-e2e`
+
+Debug full environment in 2 steps:
+
+- `nx run cli-e2e:bootstrap-env` - setup folders and starts verdaccio for `cli-e2e`
+- `nx run cli-e2e:install-env` - bootstraps and installs all dependencies for `cli-e2e`
+- `nx run cli-e2e:stop-verdaccio` - stops the verdaccio server for `cli-e2e`
+
+Debug packages:
+
+- `nx run cli-e2e:bootstrap-env` - setup folders and starts verdaccio for `cli-e2e`
+- `nx run utils:npm-publish --environmentProject cli-e2e` - publishes `utils` and `models` to the verdaccio registry configured for `cli-e2e`
+- `nx run utils:npm-install --environmentProject cli-e2e` - installs `utils` and `models` from the verdaccio registry configured for `cli-e2e`
+- `nx run cli-e2e:stop-verdaccio` - stops the verdaccio server for `cli-e2e`
 
 - make verdaccio-registry.json a constant!
 

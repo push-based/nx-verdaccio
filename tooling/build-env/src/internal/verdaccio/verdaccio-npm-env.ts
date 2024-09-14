@@ -6,23 +6,14 @@ import {
   type VerdaccioProcessResult,
 } from './verdaccio-registry';
 import { writeFile } from 'node:fs/promises';
-import { setupNpmWorkspace } from '../utils/npm';
-import { error, info } from '../utils/logging';
-import { objectToCliArgs } from '../utils/terminal-command';
+import { setupNpmWorkspace } from './npm';
+import { formatInfo } from '../utils/logging';
+import { objectToCliArgs } from '../utils/terminal';
 import { execSync } from 'node:child_process';
+import { VERDACCIO_REGISTRY_JSON } from './constants';
+import { logger } from '@nx/devkit';
 
-function logInfo(msg: string) {
-  info(msg, 'Verdaccio Env: ');
-}
-
-function errorLog(msg: string) {
-  error(msg, 'Verdaccio Env: ');
-}
-
-export const verdaccioEnvLogger = {
-  info: logInfo,
-  error: errorLog,
-};
+export const VERDACCIO_ENV_TOKEN = 'Verdaccio Env: ';
 
 export type Environment = {
   root: string;
@@ -62,15 +53,23 @@ export async function bootstrapEnvironment({
     root: environmentRoot,
   };
 
-  logInfo(
-    `Save active verdaccio registry data to file: ${activeRegistry.root}`
+  logger.info(
+    formatInfo(
+      `Save active verdaccio registry data to file: ${activeRegistry.root}`,
+      VERDACCIO_ENV_TOKEN
+    )
   );
   await writeFile(
-    join(activeRegistry.root, 'verdaccio-registry.json'),
+    join(activeRegistry.root, VERDACCIO_REGISTRY_JSON),
     JSON.stringify(activeRegistry.registry, null, 2)
   );
 
-  logInfo(`Environment ready under: ${activeRegistry.root}`);
+  logger.info(
+    formatInfo(
+      `Environment ready under: ${activeRegistry.root}`,
+      VERDACCIO_ENV_TOKEN
+    )
+  );
 
   return activeRegistry;
 }
@@ -82,20 +81,21 @@ export async function bootstrapEnvironment({
  * - `npm config set //${host}:${port}/:_authToken "secretVerdaccioToken"`
  * @see {@link VerdaccioProcessResult}
  */
+export type ConfigureRegistryOptions = VerdaccioProcessResult & {
+  userconfig?: string;
+};
+
 export function configureRegistry(
-  {
-    port,
-    host,
-    url,
-    userconfig,
-  }: VerdaccioProcessResult & { userconfig?: string },
+  { port, host, url, userconfig }: ConfigureRegistryOptions,
   verbose?: boolean
 ) {
   const setRegistry = `npm config set registry="${url}" ${objectToCliArgs({
     userconfig,
   }).join(' ')}`;
   if (verbose) {
-    logInfo(`Set registry:\n${setRegistry}`);
+    logger.info(
+      formatInfo(`Set registry:\n${setRegistry}`, VERDACCIO_ENV_TOKEN)
+    );
   }
   execSync(setRegistry);
 
@@ -111,7 +111,9 @@ export function configureRegistry(
     { userconfig }
   ).join(' ')}`;
   if (verbose) {
-    logInfo(`Set authToken:\n${setAuthToken}`);
+    logger.info(
+      formatInfo(`Set authToken:\n${setAuthToken}`, VERDACCIO_ENV_TOKEN)
+    );
   }
   execSync(setAuthToken);
 }
@@ -132,7 +134,9 @@ export function unconfigureRegistry(
     { userconfig }
   ).join(' ')}`;
   if (verbose) {
-    logInfo(`Delete authToken:\n${setAuthToken}`);
+    logger.info(
+      formatInfo(`Delete authToken:\n${setAuthToken}`, VERDACCIO_ENV_TOKEN)
+    );
   }
   execSync(setAuthToken);
 
@@ -140,7 +144,9 @@ export function unconfigureRegistry(
     userconfig,
   }).join(' ')}`;
   if (verbose) {
-    logInfo(`Delete registry:\n${setRegistry}`);
+    logger.info(
+      formatInfo(`Delete registry:\n${setRegistry}`, VERDACCIO_ENV_TOKEN)
+    );
   }
   execSync(setRegistry);
 }

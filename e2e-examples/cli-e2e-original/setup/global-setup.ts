@@ -1,44 +1,39 @@
+import { rm } from 'node:fs/promises';
 import { executeProcess, objectToCliArgs } from '@org/test-utils';
 import {
   configureRegistry,
+  RegistryResult,
   startVerdaccioServer,
   unconfigureRegistry,
-  VercaddioServerResult,
 } from '@org/tools-utils';
-import { rm } from 'node:fs/promises';
 
-const isVerbose = true; // process.env.NX_VERBOSE_LOGGING === 'true' ?? false;
-
-let activeRegistry: VercaddioServerResult;
-let stopRegistry: () => void;
+const isVerbose = process.env['NX_VERBOSE_LOGGING'] === 'true' ?? false;
+const projectName = process.env['NX_TASK_TARGET_PROJECT'];
 
 export async function setup() {
-  // start Verdaccio server and setup local registry storage
-  const { stop, registry } = await startVerdaccioServer({
+  if (projectName == null) {
+    throw new Error('Project name required.');
+  }
+
+  const registryResult = await startVerdaccioServer({
     targetName: 'original-local-registry',
     verbose: isVerbose,
     clear: true,
   });
-  activeRegistry = registry;
-  stopRegistry = stop;
 
-  // configure env with verdaccio registry as default
-  // exec commands:
-  // - `npm config set registry "${url}"`
-  // - `npm config set //${host}:${port}/:_authToken "secretVerdaccioToken"`
-  configureRegistry(registry, isVerbose);
+  configureRegistry(registryResult.registry, isVerbose);
 
   // package publish all projects
   await executeProcess({
     command: 'nx',
     args: objectToCliArgs({
       _: ['run-many'],
-      targets: 'original-npm-publish,!tag:type:testing',
+      targets: 'original-npm-publish',
       exclude: 'tag:type:testing',
       skipNxCache: true,
+      verbose: isVerbose
     }),
-
-    verbose: isVerbose,
+    verbose: isVerbose
   });
 
   // package install all projects
@@ -48,13 +43,19 @@ export async function setup() {
       _: ['run-many'],
       targets: 'original-npm-install',
       exclude: 'tag:type:testing',
+      parallel: 1,
       skipNxCache: true,
+      verbose: isVerbose
     }),
-    verbose: isVerbose,
+    verbose: isVerbose
   });
+
+  // @TODO figure out why named exports don't work https://vitest.dev/config/#globalsetup
+  return () => teardownSetup(registryResult);
 }
 
-export async function teardown() {
+export async function teardownSetup({ registry, stop }: RegistryResult) {
+  console.info(`Teardown ${projectName}`);
   // uninstall all projects
   await executeProcess({
     command: 'nx',
@@ -64,11 +65,9 @@ export async function teardown() {
     }),
     verbose: isVerbose,
   });
-  stopRegistry();
-  // exec commands:
-  // - `npm config delete //${host}:${port}/:_authToken`
-  // - `npm config delete registry`
-  unconfigureRegistry(activeRegistry, isVerbose);
-  await rm(activeRegistry.storage, { recursive: true, force: true });
+
+  stop();
+  unconfigureRegistry(registry, isVerbose);
+  await rm(registry.storage, { recursive: true, force: true });
   await rm('local-registry', { recursive: true, force: true });
 }

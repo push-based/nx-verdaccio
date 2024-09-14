@@ -1,5 +1,6 @@
 export * from './lib/utils/logging';
 export * from './lib/utils/utils';
+export * from './lib/utils/build-target-helper';
 export { setupNpmWorkspace } from './lib/utils/npm';
 
 export {

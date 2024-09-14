@@ -19,20 +19,10 @@ export const createNodes: CreateNodes = [
     if (projectName == null) {
       throw new Error('Project name required');
     }
-
-    // only execute for the -original example projects e.g. `cli-e2e-original`, `e2e-models-original`
-    if (!projectName.endsWith('-original')) {
-      return {
-        projects: {
-          [root]: {},
-        },
-      };
-    }
-
+    const isRoot = root === '.';
     const isPublishable = (projectConfiguration?.tags ?? []).some(
       (tag) => tag === 'publishable'
     );
-    const isRoot = root === '.';
 
     return {
       projects: {
@@ -55,6 +45,7 @@ function verdaccioTargets(): Record<string, TargetConfiguration> {
       options: {
         config: '.verdaccio/config.yml',
         storage: `tmp/local-registry/storage`,
+        port: 4210,
       },
     },
   };
@@ -77,7 +68,7 @@ function npmTargets(
       },
     },
     'original-npm-install': {
-      command: `npm install -D ${packageName}@{args.pkgVersion}`,
+      command: `npm install -D --no-fund --no-package-lock ${packageName}@{args.pkgVersion}`,
       options: {
         pkgVersion,
       },

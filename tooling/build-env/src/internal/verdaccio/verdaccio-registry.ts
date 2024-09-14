@@ -1,19 +1,13 @@
-import { gray, bold, red } from 'ansis';
+import { bold, gray, red } from 'ansis';
 import { join } from 'node:path';
-import { error, info } from '../utils/logging';
 import { logger } from '@nx/devkit';
-import { objectToCliArgs } from '../utils/terminal-command';
+import { objectToCliArgs } from '../utils/terminal';
 import { executeProcess } from '../utils/execute-process';
-import { uniquePort } from '../utils/utils';
-import {getEnvironmentsRoot} from "@org/build-env";
+import { uniquePort } from './unique-port';
+import { getEnvironmentsRoot } from '../utils/setup';
+import { formatError, formatInfo } from '../utils/logging';
 
-export function logInfo(msg: string) {
-  info(msg, 'Verdaccio: ');
-}
-
-export function logError(msg: string) {
-  error(msg, 'Verdaccio: ');
-}
+const VERDACCIO_TOKEN = 'Verdaccio: ';
 
 export type VerdaccioProcessResult = {
   protocol: string;
@@ -31,10 +25,8 @@ export type RegistryResult = {
 };
 
 export function parseRegistryData(stdout: string): VerdaccioProcessResult {
-  const output = stdout.toString();
-
   // Extract protocol, host, and port
-  const match = output.match(
+  const match = stdout.match(
     /(?<proto>https?):\/\/(?<host>[^:]+):(?<port>\d+)/
   );
 
@@ -52,9 +44,7 @@ export function parseRegistryData(stdout: string): VerdaccioProcessResult {
   if (!host) {
     throw new Error(`Invalid host ${String(host)}.`);
   }
-  const port = !Number.isNaN(Number(match.groups['port']))
-    ? Number(match.groups['port'])
-    : undefined;
+  const port = match.groups['port'] ? Number(match.groups['port']) : undefined;
   if (!port) {
     throw new Error(`Invalid port ${String(port)}.`);
   }
@@ -88,15 +78,15 @@ export type StarVerdaccioOptions = VerdaccioExecuterOptions &
 
 export async function startVerdaccioServer({
   targetName = 'start-verdaccio',
-                                             projectName,
-                                             port = String(uniquePort()),
-                                             storage = join(getEnvironmentsRoot(projectName), targetName, 'storage'),
-                                             location = 'none',
-                                             clear = true,
-                                             verbose = true,
+  projectName,
+  port = String(uniquePort()),
+  storage = join(getEnvironmentsRoot(projectName), targetName, 'storage'),
+  location = 'none',
+  clear = true,
+  verbose = true,
   ...opt
 }: StarVerdaccioOptions): Promise<RegistryResult> {
-  let startDetected = false;
+  let verdaccioIsRunning = false;
 
   return new Promise<RegistryResult>((resolve, reject) => {
     executeProcess({
@@ -116,14 +106,12 @@ export async function startVerdaccioServer({
       observer: {
         onStdout: (stdout: string, childProcess) => {
           if (verbose) {
-            process.stdout.write(
-              `${gray('>')} ${gray(bold('Verdaccio'))} ${stdout}`
-            );
+            process.stdout.write(formatInfo(stdout, VERDACCIO_TOKEN));
           }
 
           // Log of interest: warn --- http address - http://localhost:<PORT-NUMBER>/ - verdaccio/5.31.1
-          if (!startDetected && stdout.includes('http://localhost:')) {
-            startDetected = true;
+          if (!verdaccioIsRunning && stdout.includes('http://localhost:')) {
+            verdaccioIsRunning = true;
 
             const result: RegistryResult = {
               registry: {
@@ -135,20 +123,26 @@ export async function startVerdaccioServer({
                 try {
                   childProcess?.kill();
                 } catch {
-                  logError(
-                    `Can't kill Verdaccio process with id: ${childProcess?.pid}`
+                  logger.error(
+                    formatError(
+                      `Can't kill Verdaccio process with id: ${childProcess?.pid}`,
+                      VERDACCIO_TOKEN
+                    )
                   );
                 }
               },
             };
 
-            logInfo(
-              `Registry started on URL: ${bold(
-                result.registry.url
-              )}, ProcessID: ${bold(String(childProcess?.pid))}`
+            logger.info(
+              formatInfo(
+                `Registry started on URL: ${bold(
+                  result.registry.url
+                )}, ProcessID: ${bold(String(childProcess?.pid))}`,
+                VERDACCIO_TOKEN
+              )
             );
             if (verbose) {
-              logInfo('');
+              logger.info(formatInfo('', VERDACCIO_TOKEN));
               console.table(result);
             }
 
@@ -157,18 +151,16 @@ export async function startVerdaccioServer({
         },
         onStderr: (stderr: string) => {
           if (verbose) {
-            process.stdout.write(
-              `${red('>')} ${red(bold('Verdaccio'))} ${stderr}`
-            );
+            process.stdout.write(formatInfo(stderr, VERDACCIO_TOKEN));
           }
         },
       },
     }).catch((error) => {
-      logger.error(error);
+      logger.error(formatError(error, VERDACCIO_TOKEN));
       reject(error);
     });
-  }).catch((error: unknown) => {
-    logger.error(error);
+  }).catch((error) => {
+    logger.error(formatError(error, VERDACCIO_TOKEN));
     throw error;
   });
 }

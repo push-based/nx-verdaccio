@@ -1,19 +1,10 @@
 # @org/build-env
 
-## To Code
-
-**Executor:**
-
-- build (to stop verdaccio server process)
-- kill-process (to stop verdaccio server process)
-- install-env (to install NPM packages from within environments)
-
 ## To Research
 
 - Store Verdaccio state under .nx?
 - Project usage across existing Nx projects (popular open-source libraries?)
-- Keep custom npm-publish or use Nx release Node.js API?
-- Cache node_modules??
+- Research if we can use Nx release Node.js API instead of custom target?
 - How to ensure the setup will work in Nx Agents?
 
 **What can be cached**

@@ -18,11 +18,11 @@
       "executor": "@nx/esbuild:esbuild",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/projects/tools-utils",
-        "main": "projects/tools-utils/src/index.ts",
-        "tsConfig": "projects/tools-utils/tsconfig.lib.json",
-        "assets": ["projects/tools-utils/*.md"],
-        "generatePackageJson": true,
+        "outputPath": "dist/tooling/tools-utils",
+        "main": "tooling/tools-utils/src/index.ts",
+        "tsConfig": "tooling/tools-utils/tsconfig.lib.json",
+        "assets": ["tooling/tools-utils/*.md"],
+
         "format": ["esm"]
       }
     },

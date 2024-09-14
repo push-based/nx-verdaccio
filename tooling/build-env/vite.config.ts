@@ -17,8 +17,14 @@ export default defineConfig({
     globals: true,
     cache: { dir: '../../node_modules/.vitest' },
     environment: 'node',
-    include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    include: [
+      'src/**/*.{spec,test,unit-test,integration-test}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+    ],
     reporters: ['default'],
+    setupFiles: [
+      '../../testing/test-setup/src/lib/fs.mock.ts',
+      '../../testing/test-setup/src/lib/reset.mock.ts',
+    ],
     coverage: {
       reportsDirectory: '../../coverage/projects/build-env',
       provider: 'v8',

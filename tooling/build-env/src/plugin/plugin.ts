@@ -8,6 +8,8 @@ import { dirname, join } from 'node:path';
 import { DEFAULT_ENVIRONMENTS_OUTPUT_DIR } from '../internal/constants';
 import type { StarVerdaccioOptions } from '../internal/verdaccio/verdaccio-registry';
 
+import { VERDACCIO_REGISTRY_JSON } from '../internal/verdaccio/constants';
+
 export function isPublishable(tags: string[]): boolean {
   return tags.some((target) => target === 'publishable');
 }
@@ -46,7 +48,7 @@ export const createNodes: CreateNodes = [
           targets: {
             // start-verdaccio, stop-verdaccio
             ...(isNpmEnv(tags) && verdaccioTargets({ environmentRoot })),
-            // bootstrap-env, setup-env, install-env (intermediate task to run dependency tasks)
+            // bootstrap-env, setup-env, install-env (intermediate target to run dependency targets+)
             ...(isNpmEnv(tags) && envTargets({ environmentRoot, projectName })),
             // === dependency project
             // npm-publish, npm-install
@@ -78,7 +80,7 @@ function verdaccioTargets({
     'stop-verdaccio': {
       executor: '@org/build-env:kill-process',
       options: {
-        filePath: join(environmentRoot, 'verdaccio-registry.json'),
+        filePath: join(environmentRoot, VERDACCIO_REGISTRY_JSON),
         ...options,
       },
     },
