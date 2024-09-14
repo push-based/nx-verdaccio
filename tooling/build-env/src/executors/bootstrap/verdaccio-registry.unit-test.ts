@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { parseRegistryData, startVerdaccioServer } from './verdaccio-registry';
-import { executeProcess } from '../../internal/utils/execute-process';
-import { ChildProcess } from 'node:child_process'; // Adjust import path
+import { executeProcess } from '../../internal/execute-process';
+import { ChildProcess } from 'node:child_process';
 import { logger } from '@nx/devkit';
 
-vi.mock('../../internal/utils/execute-process');
+vi.mock('../../internal/execute-process');
 
 vi.mock('@nx/devkit', async () => {
   const actual = await vi.importActual('@nx/devkit');

@@ -9,7 +9,7 @@ import {
 } from './verdaccio-npm-env';
 import { execSync } from 'node:child_process';
 import { logger } from '@nx/devkit';
-import { formatInfo } from '../../internal/utils/logging';
+import { formatInfo } from '../../internal/logging';
 
 vi.mock('child_process', async () => {
   const actual = await vi.importActual<typeof import('child_process')>(

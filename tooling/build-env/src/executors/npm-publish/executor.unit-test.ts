@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect } from 'vitest';
 import runNpmInstallExecutor from './executor';
 import { MEMFS_VOLUME } from '@org/test-utils';
-import * as execProcessModule from '../../internal/utils/execute-process';
+import * as execProcessModule from '../../internal/execute-process';
 import { logger, readJsonFile } from '@nx/devkit';
 import { join } from 'node:path';
 import { DEFAULT_ENVIRONMENTS_OUTPUT_DIR } from '../../internal/constants';
