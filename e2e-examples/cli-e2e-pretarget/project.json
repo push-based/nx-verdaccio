@@ -10,7 +10,6 @@
     "pretarget-e2e": {
       "dependsOn": [
         {
-          "projects": "self",
           "target": "pretarget-setup-env",
           "params": "forward"
         }

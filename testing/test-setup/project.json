@@ -3,6 +3,7 @@
   "$schema": "../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "testing/test-setup/src",
   "projectType": "library",
+  "tags": ["scope:shared", "type:testing"],
   "targets": {
     "lint": {
       "executor": "@nx/linter:eslint",
@@ -11,6 +12,5 @@
         "lintFilePatterns": ["testing/test-setup/**/*.ts"]
       }
     }
-  },
-  "tags": ["scope:shared", "type:testing"]
+  }
 }

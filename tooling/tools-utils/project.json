@@ -22,7 +22,6 @@
         "main": "tooling/tools-utils/src/index.ts",
         "tsConfig": "tooling/tools-utils/tsconfig.lib.json",
         "assets": ["tooling/tools-utils/*.md"],
-
         "format": ["esm"]
       }
     },
