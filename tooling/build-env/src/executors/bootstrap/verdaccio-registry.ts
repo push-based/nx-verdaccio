@@ -1,4 +1,4 @@
-import { bold, gray, red } from 'ansis';
+import { bold } from 'ansis';
 import { join } from 'node:path';
 import { logger } from '@nx/devkit';
 import { objectToCliArgs } from '../../internal/terminal';
