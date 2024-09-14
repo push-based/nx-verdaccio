@@ -1,6 +1,10 @@
-import { type ExecutorContext, logger, readJsonFile } from '@nx/devkit';
+import {
+  type ExecutorContext,
+  logger,
+  readJsonFile,
+} from '@nx/devkit';
 import { join } from 'node:path';
-import runBuildExecutor from '../bootstrap/executor';
+import runBootstrapExecutor from '../bootstrap/executor';
 import runKillProcessExecutor from '../kill-process/executor';
 import { executeProcess } from '../../internal/utils/execute-process';
 import { objectToCliArgs } from '../../internal/utils/terminal';
@@ -28,7 +32,7 @@ export default async function runSetupEnvironmentExecutor(
   const { options: normalizedOptions } = normalizedContext;
 
   try {
-    await runBuildExecutor(
+    await runBootstrapExecutor(
       {
         ...normalizedOptions,
       },
@@ -65,6 +69,10 @@ export default async function runSetupEnvironmentExecutor(
       );
       logger.info(`Verdaccio server kept running under : ${url}`);
     }
+    return {
+      success: true,
+      command: 'Environment setup complete.',
+    } satisfies ExecutorOutput;
   } catch (error) {
     // nx build-env cli-e2e
     logger.error(error);
@@ -73,9 +81,4 @@ export default async function runSetupEnvironmentExecutor(
       command: error,
     };
   }
-
-  return Promise.resolve({
-    success: true,
-    command: 'Environment setup complete.',
-  } satisfies ExecutorOutput);
 }

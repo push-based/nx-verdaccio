@@ -18,7 +18,7 @@ export default async function runBootstrapExecutor(
     options
   );
   logger.info(
-    `Execute @org/build-env:build with options: ${JSON.stringify(
+    `Execute @org/build-env:bootstrap with options: ${JSON.stringify(
       options,
       null,
       2
@@ -41,6 +41,6 @@ export default async function runBootstrapExecutor(
 
   return Promise.resolve({
     success: true,
-    command: 'Bootstraped environemnt successfully.',
+    command: 'Bootstraped environment successfully.',
   } satisfies BootstrapExecutorOutput);
 }
