@@ -30,16 +30,7 @@
       "inputs": ["default", "^production"]
     },
     "nx-release-publish": {
-      "dependsOn": [
-        {
-          "projects": ["self"],
-          "target": "build"
-        },
-        {
-          "projects": ["dependencies"],
-          "target": "nx-release-publish"
-        }
-      ]
+      "dependsOn": ["build", "^nx-release-publish"]
     },
     "lint": {
       "executor": "@nx/linter:eslint",
