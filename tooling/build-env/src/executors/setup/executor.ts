@@ -1,8 +1,4 @@
-import {
-  type ExecutorContext,
-  logger,
-  readJsonFile,
-} from '@nx/devkit';
+import { type ExecutorContext, logger, readJsonFile } from '@nx/devkit';
 import { join } from 'node:path';
 import runBootstrapExecutor from '../bootstrap/executor';
 import runKillProcessExecutor from '../kill-process/executor';

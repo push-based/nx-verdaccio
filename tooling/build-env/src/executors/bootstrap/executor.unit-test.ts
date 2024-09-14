@@ -1,6 +1,6 @@
 import runBootstrapExecutor from './executor';
 import * as bootstrapEnvModule from './bootstrap-env';
-import { beforeEach, expect, vi } from 'vitest';
+import { beforeEach, expect, vi, it, describe } from 'vitest';
 import { logger } from '@nx/devkit';
 
 vi.mock('@nx/devkit', async () => {
@@ -55,13 +55,13 @@ describe('runBootstrapExecutor', () => {
       )
     ).resolves.toStrictEqual({
       success: true,
-      command: 'Bootstraped environemnt successfully.',
+      command: 'Bootstraped environment successfully.',
     });
 
     expect(logger.error).not.toHaveBeenCalled();
     expect(logger.info).toHaveBeenCalledTimes(1);
     expect(logger.info).toHaveBeenCalledWith(
-      'Execute @org/build-env:build with options: {}'
+      'Execute @org/build-env:bootstrap with options: {}'
     );
 
     expect(bootstrapEnvironmentSpy).toHaveBeenCalledTimes(1);
@@ -96,7 +96,7 @@ describe('runBootstrapExecutor', () => {
       )
     ).resolves.toStrictEqual({
       success: true,
-      command: 'Bootstraped environemnt successfully.',
+      command: 'Bootstraped environment successfully.',
     });
 
     expect(bootstrapEnvironmentSpy).toHaveBeenCalledWith(
@@ -135,7 +135,7 @@ describe('runBootstrapExecutor', () => {
 
     expect(logger.info).toHaveBeenCalledTimes(1);
     expect(logger.info).toHaveBeenCalledWith(
-      'Execute @org/build-env:build with options: {}'
+      'Execute @org/build-env:bootstrap with options: {}'
     );
 
     expect(logger.error).toHaveBeenCalledTimes(1);

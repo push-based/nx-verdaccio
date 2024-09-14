@@ -1,10 +1,10 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { parseRegistryData, startVerdaccioServer } from './verdaccio-registry';
-import { executeProcess } from '../utils/execute-process';
-import type { ChildProcess } from 'node:child_process'; // Adjust import path
+import { executeProcess } from '../../internal/execute-process';
+import { ChildProcess } from 'node:child_process';
 import { logger } from '@nx/devkit';
 
-vi.mock('../utils/execute-process');
+vi.mock('../../internal/execute-process');
 
 vi.mock('@nx/devkit', async () => {
   const actual = await vi.importActual('@nx/devkit');
@@ -89,7 +89,7 @@ describe('startVerdaccioServer', () => {
       projectName: 'test-project',
     });
 
-    expect(result).toEqual({
+    expect(result).toStrictEqual({
       registry: {
         pid: 12345,
         storage: expect.any(String),
