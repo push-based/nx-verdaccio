@@ -31,9 +31,9 @@ export async function setup() {
       targets: 'original-npm-publish',
       exclude: 'tag:type:testing',
       skipNxCache: true,
-      verbose: isVerbose
+      verbose: isVerbose,
     }),
-    verbose: isVerbose
+    verbose: isVerbose,
   });
 
   // package install all projects
@@ -45,9 +45,9 @@ export async function setup() {
       exclude: 'tag:type:testing',
       parallel: 1,
       skipNxCache: true,
-      verbose: isVerbose
+      verbose: isVerbose,
     }),
-    verbose: isVerbose
+    verbose: isVerbose,
   });
 
   // @TODO figure out why named exports don't work https://vitest.dev/config/#globalsetup

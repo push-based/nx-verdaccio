@@ -1,7 +1,7 @@
-import {describe, it, expect} from 'vitest';
-import {parseRegistryData, startVerdaccioServer} from './verdaccio-registry';
-import {executeProcess} from "../utils/execute-process";
-import {ChildProcess} from "node:child_process"; // Adjust import path
+import { describe, it, expect } from 'vitest';
+import { parseRegistryData, startVerdaccioServer } from './verdaccio-registry';
+import { executeProcess } from '../utils/execute-process';
+import type { ChildProcess } from 'node:child_process'; // Adjust import path
 import { logger } from '@nx/devkit';
 
 vi.mock('../utils/execute-process');
@@ -12,8 +12,8 @@ vi.mock('@nx/devkit', async () => {
     ...actual,
     logger: {
       info: vi.fn(),
-      error: vi.fn()
-    }
+      error: vi.fn(),
+    },
   };
 });
 
@@ -68,17 +68,21 @@ describe('parseRegistryData', () => {
   });
 });
 
-
 describe('startVerdaccioServer', () => {
-
   it('should start the server and return correct registry result', async () => {
     const mockStdout = 'http://localhost:4873 - verdaccio/5.31.1';
 
     const mockChildProcess = { pid: 12345 } as ChildProcess;
 
-    vi.mocked(executeProcess).mockImplementation(({observer}) => {
+    vi.mocked(executeProcess).mockImplementation(({ observer }) => {
       observer.onStdout(mockStdout, mockChildProcess);
-      return Promise.resolve({ stdout: mockStdout, stderr: '', code: 0, date: '', duration: 0 });
+      return Promise.resolve({
+        stdout: mockStdout,
+        stderr: '',
+        code: 0,
+        date: '',
+        duration: 0,
+      });
     });
 
     const result = await startVerdaccioServer({
@@ -120,5 +124,4 @@ describe('startVerdaccioServer', () => {
       expect.stringContaining('Execution failed')
     );
   });
-
-})
+});

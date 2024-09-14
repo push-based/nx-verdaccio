@@ -7,7 +7,7 @@ import { objectToCliArgs } from '../../internal/utils/terminal';
 import type { PackageJson } from 'nx/src/utils/package-json';
 import { getTargetOutputPath } from '../../internal/utils/target';
 import { normalizeOptions } from '../internal/normalize-options';
-import {NPMRC_FILENAME} from "../../internal/constants";
+import { NPMRC_FILENAME } from '../../internal/constants';
 
 export type NpmInstallExecutorOutput = {
   success: boolean;

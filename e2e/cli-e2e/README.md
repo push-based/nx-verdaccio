@@ -9,29 +9,28 @@ End-to-end tests for the `cli-e2e` library.
   - 🌐 `nx setup-npm-env cli-e2e`
     - ▶️ start Verdaccio server
     - 📑 init workspace folder
-  - 📦 `nx install-deps cli-e2e` 
+  - 📦 `nx install-deps cli-e2e`
   - 🧼 `nx teardown-npm-env cli-e2e`
     - 🛑 stop Verdaccio server
     - 🗑 delete storage folder
 - 🔬 `nx run cli-e2e:e2e` - **👈 your entered command**
+
   - _dependsOn:_ [`setup-env:cli-e2e`]
   - 🧪run tests
 
-
 - 🧰 `nx setup-env cli-e2e`
-  -  _outputs:_ [`tmp/e2e/cli-e2e`] 💾
+  - _outputs:_ [`tmp/e2e/cli-e2e`] 💾
   - 🌐 `nx setup-npm-env cli-e2e`
-    -  start Verdaccio server
-    -  init workspace folder
+    - start Verdaccio server
+    - init workspace folder
   - 📦 `nx install-deps cli-e2e`
   - 🧼 `nx teardown-npm-env cli-e2e`
-    -  stop Verdaccio server
-    -  delete storage folder
+    - stop Verdaccio server
+    - delete storage folder
 - 🔬 `nx run cli-e2e:e2e` - **👈 your entered command**
   - _dependsOn:_ [`setup-env:cli-e2e`]
   - run tests
 
-  
 ```mermaid
 flowchart TB
 pkg-e2e:e2e-. programmatic .->pkg-e2e:setup-npm-env;

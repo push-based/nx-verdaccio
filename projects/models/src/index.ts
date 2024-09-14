@@ -1,1 +1,1 @@
-export { type User, parseUser} from './lib/user';
+export { type User, parseUser } from './lib/user';
