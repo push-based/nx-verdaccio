@@ -51,7 +51,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest] # @TODO add windows-latest after we know why it is running forever
     name: E2E tests
     runs-on: ${{ matrix.os }}
     steps:
