@@ -1,5 +1,5 @@
 export {
   getEnvironmentsRoot,
   getEnvironmentRoot,
-} from './internal/utils/setup';
+} from './internal/setup';
 export { createNodes } from './plugin/plugin';

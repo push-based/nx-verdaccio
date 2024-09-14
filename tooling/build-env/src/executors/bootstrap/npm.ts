@@ -1,7 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import { join } from 'node:path';
-import { ensureDirectoryExists } from '../../internal/utils/file-system';
-import { formatError, formatInfo } from '../../internal/utils/logging';
+import { ensureDirectoryExists } from '../../internal/file-system';
+import { formatError, formatInfo } from '../../internal/logging';
 import { logger } from '@nx/devkit';
 
 export const NPM_ENV_TOKEN = 'Npm Env: ';

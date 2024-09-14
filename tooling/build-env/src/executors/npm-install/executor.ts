@@ -2,10 +2,10 @@ import { type ExecutorContext, logger, readJsonFile } from '@nx/devkit';
 
 import type { NpmInstallExecutorOptions } from './schema';
 import { join } from 'node:path';
-import { executeProcess } from '../../internal/utils/execute-process';
-import { objectToCliArgs } from '../../internal/utils/terminal';
+import { executeProcess } from '../../internal/execute-process';
+import { objectToCliArgs } from '../../internal/terminal';
 import type { PackageJson } from 'nx/src/utils/package-json';
-import { getTargetOutputPath } from '../../internal/utils/target';
+import { getTargetOutputPath } from '../../internal/target';
 import { normalizeOptions } from '../internal/normalize-options';
 import {NPMRC_FILENAME} from "../../internal/constants";
 

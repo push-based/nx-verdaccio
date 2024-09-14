@@ -1,11 +1,11 @@
 import { bold, gray, red } from 'ansis';
 import { join } from 'node:path';
 import { logger } from '@nx/devkit';
-import { objectToCliArgs } from '../../internal/utils/terminal';
-import { executeProcess } from '../../internal/utils/execute-process';
+import { objectToCliArgs } from '../../internal/terminal';
+import { executeProcess } from '../../internal/execute-process';
 import { uniquePort } from './unique-port';
-import { getEnvironmentsRoot } from '../../internal/utils/setup';
-import { formatError, formatInfo } from '../../internal/utils/logging';
+import { getEnvironmentsRoot } from '../../internal/setup';
+import { formatError, formatInfo } from '../../internal/logging';
 
 const VERDACCIO_TOKEN = 'Verdaccio: ';
 

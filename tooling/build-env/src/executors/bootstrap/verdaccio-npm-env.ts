@@ -7,8 +7,8 @@ import {
 } from './verdaccio-registry';
 import { writeFile } from 'node:fs/promises';
 import { setupNpmWorkspace } from './npm';
-import { formatInfo } from '../../internal/utils/logging';
-import { objectToCliArgs } from '../../internal/utils/terminal';
+import { formatInfo } from '../../internal/logging';
+import { objectToCliArgs } from '../../internal/terminal';
 import { execSync } from 'node:child_process';
 import { VERDACCIO_REGISTRY_JSON } from './constants';
 import { logger } from '@nx/devkit';
