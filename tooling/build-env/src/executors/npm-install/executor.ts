@@ -7,6 +7,7 @@ import { objectToCliArgs } from '../../internal/utils/terminal';
 import type { PackageJson } from 'nx/src/utils/package-json';
 import { getTargetOutputPath } from '../../internal/utils/target';
 import { normalizeOptions } from '../internal/normalize-options';
+import {NPMRC_FILENAME} from "../../internal/constants";
 
 export type NpmInstallExecutorOutput = {
   success: boolean;
@@ -31,18 +32,19 @@ export default async function runNpmInstallExecutor(
     join(packageDistPath, 'package.json')
   );
   const { pkgVersion = version, environmentRoot } = opt;
+  const packageNameAndVersion = `${packageName}@${pkgVersion}`;
 
-  logger.info(`Installing ${packageName}@${pkgVersion} in ${environmentRoot}`);
+  logger.info(`Installing ${packageNameAndVersion} in ${environmentRoot}`);
 
   await executeProcess({
     command: 'npm',
     args: objectToCliArgs({
-      _: ['install', `${packageName}@${pkgVersion}`],
-      'no-fund': true,
-      'no-shrinkwrap': true,
+      _: ['install', `${packageNameAndVersion}`],
+      'no-fund': true, // avoid polluted terminal
+      'no-shrinkwrap': true, // avoid package-lock creation or update
       save: true,
       prefix: environmentRoot,
-      userconfig: join(environmentRoot, '.npmrc'),
+      userconfig: join(environmentRoot, NPMRC_FILENAME),
     }),
     verbose: true,
   });

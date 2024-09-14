@@ -6,7 +6,7 @@ import {
   type VerdaccioProcessResult,
 } from './verdaccio-registry';
 import { writeFile } from 'node:fs/promises';
-import { setupNpmWorkspace } from '../utils/npm';
+import { setupNpmWorkspace } from './npm';
 import { formatInfo } from '../utils/logging';
 import { objectToCliArgs } from '../utils/terminal';
 import { execSync } from 'node:child_process';

@@ -1,5 +1,5 @@
 import { join } from 'node:path';
-import { DEFAULT_ENVIRONMENTS_OUTPUT_DIR } from '../internal/constants';
+import { DEFAULT_ENVIRONMENTS_OUTPUT_DIR } from '../constants';
 
 export function getEnvironmentsRoot(
   environmentsDir: string = DEFAULT_ENVIRONMENTS_OUTPUT_DIR

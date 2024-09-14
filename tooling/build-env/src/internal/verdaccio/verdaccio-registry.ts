@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { logger } from '@nx/devkit';
 import { objectToCliArgs } from '../utils/terminal';
 import { executeProcess } from '../utils/execute-process';
-import { uniquePort } from '../utils/unique-port';
+import { uniquePort } from './unique-port';
 import { getEnvironmentsRoot } from '../../shared/setup';
 import { formatError, formatInfo } from '../utils/logging';
 
@@ -86,7 +86,7 @@ export async function startVerdaccioServer({
   verbose = true,
   ...opt
 }: StarVerdaccioOptions): Promise<RegistryResult> {
-  let startDetected = false;
+  let verdaccioIsRunning = false;
 
   return new Promise<RegistryResult>((resolve, reject) => {
     executeProcess({
@@ -106,14 +106,12 @@ export async function startVerdaccioServer({
       observer: {
         onStdout: (stdout: string, childProcess) => {
           if (verbose) {
-            process.stdout.write(
-              `${gray('>')} ${gray(bold('Verdaccio'))} ${stdout}`
-            );
+            process.stdout.write(formatInfo(stdout, VERDACCIO_TOKEN));
           }
 
           // Log of interest: warn --- http address - http://localhost:<PORT-NUMBER>/ - verdaccio/5.31.1
-          if (!startDetected && stdout.includes('http://localhost:')) {
-            startDetected = true;
+          if (!verdaccioIsRunning && stdout.includes('http://localhost:')) {
+            verdaccioIsRunning = true;
 
             const result: RegistryResult = {
               registry: {
