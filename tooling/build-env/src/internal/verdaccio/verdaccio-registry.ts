@@ -1,4 +1,4 @@
-import { bold, gray, red } from 'ansis';
+import { bold } from 'ansis';
 import { join } from 'node:path';
 import { logger } from '@nx/devkit';
 import { objectToCliArgs } from '../utils/terminal';
@@ -159,8 +159,5 @@ export async function startVerdaccioServer({
       logger.error(formatError(error, VERDACCIO_TOKEN));
       reject(error);
     });
-  }).catch((error) => {
-    logger.error(formatError(error, VERDACCIO_TOKEN));
-    throw error;
   });
 }
