@@ -4,7 +4,7 @@ import { logger } from '@nx/devkit';
 import { objectToCliArgs } from '../utils/terminal';
 import { executeProcess } from '../utils/execute-process';
 import { uniquePort } from './unique-port';
-import { getEnvironmentsRoot } from '../../shared/setup';
+import { getEnvironmentsRoot } from '../utils/setup';
 import { formatError, formatInfo } from '../utils/logging';
 
 const VERDACCIO_TOKEN = 'Verdaccio: ';
