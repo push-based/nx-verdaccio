@@ -2,8 +2,9 @@ import { type ExecutorContext, logger } from '@nx/devkit';
 
 import type { KillProcessExecutorOptions } from './schema';
 import { join } from 'node:path';
-import { killProcessFromPid } from '../../internal/utils/kill-process';
+import { killProcessFromPid } from './kill-process';
 import { normalizeOptions } from '../internal/normalize-options';
+import { DEFAULT_PROCESS_FILENAME } from './constant';
 
 export type ExecutorOutput = {
   success: boolean;
@@ -14,7 +15,7 @@ export type ExecutorOutput = {
 export default async function runKillProcessExecutor(
   options: KillProcessExecutorOptions,
   context: ExecutorContext
-) {
+): Promise<ExecutorOutput> {
   const { options: opt } = normalizeOptions(context, options);
   const {
     environmentRoot,
@@ -22,7 +23,7 @@ export default async function runKillProcessExecutor(
     cleanFs = true,
     dryRun = false,
     verbose = false,
-    filePath = join(environmentRoot ?? '', 'process.json'),
+    filePath = join(environmentRoot ?? '', DEFAULT_PROCESS_FILENAME),
   } = opt;
 
   logger.info(
@@ -40,9 +41,13 @@ export default async function runKillProcessExecutor(
     }
   } catch (error) {
     logger.error(error);
+    return {
+      success: false,
+      command: 'Failed killing process.',
+    };
   }
-  return Promise.resolve({
+  return {
     success: true,
     command: 'Process killed successfully.',
-  } satisfies ExecutorOutput);
+  };
 }

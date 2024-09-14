@@ -14,10 +14,6 @@ vi.mock('@nx/devkit', async () => {
     logger: {
       info: vi.fn(),
     },
-    readJsonFile: vi.fn().mockReturnValue({
-      name: 'my-lib',
-      version: '1.0.0',
-    }),
   };
 });
 
