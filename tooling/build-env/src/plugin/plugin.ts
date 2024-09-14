@@ -6,9 +6,8 @@ import {
 } from '@nx/devkit';
 import { dirname, join } from 'node:path';
 import { DEFAULT_ENVIRONMENTS_OUTPUT_DIR } from '../internal/constants';
-import type { StarVerdaccioOptions } from '../internal/verdaccio/verdaccio-registry';
-
-import { VERDACCIO_REGISTRY_JSON } from '../internal/verdaccio/constants';
+import type { StarVerdaccioOptions } from '../executors/bootstrap/verdaccio-registry';
+import { VERDACCIO_REGISTRY_JSON } from '../executors/bootstrap/constants';
 
 export function isPublishable(tags: string[]): boolean {
   return tags.some((target) => target === 'publishable');

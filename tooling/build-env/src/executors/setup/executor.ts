@@ -6,13 +6,13 @@ import {
 import { join } from 'node:path';
 import runBootstrapExecutor from '../bootstrap/executor';
 import runKillProcessExecutor from '../kill-process/executor';
-import { executeProcess } from '../../internal/utils/execute-process';
-import { objectToCliArgs } from '../../internal/utils/terminal';
-import type { VerdaccioProcessResult } from '../../internal/verdaccio/verdaccio-registry';
+import { executeProcess } from '../../internal/execute-process';
+import { objectToCliArgs } from '../../internal/terminal';
+import type { VerdaccioProcessResult } from '../bootstrap/verdaccio-registry';
 import type { SetupEnvironmentExecutorOptions } from './schema';
 import { normalizeOptions } from '../internal/normalize-options';
 
-import { VERDACCIO_REGISTRY_JSON } from '../../internal/verdaccio/constants';
+import { VERDACCIO_REGISTRY_JSON } from '../bootstrap/constants';
 
 export type ExecutorOutput = {
   success: boolean;

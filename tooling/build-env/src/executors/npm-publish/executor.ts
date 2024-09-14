@@ -2,9 +2,9 @@ import { type ExecutorContext, logger } from '@nx/devkit';
 
 import type { NpmPublishExecutorOptions } from './schema';
 import { join, relative } from 'node:path';
-import { executeProcess } from '../../internal/utils/execute-process';
-import { objectToCliArgs } from '../../internal/utils/terminal';
-import { getTargetOutputPath } from '../../internal/utils/target';
+import { executeProcess } from '../../internal/execute-process';
+import { objectToCliArgs } from '../../internal/terminal';
+import { getTargetOutputPath } from '../../internal/target';
 import { normalizeOptions } from '../internal/normalize-options';
 
 export type NpmPublishExecutorOutput = {
