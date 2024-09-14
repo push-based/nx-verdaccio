@@ -7,8 +7,8 @@ import {
 } from './verdaccio-registry';
 import { writeFile } from 'node:fs/promises';
 import { setupNpmWorkspace } from './npm';
-import { formatInfo } from '../utils/logging';
-import { objectToCliArgs } from '../utils/terminal';
+import { formatInfo } from '../../internal/utils/logging';
+import { objectToCliArgs } from '../../internal/utils/terminal';
 import { execSync } from 'node:child_process';
 import { VERDACCIO_REGISTRY_JSON } from './constants';
 import { logger } from '@nx/devkit';
@@ -74,9 +74,13 @@ export async function bootstrapEnvironment({
   return activeRegistry;
 }
 
-export type ConfigureRegistryOptions = VerdaccioProcessResult & {
+export type ConfigureRegistryOptions = Pick<
+  VerdaccioProcessResult,
+  'port' | 'host' | 'url'
+> & {
   userconfig?: string;
 };
+
 export function configureRegistry(
   { port, host, url, userconfig }: ConfigureRegistryOptions,
   verbose?: boolean
@@ -110,8 +114,14 @@ export function configureRegistry(
   execSync(setAuthToken);
 }
 
+export type UnconfigureRegistryOptions = Pick<
+  VerdaccioProcessResult,
+  'port' | 'host'
+> & {
+  userconfig?: string;
+};
 export function unconfigureRegistry(
-  { port, host, userconfig }: VerdaccioProcessResult & { userconfig?: string },
+  { port, host, userconfig }: UnconfigureRegistryOptions,
   verbose?: boolean
 ) {
   const urlNoProtocol = `//${host}:${port}`;
