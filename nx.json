@@ -80,7 +80,6 @@
   },
   "plugins": [
     "./e2e-examples/cli-e2e-original/tooling/original.plugin.ts",
-    "./e2e-examples/cli-e2e-pretarget/tooling/pretarget.plugin.ts",
     "@org/build-env",
     {
       "plugin": "@nx/eslint/plugin",

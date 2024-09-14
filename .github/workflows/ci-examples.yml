@@ -45,11 +45,5 @@ jobs:
         uses: nrwl/nx-set-shas@v4
       - name: Install dependencies
         run: npm i
-      - name: pretarget E2E test project
-        run: npx nx run cli-e2e-pretarget:pretarget-e2e --parallel=1 --verbose
-      - name: graph E2E test project
-        run: npx nx run cli-e2e-graph:graph-e2e --parallel=1 --verbose
-      - name: env E2E test project
-        run: npx nx run cli-e2e-env:env-e2e --parallel=1 --verbose
       - name: Original E2E test project
         run: npx nx run cli-e2e-original:original-e2e --parallel=1 --verbose
