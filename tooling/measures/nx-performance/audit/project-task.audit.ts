@@ -1,5 +1,5 @@
 import {AuditOutput, Audit} from "@code-pushup/models";
-import {executeProcess, slugify} from "@code-pushup/utils";
+import {executeProcess, slugify, formatDuration} from "@code-pushup/utils";
 import {logger, readJsonFile} from "@nx/devkit";
 
 
@@ -42,7 +42,7 @@ export async function projectTaskAudits(options?: ProjectTaskAuditOptions): Prom
       slug: getAuditSlug(task), // Unique slug for each task
       score: scoreProjectTaskDuration(duration, maxDuration),
       value: duration,
-      displayValue: `${duration.toFixed(2)} ms`,
+      displayValue: formatDuration(duration),
       details: {}
     }));
 }
