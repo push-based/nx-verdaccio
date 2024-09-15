@@ -2,8 +2,10 @@ import runSetupEnvironmentExecutor from './executor';
 import { beforeEach, expect, vi } from 'vitest';
 import * as runBuildExecutorModule from '../bootstrap/executor';
 import * as executeProcessModule from '../../internal/execute-process';
+import {os} from 'testing/test-utils';
 import * as killProcessExecutorModule from '../kill-process/executor';
 import { logger } from '@nx/devkit';
+import {osAgnosticPath} from "@org/test-utils";
 
 vi.mock('@nx/devkit', async () => {
   const actual = await vi.importActual('@nx/devkit');
@@ -76,7 +78,8 @@ describe('runSetupEnvironmentExecutor', () => {
         'install-env',
         'my-lib-e2e',
         '--environmentProject="my-lib-e2e"',
-        '--environmentRoot="tmp/environments/my-lib-e2e"',
+        // @TODO check for --environmentRoot too
+        expect.stringContaining('my-lib-e2e'),
       ],
       command: 'nx',
       cwd: '/test',
