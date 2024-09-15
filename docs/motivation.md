@@ -158,7 +158,7 @@ If we would not have to keep the server running for the whole test we can also:
 Especially the caching is interesting to dive deeper in.
 Let's look at different scenarios and what they miss.
 
-#### Changes in source
+#### Changes in the source
 
 ```mermaid
 flowchart TB
@@ -176,7 +176,7 @@ classDef e2e stroke:#f00
 classDef build stroke:#f00
 ```
 
-#### Changes in tests
+#### Changes in the tests
 
 ```mermaid
 flowchart TB
@@ -186,71 +186,21 @@ classDef e2e stroke:#f00
 
 ### 🔫 DX
 
-TBD
+As the logic that starts and stops Verdaccio is backed into the setup script it is very hard and cumbersome to debug or even see what is going on.
+
+- Server always stops after test. There is no way to keep it running and look at the published packages
+- After an error the server keeps running and there is no way to manually stop it again. A reboot or terminal command is necessary.
+- Another thing related to errors is the configuration for the local registry is made in the users setup and therefore if not reverted manually no other package can be installed. Not even running `npm ci`
 
 ### 🧟‍ Maintainability
 
-TBD
+As mentioned the logic to set up and teardown the test environment is backed into the e2e tests global setup scripts.
 
-## Solution
-
-This workspace provides a scalable and maintainable E2E setup for Vite tests and Verdaccio.
-It isolates all involved files into an isolated environment for each e2e project.
-
-### Changes files during e2e
-
-The changed files during testing, are all in one isolated folder and don't interfere with your local setup.
-
-```sh
-Root/ # 👈 this is your CWD
-├── dist/
-│   └── packages/
-│       └── <project-name>/...
-└── tmp/
-    └── e2e/
-        └── <project-name>/ # e2e setup
-            ├── storage/... # npm publish/unpublish
-            ├── node_modules/
-            │   └── <org>
-            │       └── <package-name>/... # npm install/uninstall
-            ├── __test__/...
-            │   └── <file-name>/... # e2e beforeEach
-            │        └── <it-block-setup>/...
-            ├── .npmrc # local npm config configured for project specific verdaccio registry
-            ├── package-lock.json # npm install/uninstall
-            └── package.json # npm install/uninstall
-```
-
-### Task Performance
-
-To elaborate on the performance improvements, we show the different cases while writing tests.
-
-#### Changes in source
-
-```mermaid
-flowchart TB
-P[project-e2e:e2e]:::e2e-.implicit.->S[project-e2e:setup-env]:::build;
-S-.implicit.->E[project:build]:::build;
-classDef e2e stroke:#f00
-classDef setup-env stroke:#f00
-classDef build stroke:#f00
-```
-
-#### Changes in the test environments
-
-```mermaid
-flowchart TB
-P[project-e2e:e2e]:::e2e-.implicit.->S[project-e2e:setup-env]:::setup-env;
-S-.implicit.->E[project:build]:::build;
-classDef e2e stroke:#f00
-classDef setup-env stroke:#f00
-```
-
-#### Changes in tests
-
-```mermaid
-flowchart TB
-P[project-e2e:e2e]:::e2e-.implicit.->S[project-e2e:setup-env]:::build;
-S-.implicit.->E[project:build]:::build;
-classDef e2e stroke:#f00
-```
+This has several downsides when maintaining the code:
+- Since the setup and teardown processes are baked into the scripts, they are not visible in the task graph, making it difficult for developers to see the dependencies and relationships between tasks. 
+  This results in unnecessary time spent digging into the code to understand the setup.
+- With a large number of interconnected parts, updating the test environment or adjusting for new features can introduce bugs or cause existing tests to fail, increasing the chance for breaking changes.
+- When an error occurs, it is not easy to isolate the issue or see which part of the setup failed. 
+  Developers have to manually step through the complex code to identify the problem, which slows down the development process a lot.
+- The configuration for the local registry and other components is spread across different parts of the setup, adding to the complexity. 
+  This makes it harder to ensure that the environment is correctly configured across all tests.
