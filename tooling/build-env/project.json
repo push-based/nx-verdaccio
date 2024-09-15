@@ -3,6 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "tooling/build-env/src",
   "projectType": "library",
+  "tags": ["scope:shared", "type:tooling"],
   "implicitDependencies": [],
   "targets": {
     "build": {
@@ -47,6 +48,5 @@
         "configFile": "tooling/build-env/vite.config.ts"
       }
     }
-  },
-  "tags": ["scope:shared", "type:tooling"]
+  }
 }

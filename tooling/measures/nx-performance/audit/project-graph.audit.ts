@@ -1,33 +1,38 @@
-import {AuditOutput, PluginReport} from "@code-pushup/models";
-import {execFile} from "node:child_process";
+import { AuditOutput, PluginReport } from '@code-pushup/models';
+import { execFile } from 'node:child_process';
 
 export const DEFAULT_MAX_PROJECT_GRAPH_TIME = 300;
 
 export const PROJECT_GRAPH_PERFORMANCE_AUDIT = {
   slug: 'project-graph-performance',
-  title: 'Nx project graph performance audit',
+  title: 'Project graph performance',
   description: 'An audit to check performance of the Nx project graph',
-}
+};
 
 export type ProjectGraphAuditOptions = {
-  maxDuration?: number;
-}
+  maxProjectGraphTime?: number;
+};
 
-export async function projectGraphAudit(options?: ProjectGraphAuditOptions): Promise<AuditOutput> {
-  const {maxDuration = DEFAULT_MAX_PROJECT_GRAPH_TIME} = options ?? {};
-  const {duration} = await projectGraphTiming();
+export async function projectGraphAudit(
+  options?: ProjectGraphAuditOptions
+): Promise<AuditOutput> {
+  const { maxProjectGraphTime = DEFAULT_MAX_PROJECT_GRAPH_TIME } =
+    options ?? {};
+  const { duration } = await projectGraphTiming();
 
   return {
     slug: 'project-graph-performance',
-    score: scoreProjectGraphDuration(duration, maxDuration),
+    score: scoreProjectGraphDuration(duration, maxProjectGraphTime),
     value: duration,
     displayValue: `${duration.toFixed(2)} ms`,
-    details: {}
+    details: {},
   };
 }
 
-
-export function scoreProjectGraphDuration(duration: number, maxDuration: number): number {
+export function scoreProjectGraphDuration(
+  duration: number,
+  maxDuration: number
+): number {
   // Ensure duration is capped at maxDuration for the scoring
   if (duration >= maxDuration) return 0;
 
@@ -39,5 +44,5 @@ export function scoreProjectGraphDuration(duration: number, maxDuration: number)
 export async function projectGraphTiming(): Promise<{ duration: number }> {
   const start = performance.now();
   await execFile('npx nx show projects');
-  return {duration: Number((performance.now() - start).toFixed(3))};
+  return { duration: Number((performance.now() - start).toFixed(3)) };
 }

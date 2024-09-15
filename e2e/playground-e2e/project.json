@@ -10,7 +10,6 @@
     "e2e": {
       "dependsOn": [
         {
-          "projects": "self",
           "target": "setup-env",
           "params": "forward"
         }
