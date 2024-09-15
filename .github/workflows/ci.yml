@@ -28,7 +28,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest] # @TODO add windows-latest after we have the os agnostic macher
     name: Unit tests
     runs-on: ${{ matrix.os }}
     steps:
