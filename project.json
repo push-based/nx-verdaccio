@@ -3,5 +3,16 @@
   "$schema": "node_modules/nx/schemas/project-schema.json",
   "includedScripts": [],
   "// targets": "to see all targets run: nx show project workspace-source --web",
-  "targets": {}
+  "targets": {
+    "code-pushup": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "npx code-pushup"
+          }
+        ]
+      }
+    }
+  }
 }
