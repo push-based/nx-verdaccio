@@ -5,7 +5,7 @@ import {
 } from '@nx/devkit';
 import { dirname, join } from 'node:path';
 import type { ProjectConfiguration } from 'nx/src/config/workspace-json-project-json';
-import { getBuildOutputPathFromBuildTarget } from '@org/tools-utils';
+import { getBuildOutputPathFromBuildTarget } from './utils/build-target-helper';
 
 export const createNodes: CreateNodes = [
   '**/project.json',
