@@ -46,18 +46,18 @@ export async function setup() {
   // `npm config set //localhost:${verdaccioPort}:_authToken "my-auth-token"`
   configureRegistry(verdaccioPort);
 
-  // Publish the package to test to the Verdacio storage (local-registry/storage)
-  // `npm publish @my-org/my-lib@0.0.1 --registry=http://localhost:${verdaccioPort}`
+  // Publish all packages to the Verdacio storage (local-registry/storage)
+  // `npm publish <package-name> --registry=http://localhost:${verdaccioPort}`
   await publishProject('my-lib');
 
-  // Install the package locally
-  // `npm install my-lib --registry=http://localhost:${verdaccioPort}`
+  // Install all packages locally
+  // `npm install <package-name> --registry=http://localhost:${verdaccioPort}`
   await installProject('my-lib');
 }
 
 export async function teardown() {
-  // Uninstall the package from the Verdacio storage (local-registry/storage)
-  // `npm uninstall my-lib`
+  // Uninstall all package from the Verdacio storage (local-registry/storage)
+  // `npm uninstall <package-name>`
   await uninstallProject('my-lib');
 
   // Revert configure npm with form the created Verdaccio registry
@@ -99,10 +99,14 @@ User/
         │   └── my-lib-e2e/
         │       └── some.test.ts
         ├── tmp/
-        │   └── local-registry/
-        │       └── storage/
-        │           └── @my-org
-        │               └── my-lib/... # npm publish saves the package's tarball here
+        │    ├── e2e/...
+        │    │   └── <test-file-name>/... 
+        │    │        └── <it-block-setup>/...
+        │    │             └── test.file.ts
+        │    └── local-registry/
+        │        └── storage/
+        │            └── @my-org
+        │                └── my-lib/... # npm publish saves the package's tarball here
         ├── package-lock.json # 🔓 npm install/uninstall installs into workspace root
         └── package.json # 🔓 npm install/uninstall installs into workspace root
 ```
@@ -140,7 +144,9 @@ To run 1 E2E test the following chain has to happen:
 
 As you can see, the majority of the tasks are just here as we can't parallelize. :(
 
-### 🐢 Task Performance
+### 🐢 Task Graph & Performance
+
+Due to above reasons the project graph is hard to optimize and opaque as everything is hidden in 2 nodes  
 
 We already scratched that topic a bit, but in this chapter we can go in full detail.
 Let's start with looking at the steps from above.
