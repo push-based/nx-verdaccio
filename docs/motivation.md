@@ -1,13 +1,24 @@
 # Motivation
 
-The following document explains the motivation behind this library and the problems it solves.
-We will discuss common e2e setups in the wild, what problems they have and why they are pretty limited in their scalability and performance.
+The following document explains the motivation behind this library and the problem it solves.
+We will discuss [common E2e setup for publishable packages](#Common-E2E-setup-for-publishable-packages) in the wild, what problems they have and why they are pretty limited in their scalability and performance.
 
-What is not covered in this document is basic knowledge about Verdaccio as wel as Nx.
+> [!NOTE]
+> What is not covered in this document is basic knowledge about Verdaccio as well as Nx.
 
-Let's start of by explaining the common e2e setups.
+Before we go into more detail let's quickly list the problems here to later on dive into each of them individually:
 
-## Common e2e setup for publishable packages
+**The problems:**
+
+- 🚪 **Isolation** - Conflicts the file system as well as changes in the local configuration of the developer machine.
+- 📉 **Scalability** - The setup can only run in sequence and after every test we have to run a lot of cleanup scripts. In case of an error the whole chain has to rerun.
+- 🐢 **Task Performance** - The test environment setup in not cacheable and as the server has to run while the tests execute, it slows done the whole task.
+- 🔫 **DX** - In case of an error there is no easy way to debug the test setup independent of the test.
+- 🧟‍ **Maintainability** - It is very hard to maintain the test setup as it is very complex and has a lot of moving partsnthat are hard to understand and debug.
+
+Let's start off by explaining the common e2e setups.
+
+## Common E2E setup for publishable packages
 
 To get e2e tests setup with Verdaccio we typically need the following building blocks:
 
@@ -64,12 +75,14 @@ export async function teardown() {
 Now you could run `nx run my-lib-e2e:e2e` which would start the server publish and install, executes the tests and runs the cleanup logic.
 Viola, you have a working e2e setup for your package. 🎉
 
-But wait! There is are MANY caveats with this setup. Let's discuss them one by one.
+But wait! There are MANY caveats with this setup. We mentioned them already in the beginning, now let's discuss them one by one.
 
-## File system changes while running the e2e test
+## Problems
+
+### 🚪 Isolation of the E2E tests
 
 The following file tree is a result of running our e2e setup.
-It is particular bad as it interfere with your local package manager configuration.
+It is particular bad as it interfere with your local package manager configuration as well as conflicts with other tests if not run in sequence.
 
 ```sh
 User/
@@ -94,9 +107,56 @@ User/
         └── package.json # 🔓 npm install/uninstall installs into workspace root
 ```
 
-### Task Performance
+As the tests change the local configuration of the package manager, it is not possible to run multiple tests in parallel.
+Installing/uninstalling or publishing a package will end up in conflicts with other tests.
+You are forced to run the tests in sequence.
 
-To elaborate on the performance issues, we show the different cases while writing tests.
+**Publish conflict:**
+
+1. Test A: `npm publish @org/pkg@0.0.1 --registry=http://localhost:4873` # ✅
+2. Test B: `npm publish @org/pkg@0.0.1 --registry=http://localhost:4873` # ❌ package already exists in registry
+
+**Install/uninstall conflict:**
+
+1. Test A: `npm install @org/pkg@0.0.1 --registry=http://localhost:4873` # ✅
+2. Test B: `npm install @org/pkg@0.0.1 --registry=http://localhost:4873` # ✅
+3. Test B: `nx e2e pkg` # ✅
+4. Test B: `npm uninstall @org/pkg@0.0.1 --registry=http://localhost:4873` # ✅
+5. Test A: `nx e2e pkg` # ❌ package not installed
+
+### 📉 Scalability
+
+As mentioned the tests don't scale, which is mostly related to the first problem.
+
+To run 1 E2E test the following chain has to happen:
+
+- Start Verdaccio server - to be able to publish packages to and install from
+- NPM publish the package to the Verdaccio server
+- NPM install the package to the Start Verdaccio server
+- Execute the actual e2e tests over playwrite, vitest, jest or other test runner
+- NPM uninstall the package from the local setup
+- Stop the Verdaccio server
+- Delete the storage folder
+
+As you can see, the majority of the tasks are just here as we can't parallelize. :(
+
+### 🐢 Task Performance
+
+We already scratched that topic a bit, but in this chapter we can go in full detail.
+Let's start with looking at the steps from above.
+
+If we could run them in parallel the following steps would not need to happen:
+
+- 🐢 NPM uninstall the package from the local setup
+- 🐢 Delete the storage folder
+
+If we would not have to keep the server running for the whole test we can also:
+
+- 🐢 Stop wasting CPU power and memory that is consumed by the server
+- 🐢 Think about options to cache parts of the steps
+
+Especially the caching is interesting to dive deeper in.
+Let's look at different scenarios and what they miss.
 
 #### Changes in source
 
@@ -123,6 +183,14 @@ flowchart TB
 P[project-e2e:e2e]:::e2e-.implicit.->E[project:build]:::build;
 classDef e2e stroke:#f00
 ```
+
+### 🔫 DX
+
+TBD
+
+### 🧟‍ Maintainability
+
+TBD
 
 ## Solution
 
