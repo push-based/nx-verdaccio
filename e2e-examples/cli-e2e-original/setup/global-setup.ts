@@ -9,6 +9,7 @@ import {
 
 const isVerbose = process.env['NX_VERBOSE_LOGGING'] === 'true' ?? false;
 const projectName = process.env['NX_TASK_TARGET_PROJECT'];
+let stopFn: () => void
 
 export async function setup() {
   if (projectName == null) {
@@ -44,15 +45,22 @@ export async function setup() {
       targets: 'original-npm-install',
       exclude: 'tag:type:testing',
       skipNxCache: true,
+      parallel: 1,
       verbose: isVerbose
     }),
     verbose: isVerbose
   });
 
   // @TODO figure out why named exports don't work https://vitest.dev/config/#globalsetup
-  return () => teardownSetup(registryResult);
+  stopFn = () => teardownSetup(registryResult)
+  return () => stopFn();
 }
 
+
+
+export async function teardown() {
+  stopFn()
+}
 export async function teardownSetup({ registry, stop }: RegistryResult) {
   console.info(`Teardown ${projectName}`);
   // uninstall all projects
