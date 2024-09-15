@@ -43,7 +43,6 @@ export async function setup() {
       _: ['run-many'],
       targets: 'original-npm-install',
       exclude: 'tag:type:testing',
-      parallel: 1,
       skipNxCache: true,
       verbose: isVerbose
     }),
