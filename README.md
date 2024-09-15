@@ -1,18 +1,18 @@
 # Buildable Test Environment Plugin
 
-This plugin provides a way zeros configuration setup to run e2e tests in a package manager environment.
+This plugin provides a zeros configuration setup to run e2e tests in a package manager environment.
 
 ## Getting started
 
 1. Register and configure the plugins in `nx.json`:
 
-```json
+```jsonc
 {
   "plugins": [
     {
       "plugin": "@org/build-env",
       "options": {
-        "environmentsDir": "tmp/environments"
+        "environmentsDir": "tmp/environments" // Optional
       }
     }
   ]
@@ -21,20 +21,21 @@ This plugin provides a way zeros configuration setup to run e2e tests in a packa
 
 Now you can configure the project you want to e2e test as published package.
 
-2. Add a `publishable` tag to the package under test
+2. Add a `publishable` tag to the package under test to tell the plugin which projects it should consider as publishable 
 
 ```jsonc
 // projects/my-lib/project.json
 {
   "name": "my-lib",
-  "tags": ["publishable"]
+  "targets": ["publish", "nx-release-publish"]
+  "tags": ["publishable"] // Optionally filter projects by tags for a more finegrained control
   // ...
 }
 ```
 
-Next you need to configure the e2e project to use the package under test.
+Next you need to configure the e2e project that uses the package under test.
 
-3. Add the package under test as `implicitDependency` to your e2e project.
+3. Add the package under test as `implicitDependency` to your e2e project. The plugin will detect implicit dependencies and use them for the environment setup. 
 
 ```jsonc
 // projects/my-lib-e2e/project.json
@@ -71,7 +72,7 @@ Now you are ready to go.
 
 Tadaaaa! 🎉
 
-## DX while debuggins e2e tests
+## DX while debugging e2e tests
 
 ### Production usage:
 
@@ -97,6 +98,71 @@ Debug packages:
 - `nx run utils:npm-publish --environmentProject cli-e2e` - publishes `utils` and `models` to the verdaccio registry configured for `cli-e2e`
 - `nx run utils:npm-install --environmentProject cli-e2e` - installs `utils` and `models` from the verdaccio registry configured for `cli-e2e`
 - `nx run cli-e2e:stop-verdaccio` - stops the verdaccio server for `cli-e2e`
+
+
+
+## Solution
+
+This workspace provides a scalable and maintainable E2E setup for Vite tests and Verdaccio.
+It isolates all involved files into an isolated environment for each e2e project.
+
+### Changes files during e2e
+
+The changed files during testing, are all in one isolated folder and don't interfere with your local setup.
+
+```sh
+Root/ # 👈 this is your CWD
+├── dist/
+│   └── packages/
+│       └── <project-name>/...
+└── tmp/
+    └── e2e/
+        └── <project-name>/ # e2e setup
+            ├── storage/... # npm publish/unpublish
+            ├── node_modules/
+            │   └── <org>
+            │       └── <package-name>/... # npm install/uninstall
+            ├── __test__/...
+            │   └── <file-name>/... # e2e beforeEach
+            │        └── <it-block-setup>/...
+            ├── .npmrc # local npm config configured for project specific verdaccio registry
+            ├── package-lock.json # npm install/uninstall
+            └── package.json # npm install/uninstall
+```
+
+### Task Performance
+
+To elaborate on the performance improvements, we show the different cases while writing tests.
+
+#### Changes in source
+
+```mermaid
+flowchart TB
+P[project-e2e:e2e]:::e2e-.implicit.->S[project-e2e:setup-env]:::build;
+S-.implicit.->E[project:build]:::build;
+classDef e2e stroke:#f00
+classDef setup-env stroke:#f00
+classDef build stroke:#f00
+```
+
+#### Changes in the test environments
+
+```mermaid
+flowchart TB
+P[project-e2e:e2e]:::e2e-.implicit.->S[project-e2e:setup-env]:::setup-env;
+S-.implicit.->E[project:build]:::build;
+classDef e2e stroke:#f00
+classDef setup-env stroke:#f00
+```
+
+#### Changes in tests
+
+```mermaid
+flowchart TB
+P[project-e2e:e2e]:::e2e-.implicit.->S[project-e2e:setup-env]:::build;
+S-.implicit.->E[project:build]:::build;
+classDef e2e stroke:#f00
+```
 
 ## Connect with us!
 
