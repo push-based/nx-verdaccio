@@ -21,10 +21,6 @@
     "@nx/vite": "18.2.4",
     "@nx/web": "18.2.4",
     "@nx/workspace": "18.2.4",
-    "@org/cli": "^0.0.1",
-    "@org/core": "^0.0.1",
-    "@org/models": "^0.0.1",
-    "@org/utils": "^0.0.1",
     "@swc-node/register": "~1.9.1",
     "@swc/cli": "~0.3.12",
     "@swc/core": "^1.7.22",
@@ -62,12 +58,6 @@
   },
   "description": "<a alt=\"Nx logo\" href=\"https://nx.dev\" target=\"_blank\" rel=\"noreferrer\"><img src=\"https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png\" width=\"45\"></a>",
   "main": "index.js",
-  "keywords": [
-    "nx",
-    "nx devtools",
-    "testing",
-    "verdaccio",
-    "performance"
-  ],
+  "keywords": ["nx","nx devtools","testing","verdaccio", "performance"],
   "author": "Michael Hladky"
 }
