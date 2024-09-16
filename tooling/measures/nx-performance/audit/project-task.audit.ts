@@ -1,6 +1,8 @@
 import { AuditOutput, Audit } from '@code-pushup/models';
 import { executeProcess, slugify, formatDuration } from '@code-pushup/utils';
 import { logger, readJsonFile } from '@nx/devkit';
+import { DEFAULT_PLUGIN_OUTPUT } from '../constant';
+import { join } from 'node:path';
 
 export const DEFAULT_MAX_PROJECT_TARGET_TIME = 300;
 
@@ -71,8 +73,9 @@ export async function projectTaskTiming<T extends string>(
   const results: Record<T, number>[] = [];
 
   for (const task of tasks) {
+    const dist = join(DEFAULT_PLUGIN_OUTPUT, 'task-time');
     await executeProcess({
-      command: `NX_PERF_LOGGING=true NX_DAEMON=false NX_PROFILE=tmp/nx-task-performance/${slugify(
+      command: `NX_PERF_LOGGING=true NX_DAEMON=false NX_PROFILE=${dist}/${slugify(
         task
       )}-profile.json npx`,
       args: ['nx', 'run', task, '--parallel=1', '--verbose', '--skipNxCache'],
@@ -82,9 +85,7 @@ export async function projectTaskTiming<T extends string>(
       },
     });
 
-    const taskPerfJson = readJsonFile(
-      `./tmp/nx-task-performance/${slugify(task)}-profile.json`
-    );
+    const taskPerfJson = readJsonFile(`${dist}/${slugify(task)}-profile.json`);
     results.push(
       taskPerfJson
         .filter(

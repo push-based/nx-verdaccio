@@ -2,10 +2,8 @@ import runSetupEnvironmentExecutor from './executor';
 import { beforeEach, expect, vi } from 'vitest';
 import * as runBuildExecutorModule from '../bootstrap/executor';
 import * as executeProcessModule from '../../internal/execute-process';
-import {os} from 'testing/test-utils';
 import * as killProcessExecutorModule from '../kill-process/executor';
 import { logger } from '@nx/devkit';
-import {osAgnosticPath} from "@org/test-utils";
 
 vi.mock('@nx/devkit', async () => {
   const actual = await vi.importActual('@nx/devkit');

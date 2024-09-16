@@ -6,6 +6,8 @@ import {
   formatBytes,
 } from '@code-pushup/utils';
 import { logger } from '@nx/devkit';
+import { join } from 'node:path';
+import { DEFAULT_PLUGIN_OUTPUT } from '../constant';
 
 export const DEFAULT_MAX_PROJECT_TARGET_CACHE_SIZE = 3000;
 
@@ -78,6 +80,11 @@ export async function projectTaskCacheSize<T extends string>(
   const results: Record<T, number>[] = [];
 
   for (const task of tasks) {
+    const environmentRoot = join(
+      DEFAULT_PLUGIN_OUTPUT,
+      'cache-size',
+      slugify(task)
+    );
     await executeProcess({
       command: `npx`,
       args: [
@@ -85,7 +92,7 @@ export async function projectTaskCacheSize<T extends string>(
         'run',
         task,
         '--parallel=1',
-        `--environmentRoot=${slugify(task)}`,
+        `--environmentRoot=${environmentRoot}`,
         '--verbose',
       ],
       observer: {
@@ -96,7 +103,7 @@ export async function projectTaskCacheSize<T extends string>(
 
     const { stdout } = await executeProcess({
       command: 'du',
-      args: ['-sk', slugify(task), '|', 'awk', "'{print $1 * 1024}'"],
+      args: ['-sk', environmentRoot, '|', 'awk', "'{print $1 * 1024}'"],
       observer: {
         onStdout: (stdout) => logger.info(stdout),
         onStderr: (stderr) => logger.error(stderr),

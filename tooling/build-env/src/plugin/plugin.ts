@@ -113,7 +113,6 @@ function envTargets({
     // runs bootstrap-env, install-env and stop-verdaccio
     'setup-env': {
       outputs: ['{options.environmentRoot}'],
-      cache: true,
       executor: '@org/build-env:setup',
       options: { environmentRoot },
     },
