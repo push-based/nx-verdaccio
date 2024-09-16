@@ -4,7 +4,9 @@ import { sortCommandHandle } from './cli';
 import { vi } from 'vitest';
 
 vi.mock('@push-based/core', async () => {
-  const actual = await vi.importActual<typeof import('@push-based/core')>('@push-based/core');
+  const actual = await vi.importActual<typeof import('@push-based/core')>(
+    '@push-based/core'
+  );
   return {
     ...actual,
     sortUserFile: vi.fn(async () => void 0),

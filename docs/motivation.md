@@ -100,7 +100,7 @@ User/
         │       └── some.test.ts
         ├── tmp/
         │    ├── e2e/...
-        │    │   └── <test-file-name>/... 
+        │    │   └── <test-file-name>/...
         │    │        └── <it-block-setup>/...
         │    │             └── test.file.ts
         │    └── local-registry/
@@ -146,7 +146,7 @@ As you can see, the majority of the tasks are just here as we can't parallelize.
 
 ### 🐢 Task Graph & Performance
 
-Due to above reasons the project graph is hard to optimize and opaque as everything is hidden in 2 nodes  
+Due to above reasons the project graph is hard to optimize and opaque as everything is hidden in 2 nodes
 
 We already scratched that topic a bit, but in this chapter we can go in full detail.
 Let's start with looking at the steps from above.
@@ -203,10 +203,11 @@ As the logic that starts and stops Verdaccio is backed into the setup script it 
 As mentioned the logic to set up and teardown the test environment is backed into the e2e tests global setup scripts.
 
 This has several downsides when maintaining the code:
-- Since the setup and teardown processes are baked into the scripts, they are not visible in the task graph, making it difficult for developers to see the dependencies and relationships between tasks. 
+
+- Since the setup and teardown processes are baked into the scripts, they are not visible in the task graph, making it difficult for developers to see the dependencies and relationships between tasks.
   This results in unnecessary time spent digging into the code to understand the setup.
 - With a large number of interconnected parts, updating the test environment or adjusting for new features can introduce bugs or cause existing tests to fail, increasing the chance for breaking changes.
-- When an error occurs, it is not easy to isolate the issue or see which part of the setup failed. 
+- When an error occurs, it is not easy to isolate the issue or see which part of the setup failed.
   Developers have to manually step through the complex code to identify the problem, which slows down the development process a lot.
-- The configuration for the local registry and other components is spread across different parts of the setup, adding to the complexity. 
+- The configuration for the local registry and other components is spread across different parts of the setup, adding to the complexity.
   This makes it harder to ensure that the environment is correctly configured across all tests.
