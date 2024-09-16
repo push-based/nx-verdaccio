@@ -9,7 +9,7 @@
     {
       "files": ["*.ts", "*.tsx"],
       "parserOptions": {
-        "project": ["tooling/build-env/tsconfig.*?.json"]
+        "project": ["projects/build-env/tsconfig.*?.json"]
       },
       "rules": {
         // Nx plugins don't yet support ESM: https://github.com/nrwl/nx/issues/15682

@@ -1,5 +1,5 @@
 import { type MockInstance, afterEach, beforeEach, vi } from 'vitest';
-import { MEMFS_VOLUME } from '@org/test-utils';
+import { MEMFS_VOLUME } from '@push-based/test-utils';
 
 vi.mock('fs', async () => {
   const memfs: typeof import('memfs') = await vi.importActual('memfs');

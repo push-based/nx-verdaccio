@@ -18,7 +18,7 @@ export default async function runBootstrapExecutor(
     options
   );
   logger.info(
-    `Execute @org/build-env:build with options: ${JSON.stringify(
+    `Execute @push-based/build-env:build with options: ${JSON.stringify(
       options,
       null,
       2

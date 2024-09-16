@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, vi } from 'vitest';
 import runKillProcessExecutor from './executor';
 import * as killProcessModule from './kill-process';
-import { MEMFS_VOLUME } from '@org/test-utils';
+import { MEMFS_VOLUME } from '@push-based/test-utils';
 import { logger } from '@nx/devkit';
 
 vi.mock('@nx/devkit', async () => {
@@ -69,7 +69,7 @@ describe('runKillProcessExecutor', () => {
 
     expect(logger.info).toHaveBeenCalledTimes(1);
     expect(logger.info).toHaveBeenCalledWith(
-      `Execute @org/stop-verdaccio-env:kill-process with options: ${JSON.stringify(
+      `Execute @push-based/stop-verdaccio-env:kill-process with options: ${JSON.stringify(
         { pid: 777 },
         null,
         2
@@ -122,7 +122,7 @@ describe('runKillProcessExecutor', () => {
 
     expect(logger.info).toHaveBeenCalledTimes(1);
     expect(logger.info).toHaveBeenCalledWith(
-      `Execute @org/stop-verdaccio-env:kill-process with options: ${JSON.stringify(
+      `Execute @push-based/stop-verdaccio-env:kill-process with options: ${JSON.stringify(
         { filePath: 'tmp/environments/my-lib' },
         null,
         2

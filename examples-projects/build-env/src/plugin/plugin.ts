@@ -77,7 +77,7 @@ function verdaccioTargets({
       },
     },
     'stop-verdaccio': {
-      executor: '@org/build-env:kill-process',
+      executor: '@push-based/build-env:kill-process',
       options: {
         filePath: join(environmentRoot, VERDACCIO_REGISTRY_JSON),
         ...options,
@@ -94,7 +94,7 @@ function envTargets({
 }): Record<string, TargetConfiguration> {
   return {
     'bootstrap-env': {
-      executor: '@org/build-env:bootstrap',
+      executor: '@push-based/build-env:bootstrap',
     },
     // just here to execute dependent npm-install tasks with the correct environmentProject
     'install-env': {
@@ -111,7 +111,7 @@ function envTargets({
     // runs bootstrap-env, install-env and stop-verdaccio
     'setup-env': {
       outputs: ['{options.environmentRoot}'],
-      executor: '@org/build-env:setup',
+      executor: '@push-based/build-env:setup',
       options: { environmentRoot },
     },
   };
@@ -126,7 +126,7 @@ function npmTargets(
         { projects: 'self', target: 'build', params: 'forward' },
         { projects: 'dependencies', target: 'npm-publish', params: 'forward' },
       ],
-      executor: '@org/build-env:npm-publish',
+      executor: '@push-based/build-env:npm-publish',
       options: { environmentProject },
     },
     'npm-install': {
@@ -134,7 +134,7 @@ function npmTargets(
         { projects: 'self', target: 'npm-publish', params: 'forward' },
         { projects: 'dependencies', target: 'npm-install', params: 'forward' },
       ],
-      executor: '@org/build-env:npm-install',
+      executor: '@push-based/build-env:npm-install',
       options: { environmentProject },
     },
   };

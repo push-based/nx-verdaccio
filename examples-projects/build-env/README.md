@@ -1,4 +1,4 @@
-# @org/build-env
+# @push-based/build-env
 
 ## To Research
 
@@ -16,14 +16,14 @@
     - build output, using dependent task output? careful though, [it is known to struggle with Nx cloud agents](https://github.com/nrwl/nx/issues/22745)
   - outputs
     - list of packages in registry under `.../storage/.verdaccio-db.json` e.g.: `{"list":["<package-name>"],"secret":"esKM34zA53wetObgi5f0Uu1e7iObmm+f"}``
-    - tarball of package under `.../storage/@org/<package-name>-<version>.tgz`
-      e.g.: `{workspaceRoot}/${environmentsDir}/{args.environmentProject}/storage/@org/${packageName}`,
-    - `package.json` of package under `.../storage/@org/<package-name>/package.json`
+    - tarball of package under `.../storage/@push-based/<package-name>-<version>.tgz`
+      e.g.: `{workspaceRoot}/${environmentsDir}/{args.environmentProject}/storage/@push-based/${packageName}`,
+    - `package.json` of package under `.../storage/@push-based/<package-name>/package.json`
 - `npm-install`
   - outputs
     - list of installed packages under `.../package.json`
     - list of installed packages under `.../package-lock.json`
-    - source of package under `.../node_modules/@org/<package-name>/*`  
+    - source of package under `.../node_modules/@push-based/<package-name>/*`  
       mehh, we know the node_modules reputation
   - inputs:
     - output of npm-publish(?), package.json
@@ -49,5 +49,5 @@ See [configuration docs](./src/generators/configuration/README.md) for details
 
 Examples:
 
-- `nx g @org/build-env:configuration --project=<project-name>`
-- `nx g @org/build-env:configuration --project=<project-name> --targetName=cp`
+- `nx g @push-based/build-env:configuration --project=<project-name>`
+- `nx g @push-based/build-env:configuration --project=<project-name> --targetName=cp`

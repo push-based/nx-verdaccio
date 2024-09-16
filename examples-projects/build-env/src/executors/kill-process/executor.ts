@@ -27,7 +27,7 @@ export default async function runKillProcessExecutor(
   } = opt;
 
   logger.info(
-    `Execute @org/stop-verdaccio-env:kill-process with options: ${JSON.stringify(
+    `Execute @push-based/stop-verdaccio-env:kill-process with options: ${JSON.stringify(
       options,
       null,
       2

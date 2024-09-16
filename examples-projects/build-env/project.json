@@ -1,7 +1,7 @@
 {
   "name": "build-env",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "tooling/build-env/src",
+  "sourceRoot": "projects/build-env/src",
   "projectType": "library",
   "implicitDependencies": [],
   "targets": {
@@ -9,23 +9,23 @@
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/tooling/build-env",
-        "main": "tooling/build-env/src/index.ts",
-        "tsConfig": "tooling/build-env/tsconfig.lib.json",
+        "outputPath": "dist/projects/build-env",
+        "main": "projects/build-env/src/index.ts",
+        "tsConfig": "projects/build-env/tsconfig.lib.json",
         "assets": [
-          "tooling/build-env/*.md",
+          "projects/build-env/*.md",
           {
-            "input": "./tooling/build-env/src",
+            "input": "./projects/build-env/src",
             "glob": "**/!(*.ts)",
             "output": "./src"
           },
           {
-            "input": "./tooling/build-env/src",
+            "input": "./projects/build-env/src",
             "glob": "**/*.d.ts",
             "output": "./src"
           },
           {
-            "input": "./tooling/build-env",
+            "input": "./projects/build-env",
             "glob": "executors.json",
             "output": "."
           }
@@ -44,9 +44,9 @@
     "unit-test": {
       "executor": "@nx/vite:test",
       "options": {
-        "configFile": "tooling/build-env/vite.config.ts"
+        "configFile": "projects/build-env/vite.config.ts"
       }
     }
   },
-  "tags": ["scope:shared", "type:tooling"]
+  "tags": ["scope:shared", "type:feature"]
 }

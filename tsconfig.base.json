@@ -15,13 +15,13 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@org/build-env": ["tooling/build-env/src/index.ts"],
-      "@org/cli": ["examples-projects/cli/src/index.ts"],
-      "@org/core": ["examples-projects/core/src/index.ts"],
-      "@org/models": ["examples-projects/models/src/index.ts"],
-      "@org/test-setup": ["testing/test-setup/src/index.ts"],
-      "@org/test-utils": ["testing/test-utils/src/index.ts"],
-      "@org/utils": ["examples-projects/utils/src/index.ts"]
+      "@push-based/build-env": ["projects/build-env/src/index.ts"],
+      "@push-based/cli": ["projects/cli/src/index.ts"],
+      "@push-based/core": ["projects/core/src/index.ts"],
+      "@push-based/models": ["projects/models/src/index.ts"],
+      "@push-based/test-setup": ["testing/test-setup/src/index.ts"],
+      "@push-based/test-utils": ["testing/test-utils/src/index.ts"],
+      "@push-based/utils": ["projects/utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

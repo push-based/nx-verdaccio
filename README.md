@@ -10,7 +10,7 @@ This plugin provides a zeros configuration setup to run e2e tests in a package m
 {
   "plugins": [
     {
-      "plugin": "@org/build-env",
+      "plugin": "@push-based/build-env",
       "options": {
         "environmentsDir": "tmp/environments" // Optional
       }
@@ -21,7 +21,7 @@ This plugin provides a zeros configuration setup to run e2e tests in a package m
 
 Now you can configure the project you want to e2e test as published package.
 
-2. Add a `publishable` tag to the package under test to tell the plugin which projects it should consider as publishable 
+2. Add a `publishable` tag to the package under test to tell the plugin which projects it should consider as publishable
 
 ```jsonc
 // projects/my-lib/project.json
@@ -35,7 +35,7 @@ Now you can configure the project you want to e2e test as published package.
 
 Next you need to configure the e2e project that uses the package under test.
 
-3. Add the package under test as `implicitDependency` to your e2e project. The plugin will detect implicit dependencies and use them for the environment setup. 
+3. Add the package under test as `implicitDependency` to your e2e project. The plugin will detect implicit dependencies and use them for the environment setup.
 
 ```jsonc
 // projects/my-lib-e2e/project.json
@@ -73,9 +73,9 @@ Now you are ready to go.
 Tadaaaa! 🎉
 
 **Example usage:**
+
 - `nx run cli-e2e:e2e` - setup environment and then run E2E tests for `cli-e2e`
 - `nx run cli-static-e2e:e2e --environmentRoot static-environments/user-lists` - setup NPM in existing environment and then run E2E tests for `cli-static-e2e`
-
 
 ## DX while debugging e2e tests
 
@@ -124,9 +124,9 @@ Root/
 │            │       └── my-lib/...
 │            ├── node_modules/
 │            │   └── <org>
-│            │        └── <package-name>/... # npm install/uninstall 
+│            │        └── <package-name>/... # npm install/uninstall
 │            ├── __test__/...
-│            │   └── <test-file-name>/... 
+│            │   └── <test-file-name>/...
 │            │        └── <it-block-setup>/...
 │            │             └── test.file.ts
 │            ├── .npmrc # local npm config configured for project specific Verdaccio registry
@@ -141,11 +141,11 @@ Root/
 This solution allows for **parallel execution** of tests, which was not possible before due to conflicts with file systems and package managers.
 
 - ⏱️No more waiting for tests to run sequentially. With isolated environments, each E2E test can run independently without interfering with others.
-- ⏱️Environment setup and test setup are separated, which means **significantly faster execution** of the tests and less overhead in CPU and general runtime. 
+- ⏱️Environment setup and test setup are separated, which means **significantly faster execution** of the tests and less overhead in CPU and general runtime.
 
 ### ⚡ Task Performance - Optimized Execution
 
-To further improve task performance, we can now treat the E2E environment as **build output**. 
+To further improve task performance, we can now treat the E2E environment as **build output**.
 No need for a running server anymore.
 
 This allows us to **cache** the environment and **reuse** it across tests, leading to faster performance:
@@ -201,13 +201,13 @@ This approach makes the E2E setup more **maintainable** and easier to serve edge
 
 - A fine-grained task graph makes it easy to understand the project
 - Since the environment doesn’t require a constantly running server, maintaining the setup becomes much simpler. The environment can be cached as a build output, reducing complexity.
-- as the cleanup logic of a test is just deleting the files this debug effort is gone completely 
+- as the cleanup logic of a test is just deleting the files this debug effort is gone completely
 - The NX task graph provides a clear visual overview of the process, making it easy to see what runs when and how the environment is set up.
 - Configuring a test setup is in a single place and provides fine-grained configuration
 
 ![utils-task-graph-idle.png](docs%2Futils-task-graph-idle.png)
 
-In summary, this new setup offers a more scalable, maintainable, and performant way to handle E2E testing. 
+In summary, this new setup offers a more scalable, maintainable, and performant way to handle E2E testing.
 By isolating environments and using NX’s powerful tools, it becomes easier to run, manage, and debug E2E tests across projects.
 
 ## Benchmarks

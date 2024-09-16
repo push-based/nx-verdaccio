@@ -1,6 +1,6 @@
 import { join } from 'node:path';
 import { stat } from 'node:fs/promises';
-import { MEMFS_VOLUME } from '@org/test-utils';
+import { MEMFS_VOLUME } from '@push-based/test-utils';
 import { vol } from 'memfs';
 import { ensureDirectoryExists } from './file-system';
 
