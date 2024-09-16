@@ -43,6 +43,6 @@ export function scoreProjectGraphDuration(
 
 export async function projectGraphTiming(): Promise<{ duration: number }> {
   const start = performance.now();
-  await execFile('npx nx show projects');
+  execFile('npx nx show projects', { env: {...process.env, NX_DAEMON: false, NX_CACHE_PROJECT_GRAPH: false, NX_ISOLATE_PLUGINS: true });
   return { duration: Number((performance.now() - start).toFixed(3)) };
 }
