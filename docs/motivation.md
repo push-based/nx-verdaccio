@@ -190,6 +190,9 @@ P[project-e2e:e2e]:::e2e-.implicit.->E[project:build]:::build;
 classDef e2e stroke:#f00
 ```
 
+A common scenario would be to do `changes in the tests` multiple times and test if they pass.
+For this scenario executing `nx run cli-e2e:e2e` would download **`3.27 MB`** every single task run.
+
 ### 🔫 DX
 
 As the logic that starts and stops Verdaccio is backed into the setup script it is very hard and cumbersome to debug or even see what is going on.
@@ -211,3 +214,5 @@ This has several downsides when maintaining the code:
   Developers have to manually step through the complex code to identify the problem, which slows down the development process a lot.
 - The configuration for the local registry and other components is spread across different parts of the setup, adding to the complexity.
   This makes it harder to ensure that the environment is correctly configured across all tests.
+
+[Task graph opaque](./utils-e2e:e2e--task-graph_opaque.png)
