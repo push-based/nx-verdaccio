@@ -16,7 +16,7 @@ vi.mock('node:fs/promises', () => ({
 }));
 
 describe('killProcessFromPid', () => {
-  let processKillSpy = vi.spyOn(process, 'kill').mockImplementation(vi.fn());
+  const processKillSpy = vi.spyOn(process, 'kill').mockImplementation(vi.fn());
 
   it('should kill the process if pid is found and dryRun is false', async () => {
     vi.mocked(readJsonFile).mockReturnValue({ pid: 1234 });

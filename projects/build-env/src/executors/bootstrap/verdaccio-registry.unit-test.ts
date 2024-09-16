@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { parseRegistryData, startVerdaccioServer } from './verdaccio-registry';
 import { executeProcess } from '../../internal/execute-process';
-import { ChildProcess } from 'node:child_process';
+import type { ChildProcess } from 'node:child_process';
 import { logger } from '@nx/devkit';
 
 vi.mock('../../internal/execute-process');

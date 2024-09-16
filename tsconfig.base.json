@@ -15,7 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@org/build-env": ["tooling/build-env/src/index.ts"],
+      "@org/build-env": ["projects/build-env/src/index.ts"],
       "@org/cli": ["projects/cli/src/index.ts"],
       "@org/core": ["projects/core/src/index.ts"],
       "@org/models": ["projects/models/src/index.ts"],

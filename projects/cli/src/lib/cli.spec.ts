@@ -7,7 +7,7 @@ vi.mock('@org/core', async () => {
   const actual = await vi.importActual<typeof import('@org/core')>('@org/core');
   return {
     ...actual,
-    sortUserFile: vi.fn(async () => {}),
+    sortUserFile: vi.fn(async () => void 0),
   };
 });
 

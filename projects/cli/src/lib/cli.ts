@@ -5,7 +5,7 @@ export type CliArgs = {
   filePath: string;
 };
 
-const NOOP_BUILDER = <T>(_: Argv<T>) => {};
+const NOOP_BUILDER = <T>(_: Argv<T>) => void 0;
 export function cli(args: string[]) {
   return yargs(args)
     .version(false)
