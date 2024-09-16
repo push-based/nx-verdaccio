@@ -1,10 +1,10 @@
 import { join } from 'node:path';
-import { sortUserFile } from '@org/core';
+import { sortUserFile } from '@push-based/core';
 import { sortCommandHandle } from './cli';
 import { vi } from 'vitest';
 
-vi.mock('@org/core', async () => {
-  const actual = await vi.importActual<typeof import('@org/core')>('@org/core');
+vi.mock('@push-based/core', async () => {
+  const actual = await vi.importActual<typeof import('@push-based/core')>('@push-based/core');
   return {
     ...actual,
     sortUserFile: vi.fn(async () => void 0),

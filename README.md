@@ -10,7 +10,7 @@ This plugin provides a zeros configuration setup to run e2e tests in a package m
 {
   "plugins": [
     {
-      "plugin": "@org/build-env",
+      "plugin": "@push-based/build-env",
       "options": {
         "environmentsDir": "tmp/environments" // Optional
       }

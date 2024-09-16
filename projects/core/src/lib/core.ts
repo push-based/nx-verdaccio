@@ -1,6 +1,6 @@
 import { readFile, writeFile } from 'node:fs/promises';
-import { sortUser } from '@org/utils';
-import { parseUser, User } from '@org/models';
+import { sortUser } from '@push-based/utils';
+import { parseUser, User } from '@push-based/models';
 
 export async function sortUserFile(filePath: string): Promise<void> {
   const userJson: string = (await readFile(filePath)).toString();

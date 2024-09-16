@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { bold, red } from 'ansis';
-import { MEMFS_VOLUME } from '@org/test-utils';
+import { MEMFS_VOLUME } from '@push-based/test-utils';
 import {
   configureRegistry,
   type ConfigureRegistryOptions,
