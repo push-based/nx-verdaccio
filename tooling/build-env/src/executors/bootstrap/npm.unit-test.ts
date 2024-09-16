@@ -3,10 +3,10 @@ import { bold, red } from 'ansis';
 import { MEMFS_VOLUME } from '@org/test-utils';
 import {
   configureRegistry,
-  ConfigureRegistryOptions,
+  type ConfigureRegistryOptions,
   setupNpmWorkspace,
   unconfigureRegistry,
-  UnconfigureRegistryOptions,
+  type UnconfigureRegistryOptions,
   VERDACCIO_ENV_TOKEN,
 } from './npm';
 import { execSync } from 'node:child_process';

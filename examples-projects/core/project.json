@@ -1,0 +1,37 @@
+{
+  "name": "core",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "examples-projects/core/src",
+  "projectType": "library",
+  "release": {
+    "version": {
+      "generatorOptions": {
+        "packageRoot": "dist/{projectRoot}",
+        "currentVersionResolver": "git-tag"
+      }
+    }
+  },
+  "tags": ["scope:core", "type:unit-test-vi", "publishable"],
+  "targets": {
+    "lint": {},
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/examples-projects/core",
+        "main": "examples-projects/core/src/index.ts",
+        "tsConfig": "examples-projects/core/tsconfig.lib.json",
+        "assets": ["examples-projects/core/*.md"],
+        "generatePackageJson": true,
+        "format": ["esm"]
+      }
+    },
+    "unit-test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "../../coverage/examples-projects/core"
+      }
+    }
+  }
+}

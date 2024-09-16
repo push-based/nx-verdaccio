@@ -1,11 +1,8 @@
-import { beforeEach, describe, expect } from 'vitest';
-import runNpmInstallExecutor from './executor';
-import { MEMFS_VOLUME } from '@org/test-utils';
-import * as execProcessModule from '../../internal/execute-process';
-import { logger, readJsonFile } from '@nx/devkit';
-import { join } from 'node:path';
-import { DEFAULT_ENVIRONMENTS_OUTPUT_DIR } from '../../internal/constants';
+import {beforeEach, describe, expect} from 'vitest';
 import runNpmPublishExecutor from './executor';
+import {MEMFS_VOLUME} from '@org/test-utils';
+import * as execProcessModule from '../../internal/execute-process';
+import {logger} from '@nx/devkit';
 
 vi.mock('@nx/devkit', async () => {
   const actual = await vi.importActual('@nx/devkit');

@@ -1,0 +1,27 @@
+{
+  "name": "cli-static-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "examples-e2e/cli-static-e2e/test",
+  "projectType": "application",
+  "tags": ["type:e2e", "type:e2e-vi", "npm-env"],
+  "implicitDependencies": ["cli"],
+  "targets": {
+    "lint": {},
+    "e2e": {
+      "dependsOn": [
+        {
+          "projects": "self",
+          "target": "setup-env",
+          "params": "forward"
+        }
+      ],
+      "executor": "@nx/vite:test",
+      "inputs": ["default", "^production"],
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "environmentRoot": "static-environments/user-lists",
+        "reportsDirectory": "../../coverage/projects/cli-static-e2e"
+      }
+    }
+  }
+}
