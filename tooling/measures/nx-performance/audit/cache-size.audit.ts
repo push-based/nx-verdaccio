@@ -82,7 +82,7 @@ export async function projectTaskCacheSize<T extends string>(
   const results: Record<T, number>[] = [];
 
   for (const task of tasks) {
-    const environmentRoot = join(
+    const environmentRoot = join(process.cwd(),
       DEFAULT_PLUGIN_OUTPUT,
       'cache-size',
       slugify(task)
