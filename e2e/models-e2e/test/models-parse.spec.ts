@@ -1,8 +1,8 @@
 import { basename, dirname, join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { mkdir, writeFile, rm } from 'node:fs/promises';
-import { executeProcess, getTestFixturesDist } from '@org/test-utils';
-import { getEnvironmentRoot } from '@org/build-env';
+import { executeProcess, getTestFixturesDist } from '@push-based/test-utils';
+import { getEnvironmentRoot } from '@push-based/build-env';
 
 describe('models - parse user', () => {
   const fixturesDist = getTestFixturesDist('parse-user', {
@@ -20,7 +20,7 @@ describe('models - parse user', () => {
       writeFile(
         testPath,
         `
-    import {parseUser} from "@org/models";
+    import {parseUser} from "@push-based/models";
     console.log(JSON.stringify(parseUser({name: 'Alice', color: 'green'}), null, 2));`
       )
     ).resolves.not.toThrow();

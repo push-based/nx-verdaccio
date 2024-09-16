@@ -5,8 +5,8 @@ import {
   executeProcess,
   objectToCliArgs,
   getTestFixturesDist,
-} from '@org/test-utils';
-import { getEnvironmentRoot } from '@org/build-env';
+} from '@push-based/test-utils';
+import { getEnvironmentRoot } from '@push-based/build-env';
 
 describe('CLI command - sort', () => {
   const fixturesDist = getTestFixturesDist('cli-command-sort', {

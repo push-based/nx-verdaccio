@@ -61,7 +61,7 @@ describe('runBootstrapExecutor', () => {
     expect(logger.error).not.toHaveBeenCalled();
     expect(logger.info).toHaveBeenCalledTimes(1);
     expect(logger.info).toHaveBeenCalledWith(
-      'Execute @org/build-env:build with options: {}'
+      'Execute @push-based/build-env:build with options: {}'
     );
 
     expect(bootstrapEnvironmentSpy).toHaveBeenCalledTimes(1);
@@ -135,7 +135,7 @@ describe('runBootstrapExecutor', () => {
 
     expect(logger.info).toHaveBeenCalledTimes(1);
     expect(logger.info).toHaveBeenCalledWith(
-      'Execute @org/build-env:build with options: {}'
+      'Execute @push-based/build-env:build with options: {}'
     );
 
     expect(logger.error).toHaveBeenCalledTimes(1);

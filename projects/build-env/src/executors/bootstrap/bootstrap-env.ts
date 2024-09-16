@@ -9,7 +9,11 @@ import { setupNpmWorkspace } from './npm';
 import { formatInfo } from '../../internal/logging';
 import { VERDACCIO_REGISTRY_JSON } from './constants';
 import { logger } from '@nx/devkit';
-import { configureRegistry, Environment, VERDACCIO_ENV_TOKEN } from './npm';
+import {
+  configureRegistry,
+  type Environment,
+  VERDACCIO_ENV_TOKEN,
+} from './npm';
 
 export type BootstrapEnvironmentOptions = Partial<
   StarVerdaccioOptions & Environment

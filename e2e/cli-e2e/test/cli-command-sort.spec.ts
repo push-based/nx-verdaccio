@@ -1,9 +1,9 @@
 import { dirname, join, basename } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
-import { executeProcess, objectToCliArgs } from '@org/test-utils';
-import { getEnvironmentRoot } from '@org/build-env';
-import { getTestFixturesDist } from '@org/test-utils';
+import { executeProcess, objectToCliArgs } from '@push-based/test-utils';
+import { getEnvironmentRoot } from '@push-based/build-env';
+import { getTestFixturesDist } from '@push-based/test-utils';
 
 describe('CLI command - sort', () => {
   const fixturesDist = getTestFixturesDist('cli-command-sort', {
