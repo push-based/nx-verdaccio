@@ -39,14 +39,13 @@ export async function cacheSizeAudits(
   } = options ?? {};
 
   const cacheSizeResults = await projectTaskCacheSizeData(cacheSizeTasks);
-
-  return cacheSizeResults.map(({ cacheSize, data, task, issues }) => ({
+  return cacheSizeResults.map(({ cacheSize, data, task, issues }): AuditOutput => ({
     slug: getCacheSizeAuditSlug(task),
     score: scoreProjectTaskCacheSize(cacheSize, maxCacheSize),
     value: cacheSize,
     displayValue: formatBytes(cacheSize),
     details: {
-      data,
+      table:data,
       issues,
     },
   }));
@@ -144,6 +143,7 @@ export async function folderSize(options: {
   return {
     folderSize: fileSizes.reduce((acc, { size }) => acc + size, 0),
     data: {
+      title: `File sizes of ${directory}`,
       columns: [
         {
           key: 'file',

@@ -210,6 +210,12 @@ This approach makes the E2E setup more **maintainable** and easier to serve edge
 In summary, this new setup offers a more scalable, maintainable, and performant way to handle E2E testing. 
 By isolating environments and using NX’s powerful tools, it becomes easier to run, manage, and debug E2E tests across projects.
 
+## Benchmarks
+
+This repository maintains benchmarks for the certain relevant metrics.
+
+See [detailed report](./benchmarks/benchmark.md)
+
 ## Connect with us!
 
 - [Check out our services](https://push-based.io)
