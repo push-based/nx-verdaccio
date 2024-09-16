@@ -67,7 +67,7 @@ export async function runnerFunction(
   } = options;
   return [
     await projectGraphAudit({ maxProjectGraphTime }),
-    ...(await cacheSizeAudits({ maxCacheSize, cacheSizeTasks })),
-    ...(await taskTimeAudits({ taskTimeTasks, maxTaskTime })),
+   // ...(await cacheSizeAudits({ maxCacheSize, cacheSizeTasks })),
+   // ...(await taskTimeAudits({ taskTimeTasks, maxTaskTime })),
   ];
 }

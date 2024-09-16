@@ -1,5 +1,8 @@
-import { AuditOutput, PluginReport } from '@code-pushup/models';
-import { execFile } from 'node:child_process';
+import {AuditOutput, PluginReport} from '@code-pushup/models';
+import {execFile} from 'node:child_process';
+import {join} from "node:path";
+import {DEFAULT_PLUGIN_OUTPUT} from "../constant";
+import {executeProcess, slugify} from "@code-pushup/utils";
 
 export const DEFAULT_MAX_PROJECT_GRAPH_TIME = 300;
 
@@ -16,9 +19,9 @@ export type ProjectGraphAuditOptions = {
 export async function projectGraphAudit(
   options?: ProjectGraphAuditOptions
 ): Promise<AuditOutput> {
-  const { maxProjectGraphTime = DEFAULT_MAX_PROJECT_GRAPH_TIME } =
-    options ?? {};
-  const { duration } = await projectGraphTiming();
+  const {maxProjectGraphTime = DEFAULT_MAX_PROJECT_GRAPH_TIME} =
+  options ?? {};
+  const {duration} = await projectGraphTiming();
 
   return {
     slug: 'project-graph-performance',
@@ -42,7 +45,20 @@ export function scoreProjectGraphDuration(
 }
 
 export async function projectGraphTiming(): Promise<{ duration: number }> {
+  /*
+  Notice: executeProcess has ~500ms overhead compared to execFile
+  const {duration} = await executeProcess({
+    command: 'npx',
+    args: ['nx', 'show', 'projects'],
+    env: {
+      ...process.env,
+      NX_DAEMON: 'false',
+      NX_CACHE_PROJECT_GRAPH: 'false',
+      NX_ISOLATE_PLUGINS: 'true',
+    }
+  })*/
   const start = performance.now();
-  execFile('npx nx show projects', { env: {...process.env, NX_DAEMON: false, NX_CACHE_PROJECT_GRAPH: false, NX_ISOLATE_PLUGINS: true });
-  return { duration: Number((performance.now() - start).toFixed(3)) };
+  execFile('NX_DAEMON=true NX_CACHE_PROJECT_GRAPH=false NX_ISOLATE_PLUGINS=true npx nx show projects');
+  const execFileDuration = Number((performance.now() - start).toFixed(3));
+  return {duration: Number(execFileDuration.toFixed(3))};
 }

@@ -1,6 +1,5 @@
 import {
   type CreateNodes,
-  logger,
   type ProjectConfiguration,
   readJsonFile,
   type TargetConfiguration,
@@ -123,13 +122,8 @@ function npmTargets(
   environmentProject: string,
   environmentRoot: string
 ): Record<string, TargetConfiguration> {
-  const { name, version } = readJsonFile(
-    join(process.cwd(), `dist/projects/${environmentProject}/package.json`)
-  );
-  logger.error(name + version);
   return {
     'npm-publish': {
-      outputs: [`{options.environmentRoot}/storage`],
       executor: '@org/build-env:npm-publish',
       options: { environmentProject, environmentRoot },
     },
