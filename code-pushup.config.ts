@@ -1,6 +1,14 @@
 import { CoreConfig } from '@code-pushup/models';
-import nxPerformancePlugin from './tooling/measures/nx-performance/nx-performance.plugin';
+import nxPerformancePlugin, {
+  nxPerformanceCategoryRefs,
+  type OnlyAudit,
+} from './tooling/measures/nx-performance/nx-performance.plugin';
 
+const onlyAudits: OnlyAudit[] = [
+  'project-graph-performance',
+  'task-time',
+  'cache-size',
+];
 const taskTimeTasks = [
   'cli-e2e:e2e',
   'core-e2e:e2e',
@@ -20,6 +28,20 @@ export default {
     nxPerformancePlugin({
       taskTimeTasks,
       cacheSizeTasks,
+      onlyAudits,
     }),
+  ],
+  categories: [
+    {
+      slug: 'performance',
+      title: 'Performance',
+      refs: [
+        ...nxPerformanceCategoryRefs({
+          taskTimeTasks,
+          cacheSizeTasks,
+          onlyAudits,
+        }),
+      ],
+    },
   ],
 } satisfies CoreConfig;

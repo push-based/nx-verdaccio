@@ -1,13 +1,14 @@
-import {AuditOutput, PluginReport} from '@code-pushup/models';
-import {execFile} from 'node:child_process';
-import {join} from "node:path";
-import {DEFAULT_PLUGIN_OUTPUT} from "../constant";
-import {executeProcess, slugify} from "@code-pushup/utils";
+import { AuditOutput, PluginReport } from '@code-pushup/models';
+import { execFile } from 'node:child_process';
+import { join } from 'node:path';
+import { DEFAULT_PLUGIN_OUTPUT } from '../constant';
+import { executeProcess, slugify } from '@code-pushup/utils';
 
 export const DEFAULT_MAX_PROJECT_GRAPH_TIME = 300;
 
+export const PROJECT_GRAPH_PERFORMANCE_AUDIT_SLUG = 'project-graph-performance';
 export const PROJECT_GRAPH_PERFORMANCE_AUDIT = {
-  slug: 'project-graph-performance',
+  slug: PROJECT_GRAPH_PERFORMANCE_AUDIT_SLUG,
   title: 'Project graph performance',
   description: 'An audit to check performance of the Nx project graph',
 };
@@ -19,9 +20,9 @@ export type ProjectGraphAuditOptions = {
 export async function projectGraphAudit(
   options?: ProjectGraphAuditOptions
 ): Promise<AuditOutput> {
-  const {maxProjectGraphTime = DEFAULT_MAX_PROJECT_GRAPH_TIME} =
-  options ?? {};
-  const {duration} = await projectGraphTiming();
+  const { maxProjectGraphTime = DEFAULT_MAX_PROJECT_GRAPH_TIME } =
+    options ?? {};
+  const { duration } = await projectGraphTiming();
 
   return {
     slug: 'project-graph-performance',
@@ -58,7 +59,9 @@ export async function projectGraphTiming(): Promise<{ duration: number }> {
     }
   })*/
   const start = performance.now();
-  execFile('NX_DAEMON=true NX_CACHE_PROJECT_GRAPH=false NX_ISOLATE_PLUGINS=true npx nx show projects');
+  execFile(
+    'NX_DAEMON=true NX_CACHE_PROJECT_GRAPH=false NX_ISOLATE_PLUGINS=true npx nx show projects'
+  );
   const execFileDuration = Number((performance.now() - start).toFixed(3));
-  return {duration: Number(execFileDuration.toFixed(3))};
+  return { duration: Number(execFileDuration.toFixed(3)) };
 }

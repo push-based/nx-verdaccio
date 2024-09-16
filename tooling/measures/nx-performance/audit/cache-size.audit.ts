@@ -11,13 +11,15 @@ import { DEFAULT_PLUGIN_OUTPUT } from '../constant';
 
 export const DEFAULT_MAX_PROJECT_TARGET_CACHE_SIZE = 3000;
 
-export function getAuditSlug(task: string): string {
-  return `nx-${slugify(task)}-cache-size`;
+export const CACHE_SIZE_AUDIT_POSTFIX = 'cache-size';
+
+export function getCacheSizeAuditSlug(task: string): string {
+  return `nx-${slugify(task)}-${CACHE_SIZE_AUDIT_POSTFIX}`;
 }
 
 export const getCacheSizeAudits = (tasks: string[]): Audit[] => {
   return tasks.map((task) => ({
-    slug: getAuditSlug(task), // Unique slug for each task
+    slug: getCacheSizeAuditSlug(task), // Unique slug for each task
     title: `Cache size ${task}`,
     description: 'An audit to check cache size of the Nx task.',
   }));
@@ -53,7 +55,7 @@ export async function cacheSizeAudits(
         ];
       })
       .map(([task, duration]) => ({
-        slug: getAuditSlug(task), // Unique slug for each task
+        slug: getCacheSizeAuditSlug(task), // Unique slug for each task
         score: scoreProjectTaskCacheSize(duration, maxCacheSize),
         value: duration,
         displayValue: formatBytes(duration),

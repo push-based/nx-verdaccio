@@ -6,13 +6,15 @@ import { join } from 'node:path';
 
 export const DEFAULT_MAX_PROJECT_TARGET_TIME = 300;
 
-export function getAuditSlug(task: string): string {
-  return `nx-${slugify(task)}-performance`;
+export const TASK_TIME_AUDIT_POSTFIX = 'task-time';
+
+export function getTaskTimeAuditSlug(task: string): string {
+  return `nx-${slugify(task)}-${TASK_TIME_AUDIT_POSTFIX}`;
 }
 
-export const getTaskPerformanceAudits = (tasks: string[]): Audit[] => {
+export const getTaskTimeAudits = (tasks: string[]): Audit[] => {
   return tasks.map((task) => ({
-    slug: getAuditSlug(task), // Unique slug for each task
+    slug: getTaskTimeAuditSlug(task), // Unique slug for each task
     title: `Task time ${task}`,
     description: 'An audit to check performance of the Nx task.',
   }));
@@ -46,7 +48,7 @@ export async function taskTimeAudits(
         ];
       })
       .map(([task, duration]) => ({
-        slug: getAuditSlug(task), // Unique slug for each task
+        slug: getTaskTimeAuditSlug(task), // Unique slug for each task
         score: scoreProjectTaskDuration(duration, maxTaskTime),
         value: duration,
         displayValue: formatDuration(duration),
