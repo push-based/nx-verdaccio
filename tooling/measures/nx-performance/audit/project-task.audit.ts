@@ -80,7 +80,7 @@ export async function projectTaskTiming<T extends string>(
       command: `NX_PERF_LOGGING=true NX_DAEMON=false NX_PROFILE=${dist}/${slugify(
         task
       )}-profile.json npx`,
-      args: ['nx', 'run', task, '--parallel=1', '--verbose', '--skipNxCache'],
+      args: ['nx', 'run', task, '--parallel=1', '--skipNxCache'],
       observer: {
         onStdout: (stdout) => logger.info(stdout),
         onStderr: (stderr) => logger.error(stderr),

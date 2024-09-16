@@ -28,6 +28,7 @@ export default {
     nxPerformancePlugin({
       taskTimeTasks,
       cacheSizeTasks,
+      maxCacheSize: 6000000,
       onlyAudits,
     }),
   ],
