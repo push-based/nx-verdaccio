@@ -81,7 +81,6 @@
     }
   },
   "plugins": [
-    "./e2e-examples/cli-e2e-original/tooling/original.plugin.ts",
     "@push-based/build-env",
     {
       "plugin": "@nx/eslint/plugin",

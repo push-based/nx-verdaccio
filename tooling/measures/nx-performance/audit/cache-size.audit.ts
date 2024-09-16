@@ -39,16 +39,18 @@ export async function cacheSizeAudits(
   } = options ?? {};
 
   const cacheSizeResults = await projectTaskCacheSizeData(cacheSizeTasks);
-  return cacheSizeResults.map(({ cacheSize, data, task, issues }): AuditOutput => ({
-    slug: getCacheSizeAuditSlug(task),
-    score: scoreProjectTaskCacheSize(cacheSize, maxCacheSize),
-    value: cacheSize,
-    displayValue: formatBytes(cacheSize),
-    details: {
-      table:data,
-      issues,
-    },
-  }));
+  return cacheSizeResults.map(
+    ({ cacheSize, data, task, issues }): AuditOutput => ({
+      slug: getCacheSizeAuditSlug(task),
+      score: scoreProjectTaskCacheSize(cacheSize, maxCacheSize),
+      value: cacheSize,
+      displayValue: formatBytes(cacheSize),
+      details: {
+        table: data,
+        issues,
+      },
+    })
+  );
 }
 
 export function scoreProjectTaskCacheSize(

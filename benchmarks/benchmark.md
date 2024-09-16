@@ -1,8 +1,8 @@
 # Code PushUp Report
 
-| 🏷 Category                 |  ⭐ Score  | 🛡 Audits |
-| :-------------------------- | :-------: | :-------: |
-| [Performance](#performance) | 🟡 **82** |     5     |
+| 🏷 Category                  | ⭐ Score  | 🛡 Audits |
+| :-------------------------- | :-------: | :------: |
+| [Performance](#performance) | 🟡 **82** |    5     |
 
 ## 🏷 Categories
 
