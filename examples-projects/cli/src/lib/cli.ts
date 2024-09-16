@@ -1,4 +1,4 @@
-import yargs, {Argv, Options} from 'yargs';
+import yargs, { Argv, Options } from 'yargs';
 import { sortUserFile } from '@org/core';
 
 export type CliArgs = {
