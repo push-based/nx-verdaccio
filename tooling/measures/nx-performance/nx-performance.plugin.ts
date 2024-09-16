@@ -25,7 +25,9 @@ export const nxPerformanceAudits = ({
   ...(cacheSizeTasks ? getCacheSizeAudits(cacheSizeTasks) : []),
 ];
 
-export const nxPerformanceCategoryRefs = (options: NxPerfRunnerOptions): CategoryRef[] =>
+export const nxPerformanceCategoryRefs = (
+  options: NxPerfRunnerOptions
+): CategoryRef[] =>
   nxPerformanceAudits(options).map(({ slug }) => ({
     type: 'audit',
     plugin: PLUGIN_SLUG,
