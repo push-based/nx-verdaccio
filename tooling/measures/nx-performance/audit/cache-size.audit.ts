@@ -1,13 +1,9 @@
-import { AuditOutput, Audit } from '@code-pushup/models';
-import {
-  executeProcess,
-  slugify,
-  formatDuration,
-  formatBytes,
-} from '@code-pushup/utils';
-import { logger } from '@nx/devkit';
-import { join } from 'node:path';
-import { DEFAULT_PLUGIN_OUTPUT } from '../constant';
+import {Audit, AuditOutput} from '@code-pushup/models';
+import {crawlFileSystem, executeProcess, formatBytes, slugify,} from '@code-pushup/utils';
+import {logger} from '@nx/devkit';
+import {join} from 'node:path';
+import {DEFAULT_PLUGIN_OUTPUT} from '../constant';
+import {stat} from "node:fs/promises";
 
 export const DEFAULT_MAX_PROJECT_TARGET_CACHE_SIZE = 3000;
 
@@ -39,14 +35,13 @@ export async function cacheSizeAudits(
   } = options ?? {};
 
   // Get the timings for each task
-  const timings: Record<string, number>[] = await projectTaskCacheSize(
+  const sizes: Record<string, number>[] = await projectTaskCacheSizeIssues(
     cacheSizeTasks
   );
 
-  // Return an array of audits, one per task
   return (
-    timings
-      // [{task-a:duration}, {task-b:duration}] -> [[task-a, duration], [task-b, duration]]
+    sizes
+      // [{task-cache-a:size}, {task-cache-b:size}] -> [[task-cache-a, size], [task-cache-b, size]]
       .map((allTaskTimes): [string, number] => {
         const allTaskEntries = Object.entries(allTaskTimes);
         return [
@@ -76,10 +71,10 @@ export function scoreProjectTaskCacheSize(
   return 1 - duration / maxDuration;
 }
 
-export async function projectTaskCacheSize<T extends string>(
+export async function projectTaskCacheSizeIssues<T extends string>(
   tasks: T[]
-): Promise<Record<T, number>[]> {
-  const results: Record<T, number>[] = [];
+): Promise<Record<string, number>[]> {
+  let results: Record<string, number>[] = [];
 
   for (const task of tasks) {
     const environmentRoot = join('.',
@@ -102,16 +97,24 @@ export async function projectTaskCacheSize<T extends string>(
         onStderr: (stderr) => logger.error(stderr),
       },
     });
-
-    const { stdout } = await executeProcess({
-      command: 'du',
-      args: ['-sk', join(process.cwd(),environmentRoot), '|', 'awk', "'{print $1 * 1024}'"],
-      observer: {
-        onStdout: (stdout) => logger.info(stdout),
-        onStderr: (stderr) => logger.error(stderr),
-      },
-    });
-    results.push({ [task]: parseInt(stdout) } as Record<T, number>);
+    results.push({[task]: await folderSize({directory: environmentRoot})});
   }
   return results;
+}
+
+export async function folderSize(options: {
+  directory: string;
+  pattern?: string | RegExp;
+  budget?: number;
+}): Promise<number> {
+  const {directory, pattern, budget} = options;
+  const fileSizes = await crawlFileSystem({
+    directory,
+    pattern,
+    fileTransform: async (file: string): Promise<number> => {
+      const stats = await stat(file);
+      return stats.size;
+    },
+  });
+  return fileSizes.reduce((sum, size) => sum + size, 0);
 }
