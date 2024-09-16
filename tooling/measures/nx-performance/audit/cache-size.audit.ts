@@ -105,7 +105,7 @@ export async function projectTaskCacheSize<T extends string>(
 
     const { stdout } = await executeProcess({
       command: 'du',
-      args: ['-sk', environmentRoot, '|', 'awk', "'{print $1 * 1024}'"],
+      args: ['-sk', join(process.cwd(),environmentRoot), '|', 'awk', "'{print $1 * 1024}'"],
       observer: {
         onStdout: (stdout) => logger.info(stdout),
         onStderr: (stderr) => logger.error(stderr),
