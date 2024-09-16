@@ -51,8 +51,7 @@ export const createNodes: CreateNodes = [
             ...(isNpmEnv(tags) && envTargets({ environmentRoot, projectName })),
             // === dependency project
             // npm-publish, npm-install
-            ...(isPublishable(tags) &&
-              npmTargets(projectName, environmentRoot)),
+            ...(isPublishable(tags) && npmTargets(projectName)),
           },
         },
       },
@@ -111,7 +110,7 @@ function envTargets({
     },
     // runs bootstrap-env, install-env and stop-verdaccio
     'setup-env': {
-      outputs: ['{options.environmentRoot}'],
+      // outputs: ['{options.environmentRoot}'],
       executor: '@org/build-env:setup',
       options: { environmentRoot },
     },
@@ -119,13 +118,16 @@ function envTargets({
 }
 
 function npmTargets(
-  environmentProject: string,
-  environmentRoot: string
+  environmentProject: string
 ): Record<string, TargetConfiguration> {
   return {
     'npm-publish': {
+      dependsOn: [
+        { projects: 'self', target: 'build', params: 'forward' },
+        { projects: 'dependencies', target: 'npm-publish', params: 'forward' },
+      ],
       executor: '@org/build-env:npm-publish',
-      options: { environmentProject, environmentRoot },
+      options: { environmentProject },
     },
     'npm-install': {
       dependsOn: [
@@ -133,7 +135,7 @@ function npmTargets(
         { projects: 'dependencies', target: 'npm-install', params: 'forward' },
       ],
       executor: '@org/build-env:npm-install',
-      options: { environmentProject, environmentRoot },
+      options: { environmentProject },
     },
   };
 }
