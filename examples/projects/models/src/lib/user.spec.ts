@@ -1,4 +1,3 @@
-
 import { parseUser } from './user';
 
 describe('parseUser', () => {
