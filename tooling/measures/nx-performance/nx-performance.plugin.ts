@@ -23,14 +23,22 @@ import {
   cacheSizeAudits,
   getCacheSizeAudits,
 } from './audit/cache-size.audit';
+import {
+  getTaskGraphTimeAudits,
+  TASK_GRAPH_TIME_AUDIT_POSTFIX,
+  TaskGraphAuditOptions,
+  taskGraphAudits,
+} from './audit/task-graph.audit';
 
 export const nxPerformanceAudits = ({
   taskTimeTasks,
   cacheSizeTasks,
+  taskGraphTasks,
 }: NxPerfPluginConfig) => [
   PROJECT_GRAPH_PERFORMANCE_AUDIT,
   ...(taskTimeTasks ? getTaskTimeAudits(taskTimeTasks) : []),
   ...(cacheSizeTasks ? getCacheSizeAudits(cacheSizeTasks) : []),
+  ...(taskGraphTasks ? getTaskGraphTimeAudits(taskGraphTasks) : []),
 ];
 
 export const nxPerformanceCategoryRefs = (
@@ -51,12 +59,14 @@ export const nxPerformanceCategoryRefs = (
 export type OnlyAudit =
   | typeof CACHE_SIZE_AUDIT_POSTFIX
   | typeof PROJECT_GRAPH_PERFORMANCE_AUDIT_SLUG
-  | typeof TASK_TIME_AUDIT_POSTFIX;
+  | typeof TASK_TIME_AUDIT_POSTFIX
+  | typeof TASK_GRAPH_TIME_AUDIT_POSTFIX;
 export type NxPerfPluginConfig = {
   onlyAudits?: OnlyAudit[];
 } & ProjectGraphAuditOptions &
   ProjectTaskAuditOptions &
-  CacheSizeAuditOptions;
+  CacheSizeAuditOptions &
+  TaskGraphAuditOptions;
 
 export function nxPerformancePlugin(
   options?: NxPerfPluginConfig
@@ -91,6 +101,12 @@ export function filterOnlyAudits(
       return true;
     }
     if (
+      onlyAuditsSet.has(TASK_GRAPH_TIME_AUDIT_POSTFIX) &&
+      slug.endsWith(TASK_GRAPH_TIME_AUDIT_POSTFIX)
+    ) {
+      return true;
+    }
+    if (
       onlyAuditsSet.has(TASK_TIME_AUDIT_POSTFIX) &&
       slug.endsWith(TASK_TIME_AUDIT_POSTFIX)
     ) {
@@ -108,8 +124,11 @@ export async function runnerFunction(
       PROJECT_GRAPH_PERFORMANCE_AUDIT_SLUG,
       CACHE_SIZE_AUDIT_POSTFIX,
       TASK_TIME_AUDIT_POSTFIX,
+      TASK_GRAPH_TIME_AUDIT_POSTFIX,
     ],
     taskTimeTasks,
+    taskGraphTasks,
+    maxTaskGraphTime,
     maxTaskTime,
     maxCacheSize,
     cacheSizeTasks,
@@ -122,6 +141,9 @@ export async function runnerFunction(
       : []),
     ...(onlyAuditsSet.has(CACHE_SIZE_AUDIT_POSTFIX)
       ? await cacheSizeAudits({ maxCacheSize, cacheSizeTasks })
+      : []),
+    ...(onlyAuditsSet.has(TASK_GRAPH_TIME_AUDIT_POSTFIX)
+      ? await taskGraphAudits({ maxTaskGraphTime, taskGraphTasks })
       : []),
     ...(onlyAuditsSet.has(TASK_TIME_AUDIT_POSTFIX)
       ? await taskTimeAudits({ maxTaskTime, taskTimeTasks })

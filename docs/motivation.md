@@ -75,7 +75,7 @@ export async function teardown() {
 Now you could run `nx run my-lib-e2e:e2e` which would start the server publish and install, executes the tests and runs the cleanup logic.
 Viola, you have a working e2e setup for your package. 🎉
 
-But wait! There are MANY caveats with this setup. We mentioned them already in the beginning, now let's discuss them one by one.
+**But wait!** There are MANY caveats with this setup. We mentioned them already in the beginning, now let's discuss them one by one.
 
 ## Problems
 
