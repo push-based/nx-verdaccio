@@ -76,44 +76,6 @@ export const createNodesV2: CreateNodesV2<BuildEnvPluginCreateNodeOptions> = [
   },
 ];
 
-export const createNodesOld: CreateNodes = [
-  '**/project.json',
-  (projectConfigurationFile: string, opt: unknown) => {
-    const { environmentsDir = DEFAULT_ENVIRONMENTS_OUTPUT_DIR } = (opt as BuildEnvPluginCreateNodeOptions) ?? {};
-    throw new Error('Use createNodesV2 instead of createNodes');
-    const projectConfiguration: ProjectConfiguration = readJsonFile(
-      join(process.cwd(), projectConfigurationFile)
-    );
-
-    if (
-      !('name' in projectConfiguration) ||
-      typeof projectConfiguration.name !== 'string'
-    ) {
-      throw new Error('Project name is required');
-    }
-    const projectName = projectConfiguration.name;
-    const tags = projectConfiguration?.tags ?? [];
-
-    const projectRoot = dirname(projectConfigurationFile);
-    const environmentRoot = join(environmentsDir, projectName);
-    return {
-      projects: {
-        [projectRoot]: {
-          targets: {
-            // start-verdaccio, stop-verdaccio
-            ...(isNpmEnv(tags) && verdaccioTargets({ environmentRoot })),
-            // bootstrap-env, setup-env, install-env (intermediate target to run dependency targets+)
-            ...(isNpmEnv(tags) && envTargets({ environmentRoot, projectName })),
-            // === dependency project
-            // npm-publish, npm-install
-            ...(isPublishable(tags) && npmTargets(projectName)),
-          },
-        },
-      },
-    };
-  },
-];
-
 function verdaccioTargets({
   environmentRoot,
   ...options
