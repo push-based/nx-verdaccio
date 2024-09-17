@@ -1,10 +1,10 @@
 import { basename, join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { mkdir, rm, writeFile } from 'node:fs/promises';
-import { executeProcess, getTestFixturesDist } from '@org/test-utils';
+import { executeProcess, getTestFixturesDist } from '@push-based/test-utils';
 import { readJsonFile } from 'nx/src/utils/fileutils';
-import { User } from '@org/models';
-import { getEnvironmentRoot } from '@org/build-env';
+import { User } from '@push-based/models';
+import { getEnvironmentRoot } from '@push-based/build-env';
 
 describe('core - sort user.json', () => {
   const fixturesDist = getTestFixturesDist('sort-user-json', {
@@ -29,7 +29,7 @@ describe('core - sort user.json', () => {
       writeFile(
         testScriptPath,
         `
-    import {sortUserFile} from "@org/core";
+    import {sortUserFile} from "@push-based/core";
     sortUserFile('${basename(testDataPath)}');`
       )
     ).resolves.not.toThrow();

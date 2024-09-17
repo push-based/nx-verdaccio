@@ -39,4 +39,20 @@ describe('sortUserFile', () => {
       { name: 'Michael' },
     ]);
   });
+  it('should parse users before saving', async () => {
+    vol.fromJSON({
+      '/test/users.json': JSON.stringify([
+        { name: 'Michael', age: 21 },
+        { name: 'Alice' },
+      ]),
+    });
+    await sortUserFile('users.json');
+    const usersFromFile = vol
+      .readFileSync('/test/users.json', 'utf8')
+      .toString();
+    expect(JSON.parse(usersFromFile)).toEqual([
+      { name: 'Alice' },
+      { name: 'Michael' },
+    ]);
+  });
 });

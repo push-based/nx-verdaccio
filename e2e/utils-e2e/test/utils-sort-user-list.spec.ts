@@ -1,8 +1,8 @@
 import { basename, dirname, join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { mkdir, rm, writeFile } from 'node:fs/promises';
-import { executeProcess, getTestFixturesDist } from '@org/test-utils';
-import { getEnvironmentRoot } from '@org/build-env';
+import { executeProcess, getTestFixturesDist } from '@push-based/test-utils';
+import { getEnvironmentRoot } from '@push-based/build-env';
 
 describe('utils - sort user list', () => {
   const fixturesDist = getTestFixturesDist('sort-user-list', {
@@ -19,7 +19,7 @@ describe('utils - sort user list', () => {
       writeFile(
         testPath,
         `
-    import {sortUser} from "@org/utils";
+    import {sortUser} from "@push-based/utils";
     console.log(JSON.stringify(sortUser([{name: 'Michael'}, {name: 'Alice'}]), null, 2));`
       )
     ).resolves.not.toThrow();

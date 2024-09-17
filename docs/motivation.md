@@ -33,8 +33,8 @@ The following is a simplified version of a global setup script used by your test
 ```ts
 // global-setup.ts
 import { rm } from 'node:fs/promises';
-import { executeProcess, objectToCliArgs } from '@org/test-utils';
-import { configureRegistry, RegistryResult, startVerdaccioServer, unconfigureRegistry } from '@org/tools-utils';
+import { executeProcess, objectToCliArgs } from '@push-based/test-utils';
+import { configureRegistry, RegistryResult, startVerdaccioServer, unconfigureRegistry } from '@push-based/tools-utils';
 
 export async function setup() {
   const { verdaccioPort } = await startVerdaccioServer({
@@ -75,7 +75,7 @@ export async function teardown() {
 Now you could run `nx run my-lib-e2e:e2e` which would start the server publish and install, executes the tests and runs the cleanup logic.
 Viola, you have a working e2e setup for your package. 🎉
 
-But wait! There are MANY caveats with this setup. We mentioned them already in the beginning, now let's discuss them one by one.
+**But wait!** There are MANY caveats with this setup. We mentioned them already in the beginning, now let's discuss them one by one.
 
 ## Problems
 
@@ -100,7 +100,7 @@ User/
         │       └── some.test.ts
         ├── tmp/
         │    ├── e2e/...
-        │    │   └── <test-file-name>/... 
+        │    │   └── <test-file-name>/...
         │    │        └── <it-block-setup>/...
         │    │             └── test.file.ts
         │    └── local-registry/
@@ -117,15 +117,15 @@ You are forced to run the tests in sequence.
 
 **Publish conflict:**
 
-1. Test A: `npm publish @org/pkg@0.0.1 --registry=http://localhost:4873` # ✅
-2. Test B: `npm publish @org/pkg@0.0.1 --registry=http://localhost:4873` # ❌ package already exists in registry
+1. Test A: `npm publish @push-based/pkg@0.0.1 --registry=http://localhost:4873` # ✅
+2. Test B: `npm publish @push-based/pkg@0.0.1 --registry=http://localhost:4873` # ❌ package already exists in registry
 
 **Install/uninstall conflict:**
 
-1. Test A: `npm install @org/pkg@0.0.1 --registry=http://localhost:4873` # ✅
-2. Test B: `npm install @org/pkg@0.0.1 --registry=http://localhost:4873` # ✅
+1. Test A: `npm install @push-based/pkg@0.0.1 --registry=http://localhost:4873` # ✅
+2. Test B: `npm install @push-based/pkg@0.0.1 --registry=http://localhost:4873` # ✅
 3. Test B: `nx e2e pkg` # ✅
-4. Test B: `npm uninstall @org/pkg@0.0.1 --registry=http://localhost:4873` # ✅
+4. Test B: `npm uninstall @push-based/pkg@0.0.1 --registry=http://localhost:4873` # ✅
 5. Test A: `nx e2e pkg` # ❌ package not installed
 
 ### 📉 Scalability
@@ -146,7 +146,7 @@ As you can see, the majority of the tasks are just here as we can't parallelize.
 
 ### 🐢 Task Graph & Performance
 
-Due to above reasons the project graph is hard to optimize and opaque as everything is hidden in 2 nodes  
+Due to above reasons the project graph is hard to optimize and opaque as everything is hidden in 2 nodes
 
 We already scratched that topic a bit, but in this chapter we can go in full detail.
 Let's start with looking at the steps from above.
@@ -203,10 +203,11 @@ As the logic that starts and stops Verdaccio is backed into the setup script it 
 As mentioned the logic to set up and teardown the test environment is backed into the e2e tests global setup scripts.
 
 This has several downsides when maintaining the code:
-- Since the setup and teardown processes are baked into the scripts, they are not visible in the task graph, making it difficult for developers to see the dependencies and relationships between tasks. 
+
+- Since the setup and teardown processes are baked into the scripts, they are not visible in the task graph, making it difficult for developers to see the dependencies and relationships between tasks.
   This results in unnecessary time spent digging into the code to understand the setup.
 - With a large number of interconnected parts, updating the test environment or adjusting for new features can introduce bugs or cause existing tests to fail, increasing the chance for breaking changes.
-- When an error occurs, it is not easy to isolate the issue or see which part of the setup failed. 
+- When an error occurs, it is not easy to isolate the issue or see which part of the setup failed.
   Developers have to manually step through the complex code to identify the problem, which slows down the development process a lot.
-- The configuration for the local registry and other components is spread across different parts of the setup, adding to the complexity. 
+- The configuration for the local registry and other components is spread across different parts of the setup, adding to the complexity.
   This makes it harder to ensure that the environment is correctly configured across all tests.

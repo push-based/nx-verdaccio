@@ -1,15 +1,17 @@
 import { rm } from 'node:fs/promises';
 import { executeProcess, objectToCliArgs } from '@org/test-utils';
 import {
-  configureRegistry,
   RegistryResult,
   startVerdaccioServer,
+} from '../tooling/utils/verdaccio-registry';
+import {
+  configureRegistry,
   unconfigureRegistry,
-} from '@org/tools-utils';
+} from '../tooling/utils/verdaccio-npm-env';
 
 const isVerbose = process.env['NX_VERBOSE_LOGGING'] === 'true' ?? false;
 const projectName = process.env['NX_TASK_TARGET_PROJECT'];
-let stopFn: () => void
+let stopFn: () => void;
 
 export async function setup() {
   if (projectName == null) {
@@ -32,9 +34,9 @@ export async function setup() {
       targets: 'original-npm-publish',
       exclude: 'tag:type:testing',
       skipNxCache: true,
-      verbose: isVerbose
+      verbose: isVerbose,
     }),
-    verbose: isVerbose
+    verbose: isVerbose,
   });
 
   // package install all projects
@@ -46,20 +48,18 @@ export async function setup() {
       exclude: 'tag:type:testing',
       skipNxCache: true,
       parallel: 1,
-      verbose: isVerbose
+      verbose: isVerbose,
     }),
-    verbose: isVerbose
+    verbose: isVerbose,
   });
 
   // @TODO figure out why named exports don't work https://vitest.dev/config/#globalsetup
-  stopFn = () => teardownSetup(registryResult)
+  stopFn = () => teardownSetup(registryResult);
   return () => stopFn();
 }
 
-
-
 export async function teardown() {
-  stopFn()
+  stopFn();
 }
 export async function teardownSetup({ registry, stop }: RegistryResult) {
   console.info(`Teardown ${projectName}`);

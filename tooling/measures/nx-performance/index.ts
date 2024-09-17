@@ -1,1 +1,6 @@
-export {nxPerformanceAudits, nxPerformancePlugin, nxPerformanceCategoryRefs} from './nx-performance.plugin';
+export {
+  type OnlyAudit,
+  nxPerformanceAudits,
+  nxPerformancePlugin,
+  nxPerformanceCategoryRefs,
+} from './nx-performance.plugin';
