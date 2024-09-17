@@ -1,0 +1,19 @@
+{
+  "name": "cli-e2e-original",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "projects/cli-e2e-original/test",
+  "projectType": "application",
+  "tags": ["type:e2e", "scope:internal", "type:example"],
+  "implicitDependencies": ["cli", "test-utils"],
+  "targets": {
+    "lint": {},
+    "original-e2e": {
+      "executor": "@nx/vite:test",
+      "inputs": ["default", "^production"],
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "../../../coverage/projects/cli-e2e-original"
+      }
+    }
+  }
+}
