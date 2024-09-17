@@ -3,7 +3,7 @@ import { gray, bold, red } from 'ansis';
 import { join } from 'node:path';
 import { error, info } from '../utils/logging';
 import { VerdaccioExecutorSchema } from '@nx/js/src/executors/verdaccio/schema';
-import { executeProcess, objectToCliArgs } from '@org/test-utils';
+import { executeProcess, objectToCliArgs } from '@push-based/test-utils';
 
 export function logInfo(msg: string) {
   info(msg, 'Verdaccio: ');

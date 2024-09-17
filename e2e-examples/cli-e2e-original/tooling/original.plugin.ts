@@ -74,7 +74,10 @@ function npmTargets(
       },
     },
     'original-npm-uninstall': {
-      command: `npm uninstall ${packageName}`,
+      command: `npm uninstall ${packageName}@{args.pkgVersion}`,
+      options: {
+        pkgVersion,
+      },
     },
   };
 }
