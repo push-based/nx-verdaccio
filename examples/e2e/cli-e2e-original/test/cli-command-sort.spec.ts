@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { executeProcess, objectToCliArgs } from '@push-based/test-utils';
 
-describe('CLI command - sort', () => {
+describe('[ORIGINAL] CLI command - sort', () => {
   const workspaceRoot = join('tmp', 'cli-e2e-original');
   const baseDir = join(workspaceRoot, 'cli-command-sort');
 
