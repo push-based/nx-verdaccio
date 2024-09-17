@@ -3,7 +3,7 @@ import { execFile } from 'node:child_process';
 import { slugify } from '@code-pushup/utils';
 
 export const DEFAULT_MAX_TASK_GRAPH_TIME = 300;
-export const TASK_GRAPH_TIME_AUDIT_POSTFIX = 'task-graph-time';
+export const TASK_GRAPH_TIME_AUDIT_POSTFIX = 'graph-time-task';
 
 export function getTaskGraphTimeAuditSlug(task: string): string {
   return `${slugify(task)}-${TASK_GRAPH_TIME_AUDIT_POSTFIX}`;
@@ -12,7 +12,7 @@ export function getTaskGraphTimeAuditSlug(task: string): string {
 export const getTaskGraphTimeAudits = (tasks: string[]): Audit[] => {
   return tasks.map((task) => ({
     slug: getTaskGraphTimeAuditSlug(task), // Unique slug for each task
-    title: 'Task graph performance',
+    title: '[Graph Time] task graph',
     description: 'An audit to check performance of the Nx task graph',
   }));
 };

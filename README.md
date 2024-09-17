@@ -210,6 +210,22 @@ This approach makes the E2E setup more **maintainable** and easier to serve edge
 In summary, this new setup offers a more scalable, maintainable, and performant way to handle E2E testing.
 By isolating environments and using NX’s powerful tools, it becomes easier to run, manage, and debug E2E tests across projects.
 
+## Benchmarks
+
+This is a first draft of how the benchmarks will look. ATM the data set it not big proper.
+
+> [!warn]
+> The data is a first draft of the structure and does not reflect a clean data set.
+> Work on the real benchmark data in progress
+
+|     cli:e2e      |  Common   | Optimized |
+|:----------------:|:---------:|:---------:|
+|  Execution Time  |   110 s   |   13 s    |
+| Download Volume  | 381.68 MB | 381.68 MB |
+|    Cacheable     |     ❌     |     ✅     |
+|   Graph Nodes    |     1     |    13     |
+| Can run parallel |     ❌     |     ✅     |
+
 ## Connect with us!
 
 - [Check out our services](https://push-based.io)
