@@ -1,5 +1,10 @@
 {
   "name": "@push-based/core",
   "version": "0.0.1",
-  "dependencies": {}
+  "dependencies": {
+    "@push-based/utils": "0.0.1",
+    "@push-based/models": "0.0.1",
+    "vite": "~5.0.0",
+    "@nx/vite": "19.7.3"
+  }
 }

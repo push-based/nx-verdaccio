@@ -2,7 +2,8 @@
   "name": "@push-based/cli",
   "version": "0.0.1",
   "dependencies": {
-    "yargs": "^17.7.2"
+    "yargs": "^17.7.2",
+    "@push-based/core": "0.0.1"
   },
   "bin": "bin.js"
 }
