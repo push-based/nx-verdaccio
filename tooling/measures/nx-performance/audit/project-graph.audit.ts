@@ -6,7 +6,7 @@ import { executeProcess, slugify } from '@code-pushup/utils';
 
 export const DEFAULT_MAX_PROJECT_GRAPH_TIME = 300;
 
-export const PROJECT_GRAPH_PERFORMANCE_AUDIT_SLUG = 'project-graph-performance';
+export const PROJECT_GRAPH_PERFORMANCE_AUDIT_SLUG = 'project-graph-time';
 export const PROJECT_GRAPH_PERFORMANCE_AUDIT = {
   slug: PROJECT_GRAPH_PERFORMANCE_AUDIT_SLUG,
   title: 'Project graph performance',
@@ -25,7 +25,7 @@ export async function projectGraphAudit(
   const { duration } = await projectGraphTiming();
 
   return {
-    slug: 'project-graph-performance',
+    slug: PROJECT_GRAPH_PERFORMANCE_AUDIT_SLUG,
     score: scoreProjectGraphDuration(duration, maxProjectGraphTime),
     value: duration,
     displayValue: `${duration.toFixed(2)} ms`,
