@@ -216,16 +216,15 @@ This is a first draft of how the benchmarks will look. ATM the data set it not b
 
 > [!warn]
 > The data is a first draft of the structure and does not reflect a clean data set.
-> The current measures include issues and produce wrong data!
-> Will work in the real benchmark data in the future
+> Work on the real benchmark data in progress
 
 |     cli:e2e      |  Common   | Optimized |
-|:----------------:|:---------:|:---------:|
-|  Execution Time  |  98.51 s  |  11.46 s  |
-| Download Volume  | 386.71 MB | 386.71 MB |
-|    Cacheable     |     ❌     |     ✅     |
+| :--------------: | :-------: | :-------: |
+|  Execution Time  |   110 s   |   13 s    |
+| Download Volume  | 129.95 MB | 129.95 MB |
+|    Cacheable     |    ❌     |    ✅     |
 |   Graph Nodes    |     1     |    13     |
-| Can run parallel |     ❌     |     ✅     |
+| Can run parallel |    ❌     |    ✅     |
 
 ## Connect with us!
 
