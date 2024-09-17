@@ -46,6 +46,18 @@ export type ProcessObserver = {
   onComplete?: () => void;
 };
 
+/*
+Notice: executeProcess has ~500ms overhead compared to execFile
+const {duration} = await executeProcess({
+  command: 'npx',
+  args: ['nx', 'show', 'projects'],
+  env: {
+    ...process.env,
+    NX_DAEMON: 'false',
+    NX_CACHE_PROJECT_GRAPH: 'false',
+    NX_ISOLATE_PLUGINS: 'true',
+  }
+})*/
 export function executeProcess(cfg: ProcessConfig): Promise<ProcessResult> {
   const {
     command,

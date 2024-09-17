@@ -5,10 +5,10 @@ import nxPerformancePlugin, {
 } from './tooling/measures/nx-performance/nx-performance.plugin';
 
 const onlyAudits: OnlyAudit[] = [
-  'project-graph-time',
-  //'task-time',
-  //'cache-size',
-  //'task-graph-time',
+  'graph-time-project',
+  'graph-time-task',
+  'cache-size',
+  'task-time'
 ];
 const taskGraphTasks = ['cli-e2e:install-env'];
 const taskTimeTasks = [
@@ -19,14 +19,14 @@ const taskTimeTasks = [
   'core-e2e:e2e',
   'utils-e2e:e2e',
   'models-e2e:e2e',
-  'cli-e2e-original:original-e2e',
+  'cli-e2e-original:original-e2e'
 ];
 const cacheSizeTasks = [
   'models-e2e:setup-env',
   'utils-e2e:setup-env',
   'core-e2e:setup-env',
   'cli-e2e:setup-env',
-  'playground-e2e:setup-env',
+  'playground-e2e:setup-env'
 ];
 export default {
   plugins: [
@@ -35,7 +35,7 @@ export default {
       taskGraphTasks,
       maxTaskTime: 60 * 1000 * 1.5,
       cacheSizeTasks,
-      maxCacheSize: 5000000,
+      maxCacheSize: 50_000_000,
       onlyAudits,
     }),
   ],

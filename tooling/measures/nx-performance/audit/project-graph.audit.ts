@@ -3,7 +3,7 @@ import { execFile } from 'node:child_process';
 
 export const DEFAULT_MAX_PROJECT_GRAPH_TIME = 300;
 
-export const PROJECT_GRAPH_PERFORMANCE_AUDIT_SLUG = 'project-graph-time';
+export const PROJECT_GRAPH_PERFORMANCE_AUDIT_SLUG = 'graph-time-project';
 export const PROJECT_GRAPH_PERFORMANCE_AUDIT = {
   slug: PROJECT_GRAPH_PERFORMANCE_AUDIT_SLUG,
   title: '[Graph Time] project graph',
@@ -43,18 +43,6 @@ export function scoreProjectGraphDuration(
 }
 
 export async function projectGraphTiming(): Promise<{ duration: number }> {
-  /*
-  Notice: executeProcess has ~500ms overhead compared to execFile
-  const {duration} = await executeProcess({
-    command: 'npx',
-    args: ['nx', 'show', 'projects'],
-    env: {
-      ...process.env,
-      NX_DAEMON: 'false',
-      NX_CACHE_PROJECT_GRAPH: 'false',
-      NX_ISOLATE_PLUGINS: 'true',
-    }
-  })*/
   const start = performance.now();
   execFile(
     'NX_DAEMON=true NX_CACHE_PROJECT_GRAPH=false NX_ISOLATE_PLUGINS=true npx nx show projects'

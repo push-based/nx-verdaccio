@@ -3,7 +3,7 @@ import { execFile } from 'node:child_process';
 import { slugify } from '@code-pushup/utils';
 
 export const DEFAULT_MAX_TASK_GRAPH_TIME = 300;
-export const TASK_GRAPH_TIME_AUDIT_POSTFIX = 'task-graph-time';
+export const TASK_GRAPH_TIME_AUDIT_POSTFIX = 'graph-time-task';
 
 export function getTaskGraphTimeAuditSlug(task: string): string {
   return `${slugify(task)}-${TASK_GRAPH_TIME_AUDIT_POSTFIX}`;

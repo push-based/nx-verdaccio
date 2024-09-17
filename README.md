@@ -219,13 +219,13 @@ This is a first draft of how the benchmarks will look. ATM the data set it not b
 > The current measures include issues and produce wrong data!
 > Will work in the real benchmark data in the future
 
-|     cli:e2e      | Common  | Optimized |
-| :--------------: | :-----: | :-------: |
-|  Execution Time  | 98.51 s |  11.46 s  |
-| Download Volume  | 2.57 MB |  2.57 MB  |
-|    Cacheable     |   ❌    |    ✅     |
-|   Graph Nodes    |    1    |    13     |
-| Can run parallel |   ❌    |    ✅     |
+|     cli:e2e      |  Common   | Optimized |
+|:----------------:|:---------:|:---------:|
+|  Execution Time  |  98.51 s  |  11.46 s  |
+| Download Volume  | 386.71 MB | 386.71 MB |
+|    Cacheable     |     ❌     |     ✅     |
+|   Graph Nodes    |     1     |    13     |
+| Can run parallel |     ❌     |     ✅     |
 
 ## Connect with us!
 
