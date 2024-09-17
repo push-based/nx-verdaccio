@@ -219,12 +219,12 @@ This is a first draft of how the benchmarks will look. ATM the data set it not b
 > Work on the real benchmark data in progress
 
 |     cli:e2e      |  Common   | Optimized |
-| :--------------: | :-------: | :-------: |
+|:----------------:|:---------:|:---------:|
 |  Execution Time  |   110 s   |   13 s    |
-| Download Volume  | 129.95 MB | 129.95 MB |
-|    Cacheable     |    ❌     |    ✅     |
+| Download Volume  | 381.68 MB | 381.68 MB |
+|    Cacheable     |     ❌     |     ✅     |
 |   Graph Nodes    |     1     |    13     |
-| Can run parallel |    ❌     |    ✅     |
+| Can run parallel |     ❌     |     ✅     |
 
 ## Connect with us!
 

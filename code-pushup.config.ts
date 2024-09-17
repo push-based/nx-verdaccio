@@ -33,10 +33,11 @@ export default {
     nxPerformancePlugin({
       taskTimeTasks,
       taskGraphTasks,
-      maxTaskTime: 60 * 1000 * 1.5,
+      // ~ 1 minutes 20 seconds
+      maxTaskTime: 60 * 1000 * 1.3,
       cacheSizeTasks,
-      // 250MB
-      maxCacheSize: 382_730_240,
+      // ~ 250MB
+      maxCacheSize: 262_144_000,
       onlyAudits,
     }),
   ],
