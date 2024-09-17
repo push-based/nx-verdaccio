@@ -4,7 +4,7 @@
   "sourceRoot": "examples-e2e/cli-e2e-original/test",
   "projectType": "application",
   "tags": ["type:e2e", "scope:internal", "type:example"],
-  "implicitDependencies": ["cli"],
+  "implicitDependencies": ["cli", "test-utils"],
   "targets": {
     "lint": {},
     "original-e2e": {

@@ -1,5 +1,5 @@
 import { rm } from 'node:fs/promises';
-import { executeProcess, objectToCliArgs } from '@org/test-utils';
+import { executeProcess, objectToCliArgs } from '@push-based/test-utils';
 import {
   RegistryResult,
   startVerdaccioServer,
@@ -11,14 +11,16 @@ import {
 
 const isVerbose = process.env['NX_VERBOSE_LOGGING'] === 'true' ?? false;
 const projectName = process.env['NX_TASK_TARGET_PROJECT'];
+let registryResult: RegistryResult;
 let stopFn: () => void;
 
 export async function setup() {
   if (projectName == null) {
     throw new Error('Project name required.');
   }
+  console.info(`Set up ${projectName}`);
 
-  const registryResult = await startVerdaccioServer({
+  registryResult = await startVerdaccioServer({
     targetName: 'original-local-registry',
     verbose: isVerbose,
     clear: true,
@@ -52,23 +54,18 @@ export async function setup() {
     }),
     verbose: isVerbose,
   });
-
-  // @TODO figure out why named exports don't work https://vitest.dev/config/#globalsetup
-  stopFn = () => teardownSetup(registryResult);
-  return () => stopFn();
 }
 
 export async function teardown() {
-  stopFn();
-}
-export async function teardownSetup({ registry, stop }: RegistryResult) {
   console.info(`Teardown ${projectName}`);
+  const { registry } = registryResult;
   // uninstall all projects
   await executeProcess({
     command: 'nx',
     args: objectToCliArgs({
       _: ['run-many'],
       targets: 'original-npm-uninstall',
+      parallel: 1,
     }),
     verbose: isVerbose,
   });
