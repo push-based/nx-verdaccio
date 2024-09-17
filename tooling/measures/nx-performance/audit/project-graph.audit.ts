@@ -1,15 +1,12 @@
-import { AuditOutput, PluginReport } from '@code-pushup/models';
+import { AuditOutput } from '@code-pushup/models';
 import { execFile } from 'node:child_process';
-import { join } from 'node:path';
-import { DEFAULT_PLUGIN_OUTPUT } from '../constant';
-import { executeProcess, slugify } from '@code-pushup/utils';
 
 export const DEFAULT_MAX_PROJECT_GRAPH_TIME = 300;
 
 export const PROJECT_GRAPH_PERFORMANCE_AUDIT_SLUG = 'project-graph-time';
 export const PROJECT_GRAPH_PERFORMANCE_AUDIT = {
   slug: PROJECT_GRAPH_PERFORMANCE_AUDIT_SLUG,
-  title: 'Project graph performance',
+  title: '[Graph Time] project graph',
   description: 'An audit to check performance of the Nx project graph',
 };
 

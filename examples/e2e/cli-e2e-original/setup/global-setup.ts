@@ -70,7 +70,7 @@ export async function teardown() {
     verbose: isVerbose,
   });
 
-  stop();
+  // stop();
   unconfigureRegistry(registry, isVerbose);
   await rm(registry.storage, { recursive: true, force: true });
   await rm('local-registry', { recursive: true, force: true });

@@ -1,12 +1,17 @@
-import {Audit, AuditOutput} from '@code-pushup/models';
-import {crawlFileSystem, executeProcess, formatBytes, slugify,} from '@code-pushup/utils';
-import {logger} from '@nx/devkit';
-import {join} from 'node:path';
-import {DEFAULT_PLUGIN_OUTPUT} from '../constant';
-import {stat} from "node:fs/promises";
+import { Audit, AuditOutput, Table, Issue } from '@code-pushup/models';
+import {
+  crawlFileSystem,
+  executeProcess,
+  formatBytes,
+  slugify,
+} from '@code-pushup/utils';
+import { logger } from '@nx/devkit';
+import { join } from 'node:path';
+import { DEFAULT_PLUGIN_OUTPUT } from '../constant';
+import { stat } from 'node:fs/promises';
+import { relative } from 'node:path';
 
 export const DEFAULT_MAX_PROJECT_TARGET_CACHE_SIZE = 3000;
-
 export const CACHE_SIZE_AUDIT_POSTFIX = 'cache-size';
 
 export function getCacheSizeAuditSlug(task: string): string {
@@ -16,7 +21,7 @@ export function getCacheSizeAuditSlug(task: string): string {
 export const getCacheSizeAudits = (tasks: string[]): Audit[] => {
   return tasks.map((task) => ({
     slug: getCacheSizeAuditSlug(task), // Unique slug for each task
-    title: `Cache size ${task}`,
+    title: `[Cache Size] ${task}`,
     description: 'An audit to check cache size of the Nx task.',
   }));
 };
@@ -34,54 +39,55 @@ export async function cacheSizeAudits(
     maxCacheSize = DEFAULT_MAX_PROJECT_TARGET_CACHE_SIZE,
   } = options ?? {};
 
-  // Get the timings for each task
-  const sizes: Record<string, number>[] = await projectTaskCacheSizeIssues(
-    cacheSizeTasks
-  );
-
-  return (
-    sizes
-      // [{task-cache-a:size}, {task-cache-b:size}] -> [[task-cache-a, size], [task-cache-b, size]]
-      .map((allTaskTimes): [string, number] => {
-        const allTaskEntries = Object.entries(allTaskTimes);
-        return [
-          allTaskEntries?.at(-1)?.at(0) as string, // Get the last task name
-          allTaskEntries.reduce((acc, [task, duration]) => acc + duration, 0),
-        ];
-      })
-      .map(([task, duration]) => ({
-        slug: getCacheSizeAuditSlug(task), // Unique slug for each task
-        score: scoreProjectTaskCacheSize(duration, maxCacheSize),
-        value: duration,
-        displayValue: formatBytes(duration),
-        details: {},
-      }))
+  const cacheSizeResults = await projectTaskCacheSizeData(cacheSizeTasks);
+  return cacheSizeResults.map(
+    ({ cacheSize, data, task, issues }): AuditOutput => ({
+      slug: getCacheSizeAuditSlug(task),
+      score: scoreProjectTaskCacheSize(cacheSize, maxCacheSize),
+      value: cacheSize,
+      displayValue: formatBytes(cacheSize),
+      details: {
+        table: data,
+        issues,
+      },
+    })
   );
 }
 
 export function scoreProjectTaskCacheSize(
-  duration: number,
-  maxDuration: number
+  size: number,
+  maxSize: number
 ): number {
-  // Ensure duration is capped at maxDuration for the scoring
-  if (duration >= maxDuration) return 0;
+  // Ensure size is capped at maxSize for the scoring
+  if (size >= maxSize) return 0;
 
   // A simple linear score where a lower duration gives a higher score.
-  // When duration == 0, score is 1 (perfect). When duration == maxDuration, score is 0 (poor).
-  return 1 - duration / maxDuration;
+  // When size == 0, score is 1 (perfect). When duration == maxSize, score is 0 (poor).
+  return 1 - size / maxSize;
 }
 
-export async function projectTaskCacheSizeIssues<T extends string>(
+export type CacheSizeResult = {
+  task: string;
+  target: string;
+  project: string;
+  cacheSize: number;
+  data: Table;
+  issues?: Issue[];
+};
+
+export async function projectTaskCacheSizeData<T extends string>(
   tasks: T[]
-): Promise<Record<string, number>[]> {
-  let results: Record<string, number>[] = [];
+): Promise<CacheSizeResult[]> {
+  let results: CacheSizeResult[] = [];
 
   for (const task of tasks) {
-    const environmentRoot = join('.',
+    const environmentRoot = join(
+      '.',
       DEFAULT_PLUGIN_OUTPUT,
       'cache-size',
       slugify(task)
     );
+    // output cache
     await executeProcess({
       command: `npx`,
       args: [
@@ -89,15 +95,27 @@ export async function projectTaskCacheSizeIssues<T extends string>(
         'run',
         task,
         '--parallel=1',
+        // @TODO refactor to align with outputPath
         `--environmentRoot=${environmentRoot}`,
-        '--verbose',
       ],
       observer: {
         onStdout: (stdout) => logger.info(stdout),
         onStderr: (stderr) => logger.error(stderr),
       },
     });
-    results.push({[task]: await folderSize({directory: environmentRoot})});
+
+    const [project, target] = task.split(':');
+    const { folderSize: cacheSize, data } = await folderSize({
+      directory: environmentRoot,
+    });
+
+    results.push({
+      task,
+      target,
+      project,
+      cacheSize,
+      data,
+    });
   }
   return results;
 }
@@ -106,15 +124,43 @@ export async function folderSize(options: {
   directory: string;
   pattern?: string | RegExp;
   budget?: number;
-}): Promise<number> {
-  const {directory, pattern, budget} = options;
+}): Promise<{
+  folderSize: number;
+  data: Table;
+}> {
+  const { directory, pattern, budget } = options;
   const fileSizes = await crawlFileSystem({
     directory,
     pattern,
-    fileTransform: async (file: string): Promise<number> => {
+    fileTransform: async (
+      file: string
+    ): Promise<{
+      file: string;
+      size: number;
+    }> => {
       const stats = await stat(file);
-      return stats.size;
+      return { file: relative(directory, file), size: stats.size };
     },
   });
-  return fileSizes.reduce((sum, size) => sum + size, 0);
+
+  return {
+    folderSize: fileSizes.reduce((acc, { size }) => acc + size, 0),
+    data: {
+      title: `File sizes of ${directory}`,
+      columns: [
+        {
+          key: 'file',
+          label: 'File',
+        },
+        {
+          key: 'size',
+          label: 'Size',
+        },
+      ],
+      rows: fileSizes.map(({ file, size }) => ({
+        file,
+        size: formatBytes(size),
+      })),
+    },
+  };
 }

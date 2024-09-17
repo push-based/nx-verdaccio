@@ -13,10 +13,13 @@ const onlyAudits: OnlyAudit[] = [
 const taskGraphTasks = ['cli-e2e:install-env'];
 const taskTimeTasks = [
   'cli-e2e:e2e',
+  'cli-e2e:setup-env',
+  'cli:unit-test',
+  'cli:build',
   'core-e2e:e2e',
   'utils-e2e:e2e',
   'models-e2e:e2e',
-  //'cli-e2e-original:original-e2e',
+  'cli-e2e-original:original-e2e',
 ];
 const cacheSizeTasks = [
   'models-e2e:setup-env',
@@ -32,7 +35,7 @@ export default {
       taskGraphTasks,
       maxTaskTime: 60 * 1000 * 1.5,
       cacheSizeTasks,
-      maxCacheSize: 6000000,
+      maxCacheSize: 5000000,
       onlyAudits,
     }),
   ],
