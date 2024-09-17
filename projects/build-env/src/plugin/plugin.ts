@@ -1,13 +1,15 @@
 import {
-  type CreateNodes, createNodesFromFiles, CreateNodesV2,
+  type CreateNodes,
+  createNodesFromFiles,
+  CreateNodesV2,
   type ProjectConfiguration,
   readJsonFile,
   type TargetConfiguration,
 } from '@nx/devkit';
-import {dirname, join} from 'node:path';
-import {DEFAULT_ENVIRONMENTS_OUTPUT_DIR} from '../internal/constants';
-import type {StarVerdaccioOptions} from '../executors/bootstrap/verdaccio-registry';
-import {VERDACCIO_REGISTRY_JSON} from '../executors/bootstrap/constants';
+import { dirname, join } from 'node:path';
+import { DEFAULT_ENVIRONMENTS_OUTPUT_DIR } from '../internal/constants';
+import type { StarVerdaccioOptions } from '../executors/bootstrap/verdaccio-registry';
+import { VERDACCIO_REGISTRY_JSON } from '../executors/bootstrap/constants';
 
 export function isPublishable(tags: string[]): boolean {
   return tags.some((target) => target === 'publishable');
@@ -21,12 +23,12 @@ export type BuildEnvPluginCreateNodeOptions = {
   environmentsDir?: string;
 };
 
-export const createNodes: CreateNodesV2<BuildEnvPluginCreateNodeOptions> = [
+export const createNodesV2: CreateNodesV2<BuildEnvPluginCreateNodeOptions> = [
   '**/project.json',
   async (configFilePaths, opt, context) => {
     const normalizedOptions = {
       ...opt,
-      environmentsDir: opt?.environmentsDir ?? DEFAULT_ENVIRONMENTS_OUTPUT_DIR
+      environmentsDir: opt?.environmentsDir ?? DEFAULT_ENVIRONMENTS_OUTPUT_DIR,
     };
     try {
       return await createNodesFromFiles(
@@ -52,9 +54,10 @@ export const createNodes: CreateNodesV2<BuildEnvPluginCreateNodeOptions> = [
               [projectRoot]: {
                 targets: {
                   // start-verdaccio, stop-verdaccio
-                  ...(isNpmEnv(tags) && verdaccioTargets({environmentRoot})),
+                  ...(isNpmEnv(tags) && verdaccioTargets({ environmentRoot })),
                   // bootstrap-env, setup-env, install-env (intermediate target to run dependency targets+)
-                  ...(isNpmEnv(tags) && envTargets({environmentRoot, projectName})),
+                  ...(isNpmEnv(tags) &&
+                    envTargets({ environmentRoot, projectName })),
                   // === dependency project
                   // npm-publish, npm-install
                   ...(isPublishable(tags) && npmTargets(projectName)),
@@ -76,8 +79,7 @@ export const createNodes: CreateNodesV2<BuildEnvPluginCreateNodeOptions> = [
 export const createNodesOld: CreateNodes = [
   '**/project.json',
   (projectConfigurationFile: string, opt: unknown) => {
-    const {environmentsDir = DEFAULT_ENVIRONMENTS_OUTPUT_DIR} =
-    (opt as BuildEnvPluginCreateNodeOptions) ?? {};
+    const { environmentsDir = DEFAULT_ENVIRONMENTS_OUTPUT_DIR } = (opt as BuildEnvPluginCreateNodeOptions) ?? {};
     throw new Error('Use createNodesV2 instead of createNodes');
     const projectConfiguration: ProjectConfiguration = readJsonFile(
       join(process.cwd(), projectConfigurationFile)
