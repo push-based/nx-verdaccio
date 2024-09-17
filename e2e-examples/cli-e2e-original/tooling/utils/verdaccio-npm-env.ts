@@ -8,7 +8,7 @@ import {
 import { rm, writeFile } from 'node:fs/promises';
 import { setupNpmWorkspace } from '../utils/npm';
 import { error, info } from '../utils/logging';
-import { objectToCliArgs } from '@org/test-utils';
+import { objectToCliArgs } from '@push-based/test-utils';
 import { execSync } from 'node:child_process';
 
 function logInfo(msg: string) {
