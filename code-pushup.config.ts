@@ -6,9 +6,9 @@ import nxPerformancePlugin, {
 
 const onlyAudits: OnlyAudit[] = [
   'project-graph-time',
-  'task-time',
-  'cache-size',
-  'task-graph-time',
+  //'task-time',
+  //'cache-size',
+  //'task-graph-time',
 ];
 const taskGraphTasks = ['cli-e2e:install-env'];
 const taskTimeTasks = [
