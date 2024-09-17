@@ -70,8 +70,9 @@ export const createNodesV2: CreateNodesV2<BuildEnvPluginCreateNodeOptions> = [
         normalizedOptions,
         context
       );
-    } finally {
-      // writeTargetsToCache(cachePath, targetsCache);
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
   },
 ];
