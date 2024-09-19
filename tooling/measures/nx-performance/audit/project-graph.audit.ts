@@ -1,5 +1,6 @@
 import { AuditOutput } from '@code-pushup/models';
 import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
 
 export const DEFAULT_MAX_PROJECT_GRAPH_TIME = 300;
 
@@ -44,9 +45,17 @@ export function scoreProjectGraphDuration(
 
 export async function projectGraphTiming(): Promise<{ duration: number }> {
   const start = performance.now();
-  execFile(
-    'NX_DAEMON=true NX_CACHE_PROJECT_GRAPH=false NX_ISOLATE_PLUGINS=true npx nx show projects'
-  );
+  const isWindows = process.platform === 'win32';
+  await promisify(execFile)('npx nx show projects', {
+    shell: isWindows,
+    env: {
+      ...process.env,
+      NX_CACHE_PROJECT_GRAPH: 'false',
+      NX_ISOLATE_PLUGINS: 'true',
+      NX_DAEMON: 'false',
+    },
+  });
+
   const execFileDuration = Number((performance.now() - start).toFixed(3));
   return { duration: Number(execFileDuration.toFixed(3)) };
 }
