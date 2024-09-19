@@ -46,7 +46,7 @@ export function scoreProjectGraphDuration(
 export async function projectGraphTiming(): Promise<{ duration: number }> {
   const start = performance.now();
   const isWindows = process.platform === 'win32';
-  await promisify(execFile)('npx nx show projects', {
+  await promisify(execFile)('npx', ['nx', 'show', 'projects'], {
     shell: isWindows,
     env: {
       ...process.env,
