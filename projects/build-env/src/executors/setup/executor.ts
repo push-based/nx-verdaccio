@@ -1,14 +1,15 @@
 import { type ExecutorContext, logger, readJsonFile } from '@nx/devkit';
 import { join } from 'node:path';
-import runBuildExecutor from '../bootstrap/executor';
+import runBootstrapExecutor from '../bootstrap/executor';
 import runKillProcessExecutor from '../kill-process/executor';
 import { executeProcess } from '../../internal/execute-process';
 import { objectToCliArgs } from '../../internal/terminal';
 import type { VerdaccioProcessResult } from '../bootstrap/verdaccio-registry';
 import type { SetupEnvironmentExecutorOptions } from './schema';
-import { normalizeOptions } from '../internal/normalize-options';
+import { normalizeExecutorOptions } from '../internal/normalize-options';
 
 import { VERDACCIO_REGISTRY_JSON } from '../bootstrap/constants';
+import { DEFAULT_INSTALL_TARGET } from '../../internal/constants';
 
 export type ExecutorOutput = {
   success: boolean;
@@ -21,30 +22,26 @@ export default async function runSetupEnvironmentExecutor(
   context: ExecutorContext
 ) {
   const { projectName } = context;
-  const normalizedContext = normalizeOptions(
+  const normalizedContext = normalizeExecutorOptions(
     context,
     terminalAndExecutorOptions
   );
   const { options: normalizedOptions } = normalizedContext;
 
   try {
-    await runBuildExecutor(
-      {
-        ...normalizedOptions,
-      },
-      context
-    );
     const {
+      verbose,
       environmentRoot,
       keepServerRunning,
-      verbose = true,
     } = normalizedOptions;
+
+    await runBootstrapExecutor(normalizedOptions, context);
+    const {projectName} = context;
 
     await executeProcess({
       command: 'nx',
       args: objectToCliArgs({
-        _: ['install-env', projectName],
-        environmentProject: projectName,
+        _: [ DEFAULT_INSTALL_TARGET, projectName],
         environmentRoot,
       }),
       cwd: process.cwd(),

@@ -1,11 +1,11 @@
 import { describe, expect } from 'vitest';
-import { normalizeOptions } from './normalize-options';
+import { normalizeExecutorOptions } from './normalize-options';
 import type { ExecutorContext } from '@nx/devkit';
 
 describe('normalizeOptions', () => {
   it('should normalize options', () => {
     expect(
-      normalizeOptions({ projectName: 'test' } as ExecutorContext, {
+      normalizeExecutorOptions({ projectName: 'test' } as ExecutorContext, {
         environmentProject: 'test',
       })
     ).toEqual({
@@ -19,7 +19,7 @@ describe('normalizeOptions', () => {
 
   it('should normalize options with given environmentRoot to ', () => {
     expect(
-      normalizeOptions({ projectName: 'test' } as ExecutorContext, {
+      normalizeExecutorOptions({ projectName: 'test' } as ExecutorContext, {
         environmentProject: 'test',
         environmentRoot: 'static-e2e-environments/dummy-react-app',
       })

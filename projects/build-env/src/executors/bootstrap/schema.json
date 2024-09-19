@@ -8,7 +8,12 @@
       "type": "string",
       "description": "The root directory of the environment"
     },
-    "dryRun": {
+    "keepServerRunning": {
+      "type": "boolean",
+      "description": "Keep the server running after the bootstrap commands have been executed",
+      "default": false
+    },
+    "printConfig": {
       "type": "boolean",
       "description": "Print the commands that would be run, but don't actually run them"
     },
@@ -17,5 +22,8 @@
       "description": "Print additional logs"
     }
   },
-  "additionalProperties": true
+  "additionalProperties": true,
+  "required": [
+    "environmentRoot"
+  ]
 }

@@ -1,11 +1,13 @@
-import { type ExecutorContext, logger } from '@nx/devkit';
+import {type ExecutorContext, logger} from '@nx/devkit';
 
-import type { NpmPublishExecutorOptions } from './schema';
-import { join, relative } from 'node:path';
-import { executeProcess } from '../../internal/execute-process';
-import { objectToCliArgs } from '../../internal/terminal';
-import { getTargetOutputPath } from '../../internal/target';
-import { normalizeOptions } from '../internal/normalize-options';
+import type {NpmPublishExecutorOptions} from './schema';
+import {join, relative} from 'node:path';
+import {executeProcess} from '../../internal/execute-process';
+import {objectToCliArgs} from '../../internal/terminal';
+import {getTargetOutputPath} from '../../internal/target';
+import {normalizeExecutorOptions} from '../internal/normalize-options';
+import {NPMRC_FILENAME} from "../../internal/constants";
+import * as process from "process";
 
 export type NpmPublishExecutorOutput = {
   success: boolean;
@@ -20,24 +22,21 @@ export default async function runNpmPublishExecutor(
   options: NpmPublishExecutorOptions,
   context: ExecutorContext
 ) {
-  const {
-    projectName,
-    projectsConfigurations,
-    options: opt,
-  } = normalizeOptions(context, options);
-  const { environmentRoot } = opt;
+  const normalizedOptions = normalizeExecutorOptions(context, options);
+  const {projectsConfigurations, options: parsedOptions} = normalizedOptions;
+  const {environmentRoot} = parsedOptions;
 
-  const { targets } = projectsConfigurations.projects[projectName];
+  const {projectName} = context;
+  const {targets} = projectsConfigurations.projects[projectName];
   const packageDistPath = getTargetOutputPath(targets['build']);
   const userconfig = join(
     relativeFromDist(packageDistPath),
-    join(environmentRoot, '.npmrc')
+    join(environmentRoot, NPMRC_FILENAME)
   );
 
   logger.info(
     `Publishing package from ${packageDistPath} to ${environmentRoot} with userconfig ${userconfig}`
   );
-
   try {
     // @TODO: try leverage nx-release-publish
     await executeProcess({

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { bootstrapEnvironment } from './bootstrap-env';
+import { runBootstrapEnvironment } from './bootstrap-env';
 import * as verdaccioRegistryModule from './verdaccio-registry';
 import * as npmModule from './npm';
 import * as fs from 'node:fs/promises';
@@ -46,7 +46,7 @@ describe('bootstrapEnvironment', () => {
 
   it('should create environment', async () => {
     await expect(
-      bootstrapEnvironment({
+      runBootstrapEnvironment({
         projectName: 'my-lib-e2e',
         environmentRoot: 'tmp/environments/my-lib-e2e',
       })

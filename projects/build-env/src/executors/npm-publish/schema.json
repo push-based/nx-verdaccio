@@ -4,14 +4,14 @@
   "title": "A executor to kill processes by PID, command, or file",
   "type": "object",
   "properties": {
-    "dryRun": {
+    "printConfig": {
       "type": "boolean",
       "description": "Print the commands that would be run, but don't actually run them",
       "default": false
     },
-    "environmentProject": {
+    "environmentRoot": {
       "type": "string",
-      "description": "The project to use for the environment"
+      "description": "The root folder of the environment"
     },
     "verbose": {
       "type": "boolean",

@@ -6,6 +6,7 @@ import { executeProcess } from '../../internal/execute-process';
 import { uniquePort } from './unique-port';
 import { getEnvironmentsRoot } from '../../internal/setup';
 import { formatError, formatInfo } from '../../internal/logging';
+import {DEFAULT_START_VERDACCIO_TARGET} from "../../internal/constants";
 
 const VERDACCIO_TOKEN = 'Verdaccio: ';
 
@@ -77,10 +78,10 @@ export type StarVerdaccioOptions = VerdaccioExecuterOptions &
   StarVerdaccioOnlyOptions;
 
 export async function startVerdaccioServer({
-  targetName = 'start-verdaccio',
+  targetName = DEFAULT_START_VERDACCIO_TARGET,
   projectName,
   port = String(uniquePort()),
-  storage = join(getEnvironmentsRoot(projectName), targetName, 'storage'),
+  storage = join(getEnvironmentsRoot(projectName), 'storage'),
   location = 'none',
   clear = true,
   verbose = true,

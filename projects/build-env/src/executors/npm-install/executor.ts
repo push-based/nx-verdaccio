@@ -6,8 +6,8 @@ import { executeProcess } from '../../internal/execute-process';
 import { objectToCliArgs } from '../../internal/terminal';
 import type { PackageJson } from 'nx/src/utils/package-json';
 import { getTargetOutputPath } from '../../internal/target';
-import { normalizeOptions } from '../internal/normalize-options';
-import { NPMRC_FILENAME } from '../../internal/constants';
+import { normalizeExecutorOptions } from '../internal/normalize-options';
+// import { NPMRC_FILENAME } from '../../internal/constants';
 
 export type NpmInstallExecutorOutput = {
   success: boolean;
@@ -23,7 +23,7 @@ export default async function runNpmInstallExecutor(
     projectName,
     projectsConfigurations,
     options: opt,
-  } = normalizeOptions(context, options);
+  } = normalizeExecutorOptions(context, options);
 
   const packageDistPath = getTargetOutputPath(
     projectsConfigurations.projects[projectName]?.targets['build']
@@ -40,12 +40,13 @@ export default async function runNpmInstallExecutor(
     command: 'npm',
     args: objectToCliArgs({
       _: ['install', `${packageNameAndVersion}`],
-      'no-fund': true, // avoid polluted terminal
-      'no-shrinkwrap': true, // avoid package-lock creation or update
+      'fund': false, // avoid polluted terminal
+      'shrinkwrap': false, // avoid package-lock creation or update
       save: true,
-      prefix: environmentRoot,
-      userconfig: join(environmentRoot, NPMRC_FILENAME),
+     // prefix: environmentRoot,
+     // userconfig: join(environmentRoot, NPMRC_FILENAME),
     }),
+    cwd: environmentRoot,
     verbose: true,
   });
 

@@ -16,7 +16,7 @@ vi.mock('@nx/devkit', async () => {
 
 describe('runBootstrapExecutor', () => {
   const bootstrapEnvironmentSpy = vi
-    .spyOn(bootstrapEnvModule, 'bootstrapEnvironment')
+    .spyOn(bootstrapEnvModule, 'runBootstrapEnvironment')
     .mockResolvedValue({
       registry: {
         host: 'localhost',
@@ -61,7 +61,7 @@ describe('runBootstrapExecutor', () => {
     expect(logger.error).not.toHaveBeenCalled();
     expect(logger.info).toHaveBeenCalledTimes(1);
     expect(logger.info).toHaveBeenCalledWith(
-      'Execute @push-based/build-env:build with options: {}'
+      'Execute @push-based/build-env:bootstrap with options: {}'
     );
 
     expect(bootstrapEnvironmentSpy).toHaveBeenCalledTimes(1);
@@ -135,7 +135,7 @@ describe('runBootstrapExecutor', () => {
 
     expect(logger.info).toHaveBeenCalledTimes(1);
     expect(logger.info).toHaveBeenCalledWith(
-      'Execute @push-based/build-env:build with options: {}'
+      'Execute @push-based/build-env:bootstrap with options: {}'
     );
 
     expect(logger.error).toHaveBeenCalledTimes(1);
