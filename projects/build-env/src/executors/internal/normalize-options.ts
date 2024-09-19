@@ -1,4 +1,4 @@
-import type {ExecutorContext} from '@nx/devkit';
+import type { ExecutorContext } from '@nx/devkit';
 
 export function normalizeExecutorOptions<
   T extends ExecutorContext,
@@ -15,7 +15,7 @@ export function normalizeExecutorOptions<
   return {
     ...context,
     options: {
-      ...options
+      ...options,
     },
   };
 }

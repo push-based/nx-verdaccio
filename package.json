@@ -10,9 +10,6 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@code-pushup/cli": "^0.50.0",
-    "@code-pushup/models": "^0.50.0",
-    "@code-pushup/utils": "^0.50.0",
     "@nx/devkit": "19.7.3",
     "@nx/esbuild": "19.7.3",
     "@nx/eslint": "19.7.3",
@@ -23,6 +20,10 @@
     "@nx/vite": "19.7.3",
     "@nx/web": "19.7.3",
     "@nx/workspace": "19.7.3",
+    "@push-based/cli": "^0.0.1",
+    "@push-based/core": "^0.0.1",
+    "@push-based/models": "^0.0.1",
+    "@push-based/utils": "^0.0.1",
     "@swc-node/register": "~1.9.1",
     "@swc/cli": "~0.3.12",
     "@swc/core": "^1.7.22",

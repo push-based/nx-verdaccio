@@ -4,7 +4,7 @@ import {
   readJsonFile,
   type TargetConfiguration,
 } from '@nx/devkit';
-import {dirname, join} from 'node:path';
+import { dirname, join } from 'node:path';
 import {
   DEFAULT_ENVIRONMENTS_OUTPUT_DIR,
   DEFAULT_OPTION_ENVIRONMENT_TARGET_NAMES,
@@ -16,16 +16,16 @@ import {
   DEFAULT_INSTALL_TARGET,
   DEFAULT_SETUP_TARGET,
 } from '../internal/constants';
-import type {StarVerdaccioOptions} from '../executors/bootstrap/verdaccio-registry';
-import {VERDACCIO_REGISTRY_JSON} from '../executors/bootstrap/constants';
-import {uniquePort} from "../executors/bootstrap/unique-port";
+import type { StarVerdaccioOptions } from '../executors/bootstrap/verdaccio-registry';
+import { VERDACCIO_REGISTRY_JSON } from '../executors/bootstrap/constants';
+import { uniquePort } from '../executors/bootstrap/unique-port';
 
 export function isPublishable(
   projectConfig: ProjectConfiguration,
   options: NormalizedCreateNodeOptions['publishable']
 ): boolean {
-  const {projectType, tags: existingTags = []} = projectConfig;
-  const {filterByTags: publishableTagFilters} = options;
+  const { projectType, tags: existingTags = [] } = projectConfig;
+  const { filterByTags: publishableTagFilters } = options;
   if (projectType !== 'library') {
     return false;
   }
@@ -43,7 +43,7 @@ export function isNpmEnv(
   projectConfig: ProjectConfiguration,
   options: NormalizedCreateNodeOptions['environments']
 ): boolean {
-  const {tags: existingTags = [], targets} = projectConfig;
+  const { tags: existingTags = [], targets } = projectConfig;
   const existingTargetNames = Object.keys(targets ?? {});
   const {
     filterByTags: environmentsTagFilters,
@@ -128,7 +128,7 @@ type NormalizedCreateNodeOptions = {
 export const createNodes: CreateNodes = [
   '**/project.json',
   (projectConfigurationFile: string, opt: BuildEnvPluginCreateNodeOptions) => {
-    const {environments, publishable} = normalizeCreateNodesOptions(opt);
+    const { environments, publishable } = normalizeCreateNodesOptions(opt);
 
     const projectConfiguration: ProjectConfiguration = readJsonFile(
       join(process.cwd(), projectConfigurationFile)
@@ -168,9 +168,16 @@ export const createNodes: CreateNodes = [
   },
 ];
 
-function verdaccioTargets(projectConfig: ProjectConfiguration, options: Pick<NormalizedCreateNodeOptions['environments'], 'environmentsDir'> & StarVerdaccioOptions): Record<string, TargetConfiguration> {
-  const {name: environmentProject} = projectConfig;
-  const {environmentsDir, ...verdaccioOptions} = options;
+function verdaccioTargets(
+  projectConfig: ProjectConfiguration,
+  options: Pick<
+    NormalizedCreateNodeOptions['environments'],
+    'environmentsDir'
+  > &
+    StarVerdaccioOptions
+): Record<string, TargetConfiguration> {
+  const { name: environmentProject } = projectConfig;
+  const { environmentsDir, ...verdaccioOptions } = options;
   const environmentDir = join(environmentsDir, environmentProject);
   return {
     [DEFAULT_START_VERDACCIO_TARGET]: {
@@ -194,21 +201,28 @@ function verdaccioTargets(projectConfig: ProjectConfiguration, options: Pick<Nor
   };
 }
 
-function getEnvTargets(projectConfig: ProjectConfiguration, options: NormalizedCreateNodeOptions['environments']): Record<string, TargetConfiguration> {
-  const {name: environmentProject} = projectConfig;
-  const {environmentsDir} = options;
+function getEnvTargets(
+  projectConfig: ProjectConfiguration,
+  options: NormalizedCreateNodeOptions['environments']
+): Record<string, TargetConfiguration> {
+  const { name: environmentProject } = projectConfig;
+  const { environmentsDir } = options;
   const environmentRoot = join(environmentsDir, environmentProject);
   return {
     [DEFAULT_BOOTSTRAP_TARGET]: {
       executor: '@push-based/build-env:bootstrap',
-      options: {environmentRoot}
+      options: { environmentRoot },
     },
     // just here to execute dependent npm-install tasks with the correct environmentProject
     [DEFAULT_INSTALL_TARGET]: {
       dependsOn: [
-        {projects: 'dependencies', target: DEFAULT_NPM_INSTALL_TARGET, params: 'forward'}
+        {
+          projects: 'dependencies',
+          target: DEFAULT_NPM_INSTALL_TARGET,
+          params: 'forward',
+        },
       ],
-      options: {environmentRoot},
+      options: { environmentRoot },
       command: 'echo Dependencies installed!',
     },
     // runs bootstrap-env, install-env and stop-verdaccio
@@ -216,7 +230,7 @@ function getEnvTargets(projectConfig: ProjectConfiguration, options: NormalizedC
       outputs: ['{options.environmentRoot}'],
       executor: '@push-based/build-env:setup',
       options: {
-        environmentRoot
+        environmentRoot,
       },
     },
   };
@@ -226,8 +240,8 @@ function updateTargetsWithEnvSetup(
   projectConfig: ProjectConfiguration,
   options: Required<Pick<BuildEnvEnvironmentsOptions, 'targetNames'>>
 ): Record<string, TargetConfiguration> {
-  const {targetNames: envTargetNames} = options;
-  const {targets: existingTargets = {} as TargetConfiguration} =
+  const { targetNames: envTargetNames } = options;
+  const { targets: existingTargets = {} as TargetConfiguration } =
     projectConfig;
 
   return Object.fromEntries(
@@ -257,7 +271,7 @@ function getNpmTargets(): Record<string, TargetConfiguration> {
   return {
     [DEFAULT_NPM_PUBLISH_TARGET]: {
       dependsOn: [
-        {projects: 'self', target: 'build', params: 'forward'},
+        { projects: 'self', target: 'build', params: 'forward' },
         {
           projects: 'dependencies',
           target: DEFAULT_NPM_PUBLISH_TARGET,

@@ -1,13 +1,13 @@
-import {type ExecutorContext, logger} from '@nx/devkit';
+import { type ExecutorContext, logger } from '@nx/devkit';
 
-import type {NpmPublishExecutorOptions} from './schema';
-import {join, relative} from 'node:path';
-import {executeProcess} from '../../internal/execute-process';
-import {objectToCliArgs} from '../../internal/terminal';
-import {getTargetOutputPath} from '../../internal/target';
-import {normalizeExecutorOptions} from '../internal/normalize-options';
-import {NPMRC_FILENAME} from "../../internal/constants";
-import * as process from "process";
+import type { NpmPublishExecutorOptions } from './schema';
+import { join, relative } from 'node:path';
+import { executeProcess } from '../../internal/execute-process';
+import { objectToCliArgs } from '../../internal/terminal';
+import { getTargetOutputPath } from '../../internal/target';
+import { normalizeExecutorOptions } from '../internal/normalize-options';
+import { NPMRC_FILENAME } from '../../internal/constants';
+import * as process from 'process';
 
 export type NpmPublishExecutorOutput = {
   success: boolean;
@@ -23,11 +23,11 @@ export default async function runNpmPublishExecutor(
   context: ExecutorContext
 ) {
   const normalizedOptions = normalizeExecutorOptions(context, options);
-  const {projectsConfigurations, options: parsedOptions} = normalizedOptions;
-  const {environmentRoot} = parsedOptions;
+  const { projectsConfigurations, options: parsedOptions } = normalizedOptions;
+  const { environmentRoot } = parsedOptions;
 
-  const {projectName} = context;
-  const {targets} = projectsConfigurations.projects[projectName];
+  const { projectName } = context;
+  const { targets } = projectsConfigurations.projects[projectName];
   const packageDistPath = getTargetOutputPath(targets['build']);
   const userconfig = join(
     relativeFromDist(packageDistPath),

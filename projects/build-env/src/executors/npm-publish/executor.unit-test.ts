@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect } from 'vitest';
+import { beforeEach, describe, expect, vi, it } from 'vitest';
 import runNpmPublishExecutor from './executor';
 import { MEMFS_VOLUME } from '@push-based/test-utils';
 import * as execProcessModule from '../../internal/execute-process';
@@ -27,10 +27,10 @@ describe('runNpmPublishExecutor', () => {
     await expect(
       runNpmPublishExecutor(
         {
-          environmentProject: 'my-lib-e2e',
+          environmentRoot: 'tmp/environments/my-lib-e2e',
         },
         {
-          root: 'tmp/environments/test',
+          root: 'libs/my-lib',
           cwd: MEMFS_VOLUME,
           isVerbose: false,
           projectName: 'my-lib',

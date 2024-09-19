@@ -1,6 +1,7 @@
 import runBootstrapExecutor from './executor';
 import * as bootstrapEnvModule from './bootstrap-env';
-import { beforeEach, expect, vi } from 'vitest';
+import * as killProcessModule from '../kill-process/executor';
+import { beforeEach, expect, vi, it, describe, afterEach } from 'vitest';
 import { logger } from '@nx/devkit';
 
 vi.mock('@nx/devkit', async () => {
@@ -15,9 +16,14 @@ vi.mock('@nx/devkit', async () => {
 });
 
 describe('runBootstrapExecutor', () => {
-  const bootstrapEnvironmentSpy = vi
-    .spyOn(bootstrapEnvModule, 'runBootstrapEnvironment')
-    .mockResolvedValue({
+  const bootstrapEnvironmentSpy = vi.spyOn(
+    bootstrapEnvModule,
+    'bootstrapEnvironment'
+  );
+  const killProcessModuleSpy = vi.spyOn(killProcessModule, 'default');
+
+  beforeEach(() => {
+    bootstrapEnvironmentSpy.mockResolvedValue({
       registry: {
         host: 'localhost',
         pid: 7777,
@@ -29,15 +35,22 @@ describe('runBootstrapExecutor', () => {
       root: 'tmp/environments/my-lib-e2e',
       stop: expect.any(Function),
     });
-
-  beforeEach(() => {
+    killProcessModuleSpy.mockResolvedValue({
+      success: true,
+      command: 'Process killed successfully.',
+    });
+  });
+  afterEach(() => {
     bootstrapEnvironmentSpy.mockReset();
+    killProcessModuleSpy.mockReset();
   });
 
   it('should bootstrap environment correctly', async () => {
     await expect(
       runBootstrapExecutor(
-        {},
+        {
+          environmentRoot: 'tmp/environments/my-lib-e2e',
+        },
         {
           cwd: 'test',
           isVerbose: false,
@@ -61,15 +74,19 @@ describe('runBootstrapExecutor', () => {
     expect(logger.error).not.toHaveBeenCalled();
     expect(logger.info).toHaveBeenCalledTimes(1);
     expect(logger.info).toHaveBeenCalledWith(
-      'Execute @push-based/build-env:bootstrap with options: {}'
+      `Execute @push-based/build-env:bootstrap with options: ${JSON.stringify(
+        {
+          environmentRoot: 'tmp/environments/my-lib-e2e',
+        },
+        null,
+        2
+      )}`
     );
 
     expect(bootstrapEnvironmentSpy).toHaveBeenCalledTimes(1);
     expect(bootstrapEnvironmentSpy).toHaveBeenCalledWith({
       projectName: 'my-lib-e2e',
-      environmentProject: 'my-lib-e2e',
       environmentRoot: 'tmp/environments/my-lib-e2e',
-      readyWhen: 'Environment ready under',
     });
   });
 
@@ -146,9 +163,6 @@ describe('runBootstrapExecutor', () => {
     expect(bootstrapEnvironmentSpy).toHaveBeenCalledTimes(1);
     expect(bootstrapEnvironmentSpy).toHaveBeenCalledWith({
       projectName: 'my-lib-e2e',
-      environmentProject: 'my-lib-e2e',
-      environmentRoot: 'tmp/environments/my-lib-e2e',
-      readyWhen: 'Environment ready under',
     });
   });
 });

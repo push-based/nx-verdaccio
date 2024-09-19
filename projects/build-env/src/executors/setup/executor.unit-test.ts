@@ -49,7 +49,9 @@ describe('runSetupEnvironmentExecutor', () => {
 
     await expect(
       runSetupEnvironmentExecutor(
-        {},
+        {
+          environmentRoot: 'tmp/environments/my-lib-e2e',
+        },
         {
           cwd: 'test',
           isVerbose: false,
@@ -73,22 +75,19 @@ describe('runSetupEnvironmentExecutor', () => {
     expect(executeProcessSpy).toHaveBeenCalledTimes(1);
     expect(executeProcessSpy).toHaveBeenCalledWith({
       args: [
-        'install-env',
+        'build-env-env-install',
         'my-lib-e2e',
-        '--environmentProject="my-lib-e2e"',
         // @TODO check for --environmentRoot too
         expect.stringContaining('my-lib-e2e'),
       ],
       command: 'nx',
       cwd: '/test',
-      verbose: true,
     });
 
     expect(runKillProcessExecutorSpy).toHaveBeenCalledTimes(1);
     expect(runKillProcessExecutorSpy).toHaveBeenCalledWith(
       {
         filePath: 'tmp/environments/my-lib-e2e/verdaccio-registry.json',
-        environmentProject: 'my-lib-e2e',
         environmentRoot: 'tmp/environments/my-lib-e2e',
       },
       {
@@ -150,17 +149,18 @@ describe('runSetupEnvironmentExecutor', () => {
     await expect(
       runSetupEnvironmentExecutor(
         {
+          environmentRoot: 'tmp/environments/my-lib-e2e',
           keepServerRunning: true,
         },
         {
           cwd: 'test',
           isVerbose: false,
-          root: 'tmp/environments/test',
+          root: 'e2e/my-lib-e2e',
           projectName: 'my-lib-e2e',
           projectsConfigurations: {
             version: 2,
             projects: {
-              'my-lib': {
+              'my-lib-e2e': {
                 root: 'e2e/my-lib-e2e',
               },
             },
@@ -175,14 +175,12 @@ describe('runSetupEnvironmentExecutor', () => {
     expect(executeProcessSpy).toHaveBeenCalledTimes(1);
     expect(executeProcessSpy).toHaveBeenCalledWith({
       args: [
-        'install-env',
+        'build-env-env-install',
         'my-lib-e2e',
-        '--environmentProject="my-lib-e2e"',
         '--environmentRoot="tmp/environments/my-lib-e2e"',
       ],
       command: 'nx',
       cwd: '/test',
-      verbose: true,
     });
 
     expect(runKillProcessExecutorSpy).toHaveBeenCalledTimes(0);

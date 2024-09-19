@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { runBootstrapEnvironment } from './bootstrap-env';
+import { bootstrapEnvironment } from './bootstrap-env';
 import * as verdaccioRegistryModule from './verdaccio-registry';
 import * as npmModule from './npm';
 import * as fs from 'node:fs/promises';
@@ -46,7 +46,7 @@ describe('bootstrapEnvironment', () => {
 
   it('should create environment', async () => {
     await expect(
-      runBootstrapEnvironment({
+      bootstrapEnvironment({
         projectName: 'my-lib-e2e',
         environmentRoot: 'tmp/environments/my-lib-e2e',
       })
@@ -65,15 +65,17 @@ describe('bootstrapEnvironment', () => {
 
     expect(startVerdaccioServerSpy).toHaveBeenCalledTimes(1);
     expect(startVerdaccioServerSpy).toHaveBeenCalledWith({
+      environmentRoot: 'tmp/environments/my-lib-e2e',
+      keepServerRunning: true,
       projectName: 'my-lib-e2e',
       storage: 'tmp/environments/my-lib-e2e/storage',
-      verbose: false,
+      readyWhen: 'Environment ready under',
     });
 
     expect(setupNpmWorkspaceSpy).toHaveBeenCalledTimes(1);
     expect(setupNpmWorkspaceSpy).toHaveBeenCalledWith(
       'tmp/environments/my-lib-e2e',
-      false
+      undefined
     );
 
     expect(configureRegistrySpy).toHaveBeenCalledTimes(1);
@@ -87,7 +89,7 @@ describe('bootstrapEnvironment', () => {
         url: 'http://localhost:4873',
         userconfig: 'tmp/environments/my-lib-e2e/.npmrc',
       },
-      false
+      undefined
     );
 
     expect(writeFileSpy).toHaveBeenCalledTimes(1);

@@ -49,8 +49,8 @@ Show what will be executed without actually executing it:
 ## Options
 
 | Name                  | type                      | description                                                                                                                          |
-|-----------------------|---------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
-| **envRoot**           | `string`  (REQUIRED)      | The folder in which the package should get published. This folder is the environment folder and contains a configured `.npmrc` file. |
+| --------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| **envRoot**           | `string` (REQUIRED)       | The folder in which the package should get published. This folder is the environment folder and contains a configured `.npmrc` file. |
 | **keepServerRunning** | `boolean` (DEFAULT false) | keep the Verdaccio server running after bootstraping the environment                                                                 |
 | **printConfig**       | `boolean`                 | Print config without executing                                                                                                       |
 | **verbose**           | `boolean`                 | Show more verbose logs                                                                                                               |

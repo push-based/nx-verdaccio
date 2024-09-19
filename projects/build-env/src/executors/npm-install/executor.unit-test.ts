@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect } from 'vitest';
+import { beforeEach, describe, expect, vi, it } from 'vitest';
 import runNpmInstallExecutor from './executor';
 import { MEMFS_VOLUME } from '@push-based/test-utils';
 import * as execProcessModule from '../../internal/execute-process';
@@ -33,10 +33,10 @@ describe('runNpmInstallExecutor', () => {
     await expect(
       runNpmInstallExecutor(
         {
-          environmentProject: 'my-lib-e2e',
+          environmentRoot: 'tmp/environments/my-lib-e2e',
         },
         {
-          root: 'tmp/environments/test',
+          root: 'tmp/environments/my-lib',
           cwd: MEMFS_VOLUME,
           isVerbose: false,
           projectName: 'my-lib',
@@ -85,9 +85,9 @@ describe('runNpmInstallExecutor', () => {
           '--no-fund',
           '--no-shrinkwrap',
           '--save',
-          '--prefix="tmp/environments/my-lib-e2e"',
-          '--userconfig="tmp/environments/my-lib-e2e/.npmrc"',
         ],
+        cwd: 'tmp/environments/my-lib-e2e',
+        verbose: true,
       })
     );
   });

@@ -69,7 +69,7 @@ describe('runKillProcessExecutor', () => {
 
     expect(logger.info).toHaveBeenCalledTimes(1);
     expect(logger.info).toHaveBeenCalledWith(
-      `Execute @push-based/stop-verdaccio-env:kill-process with options: ${JSON.stringify(
+      `Execute @push-based/build-env:kill-process with options: ${JSON.stringify(
         { pid: 777 },
         null,
         2
@@ -122,7 +122,7 @@ describe('runKillProcessExecutor', () => {
 
     expect(logger.info).toHaveBeenCalledTimes(1);
     expect(logger.info).toHaveBeenCalledWith(
-      `Execute @push-based/stop-verdaccio-env:kill-process with options: ${JSON.stringify(
+      `Execute @push-based/build-env:kill-process with options: ${JSON.stringify(
         { filePath: 'tmp/environments/my-lib' },
         null,
         2

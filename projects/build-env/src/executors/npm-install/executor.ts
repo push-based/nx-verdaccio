@@ -40,11 +40,11 @@ export default async function runNpmInstallExecutor(
     command: 'npm',
     args: objectToCliArgs({
       _: ['install', `${packageNameAndVersion}`],
-      'fund': false, // avoid polluted terminal
-      'shrinkwrap': false, // avoid package-lock creation or update
+      fund: false, // avoid polluted terminal
+      shrinkwrap: false, // avoid package-lock creation or update
       save: true,
-     // prefix: environmentRoot,
-     // userconfig: join(environmentRoot, NPMRC_FILENAME),
+      // prefix: environmentRoot,
+      // userconfig: join(environmentRoot, NPMRC_FILENAME),
     }),
     cwd: environmentRoot,
     verbose: true,

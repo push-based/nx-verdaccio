@@ -44,7 +44,7 @@ Show what will be executed without actually executing it:
 ## Options
 
 | Name         | type     | description                                            |
-|--------------|----------|--------------------------------------------------------|
+| ------------ | -------- | ------------------------------------------------------ |
 | **pid**      | `number` | Process ID to kill                                     |
 | **filePath** | `string` | Path to JSON file contaning a `pid` property as number |
 | **verbose**  | `bolean` | Show more verbose logs                                 |

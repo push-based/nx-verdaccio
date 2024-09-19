@@ -29,23 +29,19 @@ export default async function runSetupEnvironmentExecutor(
   const { options: normalizedOptions } = normalizedContext;
 
   try {
-    const {
-      verbose,
-      environmentRoot,
-      keepServerRunning,
-    } = normalizedOptions;
+    const { verbose, environmentRoot, keepServerRunning } = normalizedOptions;
 
     await runBootstrapExecutor(normalizedOptions, context);
-    const {projectName} = context;
+    const { projectName } = context;
 
     await executeProcess({
       command: 'nx',
       args: objectToCliArgs({
-        _: [ DEFAULT_INSTALL_TARGET, projectName],
+        _: [DEFAULT_INSTALL_TARGET, projectName],
         environmentRoot,
       }),
       cwd: process.cwd(),
-      verbose,
+      ...(verbose ? { verbose } : {}),
     });
 
     if (!keepServerRunning) {

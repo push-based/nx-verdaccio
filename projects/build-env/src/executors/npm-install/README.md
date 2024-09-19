@@ -7,7 +7,7 @@ This folder has to contain all needed configuration and files for the `npm insta
 
 > [!notice]
 > To install or publish a package you need to have an environment set up.
-> Run `nx run <project-name>:build-env--bootstrap` to  one
+> Run `nx run <project-name>:build-env--bootstrap` to one
 
 ## Usage
 
@@ -49,7 +49,7 @@ Show what will be executed without actually executing it:
 ## Options
 
 | Name           | type     | description                                                                                                                          |
-|----------------|----------|--------------------------------------------------------------------------------------------------------------------------------------|
+| -------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | **pkgVersion** | `string` | The packages version to install. Falls back to get the current version from build output.                                            |
 | **envRoot**    | `string` | The folder in which the package should get installed. This folder is the environment folder and contains a configured `.npmrc` file. |
 | **verbose**    | `bolean` | Show more verbose logs                                                                                                               |

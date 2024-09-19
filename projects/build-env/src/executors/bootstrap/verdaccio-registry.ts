@@ -6,7 +6,7 @@ import { executeProcess } from '../../internal/execute-process';
 import { uniquePort } from './unique-port';
 import { getEnvironmentsRoot } from '../../internal/setup';
 import { formatError, formatInfo } from '../../internal/logging';
-import {DEFAULT_START_VERDACCIO_TARGET} from "../../internal/constants";
+import { DEFAULT_START_VERDACCIO_TARGET } from '../../internal/constants';
 
 const VERDACCIO_TOKEN = 'Verdaccio: ';
 

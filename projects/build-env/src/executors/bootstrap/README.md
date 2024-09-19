@@ -5,7 +5,7 @@ This folder contains all needed configuration and files for a Verdaccio registry
 
 **Environment folder**
 
-```bash
+````bash
 
 ```sh
 Root/
@@ -25,7 +25,7 @@ Root/
             ├── .npmrc # local npm config configured for project specific Verdaccio registry
             ├── package-lock.json # skipped creation by default
             └── package.json # npm install/uninstall
-```
+````
 
 #### @push-based/build-env:env-bootstrap
 
@@ -73,9 +73,9 @@ Show what will be executed without actually executing it:
 
 ## Options
 
-| Name                  | type                      | description                                                                                                                          |
-|-----------------------|---------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
-| **envRoot**           | `string`  (REQUIRED)      | The folder in which the package should get published. This folder is the environment folder and contains a configured `.npmrc` file. |
-| **keepServerRunning** | `boolean` (DEFAULT true)  | keep the Verdaccio server running after bootstraping the environment                                                                 |
-| **printConfig**       | `boolean`                 | Print config without executing                                                                                                       |
-| **verbose**           | `boolean`                 | Show more verbose logs                                                                                                               |
+| Name                  | type                     | description                                                                                                                          |
+| --------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| **envRoot**           | `string` (REQUIRED)      | The folder in which the package should get published. This folder is the environment folder and contains a configured `.npmrc` file. |
+| **keepServerRunning** | `boolean` (DEFAULT true) | keep the Verdaccio server running after bootstraping the environment                                                                 |
+| **printConfig**       | `boolean`                | Print config without executing                                                                                                       |
+| **verbose**           | `boolean`                | Show more verbose logs                                                                                                               |
