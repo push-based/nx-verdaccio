@@ -3,7 +3,6 @@ import {
   executeProcess,
   slugify,
   formatDuration,
-  formatBytes,
 } from '@code-pushup/utils';
 import { logger, readJsonFile } from '@nx/devkit';
 import { DEFAULT_PLUGIN_OUTPUT } from '../constant';
@@ -33,7 +32,7 @@ export type ProjectTaskAuditOptions = {
 export async function taskTimeAudits(
   options?: ProjectTaskAuditOptions
 ): Promise<AuditOutput[]> {
-  const { taskTimeTasks, maxTaskTime = DEFAULT_MAX_PROJECT_TARGET_TIME } =
+  const { taskTimeTasks = [], maxTaskTime = DEFAULT_MAX_PROJECT_TARGET_TIME } =
     options ?? {};
 
   // Get the timings for each task
