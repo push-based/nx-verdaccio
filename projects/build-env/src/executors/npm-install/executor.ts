@@ -36,7 +36,6 @@ export default async function runNpmInstallExecutor(
       fund: false, // avoid polluted terminal
       shrinkwrap: false, // avoid package-lock creation or update
       save: true, // save to package.json dependencies
-      userconfig: join('.npmrc'), // enforce local npmrc
     }),
     cwd: environmentRoot,
     verbose: true,

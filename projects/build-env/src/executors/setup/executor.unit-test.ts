@@ -34,14 +34,18 @@ describe('runSetupEnvironmentExecutor', () => {
 
   it('should setup environment correctly', async () => {
     runExecutorSpy
-      .mockResolvedValueOnce({
-        success: true,
-        command: 'Bootstraped environemnt successfully.',
-      })
-      .mockResolvedValueOnce({
-        success: true,
-        command: 'Kill process successfully',
-      });
+      .mockResolvedValueOnce([
+        Promise.resolve({
+          success: true,
+          command: 'Bootstraped environemnt successfully.',
+        }),
+      ])
+      .mockResolvedValueOnce([
+        Promise.resolve({
+          success: true,
+          command: 'Kill process successfully',
+        }),
+      ]);
     const projectName = 'my-lib-e2e';
 
     const context = {
@@ -136,20 +140,25 @@ describe('runSetupEnvironmentExecutor', () => {
       )
     ).resolves.toStrictEqual({
       success: false,
-      command: Error('Error in runBootstrapEnvironment'),
+      command:
+        'Failed executing target build-env-env-bootstrap\n Error in runBootstrapEnvironment',
     });
   });
 
   it('should keep server running if keepServerRunning is passed', async () => {
     runExecutorSpy
-      .mockResolvedValueOnce({
-        success: true,
-        command: 'Bootstraped environemnt successfully.',
-      })
-      .mockResolvedValueOnce({
-        success: true,
-        command: 'Kill process successfully',
-      });
+      .mockResolvedValueOnce([
+        Promise.resolve({
+          success: true,
+          command: 'Bootstraped environemnt successfully.',
+        }),
+      ])
+      .mockResolvedValueOnce([
+        Promise.resolve({
+          success: true,
+          command: 'Kill process successfully',
+        }),
+      ]);
     const projectName = 'my-lib-e2e';
 
     const context = {

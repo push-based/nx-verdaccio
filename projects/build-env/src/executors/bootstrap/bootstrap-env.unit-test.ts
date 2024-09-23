@@ -59,14 +59,14 @@ describe('bootstrapEnvironment', () => {
         storage: 'tmp/storage',
         url: 'http://localhost:4873',
       },
-      root: 'tmp/environments/my-lib-e2e',
+      environmentRoot: 'tmp/environments/my-lib-e2e',
       stop: expect.any(Function),
     });
 
     expect(startVerdaccioServerSpy).toHaveBeenCalledTimes(1);
     expect(startVerdaccioServerSpy).toHaveBeenCalledWith({
-      environmentRoot: 'tmp/environments/my-lib-e2e',
-      keepServerRunning: true,
+      //environmentRoot: 'tmp/environments/my-lib-e2e',
+      //keepServerRunning: true,
       projectName: 'my-lib-e2e',
       storage: 'tmp/environments/my-lib-e2e/storage',
       readyWhen: 'Environment ready under',
@@ -83,10 +83,7 @@ describe('bootstrapEnvironment', () => {
     expect(configureRegistrySpy).toHaveBeenCalledWith(
       {
         host: 'localhost',
-        pid: 7777,
         port: 4387,
-        protocol: 'http',
-        storage: 'tmp/storage',
         url: 'http://localhost:4873',
         userconfig: 'tmp/environments/my-lib-e2e/.npmrc',
       },

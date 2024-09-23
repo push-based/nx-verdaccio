@@ -31,9 +31,6 @@ export default async function runSetupEnvironmentExecutor(
   const { verbose, environmentRoot, keepServerRunning } =
     terminalAndExecutorOptions;
   try {
-    logger.info(
-      `Bootstrapping environment for ${projectName} in ${environmentRoot}`
-    );
     for await (const s of await runExecutor(
       {
         project: projectName,
@@ -42,7 +39,7 @@ export default async function runSetupEnvironmentExecutor(
       },
       {
         ...terminalAndExecutorOptions,
-        // we always want to keep the server running as in the following step we install packages
+        // we always want to keep the server running as in the next step we install packages
         // the `keepServerRunning` passed in `options` is only used to stop the server after the installation (or keep it running for debug reasons)
         keepServerRunning: true,
       },
@@ -53,14 +50,11 @@ export default async function runSetupEnvironmentExecutor(
     logger.error(error);
     return {
       success: false,
-      command: `Fails executing target ${DEFAULT_BOOTSTRAP_TARGET}\n ${error.message}`,
+      command: `Failed executing target ${DEFAULT_BOOTSTRAP_TARGET}\n ${error.message}`,
     };
   }
 
   try {
-    logger.info(`Installing packages for ${projectName} in ${environmentRoot}`);
-    if (verbose) {
-    }
     await executeProcess({
       command: 'nx',
       args: objectToCliArgs({

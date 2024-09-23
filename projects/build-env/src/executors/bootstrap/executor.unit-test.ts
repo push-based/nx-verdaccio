@@ -48,10 +48,12 @@ describe('runBootstrapExecutor', () => {
       environmentRoot: `tmp/environments/${e2eProjectName}`,
       stop: expect.any(Function),
     });
-    runExecutorSpy.mockResolvedValueOnce({
-      success: true,
-      command: 'Process killed successfully.',
-    });
+    runExecutorSpy.mockResolvedValueOnce([
+      Promise.resolve({
+        success: true,
+        command: 'Process killed successfully.',
+      }),
+    ]);
   });
   afterEach(() => {
     runExecutorSpy.mockReset();
@@ -73,7 +75,7 @@ describe('runBootstrapExecutor', () => {
     expect(errorLoggerSpy).not.toHaveBeenCalled();
     expect(infoLoggerSpy).toHaveBeenCalledTimes(1);
     expect(infoLoggerSpy).toHaveBeenCalledWith(
-      `Execute @push-based/build-env:bootstrap with options: ${JSON.stringify(
+      `Execute @push-based/build-env:build-env-env-bootstrap with options: ${JSON.stringify(
         {
           environmentRoot: `tmp/environments/${e2eProjectName}`,
         },
@@ -127,7 +129,7 @@ describe('runBootstrapExecutor', () => {
 
     expect(infoLoggerSpy).toHaveBeenCalledTimes(1);
     expect(infoLoggerSpy).toHaveBeenCalledWith(
-      'Execute @push-based/build-env:bootstrap with options: {}'
+      'Execute @push-based/build-env:build-env-env-bootstrap with options: {}'
     );
 
     expect(errorLoggerSpy).toHaveBeenCalledTimes(1);

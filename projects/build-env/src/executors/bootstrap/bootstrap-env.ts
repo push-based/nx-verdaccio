@@ -49,18 +49,11 @@ export async function bootstrapEnvironment(
     );
     throw error;
   }
+  const { registry } = registryResult;
 
   try {
-    logger.info(
-      formatInfo(
-        `Setup NPM workspace in ${environmentRoot}`,
-        VERDACCIO_ENV_TOKEN
-      )
-    );
-    await setupNpmWorkspace(environmentRoot, verbose);
-
-    const { registry } = registryResult;
     const { url, port, host } = registry;
+    await setupNpmWorkspace(environmentRoot, verbose);
     const userconfig = join(environmentRoot, '.npmrc');
     configureRegistry({ url, port, host, userconfig }, verbose);
   } catch (error) {
@@ -74,18 +67,9 @@ export async function bootstrapEnvironment(
   }
 
   try {
-    logger.info(
-      formatInfo(
-        `Save active verdaccio registry data to file: ${join(
-          environmentRoot,
-          VERDACCIO_REGISTRY_JSON
-        )}`,
-        VERDACCIO_ENV_TOKEN
-      )
-    );
     await writeFile(
       join(environmentRoot, VERDACCIO_REGISTRY_JSON),
-      JSON.stringify(environmentRoot, null, 2)
+      JSON.stringify(registry, null, 2)
     ); // NOTICE: This is a "readyWhen" condition
     logger.info(
       formatInfo(
@@ -93,13 +77,6 @@ export async function bootstrapEnvironment(
         VERDACCIO_ENV_TOKEN
       )
     );
-    logger.info(
-      formatInfo(
-        `File saved: ${join(environmentRoot, VERDACCIO_REGISTRY_JSON)}`,
-        VERDACCIO_ENV_TOKEN
-      )
-    );
-
     return {
       ...registryResult,
       environmentRoot: environmentRoot,
