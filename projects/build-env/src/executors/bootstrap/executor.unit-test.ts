@@ -147,7 +147,7 @@ describe('runBootstrapExecutor', () => {
       )
     ).resolves.toStrictEqual({
       success: false,
-      command: Error('Failed to bootstrap environment'),
+      command: 'Failed to bootstrap environment',
     });
 
     expect(logger.info).toHaveBeenCalledTimes(1);

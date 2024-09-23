@@ -36,7 +36,7 @@ export async function bootstrapEnvironment(
     storage: storage ?? join(environmentRoot, 'storage'),
     verbose,
     readyWhen: 'Environment ready under',
-    keepServerRunning: false,
+    keepServerRunning: true,
     ...options,
   });
 

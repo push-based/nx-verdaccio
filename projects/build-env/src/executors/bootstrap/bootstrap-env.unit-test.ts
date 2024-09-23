@@ -66,7 +66,7 @@ describe('bootstrapEnvironment', () => {
     expect(startVerdaccioServerSpy).toHaveBeenCalledTimes(1);
     expect(startVerdaccioServerSpy).toHaveBeenCalledWith({
       environmentRoot: 'tmp/environments/my-lib-e2e',
-      keepServerRunning: false,
+      keepServerRunning: true,
       projectName: 'my-lib-e2e',
       storage: 'tmp/environments/my-lib-e2e/storage',
       readyWhen: 'Environment ready under',

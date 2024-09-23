@@ -2,7 +2,6 @@ import { type ExecutorContext, logger } from '@nx/devkit';
 import type { BootstrapExecutorOptions } from './schema';
 import {
   bootstrapEnvironment,
-  BootstrapEnvironmentOptions,
   BootstrapEnvironmentResult,
 } from './bootstrap-env';
 import { normalizeExecutorOptions } from '../internal/normalize-options';
@@ -11,7 +10,6 @@ import { VERDACCIO_ENV_TOKEN } from './npm';
 import runKillProcessExecutor from '../kill-process/executor';
 import { join } from 'node:path';
 import { VERDACCIO_REGISTRY_JSON } from './constants';
-import * as process from 'process';
 
 export type BootstrapExecutorOutput = {
   success: boolean;
@@ -49,7 +47,7 @@ export default async function runBootstrapExecutor(
     logger.error(error);
     return {
       success: false,
-      command: error,
+      command: error?.message ?? (error as Error).toString(),
     };
   }
 

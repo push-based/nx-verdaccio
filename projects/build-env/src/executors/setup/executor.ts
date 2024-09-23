@@ -1,7 +1,10 @@
-import { type ExecutorContext, logger, readJsonFile } from '@nx/devkit';
+import {
+  type ExecutorContext,
+  logger,
+  readJsonFile,
+  runExecutor,
+} from '@nx/devkit';
 import { join } from 'node:path';
-import runBootstrapExecutor from '../bootstrap/executor';
-import runKillProcessExecutor from '../kill-process/executor';
 import { executeProcess } from '../../internal/execute-process';
 import { objectToCliArgs } from '../../internal/terminal';
 import type { VerdaccioProcessResult } from '../bootstrap/verdaccio-registry';
@@ -9,7 +12,11 @@ import type { SetupEnvironmentExecutorOptions } from './schema';
 import { normalizeExecutorOptions } from '../internal/normalize-options';
 
 import { VERDACCIO_REGISTRY_JSON } from '../bootstrap/constants';
-import { DEFAULT_INSTALL_TARGET } from '../../internal/constants';
+import {
+  DEFAULT_BOOTSTRAP_TARGET,
+  DEFAULT_INSTALL_TARGET,
+  DEFAULT_STOP_VERDACCIO_TARGET,
+} from '../../internal/constants';
 
 export type ExecutorOutput = {
   success: boolean;
@@ -21,18 +28,30 @@ export default async function runSetupEnvironmentExecutor(
   terminalAndExecutorOptions: SetupEnvironmentExecutorOptions,
   context: ExecutorContext
 ) {
-  const { projectName } = context;
+  const { configurationName: configuration } = context;
   const normalizedContext = normalizeExecutorOptions(
     context,
     terminalAndExecutorOptions
   );
-  const { options: normalizedOptions } = normalizedContext;
+  const { options: normalizedOptions, projectName } = normalizedContext;
 
   try {
     const { verbose, environmentRoot, keepServerRunning } = normalizedOptions;
 
-    await runBootstrapExecutor(normalizedOptions, context);
-    const { projectName } = context;
+    await runExecutor(
+      {
+        project: projectName,
+        target: DEFAULT_BOOTSTRAP_TARGET,
+        configuration,
+      },
+      {
+        ...normalizedOptions,
+        // we always want to keep the server running as in the following step we install packages
+        // the keepServerRunning option is only used to stop the server after the installation (or keep it running for debug reasons)
+        keepServerRunning: true,
+      },
+      context
+    );
 
     await executeProcess({
       command: 'nx',
@@ -45,9 +64,14 @@ export default async function runSetupEnvironmentExecutor(
     });
 
     if (!keepServerRunning) {
-      await runKillProcessExecutor(
+      await await runExecutor(
         {
-          ...normalizedOptions,
+          project: projectName,
+          target: DEFAULT_STOP_VERDACCIO_TARGET,
+          configuration,
+        },
+        {
+          verbose,
           filePath: join(environmentRoot, VERDACCIO_REGISTRY_JSON),
         },
         context
