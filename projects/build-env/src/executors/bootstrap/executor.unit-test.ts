@@ -117,7 +117,9 @@ describe('runBootstrapExecutor', () => {
 
   it('should throw if bootstrappingEnvironment fails', async () => {
     bootstrapEnvironmentSpy.mockReset();
-    bootstrapEnvironmentSpy.mockRejectedValueOnce(new Error('Failed to bootstrap environment'));
+    bootstrapEnvironmentSpy.mockRejectedValueOnce(
+      new Error('Failed to bootstrap environment')
+    );
     await expect(runBootstrapExecutor({}, context)).resolves.toStrictEqual({
       success: false,
       command: 'Failed to bootstrap environment',
