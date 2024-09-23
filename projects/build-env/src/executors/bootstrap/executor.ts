@@ -2,6 +2,7 @@ import { type ExecutorContext, logger } from '@nx/devkit';
 import type { BootstrapExecutorOptions } from './schema';
 import {
   bootstrapEnvironment,
+  BootstrapEnvironmentOptions,
   BootstrapEnvironmentResult,
 } from './bootstrap-env';
 import { normalizeExecutorOptions } from '../internal/normalize-options';
@@ -41,7 +42,8 @@ export default async function runBootstrapExecutor(
   try {
     bootstrapResult = await bootstrapEnvironment({
       projectName,
-      ...normalizedOptions,
+      environmentRoot,
+      keepServerRunning,
     });
   } catch (error) {
     logger.error(error);
@@ -52,15 +54,10 @@ export default async function runBootstrapExecutor(
   }
 
   if (keepServerRunning) {
-    const { registry, root } = bootstrapResult;
+    const { registry } = bootstrapResult;
+    const { url } = registry;
     logger.info(
-      formatInfo(`Environment ready under: ${root}`, VERDACCIO_ENV_TOKEN)
-    );
-    logger.info(
-      formatInfo(
-        `Verdaccio server is running on ${registry.url}`,
-        VERDACCIO_ENV_TOKEN
-      )
+      formatInfo(`Verdaccio server running under ${url}`, VERDACCIO_ENV_TOKEN)
     );
   } else {
     await runKillProcessExecutor(

@@ -58,7 +58,6 @@ export function parseRegistryData(stdout: string): VerdaccioProcessResult {
 }
 
 export type StarVerdaccioOnlyOptions = {
-  targetName?: string;
   projectName?: string;
   verbose?: boolean;
 };
@@ -67,9 +66,7 @@ export type VerdaccioExecuterOptions = {
   readyWhen?: string;
   storage?: string;
   port?: string;
-  p?: string;
   config?: string;
-  c?: string;
   location?: string;
   clear?: boolean;
 };
@@ -78,7 +75,6 @@ export type StarVerdaccioOptions = VerdaccioExecuterOptions &
   StarVerdaccioOnlyOptions;
 
 export async function startVerdaccioServer({
-  targetName = DEFAULT_START_VERDACCIO_TARGET,
   projectName,
   port = String(uniquePort()),
   storage = join(getEnvironmentsRoot(projectName), 'storage'),
@@ -93,7 +89,7 @@ export async function startVerdaccioServer({
     executeProcess({
       command: 'nx',
       args: objectToCliArgs({
-        _: [targetName, projectName ?? '', '--'],
+        _: [DEFAULT_START_VERDACCIO_TARGET, projectName ?? '', '--'],
         storage,
         port,
         verbose,

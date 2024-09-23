@@ -8,13 +8,12 @@ import { writeFile } from 'node:fs/promises';
 import { setupNpmWorkspace } from './npm';
 import { formatInfo } from '../../internal/logging';
 import { VERDACCIO_REGISTRY_JSON } from './constants';
-import { ExecutorContext, logger } from '@nx/devkit';
+import { logger } from '@nx/devkit';
 import {
   configureRegistry,
   type Environment,
   VERDACCIO_ENV_TOKEN,
 } from './npm';
-import runKillProcessExecutor from '../kill-process/executor';
 
 export type BootstrapEnvironmentOptions = Partial<
   StarVerdaccioOptions & Environment
@@ -30,16 +29,14 @@ export type BootstrapEnvironmentResult = Environment & {
 };
 
 export async function bootstrapEnvironment(
-  options: BootstrapEnvironmentOptions & {
-    projectName: string;
-  }
+  options
 ): Promise<BootstrapEnvironmentResult> {
-  const { verbose, environmentRoot } = options;
-
+  const { verbose, environmentRoot, storage } = options;
   const registryResult = await startVerdaccioServer({
-    storage: join(environmentRoot, 'storage'),
+    storage: storage ?? join(environmentRoot, 'storage'),
+    verbose,
     readyWhen: 'Environment ready under',
-    keepServerRunning: true,
+    keepServerRunning: false,
     ...options,
   });
 
@@ -61,6 +58,13 @@ export async function bootstrapEnvironment(
   await writeFile(
     join(activeRegistry.root, VERDACCIO_REGISTRY_JSON),
     JSON.stringify(activeRegistry.registry, null, 2)
+  );
+
+  logger.info(
+    formatInfo(
+      `Environment ready under: ${activeRegistry.root}`,
+      VERDACCIO_ENV_TOKEN
+    )
   );
 
   return activeRegistry;

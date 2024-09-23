@@ -2,15 +2,12 @@ import type { ExecutorContext } from '@nx/devkit';
 
 export function normalizeExecutorOptions<
   T extends ExecutorContext,
-  I extends Record<string, unknown> & {
-    environmentProject?: string;
-    environmentRoot?: string;
-  }
+  I extends Record<string, unknown>
 >(
   context: T,
   options: I
 ): T & {
-  options: I & { environmentRoot: string };
+  options: I;
 } {
   return {
     ...context,
