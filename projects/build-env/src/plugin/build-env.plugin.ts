@@ -48,7 +48,6 @@ export function isNpmEnv(
   const {
     filterByTags: environmentsTagFilters,
     targetNames: environmentTargetNames,
-    environmentsDir,
   } = options;
 
   if (!existingTargetNames || !environmentTargetNames) {
@@ -142,7 +141,10 @@ export const createNodes: CreateNodes = [
     }
     const projectRoot = dirname(projectConfigurationFile);
 
-    if(!isNpmEnv(projectConfiguration, environments) && !isPublishable(projectConfiguration, publishable)) {
+    if (
+      !isNpmEnv(projectConfiguration, environments) &&
+      !isPublishable(projectConfiguration, publishable)
+    ) {
       return {};
     }
 

@@ -5,7 +5,6 @@ import { join, relative } from 'node:path';
 import { executeProcess } from '../../internal/execute-process';
 import { objectToCliArgs } from '../../internal/terminal';
 import { getTargetOutputPath } from '../../internal/target';
-import { normalizeExecutorOptions } from '../internal/normalize-options';
 import { NPMRC_FILENAME } from '../../internal/constants';
 import * as process from 'process';
 
@@ -22,9 +21,8 @@ export default async function runNpmPublishExecutor(
   options: NpmPublishExecutorOptions,
   context: ExecutorContext
 ) {
-  const normalizedOptions = normalizeExecutorOptions(context, options);
-  const { projectsConfigurations, options: parsedOptions } = normalizedOptions;
-  const { environmentRoot } = parsedOptions;
+  const { projectsConfigurations } = context;
+  const { environmentRoot } = options;
 
   const { projectName } = context;
   const { targets } = projectsConfigurations.projects[projectName];

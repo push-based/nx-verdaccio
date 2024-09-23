@@ -1,15 +1,14 @@
-import { type ExecutorContext, logger } from '@nx/devkit';
+import { type ExecutorContext, logger, runExecutor } from '@nx/devkit';
 import type { BootstrapExecutorOptions } from './schema';
 import {
   bootstrapEnvironment,
-  BootstrapEnvironmentResult,
+  type BootstrapEnvironmentResult,
 } from './bootstrap-env';
-import { normalizeExecutorOptions } from '../internal/normalize-options';
 import { formatInfo } from '../../internal/logging';
 import { VERDACCIO_ENV_TOKEN } from './npm';
-import runKillProcessExecutor from '../kill-process/executor';
 import { join } from 'node:path';
 import { VERDACCIO_REGISTRY_JSON } from './constants';
+import { DEFAULT_STOP_VERDACCIO_TARGET } from '../../internal/constants';
 
 export type BootstrapExecutorOutput = {
   success: boolean;
@@ -21,12 +20,8 @@ export default async function runBootstrapExecutor(
   options: BootstrapExecutorOptions,
   context: ExecutorContext
 ) {
-  const { options: normalizedOptions } = normalizeExecutorOptions(
-    context,
-    options
-  );
-  const { projectName } = context;
-  const { keepServerRunning, environmentRoot } = normalizedOptions;
+  const { configurationName, projectName } = context;
+  const { keepServerRunning, environmentRoot } = options;
 
   logger.info(
     `Execute @push-based/build-env:bootstrap with options: ${JSON.stringify(
@@ -58,7 +53,12 @@ export default async function runBootstrapExecutor(
       formatInfo(`Verdaccio server running under ${url}`, VERDACCIO_ENV_TOKEN)
     );
   } else {
-    await runKillProcessExecutor(
+    await runExecutor(
+      {
+        project: projectName,
+        target: DEFAULT_STOP_VERDACCIO_TARGET,
+        configuration: configurationName,
+      },
       {
         filePath: join(environmentRoot, VERDACCIO_REGISTRY_JSON),
       },

@@ -1,13 +1,10 @@
 import { type ExecutorContext, logger, readJsonFile } from '@nx/devkit';
-
 import type { NpmInstallExecutorOptions } from './schema';
 import { join } from 'node:path';
 import { executeProcess } from '../../internal/execute-process';
 import { objectToCliArgs } from '../../internal/terminal';
 import type { PackageJson } from 'nx/src/utils/package-json';
 import { getTargetOutputPath } from '../../internal/target';
-import { normalizeExecutorOptions } from '../internal/normalize-options';
-// import { NPMRC_FILENAME } from '../../internal/constants';
 
 export type NpmInstallExecutorOutput = {
   success: boolean;
@@ -19,11 +16,7 @@ export default async function runNpmInstallExecutor(
   options: NpmInstallExecutorOptions,
   context: ExecutorContext
 ) {
-  const {
-    projectName,
-    projectsConfigurations,
-    options: opt,
-  } = normalizeExecutorOptions(context, options);
+  const { projectName, projectsConfigurations } = context;
 
   const packageDistPath = getTargetOutputPath(
     projectsConfigurations.projects[projectName]?.targets['build']
@@ -31,7 +24,7 @@ export default async function runNpmInstallExecutor(
   const { name: packageName, version } = readJsonFile<PackageJson>(
     join(packageDistPath, 'package.json')
   );
-  const { pkgVersion = version, environmentRoot } = opt;
+  const { pkgVersion = version, environmentRoot } = options;
   const packageNameAndVersion = `${packageName}@${pkgVersion}`;
 
   logger.info(`Installing ${packageNameAndVersion} in ${environmentRoot}`);

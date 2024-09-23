@@ -1,8 +1,8 @@
 import runBootstrapExecutor from './executor';
-import * as bootstrapEnvModule from './bootstrap-env';
 import * as killProcessModule from '../kill-process/executor';
-import { beforeEach, expect, vi, it, describe, afterEach } from 'vitest';
-import { logger } from '@nx/devkit';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import * as devkit from '@nx/devkit';
+import { DEFAULT_STOP_VERDACCIO_TARGET } from '../../internal/constants';
 
 vi.mock('@nx/devkit', async () => {
   const actual = await vi.importActual('@nx/devkit');
@@ -16,14 +16,11 @@ vi.mock('@nx/devkit', async () => {
 });
 
 describe('runBootstrapExecutor', () => {
-  const bootstrapEnvironmentSpy = vi.spyOn(
-    bootstrapEnvModule,
-    'bootstrapEnvironment'
-  );
+  const runExecutorSpy = vi.spyOn(devkit, 'runExecutor');
   const killProcessModuleSpy = vi.spyOn(killProcessModule, 'default');
 
   beforeEach(() => {
-    bootstrapEnvironmentSpy.mockResolvedValue({
+    runExecutorSpy.mockResolvedValue({
       registry: {
         host: 'localhost',
         pid: 7777,
@@ -41,7 +38,7 @@ describe('runBootstrapExecutor', () => {
     });
   });
   afterEach(() => {
-    bootstrapEnvironmentSpy.mockReset();
+    runExecutorSpy.mockReset();
     killProcessModuleSpy.mockReset();
   });
 
@@ -83,11 +80,18 @@ describe('runBootstrapExecutor', () => {
       )}`
     );
 
-    expect(bootstrapEnvironmentSpy).toHaveBeenCalledTimes(1);
-    expect(bootstrapEnvironmentSpy).toHaveBeenCalledWith({
-      projectName: 'my-lib-e2e',
-      environmentRoot: 'tmp/environments/my-lib-e2e',
-    });
+    expect(runExecutorSpy).toHaveBeenCalledTimes(1);
+    expect(runExecutorSpy).toHaveBeenCalledWith(
+      {
+        project: 'my-lib-e2e',
+        target: DEFAULT_STOP_VERDACCIO_TARGET,
+        configuration: undefined,
+      },
+      {
+        projectName: 'my-lib-e2e',
+        environmentRoot: 'tmp/environments/my-lib-e2e',
+      }
+    );
   });
 
   it('should pass options to bootstrapEnvironment', async () => {
@@ -116,7 +120,7 @@ describe('runBootstrapExecutor', () => {
       command: 'Bootstraped environemnt successfully.',
     });
 
-    expect(bootstrapEnvironmentSpy).toHaveBeenCalledWith(
+    expect(runExecutorSpy).toHaveBeenCalledWith(
       expect.objectContaining({
         environmentRoot: 'static-environments/dummy-react-app',
       })
@@ -124,7 +128,7 @@ describe('runBootstrapExecutor', () => {
   });
 
   it('should throw if bootstrapping environment fails', async () => {
-    bootstrapEnvironmentSpy.mockRejectedValue(
+    runExecutorSpy.mockRejectedValue(
       new Error('Failed to bootstrap environment')
     );
     await expect(
@@ -160,8 +164,8 @@ describe('runBootstrapExecutor', () => {
       Error('Failed to bootstrap environment')
     );
 
-    expect(bootstrapEnvironmentSpy).toHaveBeenCalledTimes(1);
-    expect(bootstrapEnvironmentSpy).toHaveBeenCalledWith({
+    expect(runExecutorSpy).toHaveBeenCalledTimes(1);
+    expect(runExecutorSpy).toHaveBeenCalledWith({
       projectName: 'my-lib-e2e',
     });
   });

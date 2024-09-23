@@ -9,7 +9,6 @@ import { executeProcess } from '../../internal/execute-process';
 import { objectToCliArgs } from '../../internal/terminal';
 import type { VerdaccioProcessResult } from '../bootstrap/verdaccio-registry';
 import type { SetupEnvironmentExecutorOptions } from './schema';
-import { normalizeExecutorOptions } from '../internal/normalize-options';
 
 import { VERDACCIO_REGISTRY_JSON } from '../bootstrap/constants';
 import {
@@ -28,15 +27,11 @@ export default async function runSetupEnvironmentExecutor(
   terminalAndExecutorOptions: SetupEnvironmentExecutorOptions,
   context: ExecutorContext
 ) {
-  const { configurationName: configuration } = context;
-  const normalizedContext = normalizeExecutorOptions(
-    context,
-    terminalAndExecutorOptions
-  );
-  const { options: normalizedOptions, projectName } = normalizedContext;
+  const { configurationName: configuration, projectName } = context;
 
   try {
-    const { verbose, environmentRoot, keepServerRunning } = normalizedOptions;
+    const { verbose, environmentRoot, keepServerRunning } =
+      terminalAndExecutorOptions;
 
     await runExecutor(
       {
@@ -45,7 +40,7 @@ export default async function runSetupEnvironmentExecutor(
         configuration,
       },
       {
-        ...normalizedOptions,
+        ...terminalAndExecutorOptions,
         // we always want to keep the server running as in the following step we install packages
         // the keepServerRunning option is only used to stop the server after the installation (or keep it running for debug reasons)
         keepServerRunning: true,

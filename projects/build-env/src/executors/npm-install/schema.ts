@@ -3,4 +3,5 @@ export type NpmInstallExecutorOptions = Partial<{
   environmentProject: string;
   verbose: boolean;
   printConfig: boolean;
+  environmentRoot: string;
 }>;

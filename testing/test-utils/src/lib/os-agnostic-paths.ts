@@ -1,8 +1,4 @@
-import type {
-  AuditOutput,
-  AuditOutputs,
-  AuditReport,
-} from '@code-pushup/models';
+import type { AuditOutput, AuditOutputs, Issue } from '@code-pushup/models';
 
 const AGNOSTIC_PATH_SEP_REGEX = /[/\\]/g;
 const OS_AGNOSTIC_PATH_SEP = '/';
@@ -69,7 +65,7 @@ export function osAgnosticPath(filePath?: string): string | undefined {
   // path is outside cwd (Users/repo/../my-folder/my-file.ts)
   if (
     osAgnosticPathWithoutCwd.startsWith(
-      `${OS_AGNOSTIC_PATH_SEP}..${OS_AGNOSTIC_PATH_SEP}`,
+      `${OS_AGNOSTIC_PATH_SEP}..${OS_AGNOSTIC_PATH_SEP}`
     )
   ) {
     return osAgnosticPathWithoutCwd.slice(1); // remove the leading '/'
@@ -100,11 +96,10 @@ export function osAgnosticPath(filePath?: string): string | undefined {
   return osAgnosticPathWithoutCwd;
 }
 
-export function osAgnosticAudit<T = AuditOutput | AuditReport>(
-  audit: T,
-): T {
-  const { issues = [] } = audit?.details ?? {} as AuditOutput;
-  if (issues.every(({ source }) => source == null)) {
+export function osAgnosticAudit<T extends AuditOutput>(audit: T): T {
+  const { details } = audit;
+  const { issues } = details ?? {};
+  if (!issues || issues.every(({ source }) => source == null)) {
     return audit;
   }
   return {
@@ -119,7 +114,7 @@ export function osAgnosticAudit<T = AuditOutput | AuditReport>(
                 ...issue.source,
                 file: osAgnosticPath(issue.source.file),
               },
-            },
+            }
       ),
     },
   };
