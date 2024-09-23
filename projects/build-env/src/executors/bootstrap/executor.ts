@@ -16,7 +16,7 @@ export type BootstrapExecutorOutput = {
   error?: Error;
 };
 
-export default async function runBootstrapExecutor(
+export async function bootstrapExecutor(
   options: BootstrapExecutorOptions,
   context: ExecutorContext
 ) {
@@ -68,6 +68,8 @@ export default async function runBootstrapExecutor(
 
   return Promise.resolve({
     success: true,
-    command: 'Bootstraped environemnt successfully.',
+    command: 'Bootstrapped environment successfully.',
   } satisfies BootstrapExecutorOutput);
 }
+
+export default bootstrapExecutor;
