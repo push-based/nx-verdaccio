@@ -11,6 +11,7 @@
   },
   "devDependencies": {
     "@code-pushup/cli": "^0.50.0",
+    "@code-pushup/core": "^0.50.0",
     "@code-pushup/models": "^0.50.0",
     "@code-pushup/utils": "^0.50.0",
     "@nx/devkit": "19.8.0",
