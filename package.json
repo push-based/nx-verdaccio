@@ -10,6 +10,9 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
+    "@code-pushup/core": "^0.50.0",
+    "@code-pushup/models": "^0.50.0",
+    "@code-pushup/utils": "^0.50.0",
     "@nx/devkit": "19.7.3",
     "@nx/esbuild": "19.7.3",
     "@nx/eslint": "19.7.3",
