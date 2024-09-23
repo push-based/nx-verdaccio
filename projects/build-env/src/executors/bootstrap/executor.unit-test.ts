@@ -45,7 +45,7 @@ describe('runBootstrapExecutor', () => {
         storage: 'tmp/storage',
         url: 'http://localhost:4873',
       },
-      root: `tmp/environments/${e2eProjectName}`,
+      environmentRoot: `tmp/environments/${e2eProjectName}`,
       stop: expect.any(Function),
     });
     runExecutorSpy.mockResolvedValueOnce({

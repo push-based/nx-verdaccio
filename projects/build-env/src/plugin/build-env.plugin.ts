@@ -16,7 +16,7 @@ import {
   DEFAULT_INSTALL_TARGET,
   DEFAULT_SETUP_TARGET,
 } from '../internal/constants';
-import type { StarVerdaccioOptions } from '../executors/bootstrap/verdaccio-registry';
+import type { StartVerdaccioOptions } from '../executors/bootstrap/verdaccio-registry';
 import { VERDACCIO_REGISTRY_JSON } from '../executors/bootstrap/constants';
 import { uniquePort } from '../executors/bootstrap/unique-port';
 
@@ -178,7 +178,7 @@ function verdaccioTargets(
     NormalizedCreateNodeOptions['environments'],
     'environmentsDir'
   > &
-    StarVerdaccioOptions
+    StartVerdaccioOptions
 ): Record<string, TargetConfiguration> {
   const { name: environmentProject } = projectConfig;
   const { environmentsDir, ...verdaccioOptions } = options;
@@ -227,7 +227,6 @@ function getEnvTargets(
         },
       ],
       options: { environmentRoot },
-      command: 'echo Dependencies installed!',
     },
     // runs bootstrap-env, install-env and stop-verdaccio
     [DEFAULT_SETUP_TARGET]: {

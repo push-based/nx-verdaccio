@@ -71,7 +71,7 @@ export type VerdaccioExecuterOptions = {
   clear?: boolean;
 };
 
-export type StarVerdaccioOptions = VerdaccioExecuterOptions &
+export type StartVerdaccioOptions = VerdaccioExecuterOptions &
   StarVerdaccioOnlyOptions;
 
 export async function startVerdaccioServer({
@@ -82,7 +82,7 @@ export async function startVerdaccioServer({
   clear = true,
   verbose = true,
   ...opt
-}: StarVerdaccioOptions): Promise<RegistryResult> {
+}: StartVerdaccioOptions): Promise<RegistryResult> {
   let verdaccioIsRunning = false;
 
   const startServerPromise = () =>

@@ -28,12 +28,13 @@ export default async function runSetupEnvironmentExecutor(
   context: ExecutorContext
 ) {
   const { configurationName: configuration, projectName } = context;
-
+  const { verbose, environmentRoot, keepServerRunning } =
+    terminalAndExecutorOptions;
   try {
-    const { verbose, environmentRoot, keepServerRunning } =
-      terminalAndExecutorOptions;
-
-    await runExecutor(
+    logger.info(
+      `Bootstrapping environment for ${projectName} in ${environmentRoot}`
+    );
+    for await (const s of await runExecutor(
       {
         project: projectName,
         target: DEFAULT_BOOTSTRAP_TARGET,
@@ -42,12 +43,24 @@ export default async function runSetupEnvironmentExecutor(
       {
         ...terminalAndExecutorOptions,
         // we always want to keep the server running as in the following step we install packages
-        // the keepServerRunning option is only used to stop the server after the installation (or keep it running for debug reasons)
+        // the `keepServerRunning` passed in `options` is only used to stop the server after the installation (or keep it running for debug reasons)
         keepServerRunning: true,
       },
       context
-    );
+    )) {
+    }
+  } catch (error) {
+    logger.error(error);
+    return {
+      success: false,
+      command: `Fails executing target ${DEFAULT_BOOTSTRAP_TARGET}\n ${error.message}`,
+    };
+  }
 
+  try {
+    logger.info(`Installing packages for ${projectName} in ${environmentRoot}`);
+    if (verbose) {
+    }
     await executeProcess({
       command: 'nx',
       args: objectToCliArgs({
@@ -57,9 +70,17 @@ export default async function runSetupEnvironmentExecutor(
       cwd: process.cwd(),
       ...(verbose ? { verbose } : {}),
     });
+  } catch (error) {
+    logger.error(error);
+    return {
+      success: false,
+      command: `Fails executing target ${DEFAULT_INSTALL_TARGET}\n ${error.message}`,
+    };
+  }
 
+  try {
     if (!keepServerRunning) {
-      await await runExecutor(
+      for await (const s of await runExecutor(
         {
           project: projectName,
           target: DEFAULT_STOP_VERDACCIO_TARGET,
@@ -70,7 +91,8 @@ export default async function runSetupEnvironmentExecutor(
           filePath: join(environmentRoot, VERDACCIO_REGISTRY_JSON),
         },
         context
-      );
+      )) {
+      }
     } else {
       const { url } = readJsonFile<VerdaccioProcessResult>(
         join(environmentRoot, VERDACCIO_REGISTRY_JSON)
@@ -78,7 +100,6 @@ export default async function runSetupEnvironmentExecutor(
       logger.info(`Verdaccio server kept running under : ${url}`);
     }
   } catch (error) {
-    // nx build-env cli-e2e
     logger.error(error);
     return {
       success: false,

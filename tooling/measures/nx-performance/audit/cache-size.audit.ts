@@ -1,4 +1,10 @@
-import { Audit, AuditOutput, Table, Issue } from '@code-pushup/models';
+import {
+  Audit,
+  AuditOutput,
+  Table,
+  Issue,
+  TableRowObject,
+} from '@code-pushup/models';
 import {
   crawlFileSystem,
   executeProcess,
@@ -41,17 +47,50 @@ export async function cacheSizeAudits(
 
   const cacheSizeResults = await projectTaskCacheSizeData(cacheSizeTasks);
   return cacheSizeResults.map(
-    ({ cacheSize, data, task, issues }): AuditOutput => ({
-      slug: getCacheSizeAuditSlug(task),
-      score: scoreProjectTaskCacheSize(cacheSize, maxCacheSize),
-      value: cacheSize,
-      displayValue: formatBytes(cacheSize),
-      details: {
-        table: data,
-        issues,
-      },
-    })
+    ({ cacheSize, data, task, issues }): AuditOutput => {
+      const { rows, ...restTable } = data;
+
+      return {
+        slug: getCacheSizeAuditSlug(task),
+        score: scoreProjectTaskCacheSize(cacheSize, maxCacheSize),
+        value: cacheSize,
+        displayValue: formatBytes(cacheSize),
+        details: {
+          table: {
+            ...restTable,
+            rows: prepareFileEntries(rows as FileSizeEntry[], {
+              maxFiles: 30,
+            }) as TableRowObject[],
+          },
+          issues,
+        },
+      };
+    }
   );
+}
+
+export function prepareFileEntries(
+  rows: FileSizeEntry[],
+  options: {
+    maxFiles?: number;
+  } = {}
+): (Omit<FileSizeEntry, 'size'> & { size: string })[] {
+  const { maxFiles = 10 } = options;
+  const topSizes = rows
+    .sort((a, b) => b.size - a.size)
+    .slice(0, maxFiles)
+    .map(({ file, size }) => ({
+      file,
+      size: formatBytes(size),
+    }));
+
+  if (maxFiles >= rows.length) {
+    return topSizes;
+  }
+  return [
+    ...topSizes,
+    { file: `and ${rows.length - maxFiles} more...`, size: '...' },
+  ];
 }
 
 export function scoreProjectTaskCacheSize(
@@ -120,6 +159,11 @@ export async function projectTaskCacheSizeData<T extends string>(
   return results;
 }
 
+export type FileSizeEntry = {
+  file: string;
+  size: number;
+};
+
 export async function folderSize(options: {
   directory: string;
   pattern?: string | RegExp;
@@ -159,8 +203,8 @@ export async function folderSize(options: {
       ],
       rows: fileSizes.map(({ file, size }) => ({
         file,
-        size: formatBytes(size),
-      })),
+        size,
+      })) satisfies FileSizeEntry[],
     },
   };
 }

@@ -8,7 +8,10 @@ import { formatInfo } from '../../internal/logging';
 import { VERDACCIO_ENV_TOKEN } from './npm';
 import { join } from 'node:path';
 import { VERDACCIO_REGISTRY_JSON } from './constants';
-import { DEFAULT_STOP_VERDACCIO_TARGET } from '../../internal/constants';
+import {
+  DEFAULT_BOOTSTRAP_TARGET,
+  DEFAULT_STOP_VERDACCIO_TARGET,
+} from '../../internal/constants';
 
 export type BootstrapExecutorOutput = {
   success: boolean;
@@ -19,12 +22,12 @@ export type BootstrapExecutorOutput = {
 export async function bootstrapExecutor(
   options: BootstrapExecutorOptions,
   context: ExecutorContext
-) {
+): Promise<BootstrapExecutorOutput> {
   const { configurationName, projectName } = context;
   const { keepServerRunning, environmentRoot } = options;
 
   logger.info(
-    `Execute @push-based/build-env:bootstrap with options: ${JSON.stringify(
+    `Execute @push-based/build-env:${DEFAULT_BOOTSTRAP_TARGET} with options: ${JSON.stringify(
       options,
       null,
       2
@@ -53,7 +56,7 @@ export async function bootstrapExecutor(
       formatInfo(`Verdaccio server running under ${url}`, VERDACCIO_ENV_TOKEN)
     );
   } else {
-    await runExecutor(
+    for await (const s of await runExecutor(
       {
         project: projectName,
         target: DEFAULT_STOP_VERDACCIO_TARGET,
@@ -63,13 +66,14 @@ export async function bootstrapExecutor(
         filePath: join(environmentRoot, VERDACCIO_REGISTRY_JSON),
       },
       context
-    );
+    )) {
+    }
   }
 
-  return Promise.resolve({
+  return {
     success: true,
     command: 'Bootstrapped environment successfully.',
-  } satisfies BootstrapExecutorOutput);
+  };
 }
 
 export default bootstrapExecutor;

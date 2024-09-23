@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { ensureDirectoryExists } from '../../internal/file-system';
 import { formatError, formatInfo } from '../../internal/logging';
 import { logger } from '@nx/devkit';
-import type { VerdaccioProcessResult } from './verdaccio-registry';
+import type { VercaddioServerResult } from './verdaccio-registry';
 import { objectToCliArgs } from '../../internal/terminal';
 
 export const NPM_ENV_TOKEN = 'Npm Env: ';
@@ -49,11 +49,11 @@ export async function setupNpmWorkspace(
 export const VERDACCIO_ENV_TOKEN = 'Verdaccio Env: ';
 
 export type Environment = {
-  root: string;
+  environmentRoot: string;
 };
 
 export type ConfigureRegistryOptions = Pick<
-  VerdaccioProcessResult,
+  VercaddioServerResult,
   'port' | 'host' | 'url'
 > & {
   userconfig?: string;
@@ -93,7 +93,7 @@ export function configureRegistry(
 }
 
 export type UnconfigureRegistryOptions = Pick<
-  VerdaccioProcessResult,
+  VercaddioServerResult,
   'port' | 'host'
 > & {
   userconfig?: string;
