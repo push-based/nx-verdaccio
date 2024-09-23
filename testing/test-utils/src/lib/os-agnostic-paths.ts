@@ -100,17 +100,17 @@ export function osAgnosticPath(filePath?: string): string | undefined {
   return osAgnosticPathWithoutCwd;
 }
 
-export function osAgnosticAudit<T extends AuditOutput | AuditReport>(
+export function osAgnosticAudit<T = AuditOutput | AuditReport>(
   audit: T,
 ): T {
-  const { issues = [] } = audit.details ?? {};
+  const { issues = [] } = audit?.details ?? {} as AuditOutput;
   if (issues.every(({ source }) => source == null)) {
     return audit;
   }
   return {
     ...audit,
     details: {
-      issues: issues.map(issue =>
+      issues: issues.map((issue: Issue) =>
         issue.source == null
           ? issue
           : {
