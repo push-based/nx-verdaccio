@@ -140,10 +140,12 @@ export const createNodes: CreateNodes = [
     ) {
       throw new Error('Project name is required');
     }
-    const projectName = projectConfiguration.name;
-    const tags = projectConfiguration?.tags ?? [];
-
     const projectRoot = dirname(projectConfigurationFile);
+
+    if(!isNpmEnv(projectConfiguration, environments) && !isPublishable(projectConfiguration, publishable)) {
+      return {};
+    }
+
     return {
       projects: {
         [projectRoot]: {

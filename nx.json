@@ -81,6 +81,7 @@
     }
   },
   "plugins": [
+    "./examples/e2e/cli-e2e-original/tooling/original.plugin.ts",
     {
       "plugin": "./projects/build-env/src/plugin/build-env.plugin.ts",
       "options": {
