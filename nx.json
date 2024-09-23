@@ -83,7 +83,7 @@
   "plugins": [
     "./examples/e2e/cli-e2e-original/tooling/original.plugin.ts",
     {
-      "plugin": "@push-based/build-env",
+      "plugin": "./projects/build-env/src/plugin/build-env.plugin.ts",
       "options": {
         "publishable": {
           "filterByTags": ["publishable"]
