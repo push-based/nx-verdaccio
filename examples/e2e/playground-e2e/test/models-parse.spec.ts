@@ -1,12 +1,15 @@
 import { basename, dirname, join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { mkdir, writeFile, rm } from 'node:fs/promises';
-import { executeProcess, getTestFixturesDist } from '@push-based/test-utils';
-import { getEnvironmentRoot } from '@push-based/build-env';
+import {
+  executeProcess,
+  getTestEnvironmentRoot,
+  getTestFixturesDist,
+} from '@push-based/test-utils';
 
 describe('models - parse user', () => {
   const fixturesDist = getTestFixturesDist('parse-user', {
-    root: getEnvironmentRoot(),
+    root: getTestEnvironmentRoot(process.env['NX_TASK_TARGET_PROJECT']),
   });
 
   afterEach(async () => {

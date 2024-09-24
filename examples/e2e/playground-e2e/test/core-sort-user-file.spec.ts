@@ -1,14 +1,17 @@
 import { basename, join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { mkdir, rm, writeFile } from 'node:fs/promises';
-import { executeProcess, getTestFixturesDist } from '@push-based/test-utils';
+import {
+  executeProcess,
+  getTestEnvironmentRoot,
+  getTestFixturesDist,
+} from '@push-based/test-utils';
 import { readJsonFile } from 'nx/src/utils/fileutils';
 import { User } from '@push-based/models';
-import { getEnvironmentRoot } from '@push-based/build-env';
 
 describe('core - sort user.json', () => {
   const fixturesDist = getTestFixturesDist('sort-user-json', {
-    root: getEnvironmentRoot(),
+    root: getTestEnvironmentRoot(process.env['NX_TASK_TARGET_PROJECT']),
   });
 
   afterEach(async () => {
