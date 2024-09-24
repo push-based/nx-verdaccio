@@ -1,5 +1,5 @@
 {
-  "extends": ["../../.eslintrc.json"],
+  "extends": ["../../.eslintrc.base.json"],
   "ignorePatterns": ["!**/*"],
   "overrides": [
     {
@@ -9,12 +9,10 @@
     {
       "files": ["*.ts", "*.tsx"],
       "parserOptions": {
-        "project": ["projects/build-env/tsconfig.*?.json"]
+        "project": ["projects/nx-verdaccio-env/tsconfig.*?.json"]
       },
       "rules": {
-        // Nx plugins don't yet support ESM: https://github.com/nrwl/nx/issues/15682
         "unicorn/prefer-module": "off",
-        // used instead of verbatimModuleSyntax tsconfig flag (requires ESM)
         "@typescript-eslint/consistent-type-imports": [
           "warn",
           {
@@ -24,7 +22,9 @@
         ],
         "@typescript-eslint/consistent-type-exports": [
           "warn",
-          { "fixMixedExportsWithInlineTypeSpecifier": true }
+          {
+            "fixMixedExportsWithInlineTypeSpecifier": true
+          }
         ]
       }
     },

@@ -15,6 +15,12 @@ import {
   DEFAULT_BOOTSTRAP_TARGET,
   DEFAULT_INSTALL_TARGET,
   DEFAULT_SETUP_TARGET,
+  PACKAGE_NAME,
+  KILL_PROCESS_EXECUTOR_NAME,
+  BOOTSTRAP_EXECUTOR_NAME,
+  SETUP_EXECUTOR_NAME,
+  NPM_PUBLISH_EXECUTOR_NAME,
+  NPM_INSTALL_EXECUTOR_NAME,
 } from '../internal/constants';
 import type { StartVerdaccioOptions } from '../executors/bootstrap/verdaccio-registry';
 import { VERDACCIO_REGISTRY_JSON } from '../executors/bootstrap/constants';
@@ -201,7 +207,7 @@ function verdaccioTargets(
       },
     },
     [DEFAULT_STOP_VERDACCIO_TARGET]: {
-      executor: '@push-based/build-env:kill-process',
+      executor: `${PACKAGE_NAME}:${KILL_PROCESS_EXECUTOR_NAME}`,
       options: {
         filePath: join(environmentsDir, VERDACCIO_REGISTRY_JSON),
         ...verdaccioOptions,
@@ -219,7 +225,7 @@ function getEnvTargets(
   const environmentRoot = join(environmentsDir, envProject);
   return {
     [DEFAULT_BOOTSTRAP_TARGET]: {
-      executor: '@push-based/build-env:bootstrap',
+      executor: `${PACKAGE_NAME}:${BOOTSTRAP_EXECUTOR_NAME}`,
       options: { environmentRoot },
     },
     // just here to execute dependent npm-install tasks with the correct environmentProject
@@ -236,7 +242,7 @@ function getEnvTargets(
     // runs bootstrap-env, install-env and stop-verdaccio
     [DEFAULT_SETUP_TARGET]: {
       outputs: ['{options.environmentRoot}'],
-      executor: '@push-based/build-env:setup',
+      executor: `${PACKAGE_NAME}:${SETUP_EXECUTOR_NAME}`,
       options: {
         environmentRoot,
       },
@@ -285,7 +291,7 @@ function getNpmTargets(): Record<string, TargetConfiguration> {
           params: 'forward',
         },
       ],
-      executor: '@push-based/build-env:npm-publish',
+      executor: `${PACKAGE_NAME}:${NPM_PUBLISH_EXECUTOR_NAME}`,
     },
     [DEFAULT_NPM_INSTALL_TARGET]: {
       dependsOn: [
@@ -299,7 +305,7 @@ function getNpmTargets(): Record<string, TargetConfiguration> {
           params: 'forward',
         },
       ],
-      executor: '@push-based/build-env:npm-install',
+      executor: `${PACKAGE_NAME}:${NPM_INSTALL_EXECUTOR_NAME}`,
     },
   };
 }
