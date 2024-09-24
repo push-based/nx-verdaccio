@@ -1,9 +1,4 @@
-import {
-  type ExecutorContext,
-  logger,
-  readJsonFile,
-  runExecutor,
-} from '@nx/devkit';
+import { type ExecutorContext, logger, readJsonFile } from '@nx/devkit';
 import { join } from 'node:path';
 import { executeProcess } from '../../internal/execute-process';
 import { objectToCliArgs } from '../../internal/terminal';
@@ -16,6 +11,7 @@ import {
   DEFAULT_INSTALL_TARGET,
   DEFAULT_STOP_VERDACCIO_TARGET,
 } from '../../internal/constants';
+import { runSingleExecutor } from '../../internal/run-executor';
 
 export type ExecutorOutput = {
   success: boolean;
@@ -31,7 +27,7 @@ export default async function runSetupEnvironmentExecutor(
   const { verbose, environmentRoot, keepServerRunning } =
     terminalAndExecutorOptions;
   try {
-    for await (const s of await runExecutor(
+    await runSingleExecutor(
       {
         project: projectName,
         target: DEFAULT_BOOTSTRAP_TARGET,
@@ -44,8 +40,7 @@ export default async function runSetupEnvironmentExecutor(
         keepServerRunning: true,
       },
       context
-    )) {
-    }
+    );
   } catch (error) {
     logger.error(error);
     return {
@@ -74,7 +69,7 @@ export default async function runSetupEnvironmentExecutor(
 
   try {
     if (!keepServerRunning) {
-      for await (const s of await runExecutor(
+      await runSingleExecutor(
         {
           project: projectName,
           target: DEFAULT_STOP_VERDACCIO_TARGET,
@@ -85,8 +80,7 @@ export default async function runSetupEnvironmentExecutor(
           filePath: join(environmentRoot, VERDACCIO_REGISTRY_JSON),
         },
         context
-      )) {
-      }
+      );
     } else {
       const { url } = readJsonFile<VerdaccioProcessResult>(
         join(environmentRoot, VERDACCIO_REGISTRY_JSON)

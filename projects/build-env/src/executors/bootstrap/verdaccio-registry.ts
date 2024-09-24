@@ -1,12 +1,13 @@
 import { bold } from 'ansis';
-import { join } from 'node:path';
 import { logger } from '@nx/devkit';
 import { objectToCliArgs } from '../../internal/terminal';
 import { executeProcess } from '../../internal/execute-process';
 import { uniquePort } from './unique-port';
-import { getEnvironmentsRoot } from '../../internal/setup';
 import { formatError, formatInfo } from '../../internal/logging';
-import { DEFAULT_START_VERDACCIO_TARGET } from '../../internal/constants';
+import {
+  DEFAULT_START_VERDACCIO_TARGET,
+  DEFAULT_VERDACCIO_STORAGE_DIR,
+} from '../../internal/constants';
 
 const VERDACCIO_TOKEN = 'Verdaccio: ';
 
@@ -77,10 +78,10 @@ export type StartVerdaccioOptions = VerdaccioExecuterOptions &
 export async function startVerdaccioServer({
   projectName,
   port = String(uniquePort()),
-  storage = join(getEnvironmentsRoot(projectName), 'storage'),
   location = 'none',
   clear = true,
   verbose = true,
+  storage = DEFAULT_VERDACCIO_STORAGE_DIR,
   ...opt
 }: StartVerdaccioOptions): Promise<RegistryResult> {
   let verdaccioIsRunning = false;
@@ -91,11 +92,11 @@ export async function startVerdaccioServer({
         command: 'nx',
         args: objectToCliArgs({
           _: [DEFAULT_START_VERDACCIO_TARGET, projectName ?? '', '--'],
-          storage,
           port,
           verbose,
           location,
           clear,
+          storage,
           ...opt,
         }),
         // This ensures the process runs independently and does not get closed on parent process exit

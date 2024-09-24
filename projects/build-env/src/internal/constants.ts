@@ -1,4 +1,10 @@
 import { join } from 'node:path';
+
+export const DEFAULT_VERDACCIO_STORAGE_DIR = join(
+  'tmp',
+  'local-registry',
+  'storage'
+);
 export const DEFAULT_ENVIRONMENTS_OUTPUT_DIR = join('tmp', 'environments');
 export const NPMRC_FILENAME = '.npmrc';
 export const DEFAULT_START_VERDACCIO_TARGET = 'build-env-verdaccio-start';

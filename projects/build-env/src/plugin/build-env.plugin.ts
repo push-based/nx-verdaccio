@@ -154,7 +154,9 @@ export const createNodes: CreateNodes = [
           targets: {
             // start-verdaccio, stop-verdaccio
             ...(isNpmEnv(projectConfiguration, environments) &&
-              verdaccioTargets(projectConfiguration, environments)),
+              verdaccioTargets(projectConfiguration, {
+                environmentsDir: environments.environmentsDir,
+              })),
             // bootstrap-env, setup-env, install-env (intermediate target to run dependency targets+)
             ...(isNpmEnv(projectConfiguration, environments) &&
               getEnvTargets(projectConfiguration, environments)),
@@ -178,10 +180,10 @@ function verdaccioTargets(
     NormalizedCreateNodeOptions['environments'],
     'environmentsDir'
   > &
-    StartVerdaccioOptions
+    Omit<StartVerdaccioOptions, 'projectName'>
 ): Record<string, TargetConfiguration> {
   const { name: envProject } = projectConfig;
-  const { environmentsDir, ...startVerdaccioOptions } = options;
+  const { environmentsDir, ...verdaccioOptions } = options;
   const environmentDir = join(environmentsDir, envProject);
 
   return {
@@ -193,14 +195,16 @@ function verdaccioTargets(
         port: uniquePort(),
         storage: join(environmentDir, 'storage'),
         clear: true,
-        ...startVerdaccioOptions,
+        environmentDir,
+        projectName: envProject,
+        ...verdaccioOptions,
       },
     },
     [DEFAULT_STOP_VERDACCIO_TARGET]: {
       executor: '@push-based/build-env:kill-process',
       options: {
         filePath: join(environmentsDir, VERDACCIO_REGISTRY_JSON),
-        ...startVerdaccioOptions,
+        ...verdaccioOptions,
       },
     },
   };

@@ -1,4 +1,4 @@
-import { type ExecutorContext, logger, runExecutor } from '@nx/devkit';
+import { type ExecutorContext, logger } from '@nx/devkit';
 import type { BootstrapExecutorOptions } from './schema';
 import {
   bootstrapEnvironment,
@@ -12,6 +12,7 @@ import {
   DEFAULT_BOOTSTRAP_TARGET,
   DEFAULT_STOP_VERDACCIO_TARGET,
 } from '../../internal/constants';
+import { runSingleExecutor } from '../../internal/run-executor';
 
 export type BootstrapExecutorOutput = {
   success: boolean;
@@ -55,7 +56,7 @@ export async function bootstrapExecutor(
       formatInfo(`Verdaccio server running under ${url}`, VERDACCIO_ENV_TOKEN)
     );
   } else {
-    for await (const s of await runExecutor(
+    await runSingleExecutor(
       {
         project: projectName,
         target: DEFAULT_STOP_VERDACCIO_TARGET,
@@ -65,8 +66,7 @@ export async function bootstrapExecutor(
         filePath: join(environmentRoot, VERDACCIO_REGISTRY_JSON),
       },
       context
-    )) {
-    }
+    );
   }
 
   return {
