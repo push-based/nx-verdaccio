@@ -5,12 +5,12 @@ import {
   executeProcess,
   objectToCliArgs,
   getTestFixturesDist,
+  getTestEnvironmentRoot,
 } from '@push-based/test-utils';
-import { getEnvironmentRoot } from '@push-based/build-env';
 
 describe('CLI command - sort', () => {
   const fixturesDist = getTestFixturesDist('cli-command-sort', {
-    root: getEnvironmentRoot(),
+    root: getTestEnvironmentRoot(process.env['NX_TASK_TARGET_PROJECT']),
   });
 
   afterEach(async () => {

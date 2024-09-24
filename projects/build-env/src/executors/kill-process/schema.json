@@ -13,6 +13,11 @@
       "type": "boolean",
       "description": "Delete the file after killing the process"
     },
+    "environmentRoot": {
+      "type": "string",
+      "description": "The root directory for the environment",
+      "aliases": ["envRoot", "e"]
+    },
     "filePath": {
       "type": "string",
       "description": "The path to the file to kill the process for"

@@ -1,9 +1,7 @@
 import { type ExecutorContext, logger } from '@nx/devkit';
-
 import type { KillProcessExecutorOptions } from './schema';
 import { join } from 'node:path';
 import { killProcessFromPid } from './kill-process';
-import { normalizeOptions } from '../internal/normalize-options';
 import { DEFAULT_PROCESS_FILENAME } from './constant';
 
 export type ExecutorOutput = {
@@ -14,9 +12,8 @@ export type ExecutorOutput = {
 
 export default async function runKillProcessExecutor(
   options: KillProcessExecutorOptions,
-  context: ExecutorContext
+  _: ExecutorContext
 ): Promise<ExecutorOutput> {
-  const { options: opt } = normalizeOptions(context, options);
   const {
     environmentRoot,
     pid,
@@ -24,15 +21,16 @@ export default async function runKillProcessExecutor(
     dryRun = false,
     verbose = false,
     filePath = join(environmentRoot ?? '', DEFAULT_PROCESS_FILENAME),
-  } = opt;
+  } = options;
 
   logger.info(
-    `Execute @push-based/stop-verdaccio-env:kill-process with options: ${JSON.stringify(
+    `Execute @push-based/build-env:kill-process with options: ${JSON.stringify(
       options,
       null,
       2
     )}`
   );
+
   try {
     if (pid) {
       process.kill(Number(pid));

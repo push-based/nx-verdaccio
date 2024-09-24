@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { ensureDirectoryExists } from '../../internal/file-system';
 import { formatError, formatInfo } from '../../internal/logging';
 import { logger } from '@nx/devkit';
-import type { VerdaccioProcessResult } from './verdaccio-registry';
+import type { VercaddioServerResult } from './verdaccio-registry';
 import { objectToCliArgs } from '../../internal/terminal';
 
 export const NPM_ENV_TOKEN = 'Npm Env: ';
@@ -49,11 +49,18 @@ export async function setupNpmWorkspace(
 export const VERDACCIO_ENV_TOKEN = 'Verdaccio Env: ';
 
 export type Environment = {
-  root: string;
+  environmentRoot: string;
 };
 
+/**
+ * configure env with verdaccio registry as default
+ * exec commands:
+ * - `npm config set registry "${url}"
+ * - `npm config set //${host}:${port}/:_authToken "secretVerdaccioToken"`
+ * @see {@link VerdaccioProcessResult}
+ */
 export type ConfigureRegistryOptions = Pick<
-  VerdaccioProcessResult,
+  VercaddioServerResult,
   'port' | 'host' | 'url'
 > & {
   userconfig?: string;
@@ -93,15 +100,29 @@ export function configureRegistry(
 }
 
 export type UnconfigureRegistryOptions = Pick<
-  VerdaccioProcessResult,
+  VercaddioServerResult,
   'port' | 'host'
 > & {
   userconfig?: string;
 };
+
+/**
+ * unconfigure env with verdaccio registry as default
+ * exec commands:
+ * - `npm config delete //${host}:${port}/:_authToken`
+ * - `npm config delete registry`
+ * @see {@link VerdaccioProcessResult}
+ **/
 export function unconfigureRegistry(
   { port, host, userconfig }: UnconfigureRegistryOptions,
   verbose?: boolean
 ) {
+  /**
+   * Protocol-Agnostic Configuration: The use of // allows NPM to configure authentication for a registry without tying it to a specific protocol (http: or https:).
+   * This is particularly useful when the registry might be accessible via both HTTP and HTTPS.
+   *
+   * Example: //registry.npmjs.org/:_authToken=your-token
+   */
   const urlNoProtocol = `//${host}:${port}`;
   const setAuthToken = `npm config delete ${urlNoProtocol}/:_authToken ${objectToCliArgs(
     { userconfig }

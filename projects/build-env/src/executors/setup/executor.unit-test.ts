@@ -1,9 +1,11 @@
 import runSetupEnvironmentExecutor from './executor';
 import { beforeEach, expect, vi } from 'vitest';
-import * as runBuildExecutorModule from '../bootstrap/executor';
 import * as executeProcessModule from '../../internal/execute-process';
-import * as killProcessExecutorModule from '../kill-process/executor';
-import { logger } from '@nx/devkit';
+import * as devkit from '@nx/devkit';
+import {
+  DEFAULT_BOOTSTRAP_TARGET,
+  DEFAULT_STOP_VERDACCIO_TARGET,
+} from '../../internal/constants';
 
 vi.mock('@nx/devkit', async () => {
   const actual = await vi.importActual('@nx/devkit');
@@ -22,48 +24,51 @@ vi.mock('@nx/devkit', async () => {
 });
 
 describe('runSetupEnvironmentExecutor', () => {
-  const runBootstrapEnvironmentSpy = vi.spyOn(
-    runBuildExecutorModule,
-    'default'
-  );
+  const runExecutorSpy = vi.spyOn(devkit, 'runExecutor');
   const executeProcessSpy = vi.spyOn(executeProcessModule, 'executeProcess');
-  const runKillProcessExecutorSpy = vi.spyOn(
-    killProcessExecutorModule,
-    'default'
-  );
 
   beforeEach(() => {
-    runBootstrapEnvironmentSpy.mockReset();
+    runExecutorSpy.mockReset();
     executeProcessSpy.mockReset();
   });
 
   it('should setup environment correctly', async () => {
-    runBootstrapEnvironmentSpy.mockResolvedValue({
-      success: true,
-      command: 'Bootstraped environemnt successfully.',
-    });
-    runKillProcessExecutorSpy.mockResolvedValue({
-      success: true,
-      command: 'Kill process successfully',
-    });
+    runExecutorSpy
+      .mockResolvedValueOnce([
+        Promise.resolve({
+          success: true,
+          command: 'Bootstraped environemnt successfully.',
+        }),
+      ])
+      .mockResolvedValueOnce([
+        Promise.resolve({
+          success: true,
+          command: 'Kill process successfully',
+        }),
+      ]);
+    const projectName = 'my-lib-e2e';
+
+    const context = {
+      cwd: 'test',
+      isVerbose: false,
+      root: 'tmp/environments/test',
+      projectName,
+      projectsConfigurations: {
+        version: 2,
+        projects: {
+          'my-lib': {
+            root: 'e2e/my-lib-e2e',
+          },
+        },
+      },
+    };
 
     await expect(
       runSetupEnvironmentExecutor(
-        {},
         {
-          cwd: 'test',
-          isVerbose: false,
-          root: 'tmp/environments/test',
-          projectName: 'my-lib-e2e',
-          projectsConfigurations: {
-            version: 2,
-            projects: {
-              'my-lib': {
-                root: 'e2e/my-lib-e2e',
-              },
-            },
-          },
-        }
+          environmentRoot: 'tmp/environments/my-lib-e2e',
+        },
+        context
       )
     ).resolves.toStrictEqual({
       success: true,
@@ -73,43 +78,45 @@ describe('runSetupEnvironmentExecutor', () => {
     expect(executeProcessSpy).toHaveBeenCalledTimes(1);
     expect(executeProcessSpy).toHaveBeenCalledWith({
       args: [
-        'install-env',
-        'my-lib-e2e',
-        '--environmentProject="my-lib-e2e"',
-        // @TODO check for --environmentRoot too
-        expect.stringContaining('my-lib-e2e'),
+        'build-env-env-install',
+        projectName,
+        // @TODO check for --environmentRoot too be OS agnostic path
+        expect.stringContaining(projectName),
       ],
       command: 'nx',
       cwd: '/test',
-      verbose: true,
     });
 
-    expect(runKillProcessExecutorSpy).toHaveBeenCalledTimes(1);
-    expect(runKillProcessExecutorSpy).toHaveBeenCalledWith(
-      {
-        filePath: 'tmp/environments/my-lib-e2e/verdaccio-registry.json',
-        environmentProject: 'my-lib-e2e',
-        environmentRoot: 'tmp/environments/my-lib-e2e',
-      },
-      {
-        cwd: 'test',
-        isVerbose: false,
-        projectName: 'my-lib-e2e',
-        projectsConfigurations: {
-          projects: {
-            'my-lib': {
-              root: 'e2e/my-lib-e2e',
-            },
-          },
-          version: 2,
+    expect(runExecutorSpy).toHaveBeenCalledTimes(2);
+    expect(runExecutorSpy)
+      .toHaveBeenCalledWith(
+        {
+          configuration: undefined,
+          project: projectName,
+          target: DEFAULT_BOOTSTRAP_TARGET,
         },
-        root: 'tmp/environments/test',
-      }
-    );
+        {
+          environmentRoot: 'tmp/environments/my-lib-e2e',
+          keepServerRunning: true,
+        },
+        context
+      )
+      .toHaveBeenCalledWith(
+        {
+          configuration: undefined,
+          project: projectName,
+          target: DEFAULT_STOP_VERDACCIO_TARGET,
+        },
+        {
+          filePath: 'tmp/environments/my-lib-e2e/verdaccio-registry.json',
+          verbose: undefined,
+        },
+        context
+      );
   });
 
-  it('should catch error', async () => {
-    runBootstrapEnvironmentSpy.mockRejectedValue(
+  it('should catch error cause by runBootstrapEnvironment', async () => {
+    runExecutorSpy.mockRejectedValueOnce(
       new Error('Error in runBootstrapEnvironment')
     );
 
@@ -133,34 +140,57 @@ describe('runSetupEnvironmentExecutor', () => {
       )
     ).resolves.toStrictEqual({
       success: false,
-      command: Error('Error in runBootstrapEnvironment'),
+      command:
+        'Failed executing target build-env-env-bootstrap\n Error in runBootstrapEnvironment',
     });
   });
 
   it('should keep server running if keepServerRunning is passed', async () => {
-    runBootstrapEnvironmentSpy.mockResolvedValue({
-      success: true,
-      command: 'Bootstraped environemnt successfully.',
-    });
-    runKillProcessExecutorSpy.mockResolvedValue({
-      success: true,
-      command: 'Kill process successfully',
-    });
+    runExecutorSpy
+      .mockResolvedValueOnce([
+        Promise.resolve({
+          success: true,
+          command: 'Bootstraped environemnt successfully.',
+        }),
+      ])
+      .mockResolvedValueOnce([
+        Promise.resolve({
+          success: true,
+          command: 'Kill process successfully',
+        }),
+      ]);
+    const projectName = 'my-lib-e2e';
+
+    const context = {
+      cwd: 'test',
+      isVerbose: false,
+      root: 'e2e/my-lib-e2e',
+      projectName,
+      projectsConfigurations: {
+        version: 2,
+        projects: {
+          [projectName]: {
+            root: 'e2e/my-lib-e2e',
+          },
+        },
+      },
+    };
 
     await expect(
       runSetupEnvironmentExecutor(
         {
+          environmentRoot: 'tmp/environments/my-lib-e2e',
           keepServerRunning: true,
         },
         {
           cwd: 'test',
           isVerbose: false,
-          root: 'tmp/environments/test',
+          root: 'e2e/my-lib-e2e',
           projectName: 'my-lib-e2e',
           projectsConfigurations: {
             version: 2,
             projects: {
-              'my-lib': {
+              'my-lib-e2e': {
                 root: 'e2e/my-lib-e2e',
               },
             },
@@ -175,20 +205,31 @@ describe('runSetupEnvironmentExecutor', () => {
     expect(executeProcessSpy).toHaveBeenCalledTimes(1);
     expect(executeProcessSpy).toHaveBeenCalledWith({
       args: [
-        'install-env',
+        'build-env-env-install',
         'my-lib-e2e',
-        '--environmentProject="my-lib-e2e"',
         '--environmentRoot="tmp/environments/my-lib-e2e"',
       ],
       command: 'nx',
       cwd: '/test',
-      verbose: true,
     });
 
-    expect(runKillProcessExecutorSpy).toHaveBeenCalledTimes(0);
+    expect(runExecutorSpy)
+      .toHaveBeenCalledTimes(1)
+      .toHaveBeenCalledWith(
+        {
+          configuration: undefined,
+          project: 'my-lib-e2e',
+          target: DEFAULT_BOOTSTRAP_TARGET,
+        },
+        expect.objectContaining({
+          environmentRoot: 'tmp/environments/my-lib-e2e',
+          keepServerRunning: true,
+        }),
+        context
+      );
 
-    expect(logger.info).toHaveBeenCalledTimes(1);
-    expect(logger.info).toHaveBeenCalledWith(
+    expect(devkit.logger.info).toHaveBeenCalledTimes(1);
+    expect(devkit.logger.info).toHaveBeenCalledWith(
       'Verdaccio server kept running under : http://localhost:4873'
     );
   });

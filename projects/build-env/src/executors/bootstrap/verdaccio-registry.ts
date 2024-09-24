@@ -1,11 +1,13 @@
 import { bold } from 'ansis';
-import { join } from 'node:path';
 import { logger } from '@nx/devkit';
 import { objectToCliArgs } from '../../internal/terminal';
 import { executeProcess } from '../../internal/execute-process';
 import { uniquePort } from './unique-port';
-import { getEnvironmentsRoot } from '../../internal/setup';
 import { formatError, formatInfo } from '../../internal/logging';
+import {
+  DEFAULT_START_VERDACCIO_TARGET,
+  DEFAULT_VERDACCIO_STORAGE_DIR,
+} from '../../internal/constants';
 
 const VERDACCIO_TOKEN = 'Verdaccio: ';
 
@@ -57,8 +59,7 @@ export function parseRegistryData(stdout: string): VerdaccioProcessResult {
 }
 
 export type StarVerdaccioOnlyOptions = {
-  targetName?: string;
-  projectName?: string;
+  projectName: string;
   verbose?: boolean;
 };
 
@@ -66,101 +67,103 @@ export type VerdaccioExecuterOptions = {
   readyWhen?: string;
   storage?: string;
   port?: string;
-  p?: string;
   config?: string;
-  c?: string;
   location?: string;
   clear?: boolean;
 };
 
-export type StarVerdaccioOptions = VerdaccioExecuterOptions &
+export type StartVerdaccioOptions = VerdaccioExecuterOptions &
   StarVerdaccioOnlyOptions;
 
 export async function startVerdaccioServer({
-  targetName = 'start-verdaccio',
   projectName,
   port = String(uniquePort()),
-  storage = join(getEnvironmentsRoot(projectName), targetName, 'storage'),
   location = 'none',
   clear = true,
   verbose = true,
+  storage = DEFAULT_VERDACCIO_STORAGE_DIR,
   ...opt
-}: StarVerdaccioOptions): Promise<RegistryResult> {
+}: StartVerdaccioOptions): Promise<RegistryResult> {
   let verdaccioIsRunning = false;
 
-  return new Promise<RegistryResult>((resolve, reject) => {
-    executeProcess({
-      command: 'nx',
-      args: objectToCliArgs({
-        _: [targetName, projectName ?? '', '--'],
-        storage,
-        port,
-        verbose,
-        location,
-        clear,
-        ...opt,
-      }),
-      // This ensures the process runs independently and does not get closed on parent process exit
-      detached: true,
-      shell: true,
-      observer: {
-        onStdout: (stdout: string, childProcess) => {
-          if (verbose) {
-            process.stdout.write(formatInfo(stdout, VERDACCIO_TOKEN));
-          }
-
-          // Log of interest: warn --- http address - http://localhost:<PORT-NUMBER>/ - verdaccio/5.31.1
-          if (!verdaccioIsRunning && stdout.includes('http://localhost:')) {
-            verdaccioIsRunning = true;
-
-            const result: RegistryResult = {
-              registry: {
-                pid: Number(childProcess?.pid),
-                storage,
-                ...parseRegistryData(stdout),
-              },
-              stop: () => {
-                try {
-                  childProcess?.kill();
-                } catch {
-                  logger.error(
-                    formatError(
-                      `Can't kill Verdaccio process with id: ${childProcess?.pid}`,
-                      VERDACCIO_TOKEN
-                    )
-                  );
-                }
-              },
-            };
-
-            logger.info(
-              formatInfo(
-                `Registry started on URL: ${bold(
-                  result.registry.url
-                )}, ProcessID: ${bold(String(childProcess?.pid))}`,
-                VERDACCIO_TOKEN
-              )
-            );
+  const startServerPromise = () =>
+    new Promise<RegistryResult>((resolve, reject) => {
+      executeProcess({
+        command: 'nx',
+        args: objectToCliArgs({
+          _: [DEFAULT_START_VERDACCIO_TARGET, projectName ?? '', '--'],
+          port,
+          verbose,
+          location,
+          clear,
+          storage,
+          ...opt,
+        }),
+        // This ensures the process runs independently and does not get closed on parent process exit
+        detached: true,
+        shell: true,
+        observer: {
+          onStdout: (stdout: string, childProcess) => {
             if (verbose) {
-              logger.info(formatInfo('', VERDACCIO_TOKEN));
-              console.table(result);
+              process.stdout.write(formatInfo(stdout, VERDACCIO_TOKEN));
             }
 
-            resolve(result);
-          }
+            // Log of interest: warn --- http address - http://localhost:<PORT-NUMBER>/ - verdaccio/5.31.1
+            if (!verdaccioIsRunning && stdout.includes('http://localhost:')) {
+              verdaccioIsRunning = true;
+
+              const result: RegistryResult = {
+                registry: {
+                  pid: Number(childProcess?.pid),
+                  storage,
+                  ...parseRegistryData(stdout),
+                },
+                stop: () => {
+                  try {
+                    childProcess?.kill();
+                  } catch {
+                    logger.error(
+                      formatError(
+                        `Can't kill Verdaccio process with id: ${childProcess?.pid}`,
+                        VERDACCIO_TOKEN
+                      )
+                    );
+                  }
+                },
+              };
+
+              logger.info(
+                formatInfo(
+                  `Registry started on URL: ${bold(
+                    result.registry.url
+                  )}, ProcessID: ${bold(String(childProcess?.pid))}`,
+                  VERDACCIO_TOKEN
+                )
+              );
+              if (verbose) {
+                logger.info(formatInfo('', VERDACCIO_TOKEN));
+                console.table(result);
+              }
+
+              resolve(result);
+            }
+          },
+          onStderr: (stderr: string) => {
+            if (verbose) {
+              process.stdout.write(formatInfo(stderr, VERDACCIO_TOKEN));
+            }
+          },
         },
-        onStderr: (stderr: string) => {
-          if (verbose) {
-            process.stdout.write(formatInfo(stderr, VERDACCIO_TOKEN));
-          }
-        },
-      },
-    }).catch((error) => {
-      logger.error(formatError(error, VERDACCIO_TOKEN));
-      reject(error);
+      }).catch((error) => {
+        logger.error(formatError(error, VERDACCIO_TOKEN));
+        reject(error);
+      });
     });
-  }).catch((error) => {
+
+  try {
+    return await startServerPromise();
+  } catch (error) {
     logger.error(formatError(error, VERDACCIO_TOKEN));
     throw error;
-  });
+  }
 }
