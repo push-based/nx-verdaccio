@@ -1,12 +1,12 @@
-import type {ProjectConfiguration, TargetConfiguration} from "@nx/devkit";
-import {NormalizedCreateNodeOptions} from "../normalize-create-nodes-options";
+import type { ProjectConfiguration, TargetConfiguration } from '@nx/devkit';
+import type { NormalizedCreateNodeOptions } from '../normalize-create-nodes-options';
 
 export const DEFAULT_NPM_INSTALL_TARGET = 'build-env-release-install';
 export const DEFAULT_NPM_PUBLISH_TARGET = 'build-env-release-publish';
 
 export function isPkgProject(
   projectConfig: ProjectConfiguration,
-  options: NormalizedCreateNodeOptions['publishable']
+  options: NormalizedCreateNodeOptions['packages']
 ): boolean {
   const { projectType, tags: existingTags = [] } = projectConfig;
   const { filterByTags: publishableTagFilters } = options;

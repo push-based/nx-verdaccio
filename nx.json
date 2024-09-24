@@ -85,7 +85,7 @@
     {
       "plugin": "./projects/build-env/src/plugin/build-env.plugin.ts",
       "options": {
-        "publishable": {
+        "packages": {
           "filterByTags": ["publishable"]
         },
         "environments": {

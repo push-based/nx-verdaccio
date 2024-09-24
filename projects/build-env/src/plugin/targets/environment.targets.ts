@@ -1,11 +1,11 @@
-import type {ProjectConfiguration, TargetConfiguration} from "@nx/devkit";
-import {NormalizedCreateNodeOptions} from "../normalize-create-nodes-options";
-import {join} from "node:path";
-import {DEFAULT_NPM_INSTALL_TARGET} from "./package.targets";
-import {BuildEnvEnvironmentsOptions} from "../schema";
-import type {StartVerdaccioOptions} from "../../executors/bootstrap/verdaccio-registry";
-import {uniquePort} from "../../executors/bootstrap/unique-port";
-import {VERDACCIO_REGISTRY_JSON} from "../../executors/bootstrap/constants";
+import type { ProjectConfiguration, TargetConfiguration } from '@nx/devkit';
+import type { NormalizedCreateNodeOptions } from '../normalize-create-nodes-options';
+import { join } from 'node:path';
+import { DEFAULT_NPM_INSTALL_TARGET } from './package.targets';
+import type { BuildEnvEnvironmentsOptions } from '../schema';
+import type { StartVerdaccioOptions } from '../../executors/bootstrap/verdaccio-registry';
+import { uniquePort } from '../../executors/bootstrap/unique-port';
+import { VERDACCIO_REGISTRY_JSON } from '../../executors/bootstrap/constants';
 
 export const DEFAULT_START_VERDACCIO_TARGET = 'build-env-verdaccio-start';
 export const DEFAULT_BOOTSTRAP_TARGET = 'build-env-env-bootstrap';

@@ -1,9 +1,12 @@
-import {
+import type {
   BuildEnvEnvironmentsOptions,
   BuildEnvPluginCreateNodeOptions,
-  BuildEnvPublishingOptions
-} from "./schema";
-import {DEFAULT_ENVIRONMENTS_OUTPUT_DIR, DEFAULT_OPTION_ENVIRONMENT_TARGET_NAMES} from "./constants";
+  BuildEnvPackagesOptions,
+} from './schema';
+import {
+  DEFAULT_ENVIRONMENTS_OUTPUT_DIR,
+  DEFAULT_OPTION_ENVIRONMENT_TARGET_NAMES,
+} from './constants';
 
 export type NormalizedCreateNodeOptions = {
   environments: Omit<
@@ -13,7 +16,7 @@ export type NormalizedCreateNodeOptions = {
     Required<
       Pick<BuildEnvEnvironmentsOptions, 'targetNames' | 'environmentsDir'>
     >;
-  publishable: BuildEnvPublishingOptions;
+  packages: BuildEnvPackagesOptions;
 };
 
 export function normalizeCreateNodesOptions(
@@ -21,7 +24,7 @@ export function normalizeCreateNodesOptions(
 ): NormalizedCreateNodeOptions {
   const {
     environments: givenEnvironments = {},
-    publishable: givenPublishable = {},
+    packages: givenPublishable = {},
   } = options ?? {};
 
   if (
@@ -39,7 +42,7 @@ export function normalizeCreateNodesOptions(
       targetNames: [DEFAULT_OPTION_ENVIRONMENT_TARGET_NAMES],
       ...givenEnvironments,
     },
-    publishable: {
+    packages: {
       ...givenPublishable,
     },
   };

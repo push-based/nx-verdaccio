@@ -1,14 +1,23 @@
-import {type CreateNodes, type ProjectConfiguration, readJsonFile,} from '@nx/devkit';
-import {dirname, join} from 'node:path';
-import {getEnvTargets, isEnvProject, updateEnvTargetNames, verdaccioTargets} from "./targets/environment.targets";
-import {getPkgTargets, isPkgProject} from "./targets/package.targets";
-import {BuildEnvPluginCreateNodeOptions} from "./schema";
-import {normalizeCreateNodesOptions} from "./normalize-create-nodes-options";
+import {
+  type CreateNodes,
+  type ProjectConfiguration,
+  readJsonFile,
+} from '@nx/devkit';
+import { dirname, join } from 'node:path';
+import {
+  getEnvTargets,
+  isEnvProject,
+  updateEnvTargetNames,
+  verdaccioTargets,
+} from './targets/environment.targets';
+import { getPkgTargets, isPkgProject } from './targets/package.targets';
+import type { BuildEnvPluginCreateNodeOptions } from './schema';
+import { normalizeCreateNodesOptions } from './normalize-create-nodes-options';
 
 export const createNodes: CreateNodes = [
   '**/project.json',
   (projectConfigurationFile: string, opt: BuildEnvPluginCreateNodeOptions) => {
-    const {environments, publishable} = normalizeCreateNodesOptions(opt);
+    const { environments, packages } = normalizeCreateNodesOptions(opt);
 
     const projectConfiguration: ProjectConfiguration = readJsonFile(
       join(process.cwd(), projectConfigurationFile)
@@ -24,7 +33,7 @@ export const createNodes: CreateNodes = [
 
     if (
       !isEnvProject(projectConfiguration, environments) &&
-      !isPkgProject(projectConfiguration, publishable)
+      !isPkgProject(projectConfiguration, packages)
     ) {
       return {};
     }
@@ -42,11 +51,11 @@ export const createNodes: CreateNodes = [
               // bootstrap-env, setup-env, install-env (intermediate target to run dependency targets)
               ...getEnvTargets(projectConfiguration, environments),
               // adjust targets to run setup-env
-              ...updateEnvTargetNames(projectConfiguration, environments)
+              ...updateEnvTargetNames(projectConfiguration, environments),
             }),
             // === package targets ===
             // npm-publish, npm-install
-            ...(isPkgProject(projectConfiguration, publishable) &&
+            ...(isPkgProject(projectConfiguration, packages) &&
               getPkgTargets()),
           },
         },
@@ -54,4 +63,3 @@ export const createNodes: CreateNodes = [
     };
   },
 ];
-

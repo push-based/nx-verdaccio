@@ -3,12 +3,12 @@ export type BuildEnvEnvironmentsOptions = {
   targetNames?: string[];
   filterByTags?: string[];
 };
-export type BuildEnvPublishingOptions = {
+export type BuildEnvPackagesOptions = {
   environmentsDir?: string;
   targetNames?: string[];
   filterByTags?: string[];
 };
 export type BuildEnvPluginCreateNodeOptions = {
   environments?: BuildEnvEnvironmentsOptions;
-  publishable?: BuildEnvPublishingOptions;
+  packages?: BuildEnvPackagesOptions;
 };
