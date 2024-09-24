@@ -58,7 +58,7 @@ export async function setup() {
 
 export async function teardown() {
   console.info(`Teardown ${projectName}`);
-  const { registry } = registryResult;
+  const { registry, stop } = registryResult;
   // uninstall all projects
   await executeProcess({
     command: 'nx',
