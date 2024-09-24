@@ -192,7 +192,7 @@ Debug packages:
 In the below we point out a **scalable** and **maintainable** setup for Verdaccio environments.
 
 > [!NOTE]
-> If you want to read about common problems with a shared environment **we strongly suggest to read the [docs/motivation.md](./docs/motivation.md)**.
+> If you want to read about common problems with a shared environment **we strongly suggest to read the  💡[docs/motivation.md](./docs/motivation.md)💡**.
 
 ### 🛡️ Environment Folders to Isolate Files During E2E Tests
 
@@ -229,8 +229,8 @@ Root/
 
 This solution allows for **parallel execution** of tests, which was not possible before due to conflicts with file systems and package managers.
 
-- ⏱️No more waiting for tests to run sequentially. With isolated environments, each E2E test can run independently without interfering with others.
-- ⏱️Environment setup and test setup are separated, which means **significantly faster execution** of the tests and less overhead in CPU and general runtime.
+- ⏱️ No more waiting for tests to run sequentially. With isolated environments, each E2E test can run independently without interfering with others.
+- ⏱️ Environment setup and test setup are separated, which means **significantly faster execution** of the tests and less overhead in CPU and general runtime.
 
 ### ⚡ Task Performance - Optimized Execution
 
