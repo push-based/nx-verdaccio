@@ -23,7 +23,7 @@ This plugin provides a zeros configuration setup to run e2e tests in a package m
 ```
 
 > [!NOTE]
-> Your configured targets now have a new dependency configured:
+> Your configured targets now has a new dependency configured:
 >
 > ```jsonc
 > {
