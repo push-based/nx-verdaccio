@@ -203,7 +203,7 @@ By isolating the environment for each E2E project, you avoid conflicts with the 
 ```sh
 Root/
 ├── dist/
-│   └── packages/
+│   └── projects/
 │       └── <project-name>/...
 ├── tmp/
 │    └── environments/
@@ -221,7 +221,7 @@ Root/
 │            ├── .npmrc # local npm config configured for project specific Verdaccio registry
 │            ├── package-lock.json # skipped creation by default
 │            └── package.json # npm install/uninstall
-└── packages/
+└── projects/
     └── <project-name>/...
 ```
 
