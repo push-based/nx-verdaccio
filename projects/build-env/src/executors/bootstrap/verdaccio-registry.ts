@@ -4,10 +4,8 @@ import { objectToCliArgs } from '../../internal/terminal';
 import { executeProcess } from '../../internal/execute-process';
 import { uniquePort } from './unique-port';
 import { formatError, formatInfo } from '../../internal/logging';
-import {
-  DEFAULT_START_VERDACCIO_TARGET
-} from '../../plugin/targets/environment.targets';
-import {DEFAULT_VERDACCIO_STORAGE_DIR} from "./constants";
+import { DEFAULT_START_VERDACCIO_TARGET } from '../../plugin/targets/environment.targets';
+import { DEFAULT_VERDACCIO_STORAGE_DIR } from './constants';
 
 const VERDACCIO_TOKEN = 'Verdaccio: ';
 

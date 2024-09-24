@@ -84,7 +84,7 @@ You can configure the plugin to only add those targets to projects with one or m
     {
       "plugin": "@push-based/build-env",
       "options": {
-        "publishable": {
+        "packages": {
           "filterByTags": ["publishable"]
         }
       }
