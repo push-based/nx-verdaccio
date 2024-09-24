@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { parseRegistryData, startVerdaccioServer } from './verdaccio-registry';
 import { executeProcess } from '../../internal/execute-process';
 import type { ChildProcess } from 'node:child_process';
@@ -89,7 +89,7 @@ describe('startVerdaccioServer', () => {
       projectName: 'test-project',
     });
 
-    expect(result).toEqual({
+    expect(result).toStrictEqual({
       registry: {
         pid: 12345,
         storage: expect.any(String),
@@ -109,10 +109,7 @@ describe('startVerdaccioServer', () => {
   });
 
   it('should handle errors during process execution', async () => {
-    const mockError = new Error('Execution failed');
-    vi.mocked(executeProcess).mockImplementation(() => {
-      throw mockError;
-    });
+    vi.mocked(executeProcess).mockRejectedValue(new Error('Execution failed'));
 
     await expect(
       startVerdaccioServer({
