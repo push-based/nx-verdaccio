@@ -183,7 +183,7 @@ function verdaccioTargets(
     Omit<StartVerdaccioOptions, 'projectName'>
 ): Record<string, TargetConfiguration> {
   const { name: envProject } = projectConfig;
-  const { environmentsDir, ...startVerdaccioOptions } = options;
+  const { environmentsDir, ...verdaccioOptions } = options;
   const environmentDir = join(environmentsDir, envProject);
 
   return {
@@ -195,7 +195,8 @@ function verdaccioTargets(
         port: uniquePort(),
         storage: join(environmentDir, 'storage'),
         clear: true,
-        projectName,
+        environmentDir,
+        projectName: envProject,
         ...verdaccioOptions,
       },
     },
