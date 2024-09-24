@@ -4,4 +4,5 @@ export type KillProcessExecutorOptions = Partial<{
   dryRun: boolean;
   cleanFs: boolean;
   verbose: boolean;
+  environmentRoot: string;
 }>;

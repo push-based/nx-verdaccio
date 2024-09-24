@@ -4,7 +4,7 @@
   "title": "A executor to kill processes by PID, command, or file",
   "type": "object",
   "properties": {
-    "dryRun": {
+    "printConfig": {
       "type": "boolean",
       "description": "Print the commands that would be run, but don't actually run them",
       "default": false
@@ -12,6 +12,10 @@
     "cleanFs": {
       "type": "boolean",
       "description": "Delete the file after killing the process"
+    },
+    "environmentRoot": {
+      "type": "string",
+      "description": "The root directory for the environment"
     },
     "filePath": {
       "type": "string",

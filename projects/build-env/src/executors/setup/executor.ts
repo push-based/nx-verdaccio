@@ -1,14 +1,21 @@
-import { type ExecutorContext, logger, readJsonFile } from '@nx/devkit';
+import {
+  type ExecutorContext,
+  logger,
+  readJsonFile,
+  runExecutor,
+} from '@nx/devkit';
 import { join } from 'node:path';
-import runBuildExecutor from '../bootstrap/executor';
-import runKillProcessExecutor from '../kill-process/executor';
 import { executeProcess } from '../../internal/execute-process';
 import { objectToCliArgs } from '../../internal/terminal';
 import type { VerdaccioProcessResult } from '../bootstrap/verdaccio-registry';
 import type { SetupEnvironmentExecutorOptions } from './schema';
-import { normalizeOptions } from '../internal/normalize-options';
 
 import { VERDACCIO_REGISTRY_JSON } from '../bootstrap/constants';
+import {
+  DEFAULT_BOOTSTRAP_TARGET,
+  DEFAULT_INSTALL_TARGET,
+  DEFAULT_STOP_VERDACCIO_TARGET,
+} from '../../internal/constants';
 
 export type ExecutorOutput = {
   success: boolean;
@@ -20,45 +27,66 @@ export default async function runSetupEnvironmentExecutor(
   terminalAndExecutorOptions: SetupEnvironmentExecutorOptions,
   context: ExecutorContext
 ) {
-  const { projectName } = context;
-  const normalizedContext = normalizeOptions(
-    context,
-    terminalAndExecutorOptions
-  );
-  const { options: normalizedOptions } = normalizedContext;
-
+  const { configurationName: configuration, projectName } = context;
+  const { verbose, environmentRoot, keepServerRunning } =
+    terminalAndExecutorOptions;
   try {
-    await runBuildExecutor(
+    for await (const s of await runExecutor(
       {
-        ...normalizedOptions,
+        project: projectName,
+        target: DEFAULT_BOOTSTRAP_TARGET,
+        configuration,
+      },
+      {
+        ...terminalAndExecutorOptions,
+        // we always want to keep the server running as in the next step we install packages
+        // the `keepServerRunning` passed in `options` is only used to stop the server after the installation (or keep it running for debug reasons)
+        keepServerRunning: true,
       },
       context
-    );
-    const {
-      environmentRoot,
-      keepServerRunning,
-      verbose = true,
-    } = normalizedOptions;
+    )) {
+    }
+  } catch (error) {
+    logger.error(error);
+    return {
+      success: false,
+      command: `Failed executing target ${DEFAULT_BOOTSTRAP_TARGET}\n ${error.message}`,
+    };
+  }
 
+  try {
     await executeProcess({
       command: 'nx',
       args: objectToCliArgs({
-        _: ['install-env', projectName],
-        environmentProject: projectName,
+        _: [DEFAULT_INSTALL_TARGET, projectName],
         environmentRoot,
       }),
       cwd: process.cwd(),
-      verbose,
+      ...(verbose ? { verbose } : {}),
     });
+  } catch (error) {
+    logger.error(error);
+    return {
+      success: false,
+      command: `Fails executing target ${DEFAULT_INSTALL_TARGET}\n ${error.message}`,
+    };
+  }
 
+  try {
     if (!keepServerRunning) {
-      await runKillProcessExecutor(
+      for await (const s of await runExecutor(
         {
-          ...normalizedOptions,
+          project: projectName,
+          target: DEFAULT_STOP_VERDACCIO_TARGET,
+          configuration,
+        },
+        {
+          verbose,
           filePath: join(environmentRoot, VERDACCIO_REGISTRY_JSON),
         },
         context
-      );
+      )) {
+      }
     } else {
       const { url } = readJsonFile<VerdaccioProcessResult>(
         join(environmentRoot, VERDACCIO_REGISTRY_JSON)
@@ -66,7 +94,6 @@ export default async function runSetupEnvironmentExecutor(
       logger.info(`Verdaccio server kept running under : ${url}`);
     }
   } catch (error) {
-    // nx build-env cli-e2e
     logger.error(error);
     return {
       success: false,

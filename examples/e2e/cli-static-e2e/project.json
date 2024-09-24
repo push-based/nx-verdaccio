@@ -7,14 +7,7 @@
   "implicitDependencies": ["cli"],
   "targets": {
     "lint": {},
-    "e2e": {
-      "dependsOn": [
-        {
-          "projects": "self",
-          "target": "setup-env",
-          "params": "forward"
-        }
-      ],
+    "e2e-static": {
       "executor": "@nx/vite:test",
       "inputs": ["default", "^production"],
       "outputs": ["{options.reportsDirectory}"],

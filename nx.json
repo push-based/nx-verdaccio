@@ -82,7 +82,17 @@
   },
   "plugins": [
     "./examples/e2e/cli-e2e-original/tooling/original.plugin.ts",
-    "@push-based/build-env",
+    {
+      "plugin": "./projects/build-env/src/plugin/build-env.plugin.ts",
+      "options": {
+        "publishable": {
+          "filterByTags": ["publishable"]
+        },
+        "environments": {
+          "targetNames": ["e2e", "e2e-static"]
+        }
+      }
+    },
     {
       "plugin": "@nx/eslint/plugin",
       "options": {

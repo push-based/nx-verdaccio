@@ -1,5 +1,6 @@
 export type BootstrapExecutorOptions = Partial<{
+  keepServerRunning: boolean;
   environmentRoot: string;
-  dryRun: boolean;
+  printConfig: boolean;
   verbose: boolean;
 }>;
