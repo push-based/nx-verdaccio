@@ -39,7 +39,6 @@ export async function bootstrapExecutor(
     bootstrapResult = await bootstrapEnvironment({
       projectName,
       environmentRoot,
-      keepServerRunning,
     });
   } catch (error) {
     logger.error(error);

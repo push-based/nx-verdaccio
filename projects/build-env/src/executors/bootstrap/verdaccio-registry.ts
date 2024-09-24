@@ -58,7 +58,7 @@ export function parseRegistryData(stdout: string): VerdaccioProcessResult {
 }
 
 export type StarVerdaccioOnlyOptions = {
-  projectName?: string;
+  projectName: string;
   verbose?: boolean;
 };
 

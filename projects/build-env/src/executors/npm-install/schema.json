@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/schema",
-  "$id": "KillProcessExecutorOptions",
-  "title": "A executor to kill processes by PID, command, or file",
+  "$id": "InstallExecutorOptions",
+  "title": "A executor to install a package",
   "type": "object",
   "properties": {
     "printConfig": {
@@ -15,7 +15,8 @@
     },
     "environmentRoot": {
       "type": "string",
-      "description": "The root directory for the environment"
+      "description": "The root directory for the environment",
+      "aliases": ["envRoot", "e"]
     },
     "filePath": {
       "type": "string",

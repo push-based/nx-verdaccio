@@ -15,11 +15,7 @@ import {
   VERDACCIO_ENV_TOKEN,
 } from './npm';
 
-export type BootstrapEnvironmentOptions = StartVerdaccioOptions &
-  Environment & {
-    projectName: string;
-    environmentRoot: string;
-  };
+export type BootstrapEnvironmentOptions = StartVerdaccioOptions & Environment;
 
 export type BootstrapEnvironmentResult = Environment & {
   registry: VercaddioServerResult;

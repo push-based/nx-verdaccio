@@ -15,7 +15,8 @@
     },
     "environmentRoot": {
       "type": "string",
-      "description": "The root directory for the environment"
+      "description": "The root directory for the environment",
+      "aliases": ["envRoot", "e"]
     },
     "filePath": {
       "type": "string",
