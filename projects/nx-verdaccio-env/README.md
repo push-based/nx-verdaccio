@@ -1,4 +1,4 @@
-# @push-based/build-env
+# @push-based/nx-verdaccio-env
 
 ## Plugins
 
@@ -6,12 +6,12 @@
 
 Add dynamic targets to execute environment tasks.
 
-See [build-environment plugin docs](./src/plugin/README.md) for details
+See [nx-verdaccio-environment plugin docs](./src/plugin/README.md) for details
 
 Examples:
 
-- `nx g @push-based/build-env-env-setup` - generates NPM workspace and installs packages
-- `nx g @push-based/build-env-env-setup  --keepServerRunning` - keeps Verdaccio running for debug reasons
+- `nx g @push-based/nx-verdaccio-env-env-setup` - generates NPM workspace and installs packages
+- `nx g @push-based/nx-verdaccio-env-env-setup  --keepServerRunning` - keeps Verdaccio running for debug reasons
 
 ## Executor
 
@@ -25,8 +25,8 @@ This executor helps to initiate an [environment folder](../../../../../README.md
 {
   "name": "my-project",
   "targets": {
-    "build-env--env-bootstrap": {
-      "executor": "@code-pushup/build-env:env-bootstrap",
+    "nx-verdaccio-env--env-bootstrap": {
+      "executor": "@code-pushup/nx-verdaccio-env:env-bootstrap",
       "options": {
         "keepServerRunning": false
         "envRoot": "/tmp/test-npm-workspace"
@@ -37,7 +37,7 @@ This executor helps to initiate an [environment folder](../../../../../README.md
 }
 ```
 
-Read more under [setup executor docs](./projects/build-env/src/executors/setup/README.md).
+Read more under [setup executor docs](./projects/nx-verdaccio-env/src/executors/setup/README.md).
 
 ### Bootstrap Environment Executor
 
@@ -49,8 +49,8 @@ This executor helps to initiate [environment](../../../../../README.md#-environm
 {
   "name": "my-project",
   "targets": {
-    "build-env--env-bootstrap": {
-      "executor": "@code-pushup/build-env:env-bootstrap",
+    "nx-verdaccio-env--env-bootstrap": {
+      "executor": "@code-pushup/nx-verdaccio-env:env-bootstrap",
       "options": {
         "keepServerRunning": false
         "envRoot": "/tmp/test-npm-workspace"
@@ -61,7 +61,7 @@ This executor helps to initiate [environment](../../../../../README.md#-environm
 }
 ```
 
-Read more under [bootstrap executor docs](./projects/build-env/src/executors/bootstrap/README.md).
+Read more under [bootstrap executor docs](./projects/nx-verdaccio-env/src/executors/bootstrap/README.md).
 
 ### Kill Process Executor
 
@@ -73,8 +73,8 @@ This executor helps to kill processes by `ProcessID` or a JSON file containing a
 {
   "name": "my-project",
   "targets": {
-    "build-env--kill-process": {
-      "executor": "@push-based/build-env:kill-process"
+    "nx-verdaccio-env--kill-process": {
+      "executor": "@push-based/nx-verdaccio-env:kill-process"
       "options": {
         "pid": "42312"
         "filePath": "/tmp/test-npm-workspace/process-id.json"
@@ -85,7 +85,7 @@ This executor helps to kill processes by `ProcessID` or a JSON file containing a
 }
 ```
 
-Read more under [kill-process executor docs](./projects/build-env/src/executors/kill-process/README.md).
+Read more under [kill-process executor docs](./projects/nx-verdaccio-env/src/executors/kill-process/README.md).
 
 ### NPM Install Executor
 
@@ -97,8 +97,8 @@ This executor helps to install a [`pubishable`](../../../../../README.md#fine-gr
 {
   "name": "my-project",
   "targets": {
-    "build-env--npm-install": {
-      "executor": "@code-pushup/build-env:release-install",
+    "nx-verdaccio-env--npm-install": {
+      "executor": "@code-pushup/nx-verdaccio-env:release-install",
       "options": {
         "pkgVersion": "1.2.3"
         "envRoot": "/tmp/test-npm-workspace"
@@ -109,7 +109,7 @@ This executor helps to install a [`pubishable`](../../../../../README.md#fine-gr
 }
 ```
 
-Read more under [release install executor docs](./projects/build-env/src/executors/npm-install/README.md).
+Read more under [release install executor docs](./projects/nx-verdaccio-env/src/executors/npm-install/README.md).
 
 ### NPM Publish Executor
 
@@ -121,8 +121,8 @@ This executor helps to publish a [`pubishable`](../../../../../README.md#fine-gr
 {
   "name": "my-project",
   "targets": {
-    "build-env--npm-publish": {
-      "executor": "@code-pushup/build-env:release-publish",
+    "nx-verdaccio-env--npm-publish": {
+      "executor": "@code-pushup/nx-verdaccio-env:release-publish",
       "options": {
         "pkgVersion": "1.2.3"
         "envRoot": "/tmp/test-npm-workspace"
@@ -133,7 +133,7 @@ This executor helps to publish a [`pubishable`](../../../../../README.md#fine-gr
 }
 ```
 
-Read more under [release publish executor docs](./projects/build-env/src/executors/npm-publish/README.md).
+Read more under [release publish executor docs](./projects/nx-verdaccio-env/src/executors/npm-publish/README.md).
 
 ## Debugging e2e environments
 
