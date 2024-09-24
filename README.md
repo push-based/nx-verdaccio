@@ -192,7 +192,7 @@ Debug packages:
 In the below we point out a **scalable** and **maintainable** setup for Verdaccio environments.
 
 > [!NOTE]
-> If you want to read about common problems with a shared environment read the [docs/motivation.md](./docs/motivation.md).
+> If you want to read about common problems with a shared environment **we strongly suggest to read the [docs/motivation.md](./docs/motivation.md)**.
 
 ### 🛡️ Environment Folders to Isolate Files During E2E Tests
 
