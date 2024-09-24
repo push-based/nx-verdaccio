@@ -1,23 +1,42 @@
 import runBootstrapExecutor from './executor';
-import * as bootstrapEnvModule from './bootstrap-env';
-import { beforeEach, expect, vi, it, describe } from 'vitest';
-import { logger } from '@nx/devkit';
-
-vi.mock('@nx/devkit', async () => {
-  const actual = await vi.importActual('@nx/devkit');
-  return {
-    ...actual,
-    logger: {
-      info: vi.fn(),
-      error: vi.fn(),
-    },
-  };
-});
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import * as devkit from '@nx/devkit';
+import * as bootstrapExecutorModule from './bootstrap-env';
+import { DEFAULT_STOP_VERDACCIO_TARGET } from '../../internal/constants';
 
 describe('runBootstrapExecutor', () => {
-  const bootstrapEnvironmentSpy = vi
-    .spyOn(bootstrapEnvModule, 'bootstrapEnvironment')
-    .mockResolvedValue({
+  const e2eProjectName = 'my-lib-e2e';
+  const e2eProjectsConfiguration = {
+    root: `e2e/${e2eProjectName}`,
+  };
+  const context = {
+    cwd: 'test',
+    isVerbose: false,
+    root: 'tmp/environments/test',
+    projectName: e2eProjectName,
+    projectsConfigurations: {
+      version: 2,
+      projects: {
+        [e2eProjectName]: e2eProjectsConfiguration,
+      },
+    },
+  };
+  const stopVerdaccioTask = {
+    project: e2eProjectName,
+    target: DEFAULT_STOP_VERDACCIO_TARGET,
+    configuration: undefined,
+  };
+
+  const bootstrapEnvironmentSpy = vi.spyOn(
+    bootstrapExecutorModule,
+    'bootstrapEnvironment'
+  );
+  const runExecutorSpy = vi.spyOn(devkit, 'runExecutor');
+  const infoLoggerSpy = vi.spyOn(devkit.logger, 'info');
+  const errorLoggerSpy = vi.spyOn(devkit.logger, 'error');
+
+  beforeEach(() => {
+    bootstrapEnvironmentSpy.mockResolvedValueOnce({
       registry: {
         host: 'localhost',
         pid: 7777,
@@ -26,129 +45,98 @@ describe('runBootstrapExecutor', () => {
         storage: 'tmp/storage',
         url: 'http://localhost:4873',
       },
-      root: 'tmp/environments/my-lib-e2e',
+      environmentRoot: `tmp/environments/${e2eProjectName}`,
       stop: expect.any(Function),
     });
-
-  beforeEach(() => {
-    bootstrapEnvironmentSpy.mockReset();
+    runExecutorSpy.mockResolvedValueOnce([
+      Promise.resolve({
+        success: true,
+        command: 'Process killed successfully.',
+      }),
+    ]);
+  });
+  afterEach(() => {
+    runExecutorSpy.mockReset();
   });
 
   it('should bootstrap environment correctly', async () => {
     await expect(
       runBootstrapExecutor(
-        {},
         {
-          cwd: 'test',
-          isVerbose: false,
-          root: 'tmp/environments/test',
-          projectName: 'my-lib-e2e',
-          projectsConfigurations: {
-            version: 2,
-            projects: {
-              'my-lib': {
-                root: 'e2e/my-lib-e2e',
-              },
-            },
-          },
-        }
+          environmentRoot: `tmp/environments/${e2eProjectName}`,
+        },
+        context
       )
     ).resolves.toStrictEqual({
       success: true,
-      command: 'Bootstraped environment successfully.',
+      command: 'Bootstrapped environment successfully.',
     });
 
-    expect(logger.error).not.toHaveBeenCalled();
-    expect(logger.info).toHaveBeenCalledTimes(1);
-    expect(logger.info).toHaveBeenCalledWith(
-      'Execute @push-based/build-env:bootstrap with options: {}'
+    expect(errorLoggerSpy).not.toHaveBeenCalled();
+    expect(infoLoggerSpy).toHaveBeenCalledTimes(1);
+    expect(infoLoggerSpy).toHaveBeenCalledWith(
+      `Execute @push-based/build-env:build-env-env-bootstrap with options: ${JSON.stringify(
+        {
+          environmentRoot: `tmp/environments/${e2eProjectName}`,
+        },
+        null,
+        2
+      )}`
     );
 
-    expect(bootstrapEnvironmentSpy).toHaveBeenCalledTimes(1);
-    expect(bootstrapEnvironmentSpy).toHaveBeenCalledWith({
-      projectName: 'my-lib-e2e',
-      environmentProject: 'my-lib-e2e',
-      environmentRoot: 'tmp/environments/my-lib-e2e',
-      readyWhen: 'Environment ready under',
-    });
+    expect(runExecutorSpy).toHaveBeenCalledTimes(1);
+    expect(runExecutorSpy).toHaveBeenCalledWith(
+      stopVerdaccioTask,
+      {
+        filePath: `tmp/environments/${e2eProjectName}/verdaccio-registry.json`,
+      },
+      context
+    );
   });
 
   it('should pass options to bootstrapEnvironment', async () => {
+    const environmentRoot = 'static-environments/dummy-react-app';
     await expect(
       runBootstrapExecutor(
         {
-          environmentRoot: 'static-environments/dummy-react-app',
+          environmentRoot,
         },
-        {
-          cwd: 'test',
-          isVerbose: false,
-          root: 'tmp/environments/test',
-          projectName: 'my-lib-e2e',
-          projectsConfigurations: {
-            version: 2,
-            projects: {
-              'my-lib': {
-                root: 'e2e/my-lib-e2e',
-              },
-            },
-          },
-        }
+        context
       )
     ).resolves.toStrictEqual({
       success: true,
-      command: 'Bootstraped environment successfully.',
+      command: 'Bootstrapped environment successfully.',
     });
 
-    expect(bootstrapEnvironmentSpy).toHaveBeenCalledWith(
-      expect.objectContaining({
-        environmentRoot: 'static-environments/dummy-react-app',
-      })
+    expect(runExecutorSpy).toHaveBeenCalledWith(
+      stopVerdaccioTask,
+      {
+        filePath: `${environmentRoot}/verdaccio-registry.json`,
+      },
+      context
     );
   });
 
-  it('should throw if bootstrapping environment fails', async () => {
-    bootstrapEnvironmentSpy.mockRejectedValue(
+  it('should throw if bootstrappingEnvironment fails', async () => {
+    bootstrapEnvironmentSpy.mockReset();
+    bootstrapEnvironmentSpy.mockRejectedValueOnce(
       new Error('Failed to bootstrap environment')
     );
-    await expect(
-      runBootstrapExecutor(
-        {},
-        {
-          cwd: 'test',
-          isVerbose: false,
-          root: 'tmp/environments/test',
-          projectName: 'my-lib-e2e',
-          projectsConfigurations: {
-            version: 2,
-            projects: {
-              'my-lib': {
-                root: 'e2e/my-lib-e2e',
-              },
-            },
-          },
-        }
-      )
-    ).resolves.toStrictEqual({
+    await expect(runBootstrapExecutor({}, context)).resolves.toStrictEqual({
       success: false,
-      command: Error('Failed to bootstrap environment'),
+      command: 'Failed to bootstrap environment',
     });
 
-    expect(logger.info).toHaveBeenCalledTimes(1);
-    expect(logger.info).toHaveBeenCalledWith(
-      'Execute @push-based/build-env:bootstrap with options: {}'
+    expect(infoLoggerSpy).toHaveBeenCalledTimes(1);
+    expect(infoLoggerSpy).toHaveBeenCalledWith(
+      'Execute @push-based/build-env:build-env-env-bootstrap with options: {}'
     );
 
-    expect(logger.error).toHaveBeenCalledTimes(1);
-    expect(logger.error).toHaveBeenCalledWith(
+    expect(errorLoggerSpy).toHaveBeenCalledTimes(1);
+    expect(errorLoggerSpy).toHaveBeenCalledWith(
       Error('Failed to bootstrap environment')
     );
 
-    expect(bootstrapEnvironmentSpy).toHaveBeenCalledTimes(1);
-    expect(bootstrapEnvironmentSpy).toHaveBeenCalledWith({
-      projectName: 'my-lib-e2e',
-      environmentProject: 'my-lib-e2e',
-      environmentRoot: 'tmp/environments/my-lib-e2e',
-      readyWhen: 'Environment ready under',
-    });
+    expect(runExecutorSpy).toHaveBeenCalledTimes(0);
   });
 });

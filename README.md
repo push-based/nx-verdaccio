@@ -12,91 +12,180 @@ This plugin provides a zeros configuration setup to run e2e tests in a package m
     {
       "plugin": "@push-based/build-env",
       "options": {
-        "environmentsDir": "tmp/environments" // Optional
+        "environments": {
+            "environmentsDir": "tmp/environments" // Optional
+            "targetNames": ["e2e"] // Optional
+        }
       }
     }
   ]
 }
 ```
 
-Now you can configure the project you want to e2e test as published package.
+> [!NOTE]
+> Your configured targets now have a new dependency configured:
+>
+> ```jsonc
+> {
+>   "name": "utils-e2e",
+>   "targets": {
+>     "e2e-special": {
+>       "dependsOn": [
+>         // dynamically aded
+>         { "projects": "self", "target": "setup-env", "params": "forward" }
+>       ]
+>       // ...
+>     }
+>   }
+>   // ...
+> }
+> ```
 
-2. Add a `publishable` tag to the package under test to tell the plugin which projects it should consider as publishable
-
-```jsonc
-// projects/my-lib/project.json
-{
-  "name": "my-lib",
-  "targets": ["publish", "nx-release-publish"]
-  "tags": ["publishable"] // Optionally filter projects by tags for a more finegrained control
-  // ...
-}
-```
-
-Next you need to configure the e2e project that uses the package under test.
-
-3. Add the package under test as `implicitDependency` to your e2e project. The plugin will detect implicit dependencies and use them for the environment setup.
-
-```jsonc
-// projects/my-lib-e2e/project.json
-{
-  "name": "my-lib-e2e",
-  "implicitDependency": ["my-lib"]
-}
-```
-
-4. Configure the `setup-env` target as dependent target in your e2e test project by using `dependsOn`
+2. Add the package under test as `implicitDependency` to your e2e project.
+   The plugin will detect implicit dependencies and use them for the environment setup.
 
 ```jsonc
+// projects/utils-e2e/project.json
 {
-  "name": "my-lib-e2e",
-  "targets": {
-    "e2e": {
-      "dependsOn": [
-        {
-          "projects": "self",
-          "target": "setup-env",
-          "params": "forward"
-        }
-      ]
-      // ...
-    }
-  }
-  // ...
+  "name": "utils-e2e",
+  "implicitDependency": ["utils"]
 }
 ```
 
 Now you are ready to go.
 
-5. Run your e2e test with `nx run my-lib-e2e:e2e`
+3. Run your e2e test with `nx run utils-e2e:e2e`
 
 Tadaaaa! 🎉
 
+## Options
+
+| Name                             | type                                  | description                                                                                  |
+| -------------------------------- | ------------------------------------- | -------------------------------------------------------------------------------------------- |
+| **environments.environmentsDir** | `string` (DEFAULT 'tmp/environments') | The folder name of the generated environments                                                |
+| **environments.targetNames**     | `string[]` (REQUIRED)                 | The target names of projects depending on environments                                       |
+| **environments.filterByTag**     | `string[]` (REQUIRED)                 | The tag names a projects needs to have to be considered for a environments (match is one of) |
+| **publishable.filterByTag**      | `string[]` (REQUIRED)                 | The tag names a projects needs to have to be considered for publishing (match is one of)     |
+
+### Fine-grained selection of publishable projects
+
+By default, all projects with type `library` get automatically the following targets applied:
+
+- `build-env--npm-publish`
+- `build-env--npm-install`
+
+You can configure the plugin to only add those targets to projects with one or many specific tags.
+
+1. Configure the plugin with a tag to act as filter
+
+```jsonc
+{
+  "plugins": [
+    {
+      "plugin": "@push-based/build-env",
+      "options": {
+        "publishable": {
+          "filterByTags": ["publishable"]
+        }
+      }
+    }
+  ]
+}
+```
+
+2. Add a `publishable` tag to the projects considered in test environments
+
+```jsonc
+// projects/utils/project.json
+{
+  "name": "utils",
+  //
+  "tags": ["publishable"]
+  // ...
+}
+```
+
+### Fine-grained selection of projects that need a test environment set up
+
+#### Filter by target names
+
+You can configure the plugin to select only specific projects for environment creation.
+
+1. Configure the plugin with a targets that will be configured with a dependency to the test environment
+
+```jsonc
+{
+  "plugins": [
+    {
+      "plugin": "@push-based/build-env",
+      "options": {
+        "environments": {
+          "targetNames": ["e2e", "e2e-static"]
+        }
+      }
+    }
+  ]
+}
+```
+
+### Filter by tags
+
+You can configure the plugin to only add those targets to projects with one or many specific tags.
+
+1. Configure the plugin with a tag to act as filter
+
+```jsonc
+{
+  "plugins": [
+    {
+      "plugin": "@push-based/build-env",
+      "options": {
+        "environments": {
+          "filterByTags": ["npm-env"]
+        }
+      }
+    }
+  ]
+}
+```
+
+2. Add a `environments` tag to the projects considered in test environments
+
+```jsonc
+// projects/utils/project.json
+{
+  "name": "lib-e2e",
+  //
+  "tags": ["npm-env"]
+  // ...
+}
+```
+
 **Example usage:**
 
-- `nx run cli-e2e:e2e` - setup environment and then run E2E tests for `cli-e2e`
-- `nx run cli-static-e2e:e2e --environmentRoot static-environments/user-lists` - setup NPM in existing environment and then run E2E tests for `cli-static-e2e`
+- `nx run utils-e2e:e2e` - setup environment and then run E2E tests for `utils-e2e`
+- `nx run utils-static-e2e:e2e --environmentRoot static-environments/user-lists` - setup NPM in existing environment and then run E2E tests for `utils-static-e2e`
 
 ## DX while debugging e2e tests
 
 Debug full environment in 1 setup:
 
-- `nx run cli-e2e:setup-env` - setup environment for `cli-e2e`
-  - `nx run cli-e2e:setup-env --keepServerRunning` - keeps Verdaccio running after setup
-- `nx run cli-e2e:stop-verdaccio` - stops the Verdaccio server for `cli-e2e`
+- `nx run utils-e2e:setup-env` - setup environment for `utils-e2e`
+  - `nx run utils-e2e:setup-env --keepServerRunning` - keeps Verdaccio running after setup
+- `nx run utils-e2e:stop-verdaccio` - stops the Verdaccio server for `utils-e2e`
 
 Debug full environment in 2 steps:
 
-- `nx run cli-e2e:bootstrap-env` - setup folders and starts Verdaccio for `cli-e2e`
-- `nx run cli-e2e:install-env` - bootstraps and installs all dependencies for `cli-e2e`
-- `nx run cli-e2e:stop-verdaccio` - stops the Verdaccio server for `cli-e2e`
+- `nx run utils-e2e:bootstrap-env` - setup folders and starts Verdaccio for `utils-e2e`
+- `nx run utils-e2e:install-env` - bootstraps and installs all dependencies for `utils-e2e`
+- `nx run utils-e2e:stop-verdaccio` - stops the Verdaccio server for `utils-e2e`
 
 Debug packages:
 
-- `nx run cli-e2e:bootstrap-env` - setup folders and starts Verdaccio for `cli-e2e`
-- `nx run utils:npm-publish --environmentProject cli-e2e` - publishes `utils` and `models` to the Verdaccio registry configured for `cli-e2e`
-- `nx run utils:npm-install --environmentProject cli-e2e` - installs `utils` and `models` from the Verdaccio registry configured for `cli-e2e`
-- `nx run cli-e2e:stop-verdaccio` - stops the Verdaccio server for `cli-e2e`
+- `nx run utils-e2e:bootstrap-env` - setup folders and starts Verdaccio for `utils-e2e`
+- `nx run utils:npm-publish --environmentProject utils-e2e` - publishes `utils` and `models` to the Verdaccio registry configured for `utils-e2e`
+- `nx run utils:npm-install --environmentProject utils-e2e` - installs `utils` and `models` from the Verdaccio registry configured for `utils-e2e`
+- `nx run utils-e2e:stop-verdaccio` - stops the Verdaccio server for `utils-e2e`
 
 ## Benefits in depth
 
@@ -105,7 +194,7 @@ In the below we point out a **scalable** and **maintainable** setup for Verdacci
 > [!NOTE]
 > If you want to read about common problems with a shared environment read the [docs/motivation.md](./docs/motivation.md).
 
-### 🛡️ Isolation of Files During E2E Tests
+### 🛡️ Environment Folders to Isolate Files During E2E Tests
 
 All files that change during testing are contained within an isolated folder, ensuring they don't interfere with your local setup or other tests.
 
@@ -117,14 +206,14 @@ Root/
 │   └── packages/
 │       └── <project-name>/...
 ├── tmp/
-│    └── e2e/
+│    └── environments/
 │        └── <project-name>/
 │            ├── storage/... # npm publish/unpublish
-│            │   └── @my-org
-│            │       └── my-lib/...
-│            ├── node_modules/
 │            │   └── <org>
-│            │        └── <package-name>/... # npm install/uninstall
+│            │       └── <package-name>/...
+│            ├── node_modules/ # npm install/uninstall
+│            │   └── <org>
+│            │        └── <package-name>/...
 │            ├── __test__/...
 │            │   └── <test-file-name>/...
 │            │        └── <it-block-setup>/...
@@ -210,39 +299,48 @@ This approach makes the E2E setup more **maintainable** and easier to serve edge
 In summary, this new setup offers a more scalable, maintainable, and performant way to handle E2E testing.
 By isolating environments and using NX’s powerful tools, it becomes easier to run, manage, and debug E2E tests across projects.
 
-- make verdaccio-registry.json a constant!
+## Benchmarks
 
-- in `npm-install` executor:
+This is a first draft of how the benchmarks will look. ATM the data set it not big proper.
 
-  - make buildTarget configurable in the executor options, default to 'build'
-  - use getPackageManagerCommand().install instead to be able to support yarn installation as well
-  - use detectPackageManager() and getPackageManagerVersion() to deduce the userconfig path (e.g. .yarnrc, .npmrc, etc.)
+> [!warn]
+> The data is a first draft of the structure and does not reflect a clean data set.
+> Work on the real benchmark data in progress
 
-- use [createNodesV2](https://nx.dev/nx-api/devkit/documents/CreateNodesV2) instead of [createNodes](https://nx.dev/nx-api/devkit/documents/CreateNodes) in `tooling/build-env/src/plugin/verdaccio-env.plugin.ts`
-
-- in the plugin code, (maybe I got it wrong) it looks like some targets should only be added to the e2e project, but they are added to all projects.
-
-```ts
-export const createNodes: CreateNodes = [
-  '**/project.json',
-  (projectConfigurationFile) => {
-    const projectConfiguration: ProjectConfiguration = readJsonFile(join(process.cwd(), projectConfigurationFile));
-    const projectName = projectConfiguration.name;
-    const graph = readCachedProjectGraph();
-    const projectNode = graph.nodes[projectConfiguration.name];
-    if (projectNode.type !== 'e2e') {
-      return {
-        // npmTargets
-      };
-    }
-    return {
-      // verdaccioTargets, envTargets
-    };
-  },
-];
-```
+|     cli:e2e      |  Common   | Optimized |
+| :--------------: | :-------: | :-------: |
+|  Execution Time  |   110 s   |   13 s    |
+| Download Volume  | 381.68 MB | 381.68 MB |
+|    Cacheable     |    ❌     |    ✅     |
+|   Graph Nodes    |     1     |    13     |
+| Can run parallel |    ❌     |    ✅     |
 
 ## Connect with us!
 
 - [Check out our services](https://push-based.io)
 - [Follow us on Twitter](https://twitter.com/pushbased)
+
+<!--
+
+```mermaid
+flowchart TB
+  
+  UE["utils:e2e"] -->USE["utils:setup-env"]
+
+USE["utils:setup-env"] --> UIE["utils:install-env"]
+UIE["utils:install-env"] --> utils:install-env
+
+subgraph utils:install-env
+UI["utils:install"] --> UP["utils:publish"]
+UI["utils:install"] --> MI["models:install"]
+UP["utils:publish"] --> MP["models:publish"]
+MI["models:install"] --> MP["models:publish"]
+end
+
+utils:install-env --> UB["utils:build"]
+UB["utils:build"] --> MB["models:build"]
+
+```
+
+-->
+```

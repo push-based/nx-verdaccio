@@ -13,6 +13,16 @@
           }
         ]
       }
+    },
+    "update-benchmark": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "npx code-pushup collect --persist.outputDir=benchmarks --persist.filename=benchmark --persist.format=md"
+          }
+        ]
+      }
     }
   }
 }

@@ -59,35 +59,35 @@ describe('bootstrapEnvironment', () => {
         storage: 'tmp/storage',
         url: 'http://localhost:4873',
       },
-      root: 'tmp/environments/my-lib-e2e',
+      environmentRoot: 'tmp/environments/my-lib-e2e',
       stop: expect.any(Function),
     });
 
     expect(startVerdaccioServerSpy).toHaveBeenCalledTimes(1);
     expect(startVerdaccioServerSpy).toHaveBeenCalledWith({
+      //environmentRoot: 'tmp/environments/my-lib-e2e',
+      //keepServerRunning: true,
       projectName: 'my-lib-e2e',
       storage: 'tmp/environments/my-lib-e2e/storage',
-      verbose: false,
+      readyWhen: 'Environment ready under',
+      verbose: undefined,
     });
 
     expect(setupNpmWorkspaceSpy).toHaveBeenCalledTimes(1);
     expect(setupNpmWorkspaceSpy).toHaveBeenCalledWith(
       'tmp/environments/my-lib-e2e',
-      false
+      undefined
     );
 
     expect(configureRegistrySpy).toHaveBeenCalledTimes(1);
     expect(configureRegistrySpy).toHaveBeenCalledWith(
       {
         host: 'localhost',
-        pid: 7777,
         port: 4387,
-        protocol: 'http',
-        storage: 'tmp/storage',
         url: 'http://localhost:4873',
         userconfig: 'tmp/environments/my-lib-e2e/.npmrc',
       },
-      false
+      undefined
     );
 
     expect(writeFileSpy).toHaveBeenCalledTimes(1);

@@ -8,12 +8,6 @@
   "targets": {
     "lint": {},
     "e2e": {
-      "dependsOn": [
-        {
-          "target": "setup-env",
-          "params": "forward"
-        }
-      ],
       "executor": "@nx/vite:test",
       "inputs": ["default", "^production"],
       "outputs": ["{options.reportsDirectory}"],
