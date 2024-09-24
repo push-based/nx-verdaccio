@@ -52,6 +52,13 @@ export type Environment = {
   environmentRoot: string;
 };
 
+/**
+ * configure env with verdaccio registry as default
+ * exec commands:
+ * - `npm config set registry "${url}"
+ * - `npm config set //${host}:${port}/:_authToken "secretVerdaccioToken"`
+ * @see {@link VerdaccioProcessResult}
+ */
 export type ConfigureRegistryOptions = Pick<
   VercaddioServerResult,
   'port' | 'host' | 'url'
@@ -98,10 +105,24 @@ export type UnconfigureRegistryOptions = Pick<
 > & {
   userconfig?: string;
 };
+
+/**
+ * unconfigure env with verdaccio registry as default
+ * exec commands:
+ * - `npm config delete //${host}:${port}/:_authToken`
+ * - `npm config delete registry`
+ * @see {@link VerdaccioProcessResult}
+ **/
 export function unconfigureRegistry(
   { port, host, userconfig }: UnconfigureRegistryOptions,
   verbose?: boolean
 ) {
+  /**
+   * Protocol-Agnostic Configuration: The use of // allows NPM to configure authentication for a registry without tying it to a specific protocol (http: or https:).
+   * This is particularly useful when the registry might be accessible via both HTTP and HTTPS.
+   *
+   * Example: //registry.npmjs.org/:_authToken=your-token
+   */
   const urlNoProtocol = `//${host}:${port}`;
   const setAuthToken = `npm config delete ${urlNoProtocol}/:_authToken ${objectToCliArgs(
     { userconfig }
