@@ -134,3 +134,24 @@ This executor helps to publish a [`pubishable`](../../../../../README.md#fine-gr
 ```
 
 Read more under [release publish executor docs](./projects/build-env/src/executors/npm-publish/README.md).
+
+## Debugging e2e environments
+
+Debug full environment in 1 setup:
+
+- `nx run utils-e2e:setup-env` - setup environment for `utils-e2e`
+- `nx run utils-e2e:setup-env --keepServerRunning` - keeps Verdaccio running after setup
+- `nx run utils-e2e:stop-verdaccio` - stops the Verdaccio server for `utils-e2e`
+
+Debug full environment in 2 steps:
+
+- `nx run utils-e2e:bootstrap-env` - setup folders and starts Verdaccio for `utils-e2e`
+- `nx run utils-e2e:install-env` - bootstraps and installs all dependencies for `utils-e2e`
+- `nx run utils-e2e:stop-verdaccio` - stops the Verdaccio server for `utils-e2e`
+
+Debug packages:
+
+- `nx run utils-e2e:bootstrap-env` - setup folders and starts Verdaccio for `utils-e2e`
+- `nx run utils:npm-publish --envProject utils-e2e` - publishes `utils` and `models` to the Verdaccio registry configured for `utils-e2e`
+- `nx run utils:npm-install --envProject utils-e2e` - installs `utils` and `models` from the Verdaccio registry configured for `utils-e2e`
+- `nx run utils-e2e:stop-verdaccio` - stops the Verdaccio server for `utils-e2e`
