@@ -2,7 +2,7 @@ import runBootstrapExecutor from './executor';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import * as devkit from '@nx/devkit';
 import * as bootstrapExecutorModule from './bootstrap-env';
-import { DEFAULT_STOP_VERDACCIO_TARGET } from '../../internal/constants';
+import { DEFAULT_STOP_VERDACCIO_TARGET } from '../../plugin/targets/environment.targets';
 
 describe('runBootstrapExecutor', () => {
   const e2eProjectName = 'my-lib-e2e';

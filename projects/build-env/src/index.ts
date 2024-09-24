@@ -1,1 +1,1 @@
-export { createNodesV2 } from './plugin/build-env.plugin';
+export { createNodes } from './plugin/build-env.plugin';

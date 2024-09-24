@@ -4,14 +4,14 @@ import {
   bootstrapEnvironment,
   type BootstrapEnvironmentResult,
 } from './bootstrap-env';
+import { join } from 'node:path';
 import { formatInfo } from '../../internal/logging';
 import { VERDACCIO_ENV_TOKEN } from './npm';
-import { join } from 'node:path';
 import { VERDACCIO_REGISTRY_JSON } from './constants';
 import {
   DEFAULT_BOOTSTRAP_TARGET,
   DEFAULT_STOP_VERDACCIO_TARGET,
-} from '../../internal/constants';
+} from '../../plugin/targets/environment.targets';
 import { runSingleExecutor } from '../../internal/run-executor';
 
 export type BootstrapExecutorOutput = {

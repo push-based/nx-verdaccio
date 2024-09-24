@@ -10,7 +10,7 @@ import {
   DEFAULT_BOOTSTRAP_TARGET,
   DEFAULT_INSTALL_TARGET,
   DEFAULT_STOP_VERDACCIO_TARGET,
-} from '../../internal/constants';
+} from '../../plugin/targets/environment.targets';
 import { runSingleExecutor } from '../../internal/run-executor';
 
 export type ExecutorOutput = {

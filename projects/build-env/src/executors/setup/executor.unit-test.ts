@@ -5,7 +5,7 @@ import * as devkit from '@nx/devkit';
 import {
   DEFAULT_BOOTSTRAP_TARGET,
   DEFAULT_STOP_VERDACCIO_TARGET,
-} from '../../internal/constants';
+} from '../../plugin/targets/environment.targets';
 
 vi.mock('@nx/devkit', async () => {
   const actual = await vi.importActual('@nx/devkit');
