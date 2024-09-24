@@ -258,7 +258,6 @@ function updateTargetsWithEnvSetup(
           ...config,
           dependsOn: [
             {
-              projects: 'self',
               target: DEFAULT_SETUP_TARGET,
               params: 'forward',
             },
@@ -274,7 +273,7 @@ function getNpmTargets(): Record<string, TargetConfiguration> {
   return {
     [DEFAULT_NPM_PUBLISH_TARGET]: {
       dependsOn: [
-        { projects: 'self', target: 'build', params: 'forward' },
+        { target: 'build', params: 'forward' },
         {
           projects: 'dependencies',
           target: DEFAULT_NPM_PUBLISH_TARGET,
@@ -286,7 +285,6 @@ function getNpmTargets(): Record<string, TargetConfiguration> {
     [DEFAULT_NPM_INSTALL_TARGET]: {
       dependsOn: [
         {
-          projects: 'self',
           target: DEFAULT_NPM_PUBLISH_TARGET,
           params: 'forward',
         },
