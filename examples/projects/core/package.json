@@ -1,6 +1,7 @@
 {
   "name": "@push-based/core",
   "version": "0.0.1",
+  "private": "true",
   "dependencies": {
     "@push-based/utils": "0.0.1",
     "@push-based/models": "0.0.1",
