@@ -182,9 +182,10 @@ function verdaccioTargets(
   > &
     Omit<StartVerdaccioOptions, 'projectName'>
 ): Record<string, TargetConfiguration> {
-  const { name: projectName } = projectConfig;
-  const { environmentsDir, ...verdaccioOptions } = options;
-  const environmentDir = join(environmentsDir, projectName);
+  const { name: envProject } = projectConfig;
+  const { environmentsDir, ...startVerdaccioOptions } = options;
+  const environmentDir = join(environmentsDir, envProject);
+
   return {
     [DEFAULT_START_VERDACCIO_TARGET]: {
       // @TODO: consider using the executor function directly to reduce the number of targets
@@ -212,9 +213,9 @@ function getEnvTargets(
   projectConfig: ProjectConfiguration,
   options: NormalizedCreateNodeOptions['environments']
 ): Record<string, TargetConfiguration> {
-  const { name: environmentProject } = projectConfig;
+  const { name: envProject } = projectConfig;
   const { environmentsDir } = options;
-  const environmentRoot = join(environmentsDir, environmentProject);
+  const environmentRoot = join(environmentsDir, envProject);
   return {
     [DEFAULT_BOOTSTRAP_TARGET]: {
       executor: '@push-based/build-env:bootstrap',

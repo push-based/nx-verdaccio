@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/schema",
-  "$id": "KillProcessExecutorOptions",
-  "title": "A executor to kill processes by PID, command, or file",
+  "$id": "PublishExecutorOptions",
+  "title": "A executor to publish NPM packages",
   "type": "object",
   "properties": {
     "printConfig": {
@@ -11,7 +11,8 @@
     },
     "environmentRoot": {
       "type": "string",
-      "description": "The root folder of the environment"
+      "description": "The root folder of the environment",
+      "aliases": ["envRoot", "e"]
     },
     "verbose": {
       "type": "boolean",

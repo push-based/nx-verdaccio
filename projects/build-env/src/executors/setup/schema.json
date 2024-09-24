@@ -6,12 +6,14 @@
   "properties": {
     "environmentRoot": {
       "type": "string",
-      "description": "The root directory of the environment"
+      "description": "The root directory of the environment",
+      "aliases": ["envRoot", "e"]
     },
     "keepServerRunning": {
       "type": "boolean",
       "description": "Keep the server running after the bootstrap commands have been executed",
-      "default": true
+      "default": true,
+      "aliases": ["k"]
     },
     "dryRun": {
       "type": "boolean",
