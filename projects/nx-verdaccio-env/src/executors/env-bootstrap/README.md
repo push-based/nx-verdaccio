@@ -43,7 +43,7 @@ Root/
   "name": "my-project",
   "targets": {
     "pb-ve--env-bootstrap": {
-      "executor": "@push-based/nx-verdaccio-env:env-env-bootstrap"
+      "executor": "@push-based/nx-verdaccio-env:env-bootstrap"
     }
   }
 }

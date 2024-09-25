@@ -141,7 +141,7 @@ describe('runSetupEnvironmentExecutor', () => {
     ).resolves.toStrictEqual({
       success: false,
       command:
-        'Failed executing target pb-ve-env-env-bootstrap\n Error in runBootstrapEnvironment',
+        'Failed executing target pb-ve-env-bootstrap\n Error in runBootstrapEnvironment',
     });
   });
 

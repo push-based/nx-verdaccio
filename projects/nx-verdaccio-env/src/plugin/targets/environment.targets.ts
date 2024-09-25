@@ -14,9 +14,9 @@ import { EXECUTOR_ENVIRONMENT_KILL_PROCESS } from '../../executors/kill-process/
 import { EXECUTOR_ENVIRONMENT_SETUP } from '../../executors/env-setup/constants';
 
 export const TARGET_ENVIRONMENT_VERDACCIO_START = 'pb-ve-env-verdaccio-start';
-export const TARGET_ENVIRONMENT_BOOTSTRAP = 'pb-ve-env-env-bootstrap';
+export const TARGET_ENVIRONMENT_BOOTSTRAP = 'pb-ve-env-bootstrap';
 export const TARGET_ENVIRONMENT_INSTALL = 'pb-ve-env-install';
-export const TARGET_ENVIRONMENT_SETUP = 'pb-ve-env-env-setup';
+export const TARGET_ENVIRONMENT_SETUP = 'pb-ve-env-setup';
 export const TARGET_ENVIRONMENT_VERDACCIO_STOP = 'pb-ve-env-verdaccio-stop';
 
 export function isEnvProject(

@@ -10,8 +10,8 @@ See [nx-verdaccio-environment plugin docs](./src/plugin/README.md) for details
 
 Examples:
 
-- `nx g @push-based/nx-verdaccio-env-env-setup` - generates NPM workspace and installs packages
-- `nx g @push-based/nx-verdaccio-env-env-setup  --keepServerRunning` - keeps Verdaccio running for debug reasons
+- `nx g @push-based/nx-verdaccio-env-setup` - generates NPM workspace and installs packages
+- `nx g @push-based/nx-verdaccio-env-setup  --keepServerRunning` - keeps Verdaccio running for debug reasons
 
 ## Executor
 
