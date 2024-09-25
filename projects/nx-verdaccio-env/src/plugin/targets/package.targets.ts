@@ -1,8 +1,11 @@
 import type { ProjectConfiguration, TargetConfiguration } from '@nx/devkit';
 import type { NormalizedCreateNodeOptions } from '../normalize-create-nodes-options';
+import {PACKAGE_NAME} from "../constants";
+import {EXECUTOR_PACKAGE_NPM_PUBLISH} from "../../executors/npm-publish/constants";
+import {EXECUTOR_PACKAGE_NPM_INSTALL} from "../../executors/npm-install/constants";
 
-export const DEFAULT_NPM_INSTALL_TARGET = 'build-env-release-install';
-export const DEFAULT_NPM_PUBLISH_TARGET = 'build-env-release-publish';
+export const TARGET_PACKAGE_NPM_INSTALL = 'build-env-release-install';
+export const TARGET_PACKAGE_NPM_PUBLISH = 'build-env-release-publish';
 
 export function isPkgProject(
   projectConfig: ProjectConfiguration,
@@ -25,30 +28,30 @@ export function isPkgProject(
 
 export function getPkgTargets(): Record<string, TargetConfiguration> {
   return {
-    [DEFAULT_NPM_PUBLISH_TARGET]: {
+    [TARGET_PACKAGE_NPM_PUBLISH]: {
       dependsOn: [
         { target: 'build', params: 'forward' },
         {
           projects: 'dependencies',
-          target: DEFAULT_NPM_PUBLISH_TARGET,
+          target: TARGET_PACKAGE_NPM_PUBLISH,
           params: 'forward',
         },
       ],
-      executor: '@push-based/build-env:npm-publish',
+      executor: `${PACKAGE_NAME}:${EXECUTOR_PACKAGE_NPM_PUBLISH}`,
     },
-    [DEFAULT_NPM_INSTALL_TARGET]: {
+    [TARGET_PACKAGE_NPM_INSTALL]: {
       dependsOn: [
         {
-          target: DEFAULT_NPM_PUBLISH_TARGET,
+          target: TARGET_PACKAGE_NPM_PUBLISH,
           params: 'forward',
         },
         {
           projects: 'dependencies',
-          target: DEFAULT_NPM_INSTALL_TARGET,
+          target: TARGET_PACKAGE_NPM_INSTALL,
           params: 'forward',
         },
       ],
-      executor: '@push-based/build-env:npm-install',
+      executor: `${PACKAGE_NAME}:${EXECUTOR_PACKAGE_NPM_INSTALL}`,
     },
   };
 }

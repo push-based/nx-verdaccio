@@ -3,7 +3,7 @@
 This executor helps to install a [`pubishable`](../../../../../README.md#fine-grained-selection-of-publishable-projects) projects into a given [environment folder](../../../../../README.md#-environment-folders-to-isolate-files-during-e2e-tests).
 This folder has to contain all needed configuration and files for the `npm install` command to work.
 
-#### @push-based/build-env:release-install
+#### @push-based/nx-verdaccio-env:release-install
 
 > [!notice]
 > To install or publish a package you need to have an environment set up.
@@ -18,7 +18,7 @@ This folder has to contain all needed configuration and files for the `npm insta
   "name": "my-project",
   "targets": {
     "build-env--npm-install": {
-      "executor": "@push-based/build-env:release-install"
+      "executor": "@push-based/nx-verdaccio-env:release-install"
     }
   }
 }

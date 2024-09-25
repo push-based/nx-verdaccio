@@ -2,10 +2,8 @@ import runBootstrapExecutor from './executor';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import * as devkit from '@nx/devkit';
 import * as bootstrapExecutorModule from './bootstrap-env';
-import {
-  DEFAULT_STOP_VERDACCIO_TARGET,
-  PACKAGE_NAME,
-} from '../../internal/constants';
+import {PACKAGE_NAME} from "../../plugin/constants";
+import {TARGET_ENVIRONMENT_VERDACCIO_STOP} from "../../plugin/targets/environment.targets";
 
 describe('runBootstrapExecutor', () => {
   const e2eProjectName = 'my-lib-e2e';
@@ -26,7 +24,7 @@ describe('runBootstrapExecutor', () => {
   };
   const stopVerdaccioTask = {
     project: e2eProjectName,
-    target: DEFAULT_STOP_VERDACCIO_TARGET,
+    target: TARGET_ENVIRONMENT_VERDACCIO_STOP,
     configuration: undefined,
   };
 

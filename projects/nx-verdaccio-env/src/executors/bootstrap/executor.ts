@@ -9,11 +9,11 @@ import { formatInfo } from '../../internal/logging';
 import { VERDACCIO_ENV_TOKEN } from './npm';
 import { VERDACCIO_REGISTRY_JSON } from './constants';
 import {
-  DEFAULT_BOOTSTRAP_TARGET,
-  DEFAULT_STOP_VERDACCIO_TARGET,
-  PACKAGE_NAME,
+  TARGET_ENVIRONMENT_BOOTSTRAP,
+  TARGET_ENVIRONMENT_VERDACCIO_STOP,
 } from '../../plugin/targets/environment.targets';
 import { runSingleExecutor } from '../../internal/run-executor';
+import {PACKAGE_NAME} from "../../plugin/constants";
 
 export type BootstrapExecutorOutput = {
   success: boolean;
@@ -29,7 +29,7 @@ export async function bootstrapExecutor(
   const { keepServerRunning, environmentRoot } = options;
 
   logger.info(
-    `Execute ${PACKAGE_NAME}:${DEFAULT_BOOTSTRAP_TARGET} with options: ${JSON.stringify(
+    `Execute ${PACKAGE_NAME}:${TARGET_ENVIRONMENT_BOOTSTRAP} with options: ${JSON.stringify(
       options,
       null,
       2
@@ -60,7 +60,7 @@ export async function bootstrapExecutor(
     await runSingleExecutor(
       {
         project: projectName,
-        target: DEFAULT_STOP_VERDACCIO_TARGET,
+        target: TARGET_ENVIRONMENT_VERDACCIO_STOP,
         configuration: configurationName,
       },
       {

@@ -12,7 +12,7 @@
     "keepServerRunning": {
       "type": "boolean",
       "description": "Keep the server running after the bootstrap commands have been executed",
-      "default": true,
+      "default": false,
       "aliases": ["k"]
     },
     "dryRun": {

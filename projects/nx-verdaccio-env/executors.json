@@ -1,11 +1,11 @@
 {
   "executors": {
-    "bootstrap": {
+    "env-bootstrap": {
       "implementation": "./src/executors/bootstrap/executor",
       "schema": "./src/executors/bootstrap/schema.json",
       "description": "Bootstraps a test environments in your workspace. Cached and ready for use."
     },
-    "setup": {
+    "env-setup": {
       "implementation": "./src/executors/setup/executor",
       "schema": "./src/executors/setup/schema.json",
       "description": "Generate and install test environments in your workspace. Cached and ready for use."

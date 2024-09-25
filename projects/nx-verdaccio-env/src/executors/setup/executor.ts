@@ -7,9 +7,9 @@ import type { SetupEnvironmentExecutorOptions } from './schema';
 
 import { VERDACCIO_REGISTRY_JSON } from '../bootstrap/constants';
 import {
-  DEFAULT_BOOTSTRAP_TARGET,
-  DEFAULT_INSTALL_TARGET,
-  DEFAULT_STOP_VERDACCIO_TARGET,
+  TARGET_ENVIRONMENT_BOOTSTRAP,
+  TARGET_ENVIRONMENT_INSTALL,
+  TARGET_ENVIRONMENT_VERDACCIO_STOP,
 } from '../../plugin/targets/environment.targets';
 import { runSingleExecutor } from '../../internal/run-executor';
 
@@ -24,13 +24,13 @@ export default async function runSetupEnvironmentExecutor(
   context: ExecutorContext
 ) {
   const { configurationName: configuration, projectName } = context;
-  const { verbose, environmentRoot, keepServerRunning } =
+  const { verbose, environmentRoot, keepServerRunning  } =
     terminalAndExecutorOptions;
   try {
     await runSingleExecutor(
       {
         project: projectName,
-        target: DEFAULT_BOOTSTRAP_TARGET,
+        target: TARGET_ENVIRONMENT_BOOTSTRAP,
         configuration,
       },
       {
@@ -45,7 +45,7 @@ export default async function runSetupEnvironmentExecutor(
     logger.error(error);
     return {
       success: false,
-      command: `Failed executing target ${DEFAULT_BOOTSTRAP_TARGET}\n ${error.message}`,
+      command: `Failed executing target ${TARGET_ENVIRONMENT_BOOTSTRAP}\n ${error.message}`,
     };
   }
 
@@ -53,7 +53,7 @@ export default async function runSetupEnvironmentExecutor(
     await executeProcess({
       command: 'nx',
       args: objectToCliArgs({
-        _: [DEFAULT_INSTALL_TARGET, projectName],
+        _: [TARGET_ENVIRONMENT_INSTALL, projectName],
         environmentRoot,
       }),
       cwd: process.cwd(),
@@ -63,7 +63,7 @@ export default async function runSetupEnvironmentExecutor(
     logger.error(error);
     return {
       success: false,
-      command: `Fails executing target ${DEFAULT_INSTALL_TARGET}\n ${error.message}`,
+      command: `Fails executing target ${TARGET_ENVIRONMENT_INSTALL}\n ${error.message}`,
     };
   }
 
@@ -72,7 +72,7 @@ export default async function runSetupEnvironmentExecutor(
       await runSingleExecutor(
         {
           project: projectName,
-          target: DEFAULT_STOP_VERDACCIO_TARGET,
+          target: TARGET_ENVIRONMENT_VERDACCIO_STOP,
           configuration,
         },
         {

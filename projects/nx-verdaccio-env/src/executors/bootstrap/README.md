@@ -27,7 +27,7 @@ Root/
             └── package.json # npm install/uninstall
 ````
 
-#### @push-based/build-env:env-bootstrap
+#### @push-based/nx-verdaccio-env:env-bootstrap
 
 > [!notice]
 > The bootstrap executor keeps the Verdaccio server running.
@@ -43,7 +43,7 @@ Root/
   "name": "my-project",
   "targets": {
     "build-env--env-bootstrap": {
-      "executor": "@push-based/build-env:env-bootstrap"
+      "executor": "@push-based/nx-verdaccio-env:env-bootstrap"
     }
   }
 }

@@ -1,23 +1,26 @@
-import type { ProjectConfiguration, TargetConfiguration } from '@nx/devkit';
-import type { NormalizedCreateNodeOptions } from '../normalize-create-nodes-options';
-import { join } from 'node:path';
-import { DEFAULT_NPM_INSTALL_TARGET } from './package.targets';
-import type { BuildEnvEnvironmentsOptions } from '../schema';
-import type { StartVerdaccioOptions } from '../../executors/bootstrap/verdaccio-registry';
-import { uniquePort } from '../../executors/bootstrap/unique-port';
-import { VERDACCIO_REGISTRY_JSON } from '../../executors/bootstrap/constants';
+import type {ProjectConfiguration, TargetConfiguration} from '@nx/devkit';
+import type {NormalizedCreateNodeOptions} from '../normalize-create-nodes-options';
+import {join} from 'node:path';
+import {TARGET_PACKAGE_NPM_INSTALL} from './package.targets';
+import type {BuildEnvEnvironmentsOptions} from '../schema';
+import type {StartVerdaccioOptions} from '../../executors/bootstrap/verdaccio-registry';
+import {uniquePort} from '../../executors/bootstrap/unique-port';
+import {EXECUTOR_ENVIRONMENT_BOOTSTRAP, VERDACCIO_REGISTRY_JSON} from '../../executors/bootstrap/constants';
+import {PACKAGE_NAME} from "../constants";
+import {EXECUTOR_ENVIRONMENT_KILL_PROCESS} from "../../executors/kill-process/constant";
+import {EXECUTOR_ENVIRONMENT_SETUP} from "../../executors/setup/constants";
 
-export const DEFAULT_START_VERDACCIO_TARGET = 'build-env-verdaccio-start';
-export const DEFAULT_BOOTSTRAP_TARGET = 'build-env-env-bootstrap';
-export const DEFAULT_INSTALL_TARGET = 'build-env-env-install';
-export const DEFAULT_SETUP_TARGET = 'build-env-env-setup';
-export const DEFAULT_STOP_VERDACCIO_TARGET = 'build-env-verdaccio-stop';
+export const TARGET_ENVIRONMENT_VERDACCIO_START = 'build-env-verdaccio-start';
+export const TARGET_ENVIRONMENT_BOOTSTRAP = 'build-env-env-bootstrap';
+export const TARGET_ENVIRONMENT_INSTALL = 'build-env-env-install';
+export const TARGET_ENVIRONMENT_SETUP = 'build-env-env-setup';
+export const TARGET_ENVIRONMENT_VERDACCIO_STOP = 'build-env-verdaccio-stop';
 
 export function isEnvProject(
   projectConfig: ProjectConfiguration,
   options: NormalizedCreateNodeOptions['environments']
 ): boolean {
-  const { tags: existingTags = [], targets } = projectConfig;
+  const {tags: existingTags = [], targets} = projectConfig;
   const existingTargetNames = Object.keys(targets ?? {});
   const {
     filterByTags: environmentsTagFilters,
@@ -52,12 +55,12 @@ export function verdaccioTargets(
   > &
     Omit<StartVerdaccioOptions, 'projectName'>
 ): Record<string, TargetConfiguration> {
-  const { name: envProject } = projectConfig;
-  const { environmentsDir, ...verdaccioOptions } = options;
+  const {name: envProject} = projectConfig;
+  const {environmentsDir, ...verdaccioOptions} = options;
   const environmentDir = join(environmentsDir, envProject);
 
   return {
-    [DEFAULT_START_VERDACCIO_TARGET]: {
+    [TARGET_ENVIRONMENT_VERDACCIO_START]: {
       // @TODO: consider using the executor function directly to reduce the number of targets
       executor: '@nx/js:verdaccio',
       options: {
@@ -70,8 +73,8 @@ export function verdaccioTargets(
         ...verdaccioOptions,
       },
     },
-    [DEFAULT_STOP_VERDACCIO_TARGET]: {
-      executor: '@push-based/build-env:kill-process',
+    [TARGET_ENVIRONMENT_VERDACCIO_STOP]: {
+      executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_KILL_PROCESS}`,
       options: {
         filePath: join(environmentsDir, VERDACCIO_REGISTRY_JSON),
         ...verdaccioOptions,
@@ -84,29 +87,29 @@ export function getEnvTargets(
   projectConfig: ProjectConfiguration,
   options: NormalizedCreateNodeOptions['environments']
 ): Record<string, TargetConfiguration> {
-  const { name: envProject } = projectConfig;
-  const { environmentsDir } = options;
+  const {name: envProject} = projectConfig;
+  const {environmentsDir} = options;
   const environmentRoot = join(environmentsDir, envProject);
   return {
-    [DEFAULT_BOOTSTRAP_TARGET]: {
-      executor: '@push-based/build-env:bootstrap',
-      options: { environmentRoot },
+    [TARGET_ENVIRONMENT_BOOTSTRAP]: {
+      executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_BOOTSTRAP}`,
+      options: {environmentRoot},
     },
     // just here to execute dependent npm-install tasks with the correct environmentProject
-    [DEFAULT_INSTALL_TARGET]: {
+    [TARGET_ENVIRONMENT_INSTALL]: {
       dependsOn: [
         {
           projects: 'dependencies',
-          target: DEFAULT_NPM_INSTALL_TARGET,
+          target: TARGET_PACKAGE_NPM_INSTALL,
           params: 'forward',
         },
       ],
-      options: { environmentRoot },
+      options: {environmentRoot},
     },
     // runs bootstrap-env, install-env and stop-verdaccio
-    [DEFAULT_SETUP_TARGET]: {
+    [TARGET_ENVIRONMENT_SETUP]: {
       outputs: ['{options.environmentRoot}'],
-      executor: '@push-based/build-env:setup',
+      executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_SETUP}`,
       options: {
         environmentRoot,
       },
@@ -118,8 +121,8 @@ export function updateEnvTargetNames(
   projectConfig: ProjectConfiguration,
   options: Required<Pick<BuildEnvEnvironmentsOptions, 'targetNames'>>
 ): Record<string, TargetConfiguration> {
-  const { targetNames: envTargetNames } = options;
-  const { targets: existingTargets = {} as TargetConfiguration } =
+  const {targetNames: envTargetNames} = options;
+  const {targets: existingTargets = {} as TargetConfiguration} =
     projectConfig;
 
   return Object.fromEntries(
@@ -133,7 +136,7 @@ export function updateEnvTargetNames(
           ...config,
           dependsOn: [
             {
-              target: DEFAULT_SETUP_TARGET,
+              target: TARGET_ENVIRONMENT_SETUP,
               params: 'forward',
             },
             ...(config.dependsOn ?? []),
