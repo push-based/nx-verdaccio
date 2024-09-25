@@ -8,29 +8,29 @@ import {
   readJsonFile,
   type TargetConfiguration,
 } from '@nx/devkit';
-import {dirname, join} from 'node:path';
-import type {BuildEnvPluginCreateNodeOptions} from './schema';
+import { dirname, join } from 'node:path';
+import type { BuildEnvPluginCreateNodeOptions } from './schema';
 import {
   normalizeCreateNodesOptions,
   type NormalizedCreateNodeOptions,
 } from './normalize-create-nodes-options';
-import {hashObject} from 'nx/src/hasher/file-hasher';
-import {workspaceDataDirectory} from 'nx/src/utils/cache-directory';
-import {PLUGIN_NAME} from './constants';
+import { hashObject } from 'nx/src/hasher/file-hasher';
+import { workspaceDataDirectory } from 'nx/src/utils/cache-directory';
+import { PLUGIN_NAME } from './constants';
 import {
   getCacheRecord,
   readTargetsCache,
   setCacheRecord,
   writeTargetsToCache,
 } from './caching';
-import {createTargets} from './targets/create-targets';
+import { createTargets } from './targets/create-targets';
 
 const PROJECT_JSON_FILE_GLOB = '**/project.json';
 
 export const createNodesV2: CreateNodesV2<BuildEnvPluginCreateNodeOptions> = [
   PROJECT_JSON_FILE_GLOB,
   async (configFiles, options, context) => {
-    const optionsHash = hashObject({configFiles, options});
+    const optionsHash = hashObject({ configFiles, options });
     const nxVerdaccioEnvPluginCachePath = join(
       workspaceDataDirectory,
       `push-based--${PLUGIN_NAME}-${optionsHash}.hash`

@@ -76,7 +76,7 @@ describe('runBootstrapExecutor', () => {
     expect(errorLoggerSpy).not.toHaveBeenCalled();
     expect(infoLoggerSpy).toHaveBeenCalledTimes(1);
     expect(infoLoggerSpy).toHaveBeenCalledWith(
-      `Execute ${PACKAGE_NAME}:build-env-env-bootstrap with options: ${JSON.stringify(
+      `Execute ${PACKAGE_NAME}:pb-ve-env-bootstrap with options: ${JSON.stringify(
         {
           environmentRoot: `tmp/environments/${e2eProjectName}`,
         },
@@ -130,7 +130,7 @@ describe('runBootstrapExecutor', () => {
 
     expect(infoLoggerSpy).toHaveBeenCalledTimes(1);
     expect(infoLoggerSpy).toHaveBeenCalledWith(
-      `Execute ${PACKAGE_NAME}:build-env-env-bootstrap with options: {}`
+      `Execute ${PACKAGE_NAME}:pb-ve-env-bootstrap with options: {}`
     );
 
     expect(errorLoggerSpy).toHaveBeenCalledTimes(1);

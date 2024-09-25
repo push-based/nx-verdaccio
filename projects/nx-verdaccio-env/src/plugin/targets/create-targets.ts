@@ -1,8 +1,13 @@
-import type {BuildEnvPluginCreateNodeOptions} from '../schema';
-import type {CreateNodesResult, ProjectConfiguration,} from '@nx/devkit';
-import {normalizeCreateNodesOptions} from '../normalize-create-nodes-options';
-import {getEnvTargets, isEnvProject, updateEnvTargetNames, verdaccioTargets,} from './environment.targets';
-import {getPkgTargets, isPkgProject} from './package.targets';
+import type { BuildEnvPluginCreateNodeOptions } from '../schema';
+import type { CreateNodesResult, ProjectConfiguration } from '@nx/devkit';
+import { normalizeCreateNodesOptions } from '../normalize-create-nodes-options';
+import {
+  getEnvTargets,
+  isEnvProject,
+  updateEnvTargetNames,
+  verdaccioTargets,
+} from './environment.targets';
+import { getPkgTargets, isPkgProject } from './package.targets';
 
 export function createTargets(
   projectConfiguration: ProjectConfiguration,
@@ -30,7 +35,7 @@ export function createTargets(
       ...updateEnvTargetNames(projectConfiguration, environments),
     }),
     // === PACKAGE TARGETS ===
-    // npm-publish, npm-install
+    // pkg-publish, pkg-install
     ...(isPkgProject(projectConfiguration, packages) && getPkgTargets()),
   };
 }

@@ -4,8 +4,8 @@ import { PACKAGE_NAME } from '../constants';
 import { EXECUTOR_PACKAGE_NPM_PUBLISH } from '../../executors/npm-publish/constants';
 import { EXECUTOR_PACKAGE_NPM_INSTALL } from '../../executors/npm-install/constants';
 
-export const TARGET_PACKAGE_NPM_INSTALL = 'build-env-release-install';
-export const TARGET_PACKAGE_NPM_PUBLISH = 'build-env-release-publish';
+export const TARGET_PACKAGE_NPM_INSTALL = 'pb-ve-pkg-install';
+export const TARGET_PACKAGE_NPM_PUBLISH = 'pb-ve-pkg-publish';
 
 export function isPkgProject(
   projectConfig: ProjectConfiguration,

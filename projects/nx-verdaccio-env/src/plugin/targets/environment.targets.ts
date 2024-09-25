@@ -13,11 +13,11 @@ import { PACKAGE_NAME } from '../constants';
 import { EXECUTOR_ENVIRONMENT_KILL_PROCESS } from '../../executors/kill-process/constant';
 import { EXECUTOR_ENVIRONMENT_SETUP } from '../../executors/setup/constants';
 
-export const TARGET_ENVIRONMENT_VERDACCIO_START = 'build-env-verdaccio-start';
-export const TARGET_ENVIRONMENT_BOOTSTRAP = 'build-env-env-bootstrap';
-export const TARGET_ENVIRONMENT_INSTALL = 'build-env-env-install';
-export const TARGET_ENVIRONMENT_SETUP = 'build-env-env-setup';
-export const TARGET_ENVIRONMENT_VERDACCIO_STOP = 'build-env-verdaccio-stop';
+export const TARGET_ENVIRONMENT_VERDACCIO_START = 'pb-ve-env-verdaccio-start';
+export const TARGET_ENVIRONMENT_BOOTSTRAP = 'pb-ve-env-bootstrap';
+export const TARGET_ENVIRONMENT_INSTALL = 'pb-ve-env-install';
+export const TARGET_ENVIRONMENT_SETUP = 'pb-ve-env-setup';
+export const TARGET_ENVIRONMENT_VERDACCIO_STOP = 'pb-ve-env-verdaccio-stop';
 
 export function isEnvProject(
   projectConfig: ProjectConfiguration,
@@ -98,7 +98,7 @@ export function getEnvTargets(
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_BOOTSTRAP}`,
       options: { environmentRoot },
     },
-    // just here to execute dependent npm-install tasks with the correct environmentProject
+    // intermediate task just here to execute dependent pkg-install tasks with the correct environmentProject
     [TARGET_ENVIRONMENT_INSTALL]: {
       dependsOn: [
         {
@@ -138,10 +138,7 @@ export function updateEnvTargetNames(
         {
           ...config,
           dependsOn: [
-            {
-              target: TARGET_ENVIRONMENT_SETUP,
-              params: 'forward',
-            },
+            { target: TARGET_ENVIRONMENT_SETUP, params: 'forward' },
             ...(config.dependsOn ?? []),
           ],
         },

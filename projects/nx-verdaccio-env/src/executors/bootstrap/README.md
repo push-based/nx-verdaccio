@@ -31,7 +31,7 @@ Root/
 
 > [!notice]
 > The bootstrap executor keeps the Verdaccio server running.
-> To stop the server **`nx run <project-name>:build-env--verdaccio-stop --environmentRoot path/to/environment`**
+> To stop the server **`nx run <project-name>:pb-ve--verdaccio-stop --environmentRoot path/to/environment`**
 > To avoid keeping the server running pass **`--no-keepServerRunning`**
 
 ## Usage
@@ -42,7 +42,7 @@ Root/
 {
   "name": "my-project",
   "targets": {
-    "build-env--env-bootstrap": {
+    "pb-ve--env-bootstrap": {
       "executor": "@push-based/nx-verdaccio-env:env-bootstrap"
     }
   }
@@ -55,8 +55,8 @@ By default, the Nx executor will derive the options from the executor options.
 {
   "name": "my-project",
   "targets": {
-    "build-env--env-bootstrap": {
-      "executor": "@code-pushup/build-env:env-bootstrap",
+    "pb-ve--env-bootstrap": {
+      "executor": "@code-pushup/pb-ve:env-bootstrap",
       "options": {
         "keepServerRunning": false
         "envRoot": "/tmp/test-npm-workspace"
@@ -69,7 +69,7 @@ By default, the Nx executor will derive the options from the executor options.
 
 Show what will be executed without actually executing it:
 
-`nx run my-project:build-env--env-bootstrap --print-config`
+`nx run my-project:pb-ve--env-bootstrap --print-config`
 
 ## Options
 

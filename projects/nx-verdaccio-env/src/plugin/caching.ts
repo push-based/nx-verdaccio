@@ -1,5 +1,9 @@
 import { hashObject } from 'nx/src/hasher/file-hasher';
-import { type CreateNodesResult, readJsonFile, writeJsonFile } from '@nx/devkit';
+import {
+  type CreateNodesResult,
+  readJsonFile,
+  writeJsonFile,
+} from '@nx/devkit';
 import { existsSync } from 'node:fs';
 
 export function cacheKey(prefix: string, hashData: Record<string, unknown>) {
