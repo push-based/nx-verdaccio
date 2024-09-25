@@ -11,13 +11,18 @@ import {
 } from '@nx/devkit';
 import { existsSync } from 'node:fs';
 import { dirname, join, basename } from 'node:path';
-import {BuildEnvPluginCreateNodeOptions} from "./schema";
-import {normalizeCreateNodesOptions} from "./normalize-create-nodes-options";
-import {hashObject} from "nx/src/hasher/file-hasher";
-import {getEnvTargets, isEnvProject, updateEnvTargetNames, verdaccioTargets} from "./targets/environment.targets";
-import {getPkgTargets, isPkgProject} from "./targets/package.targets";
-import {workspaceDataDirectory} from "nx/src/utils/cache-directory";
-import {PLUGIN_NAME} from "./constants";
+import { BuildEnvPluginCreateNodeOptions } from './schema';
+import { normalizeCreateNodesOptions } from './normalize-create-nodes-options';
+import { hashObject } from 'nx/src/hasher/file-hasher';
+import {
+  getEnvTargets,
+  isEnvProject,
+  updateEnvTargetNames,
+  verdaccioTargets,
+} from './targets/environment.targets';
+import { getPkgTargets, isPkgProject } from './targets/package.targets';
+import { workspaceDataDirectory } from 'nx/src/utils/cache-directory';
+import { PLUGIN_NAME } from './constants';
 
 function readTargetsCache(
   cachePath: string

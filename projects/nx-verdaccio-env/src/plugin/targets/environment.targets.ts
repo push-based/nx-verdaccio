@@ -1,14 +1,17 @@
-import type {ProjectConfiguration, TargetConfiguration} from '@nx/devkit';
-import type {NormalizedCreateNodeOptions} from '../normalize-create-nodes-options';
-import {join} from 'node:path';
-import {TARGET_PACKAGE_NPM_INSTALL} from './package.targets';
-import type {BuildEnvEnvironmentsOptions} from '../schema';
-import type {StartVerdaccioOptions} from '../../executors/bootstrap/verdaccio-registry';
-import {uniquePort} from '../../executors/bootstrap/unique-port';
-import {EXECUTOR_ENVIRONMENT_BOOTSTRAP, VERDACCIO_REGISTRY_JSON} from '../../executors/bootstrap/constants';
-import {PACKAGE_NAME} from "../constants";
-import {EXECUTOR_ENVIRONMENT_KILL_PROCESS} from "../../executors/kill-process/constant";
-import {EXECUTOR_ENVIRONMENT_SETUP} from "../../executors/setup/constants";
+import type { ProjectConfiguration, TargetConfiguration } from '@nx/devkit';
+import type { NormalizedCreateNodeOptions } from '../normalize-create-nodes-options';
+import { join } from 'node:path';
+import { TARGET_PACKAGE_NPM_INSTALL } from './package.targets';
+import type { BuildEnvEnvironmentsOptions } from '../schema';
+import type { StartVerdaccioOptions } from '../../executors/bootstrap/verdaccio-registry';
+import { uniquePort } from '../../executors/bootstrap/unique-port';
+import {
+  EXECUTOR_ENVIRONMENT_BOOTSTRAP,
+  VERDACCIO_REGISTRY_JSON,
+} from '../../executors/bootstrap/constants';
+import { PACKAGE_NAME } from '../constants';
+import { EXECUTOR_ENVIRONMENT_KILL_PROCESS } from '../../executors/kill-process/constant';
+import { EXECUTOR_ENVIRONMENT_SETUP } from '../../executors/setup/constants';
 
 export const TARGET_ENVIRONMENT_VERDACCIO_START = 'build-env-verdaccio-start';
 export const TARGET_ENVIRONMENT_BOOTSTRAP = 'build-env-env-bootstrap';
@@ -20,7 +23,7 @@ export function isEnvProject(
   projectConfig: ProjectConfiguration,
   options: NormalizedCreateNodeOptions['environments']
 ): boolean {
-  const {tags: existingTags = [], targets} = projectConfig;
+  const { tags: existingTags = [], targets } = projectConfig;
   const existingTargetNames = Object.keys(targets ?? {});
   const {
     filterByTags: environmentsTagFilters,
@@ -55,8 +58,8 @@ export function verdaccioTargets(
   > &
     Omit<StartVerdaccioOptions, 'projectName'>
 ): Record<string, TargetConfiguration> {
-  const {name: envProject} = projectConfig;
-  const {environmentsDir, ...verdaccioOptions} = options;
+  const { name: envProject } = projectConfig;
+  const { environmentsDir, ...verdaccioOptions } = options;
   const environmentDir = join(environmentsDir, envProject);
 
   return {
@@ -87,13 +90,13 @@ export function getEnvTargets(
   projectConfig: ProjectConfiguration,
   options: NormalizedCreateNodeOptions['environments']
 ): Record<string, TargetConfiguration> {
-  const {name: envProject} = projectConfig;
-  const {environmentsDir} = options;
+  const { name: envProject } = projectConfig;
+  const { environmentsDir } = options;
   const environmentRoot = join(environmentsDir, envProject);
   return {
     [TARGET_ENVIRONMENT_BOOTSTRAP]: {
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_BOOTSTRAP}`,
-      options: {environmentRoot},
+      options: { environmentRoot },
     },
     // just here to execute dependent npm-install tasks with the correct environmentProject
     [TARGET_ENVIRONMENT_INSTALL]: {
@@ -104,7 +107,7 @@ export function getEnvTargets(
           params: 'forward',
         },
       ],
-      options: {environmentRoot},
+      options: { environmentRoot },
     },
     // runs bootstrap-env, install-env and stop-verdaccio
     [TARGET_ENVIRONMENT_SETUP]: {
@@ -121,8 +124,8 @@ export function updateEnvTargetNames(
   projectConfig: ProjectConfiguration,
   options: Required<Pick<BuildEnvEnvironmentsOptions, 'targetNames'>>
 ): Record<string, TargetConfiguration> {
-  const {targetNames: envTargetNames} = options;
-  const {targets: existingTargets = {} as TargetConfiguration} =
+  const { targetNames: envTargetNames } = options;
+  const { targets: existingTargets = {} as TargetConfiguration } =
     projectConfig;
 
   return Object.fromEntries(

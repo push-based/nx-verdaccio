@@ -3,8 +3,8 @@ import runKillProcessExecutor from './executor';
 import * as killProcessModule from './kill-process';
 import { MEMFS_VOLUME } from '@push-based/test-utils';
 import { logger } from '@nx/devkit';
-import {PACKAGE_NAME} from "../../plugin/constants";
-import {EXECUTOR_ENVIRONMENT_KILL_PROCESS} from "./constant";
+import { PACKAGE_NAME } from '../../plugin/constants';
+import { EXECUTOR_ENVIRONMENT_KILL_PROCESS } from './constant';
 
 vi.mock('@nx/devkit', async () => {
   const actual = await vi.importActual('@nx/devkit');

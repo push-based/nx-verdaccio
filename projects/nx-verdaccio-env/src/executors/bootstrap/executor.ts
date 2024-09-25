@@ -13,7 +13,7 @@ import {
   TARGET_ENVIRONMENT_VERDACCIO_STOP,
 } from '../../plugin/targets/environment.targets';
 import { runSingleExecutor } from '../../internal/run-executor';
-import {PACKAGE_NAME} from "../../plugin/constants";
+import { PACKAGE_NAME } from '../../plugin/constants';
 
 export type BootstrapExecutorOutput = {
   success: boolean;

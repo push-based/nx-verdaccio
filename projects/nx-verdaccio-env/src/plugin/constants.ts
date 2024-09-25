@@ -1,5 +1,5 @@
-import {join} from 'node:path';
-import {name} from '../../package.json';
+import { join } from 'node:path';
+import { name } from '../../package.json';
 
 export const PACKAGE_NAME = name;
 export const PLUGIN_NAME = 'build-env';

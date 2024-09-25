@@ -2,8 +2,11 @@ import { type ExecutorContext, logger } from '@nx/devkit';
 import type { KillProcessExecutorOptions } from './schema';
 import { join } from 'node:path';
 import { killProcessFromPid } from './kill-process';
-import {DEFAULT_PROCESS_FILENAME, EXECUTOR_ENVIRONMENT_KILL_PROCESS} from './constant';
-import {PACKAGE_NAME} from "../../plugin/constants";
+import {
+  DEFAULT_PROCESS_FILENAME,
+  EXECUTOR_ENVIRONMENT_KILL_PROCESS,
+} from './constant';
+import { PACKAGE_NAME } from '../../plugin/constants';
 
 export type ExecutorOutput = {
   success: boolean;

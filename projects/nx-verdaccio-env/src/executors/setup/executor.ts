@@ -24,7 +24,7 @@ export default async function runSetupEnvironmentExecutor(
   context: ExecutorContext
 ) {
   const { configurationName: configuration, projectName } = context;
-  const { verbose, environmentRoot, keepServerRunning  } =
+  const { verbose, environmentRoot, keepServerRunning } =
     terminalAndExecutorOptions;
   try {
     await runSingleExecutor(

@@ -1,8 +1,8 @@
 import type { ProjectConfiguration, TargetConfiguration } from '@nx/devkit';
 import type { NormalizedCreateNodeOptions } from '../normalize-create-nodes-options';
-import {PACKAGE_NAME} from "../constants";
-import {EXECUTOR_PACKAGE_NPM_PUBLISH} from "../../executors/npm-publish/constants";
-import {EXECUTOR_PACKAGE_NPM_INSTALL} from "../../executors/npm-install/constants";
+import { PACKAGE_NAME } from '../constants';
+import { EXECUTOR_PACKAGE_NPM_PUBLISH } from '../../executors/npm-publish/constants';
+import { EXECUTOR_PACKAGE_NPM_INSTALL } from '../../executors/npm-install/constants';
 
 export const TARGET_PACKAGE_NPM_INSTALL = 'build-env-release-install';
 export const TARGET_PACKAGE_NPM_PUBLISH = 'build-env-release-publish';
