@@ -65,6 +65,7 @@ export function verdaccioTargets(
   return {
     [TARGET_ENVIRONMENT_VERDACCIO_START]: {
       // @TODO: consider using the executor function directly to reduce the number of targets
+      // https://github.com/nrwl/nx/blob/b73f1e0e0002c55fc0bacaa1557140adb9eec8de/packages/js/src/executors/verdaccio/verdaccio.impl.ts#L22
       executor: '@nx/js:verdaccio',
       options: {
         config: '.verdaccio/config.yml',
