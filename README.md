@@ -64,7 +64,7 @@ With this plugin, say goodbye to the old days of waiting around for your tests a
 >     "e2e-special": {
 >       "dependsOn": [
 >         // dynamically aded
->         { "projects": "self", "target": "setup-env", "params": "forward" }
+>         { "target": "setup-env", "params": "forward" }
 >       ]
 >       // ...
 >     }
