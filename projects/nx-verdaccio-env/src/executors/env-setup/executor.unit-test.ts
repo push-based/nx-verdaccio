@@ -32,7 +32,7 @@ describe('runSetupEnvironmentExecutor', () => {
     executeProcessSpy.mockReset();
   });
 
-  it('should setup environment correctly', async () => {
+  it('should env-setup environment correctly', async () => {
     runExecutorSpy
       .mockResolvedValueOnce([
         Promise.resolve({
@@ -72,7 +72,7 @@ describe('runSetupEnvironmentExecutor', () => {
       )
     ).resolves.toStrictEqual({
       success: true,
-      command: 'Environment setup complete.',
+      command: 'Environment env-setup complete.',
     });
 
     expect(executeProcessSpy).toHaveBeenCalledTimes(1);
@@ -141,7 +141,7 @@ describe('runSetupEnvironmentExecutor', () => {
     ).resolves.toStrictEqual({
       success: false,
       command:
-        'Failed executing target pb-ve-env-bootstrap\n Error in runBootstrapEnvironment',
+        'Failed executing target pb-ve-env-env-bootstrap\n Error in runBootstrapEnvironment',
     });
   });
 
@@ -199,7 +199,7 @@ describe('runSetupEnvironmentExecutor', () => {
       )
     ).resolves.toStrictEqual({
       success: true,
-      command: 'Environment setup complete.',
+      command: 'Environment env-setup complete.',
     });
 
     expect(executeProcessSpy).toHaveBeenCalledTimes(1);

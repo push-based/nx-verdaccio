@@ -31,7 +31,7 @@ The interesting part here is the global setup script. So let's take a closer loo
 The following is a simplified version of a global setup script used by your testing lib.
 
 ```ts
-// global-setup.ts
+// global-env-setup.ts
 import { rm } from 'node:fs/promises';
 import { executeProcess, objectToCliArgs } from '@push-based/test-utils';
 import { configureRegistry, RegistryResult, startVerdaccioServer, unconfigureRegistry } from '@push-based/tools-utils';
@@ -101,7 +101,7 @@ User/
         ├── tmp/
         │    ├── e2e/...
         │    │   └── <test-file-name>/...
-        │    │        └── <it-block-setup>/...
+        │    │        └── <it-block-env-setup>/...
         │    │             └── test.file.ts
         │    └── local-registry/
         │        └── storage/

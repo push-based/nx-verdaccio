@@ -60,7 +60,7 @@ describe('runBootstrapExecutor', () => {
     runExecutorSpy.mockReset();
   });
 
-  it('should bootstrap environment correctly', async () => {
+  it('should env-bootstrap environment correctly', async () => {
     await expect(
       runBootstrapExecutor(
         {
@@ -121,11 +121,11 @@ describe('runBootstrapExecutor', () => {
   it('should throw if bootstrappingEnvironment fails', async () => {
     bootstrapEnvironmentSpy.mockReset();
     bootstrapEnvironmentSpy.mockRejectedValueOnce(
-      new Error('Failed to bootstrap environment')
+      new Error('Failed to env-bootstrap environment')
     );
     await expect(runBootstrapExecutor({}, context)).resolves.toStrictEqual({
       success: false,
-      command: 'Failed to bootstrap environment',
+      command: 'Failed to env-bootstrap environment',
     });
 
     expect(infoLoggerSpy).toHaveBeenCalledTimes(1);
@@ -135,7 +135,7 @@ describe('runBootstrapExecutor', () => {
 
     expect(errorLoggerSpy).toHaveBeenCalledTimes(1);
     expect(errorLoggerSpy).toHaveBeenCalledWith(
-      Error('Failed to bootstrap environment')
+      Error('Failed to env-bootstrap environment')
     );
 
     expect(runExecutorSpy).toHaveBeenCalledTimes(0);

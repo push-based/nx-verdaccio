@@ -13,7 +13,7 @@ const onlyAudits: OnlyAudit[] = [
 const taskGraphTasks = ['cli-e2e:build-env-env-install'];
 const taskTimeTasks = [
   'cli-e2e:e2e',
-  'cli-e2e:build-env-env-setup',
+  'cli-e2e:build-env-env-env-setup',
   'cli:unit-test',
   'cli:build',
   'core-e2e:e2e',
@@ -22,11 +22,11 @@ const taskTimeTasks = [
   'cli-e2e-original:original-e2e',
 ];
 const cacheSizeTasks = [
-  'models-e2e:build-env-env-setup',
-  'utils-e2e:build-env-env-setup',
-  'core-e2e:build-env-env-setup',
-  'cli-e2e:build-env-env-setup',
-  'playground-e2e:build-env-env-setup',
+  'models-e2e:build-env-env-env-setup',
+  'utils-e2e:build-env-env-env-setup',
+  'core-e2e:build-env-env-env-setup',
+  'cli-e2e:build-env-env-env-setup',
+  'playground-e2e:build-env-env-env-setup',
 ];
 export default {
   plugins: [

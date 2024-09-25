@@ -29,9 +29,9 @@ export function createTargets(
       ...verdaccioTargets(projectConfiguration, {
         environmentsDir: environments.environmentsDir,
       }),
-      // bootstrap-env, setup-env, install-env (intermediate target to run dependency targets)
+      // env-bootstrap-env, env-setup-env, install-env (intermediate target to run dependency targets)
       ...getEnvTargets(projectConfiguration, environments),
-      // adjust targets to run setup-env
+      // adjust targets to run env-setup-env
       ...updateEnvTargetNames(projectConfiguration, environments),
     }),
     // === PACKAGE TARGETS ===

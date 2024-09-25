@@ -3,20 +3,20 @@ import type { NormalizedCreateNodeOptions } from '../normalize-create-nodes-opti
 import { join } from 'node:path';
 import { TARGET_PACKAGE_NPM_INSTALL } from './package.targets';
 import type { BuildEnvEnvironmentsOptions } from '../schema';
-import type { StartVerdaccioOptions } from '../../executors/bootstrap/verdaccio-registry';
-import { uniquePort } from '../../executors/bootstrap/unique-port';
+import type { StartVerdaccioOptions } from '../../executors/env-bootstrap/verdaccio-registry';
+import { uniquePort } from '../../executors/env-bootstrap/unique-port';
 import {
   EXECUTOR_ENVIRONMENT_BOOTSTRAP,
   VERDACCIO_REGISTRY_JSON,
-} from '../../executors/bootstrap/constants';
+} from '../../executors/env-bootstrap/constants';
 import { PACKAGE_NAME } from '../constants';
 import { EXECUTOR_ENVIRONMENT_KILL_PROCESS } from '../../executors/kill-process/constant';
-import { EXECUTOR_ENVIRONMENT_SETUP } from '../../executors/setup/constants';
+import { EXECUTOR_ENVIRONMENT_SETUP } from '../../executors/env-setup/constants';
 
 export const TARGET_ENVIRONMENT_VERDACCIO_START = 'pb-ve-env-verdaccio-start';
-export const TARGET_ENVIRONMENT_BOOTSTRAP = 'pb-ve-env-bootstrap';
+export const TARGET_ENVIRONMENT_BOOTSTRAP = 'pb-ve-env-env-bootstrap';
 export const TARGET_ENVIRONMENT_INSTALL = 'pb-ve-env-install';
-export const TARGET_ENVIRONMENT_SETUP = 'pb-ve-env-setup';
+export const TARGET_ENVIRONMENT_SETUP = 'pb-ve-env-env-setup';
 export const TARGET_ENVIRONMENT_VERDACCIO_STOP = 'pb-ve-env-verdaccio-stop';
 
 export function isEnvProject(
@@ -109,7 +109,7 @@ export function getEnvTargets(
       ],
       options: { environmentRoot },
     },
-    // runs bootstrap-env, install-env and stop-verdaccio
+    // runs env-bootstrap-env, install-env and stop-verdaccio
     [TARGET_ENVIRONMENT_SETUP]: {
       outputs: ['{options.environmentRoot}'],
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_SETUP}`,

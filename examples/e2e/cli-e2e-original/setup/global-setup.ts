@@ -33,7 +33,7 @@ export async function setup() {
     command: 'nx',
     args: objectToCliArgs({
       _: ['run-many'],
-      targets: 'original-npm-publish',
+      targets: 'original-pkg-publish',
       exclude: 'tag:type:testing',
       skipNxCache: true,
       verbose: isVerbose,
@@ -46,7 +46,7 @@ export async function setup() {
     command: 'nx',
     args: objectToCliArgs({
       _: ['run-many'],
-      targets: 'original-npm-install',
+      targets: 'original-pkg-install',
       exclude: 'tag:type:testing',
       skipNxCache: true,
       parallel: 1,

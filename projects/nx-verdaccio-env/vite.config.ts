@@ -22,8 +22,8 @@ export default defineConfig({
     ],
     reporters: ['default'],
     setupFiles: [
-      '../../testing/test-setup/src/lib/fs.mock.ts',
-      '../../testing/test-setup/src/lib/reset.mock.ts',
+      '../../testing/test-env-setup/src/lib/fs.mock.ts',
+      '../../testing/test-env-setup/src/lib/reset.mock.ts',
     ],
     coverage: {
       reportsDirectory: '../../coverage/projects/build-env',

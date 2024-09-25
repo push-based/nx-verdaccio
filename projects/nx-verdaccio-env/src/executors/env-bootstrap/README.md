@@ -20,7 +20,7 @@ Root/
             │       └── <package-name>/...
             ├── __test__/...
             │   └── <test-file-name>/...
-            │       └── <it-block-setup>/...
+            │       └── <it-block-env-setup>/...
             │           └── test.file.ts
             ├── .npmrc # local npm config configured for project specific Verdaccio registry
             ├── package-lock.json # skipped creation by default
@@ -43,7 +43,7 @@ Root/
   "name": "my-project",
   "targets": {
     "pb-ve--env-bootstrap": {
-      "executor": "@push-based/nx-verdaccio-env:env-bootstrap"
+      "executor": "@push-based/nx-verdaccio-env:env-env-bootstrap"
     }
   }
 }

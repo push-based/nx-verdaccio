@@ -18,7 +18,7 @@ After running this task a ready to use environment is set up with packages publi
   "name": "my-project",
   "targets": {
     "pb-ve--env-setup": {
-      "executor": "@push-based/nx-verdaccio-env:env-setup"
+      "executor": "@push-based/nx-verdaccio-env:env-env-setup"
     }
   }
 }

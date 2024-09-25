@@ -2,10 +2,10 @@ import { type ExecutorContext, logger, readJsonFile } from '@nx/devkit';
 import { join } from 'node:path';
 import { executeProcess } from '../../internal/execute-process';
 import { objectToCliArgs } from '../../internal/terminal';
-import type { VerdaccioProcessResult } from '../bootstrap/verdaccio-registry';
+import type { VerdaccioProcessResult } from '../env-bootstrap/verdaccio-registry';
 import type { SetupEnvironmentExecutorOptions } from './schema';
 
-import { VERDACCIO_REGISTRY_JSON } from '../bootstrap/constants';
+import { VERDACCIO_REGISTRY_JSON } from '../env-bootstrap/constants';
 import {
   TARGET_ENVIRONMENT_BOOTSTRAP,
   TARGET_ENVIRONMENT_INSTALL,
@@ -98,6 +98,6 @@ export default async function runSetupEnvironmentExecutor(
 
   return Promise.resolve({
     success: true,
-    command: 'Environment setup complete.',
+    command: 'Environment env-setup complete.',
   } satisfies ExecutorOutput);
 }
