@@ -1,6 +1,6 @@
 # Verdaccio Testing Environments Nx Plugin
 
-### 🚀 Enterprise Grade Testing with Verdaccio and Nx 🚀
+### 🚀 Enterprise Grade Testing with Verdaccio and Nx ⚡
 
 [![version](https://img.shields.io/github/v/release/push-based/nx-verdaccio-env)](https://github.com/push-based/nx-verdaccio-env/releases/latest)
 [![release date](https://img.shields.io/github/release-date/push-based/nx-verdaccio-env)](https://github.com/push-based/nx-verdaccio-env/releases)
