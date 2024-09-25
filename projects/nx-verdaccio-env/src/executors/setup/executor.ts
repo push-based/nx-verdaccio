@@ -42,7 +42,7 @@ export default async function runSetupEnvironmentExecutor(
       context
     );
   } catch (error) {
-    logger.error(error);
+    logger.error(error.message);
     return {
       success: false,
       command: `Failed executing target ${TARGET_ENVIRONMENT_BOOTSTRAP}\n ${error.message}`,
@@ -55,12 +55,13 @@ export default async function runSetupEnvironmentExecutor(
       args: objectToCliArgs({
         _: [TARGET_ENVIRONMENT_INSTALL, projectName],
         environmentRoot,
+        ...(verbose ? { verbose } : {}),
       }),
       cwd: process.cwd(),
       ...(verbose ? { verbose } : {}),
     });
   } catch (error) {
-    logger.error(error);
+    logger.error(error.message);
     return {
       success: false,
       command: `Fails executing target ${TARGET_ENVIRONMENT_INSTALL}\n ${error.message}`,
@@ -76,7 +77,7 @@ export default async function runSetupEnvironmentExecutor(
           configuration,
         },
         {
-          verbose,
+          ...(verbose ? { verbose } : {}),
           filePath: join(environmentRoot, VERDACCIO_REGISTRY_JSON),
         },
         context
@@ -88,10 +89,10 @@ export default async function runSetupEnvironmentExecutor(
       logger.info(`Verdaccio server kept running under : ${url}`);
     }
   } catch (error) {
-    logger.error(error);
+    logger.error(error.message);
     return {
       success: false,
-      command: error,
+      command: error.message,
     };
   }
 

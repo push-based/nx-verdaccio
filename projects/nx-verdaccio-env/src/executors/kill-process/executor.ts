@@ -15,8 +15,7 @@ export type ExecutorOutput = {
 };
 
 export default async function runKillProcessExecutor(
-  options: KillProcessExecutorOptions,
-  _: ExecutorContext
+  options: KillProcessExecutorOptions
 ): Promise<ExecutorOutput> {
   const {
     environmentRoot,
