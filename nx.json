@@ -107,8 +107,15 @@
     }
   },
   "release": {
+    "projects": ["nx-verdaccio-env"],
     "version": {
+      "conventionalCommits": true,
       "preVersionCommand": "npx nx run-many -t build"
+    },
+    "changelog": {
+      "workspaceChangelog": {
+        "createRelease": "github"
+      }
     }
   }
 }
