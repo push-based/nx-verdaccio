@@ -1,6 +1,6 @@
 # @push-based/nx-verdaccio-env
 
-## Plugins
+## Plugins 🔌
 
 ### Build Environment Plugin
 
