@@ -29,7 +29,7 @@ describe('runNpmInstallExecutor', () => {
     executeProcessSpy.mockReset();
   });
 
-  it('should execute npm install for the given project.', async () => {
+  it('should execute npm install for the given project', async () => {
     await expect(
       runNpmInstallExecutor(
         {
