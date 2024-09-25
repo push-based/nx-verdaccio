@@ -11,6 +11,7 @@ import { VERDACCIO_REGISTRY_JSON } from './constants';
 import {
   DEFAULT_BOOTSTRAP_TARGET,
   DEFAULT_STOP_VERDACCIO_TARGET,
+  PACKAGE_NAME,
 } from '../../plugin/targets/environment.targets';
 import { runSingleExecutor } from '../../internal/run-executor';
 
@@ -28,7 +29,7 @@ export async function bootstrapExecutor(
   const { keepServerRunning, environmentRoot } = options;
 
   logger.info(
-    `Execute @push-based/build-env:${DEFAULT_BOOTSTRAP_TARGET} with options: ${JSON.stringify(
+    `Execute ${PACKAGE_NAME}:${DEFAULT_BOOTSTRAP_TARGET} with options: ${JSON.stringify(
       options,
       null,
       2

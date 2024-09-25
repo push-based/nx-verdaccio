@@ -1,9 +1,9 @@
-# BuildEnv Plugin
+# Verdaccio Testing Environments Nx Plugin
 
 This plugin helps to add dynamic targets to execute environment tasks.
 This distinguishes between projects that maintain publishable packages and e2e test projects that depend on an environment where the publishable projects get installed.
 
-#### @push-based/build-env
+#### @push-based/nx-verdaccio-env
 
 ## Usage
 

@@ -2,7 +2,10 @@ import runBootstrapExecutor from './executor';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import * as devkit from '@nx/devkit';
 import * as bootstrapExecutorModule from './bootstrap-env';
-import { DEFAULT_STOP_VERDACCIO_TARGET } from '../../plugin/targets/environment.targets';
+import {
+  DEFAULT_STOP_VERDACCIO_TARGET,
+  PACKAGE_NAME,
+} from '../../internal/constants';
 
 describe('runBootstrapExecutor', () => {
   const e2eProjectName = 'my-lib-e2e';
@@ -75,7 +78,7 @@ describe('runBootstrapExecutor', () => {
     expect(errorLoggerSpy).not.toHaveBeenCalled();
     expect(infoLoggerSpy).toHaveBeenCalledTimes(1);
     expect(infoLoggerSpy).toHaveBeenCalledWith(
-      `Execute @push-based/build-env:build-env-env-bootstrap with options: ${JSON.stringify(
+      `Execute ${PACKAGE_NAME}:build-env-env-bootstrap with options: ${JSON.stringify(
         {
           environmentRoot: `tmp/environments/${e2eProjectName}`,
         },
@@ -129,7 +132,7 @@ describe('runBootstrapExecutor', () => {
 
     expect(infoLoggerSpy).toHaveBeenCalledTimes(1);
     expect(infoLoggerSpy).toHaveBeenCalledWith(
-      'Execute @push-based/build-env:build-env-env-bootstrap with options: {}'
+      `Execute ${PACKAGE_NAME}:build-env-env-bootstrap with options: {}`
     );
 
     expect(errorLoggerSpy).toHaveBeenCalledTimes(1);

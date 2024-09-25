@@ -1,6 +1,6 @@
 {
-  "name": "@push-based/build-env",
-  "version": "0.29.0",
+  "name": "@push-based/nx-verdaccio-env",
+  "version": "0.0.0-alpha.2",
   "license": "MIT",
   "dependencies": {
     "@nx/devkit": "^19.6.4",

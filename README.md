@@ -1,10 +1,42 @@
-# Nx Verdaccio Environment Plugin
+# Verdaccio Testing Environments Nx Plugin
 
-This plugin provides a zeros configuration setup to run e2e tests in a package manager environment.
+### 🚀 Enterprise Grade Testing with Verdaccio and Nx ⚡
 
-## Getting started
+[![version](https://img.shields.io/github/v/release/push-based/nx-verdaccio-env)](https://github.com/push-based/nx-verdaccio-env/releases/latest)
+[![release date](https://img.shields.io/github/release-date/push-based/nx-verdaccio-env)](https://github.com/push-based/nx-verdaccio-env/releases)
+[![license](https://img.shields.io/github/license/push-based/nx-verdaccio-env)](https://opensource.org/licenses/MIT)
+[![CI](https://github.com/push-based/nx-verdaccio-env/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/push-based/nx-verdaccio-env/actions/workflows/ci.yml?query=branch%3Amain)
 
-1. Register and configure the plugins in `nx.json`:
+Welcome to the **Verdaccio Testing Environments Nx Plugin** — your one-stop solution for running **blazingly fast**, **isolated**, and **scalable** end-to-end (e2e) tests with zero configuration. Yeah, you heard that right: **ZERO configuration**.
+
+With this plugin, say goodbye to the old days of waiting around for your tests and hello to _next-level speed_. Plug it in, and you're good to go.
+
+## Why You NEED This Plugin 🔥
+
+**Key Features:**
+
+- ⚙️ **ZERO Config** — You won’t need any global setup or teardown scripts.
+- 🔥 **BRUTALLY FAST** — Up to **⚡110x faster⚡** than traditional setups. Yes, you read that right.
+- 🛡️ **Isolated** — No more conflicts with local file systems. Everything’s clean.
+- 🚀 **Scalable** — Run your tests in parallel, no matter how big your project.
+- 🕒 **Optimized** — We cache everything we can, so your tests run faster over time.
+- ⚡ **Developer Experience** — Streamlined and simplified. You focus on the code, we handle the setup.
+- 🧪 **Easier Debugging** — Debugging e2e tests is now a piece of cake 🍰.
+
+---
+
+### 🏎️ **Speed Benchmarks** 🏎️
+
+| Small Project (4 packages)    | Common Setup | Optimized Setup | [x] times faster | [%] percent faster |
+| ----------------------------- | ------------ | --------------- | ---------------- | ------------------ |
+| **Worst Case** Execution Time | 110 s        | 13 s            | 8.46x faster     | 746%               |
+| **Best Case** Execution Time  | 110 s        | 1 s             | 110x faster      | 11000%             |
+
+---
+
+## Getting Started 🏁
+
+### Step 1: Register and Configure in `nx.json`:
 
 ```jsonc
 {
@@ -13,8 +45,8 @@ This plugin provides a zeros configuration setup to run e2e tests in a package m
       "plugin": "@push-based/build-env",
       "options": {
         "environments": {
-            "environmentsDir": "tmp/environments" // Optional
-            "targetNames": ["e2e"] // Optional
+          "environmentsDir": "tmp/environments", // Optional
+          "targetNames": ["e2e"] // Optional
         }
       }
     }
@@ -23,16 +55,16 @@ This plugin provides a zeros configuration setup to run e2e tests in a package m
 ```
 
 > [!NOTE]
-> Your configured targets now have a new dependency configured:
+> Your configured targets now has a new dependency configured:
 >
 > ```jsonc
 > {
 >   "name": "utils-e2e",
 >   "targets": {
->     "e2e-special": {
+>     "e2e": {
 >       "dependsOn": [
 >         // dynamically aded
->         { "projects": "self", "target": "setup-env", "params": "forward" }
+>         { "target": "setup-env", "params": "forward" }
 >       ]
 >       // ...
 >     }
@@ -41,8 +73,9 @@ This plugin provides a zeros configuration setup to run e2e tests in a package m
 > }
 > ```
 
-2. Add the package under test as `implicitDependency` to your e2e project.
-   The plugin will detect implicit dependencies and use them for the environment setup.
+### Optional: Add the Package Under Test as implicitDependency (OPTIONAL)
+
+Let the plugin detect your implicit dependencies:
 
 ```jsonc
 // projects/utils-e2e/project.json
@@ -52,31 +85,31 @@ This plugin provides a zeros configuration setup to run e2e tests in a package m
 }
 ```
 
-Now you are ready to go.
+### Step 3: Run the E2E Test
 
-3. Run your e2e test with `nx run utils-e2e:e2e`
+```bash
+nx run utils-e2e:e2e
+```
 
-Tadaaaa! 🎉
+Tadaaaa! 🎉 You’re now testing at light speed!
 
-## Options
+## Configuration Options 🛠️
 
-| Name                             | type                                  | description                                                                                  |
-| -------------------------------- | ------------------------------------- | -------------------------------------------------------------------------------------------- |
-| **environments.environmentsDir** | `string` (DEFAULT 'tmp/environments') | The folder name of the generated environments                                                |
-| **environments.targetNames**     | `string[]` (REQUIRED)                 | The target names of projects depending on environments                                       |
-| **environments.filterByTag**     | `string[]` (REQUIRED)                 | The tag names a projects needs to have to be considered for a environments (match is one of) |
-| **publishable.filterByTag**      | `string[]` (REQUIRED)                 | The tag names a projects needs to have to be considered for publishing (match is one of)     |
+| Name                             | type                                    | description                                                    |
+| -------------------------------- | --------------------------------------- | -------------------------------------------------------------- |
+| **environments.environmentsDir** | `string` (DEFAULT `'tmp/environments'`) | Directory for environment storage.                             |
+| **environments.targetNames**     | `string[]` (REQUIRED)                   | Target names for environment-based projects.                   |
+| **environments.filterByTag**     | `string[]` (REQUIRED)                   | Only consider projects with these tags for environment setup.  |
+| **publishable.filterByTag**      | `string[]` (REQUIRED)                   | Only consider projects with these tags for publishing targets. |
 
-### Fine-grained selection of publishable projects
+### Fine-Grained Control for Publishable Projects 🚀
 
-By default, all projects with type `library` get automatically the following targets applied:
+Out of the box, all library-type projects get these targets:
 
 - `build-env--npm-publish`
 - `build-env--npm-install`
 
-You can configure the plugin to only add those targets to projects with one or many specific tags.
-
-1. Configure the plugin with a tag to act as filter
+But if you want to narrow it down:
 
 ```jsonc
 {
@@ -93,7 +126,7 @@ You can configure the plugin to only add those targets to projects with one or m
 }
 ```
 
-2. Add a `publishable` tag to the projects considered in test environments
+Tag your projects accordingly:
 
 ```jsonc
 // projects/utils/project.json
@@ -105,13 +138,11 @@ You can configure the plugin to only add those targets to projects with one or m
 }
 ```
 
-### Fine-grained selection of projects that need a test environment set up
+### Custom Test Environment Setup 🧪
 
 #### Filter by target names
 
-You can configure the plugin to select only specific projects for environment creation.
-
-1. Configure the plugin with a targets that will be configured with a dependency to the test environment
+Want more control over which projects get their environments set up?
 
 ```jsonc
 {
@@ -130,9 +161,7 @@ You can configure the plugin to select only specific projects for environment cr
 
 ### Filter by tags
 
-You can configure the plugin to only add those targets to projects with one or many specific tags.
-
-1. Configure the plugin with a tag to act as filter
+Filter projects by tags to apply environment setup:
 
 ```jsonc
 {
@@ -149,7 +178,7 @@ You can configure the plugin to only add those targets to projects with one or m
 }
 ```
 
-2. Add a `environments` tag to the projects considered in test environments
+Tag those projects accordingly:
 
 ```jsonc
 // projects/utils/project.json
@@ -161,38 +190,19 @@ You can configure the plugin to only add those targets to projects with one or m
 }
 ```
 
-**Example usage:**
+**Example Usage:**
 
-- `nx run utils-e2e:e2e` - setup environment and then run E2E tests for `utils-e2e`
-- `nx run utils-static-e2e:e2e --environmentRoot static-environments/user-lists` - setup NPM in existing environment and then run E2E tests for `utils-static-e2e`
-
-## DX while debugging e2e tests
-
-Debug full environment in 1 setup:
-
-- `nx run utils-e2e:setup-env` - setup environment for `utils-e2e`
-  - `nx run utils-e2e:setup-env --keepServerRunning` - keeps Verdaccio running after setup
-- `nx run utils-e2e:stop-verdaccio` - stops the Verdaccio server for `utils-e2e`
-
-Debug full environment in 2 steps:
-
-- `nx run utils-e2e:bootstrap-env` - setup folders and starts Verdaccio for `utils-e2e`
-- `nx run utils-e2e:install-env` - bootstraps and installs all dependencies for `utils-e2e`
-- `nx run utils-e2e:stop-verdaccio` - stops the Verdaccio server for `utils-e2e`
-
-Debug packages:
-
-- `nx run utils-e2e:bootstrap-env` - setup folders and starts Verdaccio for `utils-e2e`
-- `nx run utils:npm-publish --environmentProject utils-e2e` - publishes `utils` and `models` to the Verdaccio registry configured for `utils-e2e`
-- `nx run utils:npm-install --environmentProject utils-e2e` - installs `utils` and `models` from the Verdaccio registry configured for `utils-e2e`
-- `nx run utils-e2e:stop-verdaccio` - stops the Verdaccio server for `utils-e2e`
+- Run the E2E test for`utils-e2e`:  
+  `nx run utils-e2e:e2e`
+- Run E2E with specific environments:  
+  `nx run utils-static-e2e:e2e --environmentRoot static-environments/user-lists`
 
 ## Benefits in depth
 
-In the below we point out a **scalable** and **maintainable** setup for Verdaccio environments.
+Discover how this **scalable** and **maintainable** setup for Verdaccio environments completely changes your testing experience.
 
 > [!NOTE]
-> If you want to read about common problems with a shared environment read the [docs/motivation.md](./docs/motivation.md).
+> 💡 Pro Tip: Learn more about the common problems with shared environments in the **💡[docs/motivation.md](./docs/motivation.md)💡**.
 
 ### 🛡️ Environment Folders to Isolate Files During E2E Tests
 
@@ -203,7 +213,7 @@ By isolating the environment for each E2E project, you avoid conflicts with the 
 ```sh
 Root/
 ├── dist/
-│   └── packages/
+│   └── projects/
 │       └── <project-name>/...
 ├── tmp/
 │    └── environments/
@@ -221,7 +231,7 @@ Root/
 │            ├── .npmrc # local npm config configured for project specific Verdaccio registry
 │            ├── package-lock.json # skipped creation by default
 │            └── package.json # npm install/uninstall
-└── packages/
+└── projects/
     └── <project-name>/...
 ```
 
@@ -229,8 +239,8 @@ Root/
 
 This solution allows for **parallel execution** of tests, which was not possible before due to conflicts with file systems and package managers.
 
-- ⏱️No more waiting for tests to run sequentially. With isolated environments, each E2E test can run independently without interfering with others.
-- ⏱️Environment setup and test setup are separated, which means **significantly faster execution** of the tests and less overhead in CPU and general runtime.
+- ⏱️ No more waiting for tests to run sequentially. With isolated environments, each E2E test can run independently without interfering with others.
+- ⏱️ Environment setup and test setup are separated, which means **significantly faster execution** of the tests and less overhead in CPU and general runtime.
 
 ### ⚡ Task Performance - Optimized Execution
 
@@ -276,7 +286,7 @@ S-.implicit.->E[project:build]:::build;
 classDef e2e stroke:#f00
 ```
 
-### ✨ DX - Developer Experience Simplified
+### ✨ Simplified Developer Experience (DX)
 
 The **NX task graph** makes it easier to discover and understand the setup. Instead of relying on complex global setup scripts:
 
@@ -307,15 +317,16 @@ This is a first draft of how the benchmarks will look. ATM the data set it not b
 > The data is a first draft of the structure and does not reflect a clean data set.
 > Work on the real benchmark data in progress
 
-|     cli:e2e      |  Common   | Optimized |
-| :--------------: | :-------: | :-------: |
-|  Execution Time  |   110 s   |   13 s    |
-| Download Volume  | 381.68 MB | 381.68 MB |
-|    Cacheable     |    ❌     |    ✅     |
-|   Graph Nodes    |     1     |    13     |
-| Can run parallel |    ❌     |    ✅     |
+|            cli:e2e            | Common | Optimized | [x] times faster  | [%] percent faster |
+| :---------------------------: | :----: | :-------: | :---------------: | :----------------: |
+| Execution Time - _Worse case_ | 110 s  |   13 s    | 8.46 times faster |        746%        |
+| Execution Time - _Best case_  | 110 s  |    1 s    |        110        |       11000%       |
+|        Download Volume        | 381 MB |  381 MB   |        0%         |         0%         |
+|           Cacheable           |   ❌   |    ✅     |        n/a        |        n/a         |
+|          Graph Nodes          |   1    |    13     |        n/a        |        n/a         |
+|          Parallelism          |   ❌   |    ✅     |        n/a        |        n/a         |
 
-## Connect with us!
+## Stay Connected! 🔗
 
 - [Check out our services](https://push-based.io)
 - [Follow us on Twitter](https://twitter.com/pushbased)
@@ -343,4 +354,5 @@ UB["utils:build"] --> MB["models:build"]
 ```
 
 -->
+
 ```

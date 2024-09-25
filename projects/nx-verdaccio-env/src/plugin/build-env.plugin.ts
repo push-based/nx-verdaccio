@@ -9,15 +9,27 @@ import {
   readJsonFile,
   writeJsonFile,
 } from '@nx/devkit';
-import {basename, dirname, join} from 'node:path';
-import {existsSync} from 'node:fs';
-import {getEnvTargets, isEnvProject, updateEnvTargetNames, verdaccioTargets,} from './targets/environment.targets';
-import {getPkgTargets, isPkgProject} from './targets/package.targets';
-import type {BuildEnvPluginCreateNodeOptions} from './schema';
-import {normalizeCreateNodesOptions,} from './normalize-create-nodes-options';
-import {workspaceDataDirectory} from 'nx/src/utils/cache-directory';
-import {hashObject} from 'nx/src/hasher/file-hasher';
-import {PLUGIN_NAME} from './constants';
+import { dirname, join } from 'node:path';
+import {
+  DEFAULT_ENVIRONMENTS_OUTPUT_DIR,
+  DEFAULT_OPTION_ENVIRONMENT_TARGET_NAMES,
+  DEFAULT_NPM_INSTALL_TARGET,
+  DEFAULT_NPM_PUBLISH_TARGET,
+  DEFAULT_START_VERDACCIO_TARGET,
+  DEFAULT_STOP_VERDACCIO_TARGET,
+  DEFAULT_BOOTSTRAP_TARGET,
+  DEFAULT_INSTALL_TARGET,
+  DEFAULT_SETUP_TARGET,
+  PACKAGE_NAME,
+  KILL_PROCESS_EXECUTOR_NAME,
+  BOOTSTRAP_EXECUTOR_NAME,
+  SETUP_EXECUTOR_NAME,
+  NPM_PUBLISH_EXECUTOR_NAME,
+  NPM_INSTALL_EXECUTOR_NAME,
+} from '../internal/constants';
+import type { StartVerdaccioOptions } from '../executors/bootstrap/verdaccio-registry';
+import { VERDACCIO_REGISTRY_JSON } from '../executors/bootstrap/constants';
+import { uniquePort } from '../executors/bootstrap/unique-port';
 
 function readTargetsCache(
   cachePath: string
