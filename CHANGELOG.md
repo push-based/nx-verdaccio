@@ -1,3 +1,15 @@
+## 0.0.0-alpha.2 (2024-09-25)
+
+
+### 🩹 Fixes
+
+- adjust docs ([bc8fac1](https://github.com/push-based/-nx-verdaccio-e2e-setup/commit/bc8fac1))
+- **nx-verdaccio-env:** adjust test description ([f2411e3](https://github.com/push-based/-nx-verdaccio-e2e-setup/commit/f2411e3))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
 ## 0.0.0-alpha.1 (2024-09-25)
 
 
