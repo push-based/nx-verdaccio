@@ -7,13 +7,13 @@ import nxPerformancePlugin, {
 const onlyAudits: OnlyAudit[] = [
   'graph-time-project',
   'graph-time-task',
-  'cache-size',
+  //'cache-size',
   'task-time',
 ];
 const taskGraphTasks = ['cli-e2e:pb-ve-env-install'];
 const taskTimeTasks = [
   'cli-e2e:e2e',
-  'cli-e2e:pb-v-env-setup',
+  'cli-e2e:pb-ve-env-setup',
   'cli:unit-test',
   'cli:build',
   'core-e2e:e2e',
