@@ -3,9 +3,9 @@ import { beforeEach, expect, vi } from 'vitest';
 import * as executeProcessModule from '../../internal/execute-process';
 import * as devkit from '@nx/devkit';
 import {
-  DEFAULT_BOOTSTRAP_TARGET,
-  DEFAULT_STOP_VERDACCIO_TARGET,
-} from '../../internal/constants';
+  TARGET_ENVIRONMENT_BOOTSTRAP,
+  TARGET_ENVIRONMENT_VERDACCIO_STOP,
+} from '../../plugin/targets/environment.targets';
 
 vi.mock('@nx/devkit', async () => {
   const actual = await vi.importActual('@nx/devkit');
@@ -32,7 +32,7 @@ describe('runSetupEnvironmentExecutor', () => {
     executeProcessSpy.mockReset();
   });
 
-  it('should setup environment correctly', async () => {
+  it('should env-setup environment correctly', async () => {
     runExecutorSpy
       .mockResolvedValueOnce([
         Promise.resolve({
@@ -72,13 +72,13 @@ describe('runSetupEnvironmentExecutor', () => {
       )
     ).resolves.toStrictEqual({
       success: true,
-      command: 'Environment setup complete.',
+      command: 'Environment env-setup complete.',
     });
 
     expect(executeProcessSpy).toHaveBeenCalledTimes(1);
     expect(executeProcessSpy).toHaveBeenCalledWith({
       args: [
-        'build-env-env-install',
+        'pb-ve-env-install',
         projectName,
         // @TODO check for --environmentRoot too be OS agnostic path
         expect.stringContaining(projectName),
@@ -93,7 +93,7 @@ describe('runSetupEnvironmentExecutor', () => {
         {
           configuration: undefined,
           project: projectName,
-          target: DEFAULT_BOOTSTRAP_TARGET,
+          target: TARGET_ENVIRONMENT_BOOTSTRAP,
         },
         {
           environmentRoot: 'tmp/environments/my-lib-e2e',
@@ -105,7 +105,7 @@ describe('runSetupEnvironmentExecutor', () => {
         {
           configuration: undefined,
           project: projectName,
-          target: DEFAULT_STOP_VERDACCIO_TARGET,
+          target: TARGET_ENVIRONMENT_VERDACCIO_STOP,
         },
         {
           filePath: 'tmp/environments/my-lib-e2e/verdaccio-registry.json',
@@ -141,7 +141,7 @@ describe('runSetupEnvironmentExecutor', () => {
     ).resolves.toStrictEqual({
       success: false,
       command:
-        'Failed executing target build-env-env-bootstrap\n Error in runBootstrapEnvironment',
+        'Failed executing target pb-ve-env-bootstrap\n Error in runBootstrapEnvironment',
     });
   });
 
@@ -199,13 +199,13 @@ describe('runSetupEnvironmentExecutor', () => {
       )
     ).resolves.toStrictEqual({
       success: true,
-      command: 'Environment setup complete.',
+      command: 'Environment env-setup complete.',
     });
 
     expect(executeProcessSpy).toHaveBeenCalledTimes(1);
     expect(executeProcessSpy).toHaveBeenCalledWith({
       args: [
-        'build-env-env-install',
+        'pb-ve-env-install',
         'my-lib-e2e',
         '--environmentRoot="tmp/environments/my-lib-e2e"',
       ],
@@ -219,7 +219,7 @@ describe('runSetupEnvironmentExecutor', () => {
         {
           configuration: undefined,
           project: 'my-lib-e2e',
-          target: DEFAULT_BOOTSTRAP_TARGET,
+          target: TARGET_ENVIRONMENT_BOOTSTRAP,
         },
         expect.objectContaining({
           environmentRoot: 'tmp/environments/my-lib-e2e',

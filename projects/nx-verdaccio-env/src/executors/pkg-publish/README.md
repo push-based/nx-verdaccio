@@ -3,11 +3,11 @@
 This executor helps to publish a [`pubishable`](../../../../../README.md#fine-grained-selection-of-publishable-projects) projects into a given [environment folder](../../../../../README.md#-environment-folders-to-isolate-files-during-e2e-tests).
 This folder has to contain all needed configuration and files for the `npm publish` command to work.
 
-#### @push-based/build-env:release-publish
+#### @push-based/nx-verdaccio-env:release-publish
 
 > [!notice]
 > To install or publish a package you need to have an environment set up.
-> Run `nx run <project-name>:build-env--bootstrap` to one
+> Run `nx run <project-name>:pb-ve--bootstrap` to one
 
 ## Usage
 
@@ -17,8 +17,8 @@ This folder has to contain all needed configuration and files for the `npm publi
 {
   "name": "my-project",
   "targets": {
-    "build-env--npm-publish": {
-      "executor": "@push-based/build-env:release-publish"
+    "pb-ve--pkg-publish": {
+      "executor": "@push-based/nx-verdaccio-env:release-publish"
     }
   }
 }
@@ -30,8 +30,8 @@ By default, the Nx executor will derive the options from the executor options.
 {
   "name": "my-project",
   "targets": {
-    "build-env--npm-publish": {
-      "executor": "@code-pushup/build-env:release-publish",
+    "pb-ve--pkg-publish": {
+      "executor": "@code-pushup/pb-ve:release-publish",
       "options": {
         "pkgVersion": "1.2.3"
         "envRoot": "/tmp/test-npm-workspace"
@@ -44,7 +44,7 @@ By default, the Nx executor will derive the options from the executor options.
 
 Show what will be executed without actually executing it:
 
-`nx run my-project:build-env--release-publish --print-config`
+`nx run my-project:pb-ve--release-publish --print-config`
 
 ## Options
 

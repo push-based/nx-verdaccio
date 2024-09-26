@@ -3,7 +3,7 @@
 This executor helps to initiate an [environment folder](../../../../../README.md#-environment-folders-to-isolate-files-during-e2e-tests) and installs it`s dependent projects.
 After running this task a ready to use environment is set up with packages published and installed with Verdaccio.
 
-#### @push-based/build-env:env-setup
+#### @push-based/nx-verdaccio-env:env-setup
 
 > [!notice]
 > The setup executor does not keep the Verdaccio server running.
@@ -17,8 +17,8 @@ After running this task a ready to use environment is set up with packages publi
 {
   "name": "my-project",
   "targets": {
-    "build-env--env-setup": {
-      "executor": "@push-based/build-env:env-setup"
+    "pb-ve--env-setup": {
+      "executor": "@push-based/nx-verdaccio-env:env-setup"
     }
   }
 }
@@ -30,8 +30,8 @@ By default, the Nx executor will derive the options from the executor options.
 {
   "name": "my-project",
   "targets": {
-    "build-env--env-bootstrap": {
-      "executor": "@code-pushup/build-env:env-bootstrap",
+    "pb-ve--env-bootstrap": {
+      "executor": "@code-pushup/pb-ve:env-bootstrap",
       "options": {
         "keepServerRunning": false
         "envRoot": "/tmp/test-npm-workspace"
@@ -44,7 +44,7 @@ By default, the Nx executor will derive the options from the executor options.
 
 Show what will be executed without actually executing it:
 
-`nx run my-project:build-env--env-setup --print-config`
+`nx run my-project:pb-ve--env-setup --print-config`
 
 ## Options
 

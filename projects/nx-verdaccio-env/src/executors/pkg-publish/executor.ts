@@ -5,7 +5,7 @@ import { join, relative } from 'node:path';
 import { executeProcess } from '../../internal/execute-process';
 import { objectToCliArgs } from '../../internal/terminal';
 import { getTargetOutputPath } from '../../internal/target';
-import { NPMRC_FILENAME } from '../../internal/constants';
+import { NPMRC_FILENAME } from './constants';
 import * as process from 'process';
 
 export type NpmPublishExecutorOutput = {

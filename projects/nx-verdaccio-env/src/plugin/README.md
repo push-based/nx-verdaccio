@@ -13,7 +13,7 @@ This distinguishes between projects that maintain publishable packages and e2e t
 {
   "plugins": [
     {
-      "plugin": "@push-based/build-env",
+      "plugin": "@push-based/nx-verdaccio-env",
       "options": {
         "environments": {
             "environmentsDir": "tmp/environments" // Optional

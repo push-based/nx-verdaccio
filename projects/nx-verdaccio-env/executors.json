@@ -1,24 +1,24 @@
 {
   "executors": {
-    "bootstrap": {
-      "implementation": "./src/executors/bootstrap/executor",
-      "schema": "./src/executors/bootstrap/schema.json",
+    "env-bootstrap": {
+      "implementation": "./src/executors/env-bootstrap/executor",
+      "schema": "./src/executors/env-bootstrap/schema.json",
       "description": "Bootstraps a test environments in your workspace. Cached and ready for use."
     },
-    "setup": {
-      "implementation": "./src/executors/setup/executor",
-      "schema": "./src/executors/setup/schema.json",
+    "env-setup": {
+      "implementation": "./src/executors/env-setup/executor",
+      "schema": "./src/executors/env-setup/schema.json",
       "description": "Generate and install test environments in your workspace. Cached and ready for use."
     },
-    "npm-publish": {
-      "implementation": "./src/executors/npm-publish/executor",
-      "schema": "./src/executors/npm-publish/schema.json",
-      "description": "Publishes npm packages to a configured registry."
+    "pkg-publish": {
+      "implementation": "./src/executors/pkg-publish/executor",
+      "schema": "./src/executors/pkg-publish/schema.json",
+      "description": "Publishes packages to a configured registry."
     },
-    "npm-install": {
-      "implementation": "./src/executors/npm-install/executor",
-      "schema": "./src/executors/npm-install/schema.json",
-      "description": "Installs npm packages in your workspace."
+    "pkg-install": {
+      "implementation": "./src/executors/pkg-install/executor",
+      "schema": "./src/executors/pkg-install/schema.json",
+      "description": "Installs packages in your workspace."
     },
     "kill-process": {
       "implementation": "./src/executors/kill-process/executor",

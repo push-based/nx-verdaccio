@@ -3,10 +3,8 @@ import runKillProcessExecutor from './executor';
 import * as killProcessModule from './kill-process';
 import { MEMFS_VOLUME } from '@push-based/test-utils';
 import { logger } from '@nx/devkit';
-import {
-  KILL_PROCESS_EXECUTOR_NAME,
-  PACKAGE_NAME,
-} from '../../internal/constants';
+import { PACKAGE_NAME } from '../../plugin/constants';
+import { EXECUTOR_ENVIRONMENT_KILL_PROCESS } from './constant';
 
 vi.mock('@nx/devkit', async () => {
   const actual = await vi.importActual('@nx/devkit');
@@ -73,7 +71,7 @@ describe('runKillProcessExecutor', () => {
 
     expect(logger.info).toHaveBeenCalledTimes(1);
     expect(logger.info).toHaveBeenCalledWith(
-      `Execute ${PACKAGE_NAME}:${KILL_PROCESS_EXECUTOR_NAME} with options: ${JSON.stringify(
+      `Execute ${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_KILL_PROCESS} with options: ${JSON.stringify(
         { pid: 777 },
         null,
         2
@@ -126,7 +124,7 @@ describe('runKillProcessExecutor', () => {
 
     expect(logger.info).toHaveBeenCalledTimes(1);
     expect(logger.info).toHaveBeenCalledWith(
-      `Execute ${PACKAGE_NAME}:${KILL_PROCESS_EXECUTOR_NAME} with options: ${JSON.stringify(
+      `Execute ${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_KILL_PROCESS} with options: ${JSON.stringify(
         { filePath: 'tmp/environments/my-lib' },
         null,
         2

@@ -2,10 +2,8 @@ import runBootstrapExecutor from './executor';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import * as devkit from '@nx/devkit';
 import * as bootstrapExecutorModule from './bootstrap-env';
-import {
-  DEFAULT_STOP_VERDACCIO_TARGET,
-  PACKAGE_NAME,
-} from '../../internal/constants';
+import { PACKAGE_NAME } from '../../plugin/constants';
+import { TARGET_ENVIRONMENT_VERDACCIO_STOP } from '../../plugin/targets/environment.targets';
 
 describe('runBootstrapExecutor', () => {
   const e2eProjectName = 'my-lib-e2e';
@@ -26,7 +24,7 @@ describe('runBootstrapExecutor', () => {
   };
   const stopVerdaccioTask = {
     project: e2eProjectName,
-    target: DEFAULT_STOP_VERDACCIO_TARGET,
+    target: TARGET_ENVIRONMENT_VERDACCIO_STOP,
     configuration: undefined,
   };
 
@@ -62,7 +60,7 @@ describe('runBootstrapExecutor', () => {
     runExecutorSpy.mockReset();
   });
 
-  it('should bootstrap environment correctly', async () => {
+  it('should env-bootstrap environment correctly', async () => {
     await expect(
       runBootstrapExecutor(
         {
@@ -78,7 +76,7 @@ describe('runBootstrapExecutor', () => {
     expect(errorLoggerSpy).not.toHaveBeenCalled();
     expect(infoLoggerSpy).toHaveBeenCalledTimes(1);
     expect(infoLoggerSpy).toHaveBeenCalledWith(
-      `Execute ${PACKAGE_NAME}:build-env-env-bootstrap with options: ${JSON.stringify(
+      `Execute ${PACKAGE_NAME}:pb-ve-env-bootstrap with options: ${JSON.stringify(
         {
           environmentRoot: `tmp/environments/${e2eProjectName}`,
         },
@@ -123,21 +121,21 @@ describe('runBootstrapExecutor', () => {
   it('should throw if bootstrappingEnvironment fails', async () => {
     bootstrapEnvironmentSpy.mockReset();
     bootstrapEnvironmentSpy.mockRejectedValueOnce(
-      new Error('Failed to bootstrap environment')
+      new Error('Failed to env-bootstrap environment')
     );
     await expect(runBootstrapExecutor({}, context)).resolves.toStrictEqual({
       success: false,
-      command: 'Failed to bootstrap environment',
+      command: 'Failed to env-bootstrap environment',
     });
 
     expect(infoLoggerSpy).toHaveBeenCalledTimes(1);
     expect(infoLoggerSpy).toHaveBeenCalledWith(
-      `Execute ${PACKAGE_NAME}:build-env-env-bootstrap with options: {}`
+      `Execute ${PACKAGE_NAME}:pb-ve-env-bootstrap with options: {}`
     );
 
     expect(errorLoggerSpy).toHaveBeenCalledTimes(1);
     expect(errorLoggerSpy).toHaveBeenCalledWith(
-      Error('Failed to bootstrap environment')
+      Error('Failed to env-bootstrap environment')
     );
 
     expect(runExecutorSpy).toHaveBeenCalledTimes(0);

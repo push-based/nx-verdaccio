@@ -2,15 +2,15 @@ import { type ExecutorContext, logger, readJsonFile } from '@nx/devkit';
 import { join } from 'node:path';
 import { executeProcess } from '../../internal/execute-process';
 import { objectToCliArgs } from '../../internal/terminal';
-import type { VerdaccioProcessResult } from '../bootstrap/verdaccio-registry';
+import type { VerdaccioProcessResult } from '../env-bootstrap/verdaccio-registry';
 import type { SetupEnvironmentExecutorOptions } from './schema';
 
-import { VERDACCIO_REGISTRY_JSON } from '../bootstrap/constants';
+import { VERDACCIO_REGISTRY_JSON } from '../env-bootstrap/constants';
 import {
-  DEFAULT_BOOTSTRAP_TARGET,
-  DEFAULT_INSTALL_TARGET,
-  DEFAULT_STOP_VERDACCIO_TARGET,
-} from '../../internal/constants';
+  TARGET_ENVIRONMENT_BOOTSTRAP,
+  TARGET_ENVIRONMENT_INSTALL,
+  TARGET_ENVIRONMENT_VERDACCIO_STOP,
+} from '../../plugin/targets/environment.targets';
 import { runSingleExecutor } from '../../internal/run-executor';
 
 export type ExecutorOutput = {
@@ -30,7 +30,7 @@ export default async function runSetupEnvironmentExecutor(
     await runSingleExecutor(
       {
         project: projectName,
-        target: DEFAULT_BOOTSTRAP_TARGET,
+        target: TARGET_ENVIRONMENT_BOOTSTRAP,
         configuration,
       },
       {
@@ -42,10 +42,10 @@ export default async function runSetupEnvironmentExecutor(
       context
     );
   } catch (error) {
-    logger.error(error);
+    logger.error(error.message);
     return {
       success: false,
-      command: `Failed executing target ${DEFAULT_BOOTSTRAP_TARGET}\n ${error.message}`,
+      command: `Failed executing target ${TARGET_ENVIRONMENT_BOOTSTRAP}\n ${error.message}`,
     };
   }
 
@@ -53,17 +53,18 @@ export default async function runSetupEnvironmentExecutor(
     await executeProcess({
       command: 'nx',
       args: objectToCliArgs({
-        _: [DEFAULT_INSTALL_TARGET, projectName],
+        _: [TARGET_ENVIRONMENT_INSTALL, projectName],
         environmentRoot,
+        ...(verbose ? { verbose } : {}),
       }),
       cwd: process.cwd(),
       ...(verbose ? { verbose } : {}),
     });
   } catch (error) {
-    logger.error(error);
+    logger.error(error.message);
     return {
       success: false,
-      command: `Fails executing target ${DEFAULT_INSTALL_TARGET}\n ${error.message}`,
+      command: `Fails executing target ${TARGET_ENVIRONMENT_INSTALL}\n ${error.message}`,
     };
   }
 
@@ -72,11 +73,11 @@ export default async function runSetupEnvironmentExecutor(
       await runSingleExecutor(
         {
           project: projectName,
-          target: DEFAULT_STOP_VERDACCIO_TARGET,
+          target: TARGET_ENVIRONMENT_VERDACCIO_STOP,
           configuration,
         },
         {
-          verbose,
+          ...(verbose ? { verbose } : {}),
           filePath: join(environmentRoot, VERDACCIO_REGISTRY_JSON),
         },
         context
@@ -88,15 +89,15 @@ export default async function runSetupEnvironmentExecutor(
       logger.info(`Verdaccio server kept running under : ${url}`);
     }
   } catch (error) {
-    logger.error(error);
+    logger.error(error.message);
     return {
       success: false,
-      command: error,
+      command: error.message,
     };
   }
 
   return Promise.resolve({
     success: true,
-    command: 'Environment setup complete.',
+    command: 'Environment env-setup complete.',
   } satisfies ExecutorOutput);
 }

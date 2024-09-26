@@ -31,7 +31,7 @@ The interesting part here is the global setup script. So let's take a closer loo
 The following is a simplified version of a global setup script used by your testing lib.
 
 ```ts
-// global-setup.ts
+// global-env-setup.ts
 import { rm } from 'node:fs/promises';
 import { executeProcess, objectToCliArgs } from '@push-based/test-utils';
 import { configureRegistry, RegistryResult, startVerdaccioServer, unconfigureRegistry } from '@push-based/tools-utils';
@@ -79,6 +79,12 @@ Viola, you have a working e2e setup for your package. 🎉
 
 ## Problems
 
+##### Project Graph
+
+Here the project graph of the research.
+
+![utils-project-graph-idle.png](utils-project-graph-idle.png)
+
 ### 🚪 Isolation of the E2E tests
 
 The following file tree is a result of running our e2e setup.
@@ -101,7 +107,7 @@ User/
         ├── tmp/
         │    ├── e2e/...
         │    │   └── <test-file-name>/...
-        │    │        └── <it-block-setup>/...
+        │    │        └── <it-block-env-setup>/...
         │    │             └── test.file.ts
         │    └── local-registry/
         │        └── storage/
@@ -160,6 +166,8 @@ If we would not have to keep the server running for the whole test we can also:
 
 - 🐢 Stop wasting CPU power and memory that is consumed by the server
 - 🐢 Think about options to cache parts of the steps
+
+![bad-dx-schema.png](bad-dx-schema.png)
 
 Especially the caching is interesting to dive deeper in.
 Let's look at different scenarios and what they miss.

@@ -4,10 +4,8 @@ import { objectToCliArgs } from '../../internal/terminal';
 import { executeProcess } from '../../internal/execute-process';
 import { uniquePort } from './unique-port';
 import { formatError, formatInfo } from '../../internal/logging';
-import {
-  DEFAULT_START_VERDACCIO_TARGET,
-  DEFAULT_VERDACCIO_STORAGE_DIR,
-} from '../../internal/constants';
+import { TARGET_ENVIRONMENT_VERDACCIO_START } from '../../plugin/targets/environment.targets';
+import { DEFAULT_VERDACCIO_STORAGE_DIR } from './constants';
 
 const VERDACCIO_TOKEN = 'Verdaccio: ';
 
@@ -91,7 +89,7 @@ export async function startVerdaccioServer({
       executeProcess({
         command: 'nx',
         args: objectToCliArgs({
-          _: [DEFAULT_START_VERDACCIO_TARGET, projectName ?? '', '--'],
+          _: [TARGET_ENVIRONMENT_VERDACCIO_START, projectName ?? '', '--'],
           port,
           verbose,
           location,
