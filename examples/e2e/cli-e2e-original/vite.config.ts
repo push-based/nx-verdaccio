@@ -19,7 +19,7 @@ export default defineConfig({
     environment: 'node',
     include: ['test/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     reporters: ['default'],
-    globalSetup: ['./env-setup/global-env-setup.ts'],
+    globalSetup: ['./setup/global-setup.ts'],
     coverage: {
       reportsDirectory: '../../../coverage/projects/cli-e2e-original',
       provider: 'v8',
