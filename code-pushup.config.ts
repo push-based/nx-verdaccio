@@ -10,10 +10,10 @@ const onlyAudits: OnlyAudit[] = [
   'cache-size',
   'task-time',
 ];
-const taskGraphTasks = ['cli-e2e:build-env-env-install'];
+const taskGraphTasks = ['cli-e2e:pb-ve-env-install'];
 const taskTimeTasks = [
   'cli-e2e:e2e',
-  'cli-e2e:build-env-env-env-setup',
+  'cli-e2e:pb-v-env-setup',
   'cli:unit-test',
   'cli:build',
   'core-e2e:e2e',
@@ -22,11 +22,11 @@ const taskTimeTasks = [
   'cli-e2e-original:original-e2e',
 ];
 const cacheSizeTasks = [
-  'models-e2e:build-env-env-env-setup',
-  'utils-e2e:build-env-env-env-setup',
-  'core-e2e:build-env-env-env-setup',
-  'cli-e2e:build-env-env-env-setup',
-  'playground-e2e:build-env-env-env-setup',
+  'models-e2e:pb-ve-env-setup',
+  'utils-e2e:pb-ve-env-setup',
+  'core-e2e:pb-ve-env-setup',
+  'cli-e2e:pb-ve-env-setup',
+  'playground-e2e:pb-ve-env-setup',
 ];
 export default {
   plugins: [

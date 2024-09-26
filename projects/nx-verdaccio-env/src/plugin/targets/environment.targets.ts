@@ -12,6 +12,8 @@ import {
 import { PACKAGE_NAME } from '../constants';
 import { EXECUTOR_ENVIRONMENT_KILL_PROCESS } from '../../executors/kill-process/constant';
 import { EXECUTOR_ENVIRONMENT_SETUP } from '../../executors/env-setup/constants';
+import * as constants from 'constants';
+import { iterateEntries } from '../../internal/transform';
 
 export const TARGET_ENVIRONMENT_VERDACCIO_START = 'pb-ve-env-verdaccio-start';
 export const TARGET_ENVIRONMENT_BOOTSTRAP = 'pb-ve-env-bootstrap';
@@ -129,8 +131,8 @@ export function updateEnvTargetNames(
   const { targets: existingTargets = {} as TargetConfiguration } =
     projectConfig;
 
-  return Object.fromEntries(
-    Object.entries(existingTargets).map(([existingTargetName, config]) => {
+  return iterateEntries(existingTargets, (entries) =>
+    entries.map(([existingTargetName, config]) => {
       if (!envTargetNames.includes(existingTargetName)) {
         return [existingTargetName, config];
       }

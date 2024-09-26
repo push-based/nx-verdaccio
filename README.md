@@ -26,6 +26,7 @@ With this plugin, say goodbye to the old days of waiting around for your tests a
 ---
 
 ### 🏎️ **Speed Benchmarks** 🏎️
+
 ![comparison-schema.png](docs%2Fcomparison-schema.png)
 
 | Small Project (4 packages)    | Common Setup | Optimized Setup | [x] times faster | [%] percent faster |

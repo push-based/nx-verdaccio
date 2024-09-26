@@ -198,8 +198,6 @@ P[project-e2e:e2e]:::e2e-.implicit.->E[project:build]:::build;
 classDef e2e stroke:#f00
 ```
 
-
-
 ### 🔫 DX
 
 As the logic that starts and stops Verdaccio is backed into the setup script it is very hard and cumbersome to debug or even see what is going on.
