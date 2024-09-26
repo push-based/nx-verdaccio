@@ -79,6 +79,12 @@ Viola, you have a working e2e setup for your package. 🎉
 
 ## Problems
 
+##### Project Graph
+
+Here the project graph of the research.
+
+![utils-project-graph-idle.png](utils-project-graph-idle.png)
+
 ### 🚪 Isolation of the E2E tests
 
 The following file tree is a result of running our e2e setup.
@@ -161,6 +167,8 @@ If we would not have to keep the server running for the whole test we can also:
 - 🐢 Stop wasting CPU power and memory that is consumed by the server
 - 🐢 Think about options to cache parts of the steps
 
+![bad-dx-schema.png](bad-dx-schema.png)
+
 Especially the caching is interesting to dive deeper in.
 Let's look at different scenarios and what they miss.
 
@@ -189,6 +197,8 @@ flowchart TB
 P[project-e2e:e2e]:::e2e-.implicit.->E[project:build]:::build;
 classDef e2e stroke:#f00
 ```
+
+
 
 ### 🔫 DX
 

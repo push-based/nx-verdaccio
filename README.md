@@ -26,6 +26,7 @@ With this plugin, say goodbye to the old days of waiting around for your tests a
 ---
 
 ### 🏎️ **Speed Benchmarks** 🏎️
+![comparison-schema.png](docs%2Fcomparison-schema.png)
 
 | Small Project (4 packages)    | Common Setup | Optimized Setup | [x] times faster | [%] percent faster |
 | ----------------------------- | ------------ | --------------- | ---------------- | ------------------ |
@@ -204,6 +205,12 @@ Discover how this **scalable** and **maintainable** setup for Verdaccio environm
 > [!NOTE]
 > 💡 Pro Tip: Learn more about the common problems with shared environments in the **💡[docs/motivation.md](./docs/motivation.md)💡**.
 
+##### Project Graph
+
+Here the project graph of the research.
+
+![utils-project-graph-idle.png](docs%2Futils-project-graph-idle.png)
+
 ### 🛡️ Environment Folders to Isolate Files During E2E Tests
 
 All files that change during testing are contained within an isolated folder, ensuring they don't interfere with your local setup or other tests.
@@ -254,7 +261,7 @@ This allows us to **cache** the environment and **reuse** it across tests, leadi
 - 🔥 No need to uninstall packages or delete storage folders manually. We can simply delete the isolated folder when needed.
 - 🔥 The system only installs the necessary packages, further reducing time and resource usage.
 
-![utils-project-graph-idle.png](docs%2Futils-project-graph-idle.png)
+![good-dx-schema.png](docs%2Fgood-dx-schema.png)
 
 #### Changes in source
 
