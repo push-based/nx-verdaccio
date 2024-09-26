@@ -80,7 +80,7 @@ export async function projectTaskCacheSizeData<T extends string>(
   for (const task of tasks) {
     const dist = join(DEFAULT_PLUGIN_OUTPUT, 'task-time');
     await executeProcess({
-      command: `NX_PERF_LOGGING=true NX_DAEMON=false NX_PROFILE=${dist}/${slugify(
+      command: `NX_DAEMON=false NX_PROFILE=${dist}/${slugify(
         task
       )}-profile.json npx`,
       args: ['nx', 'run', task, '--parallel=1', '--skipNxCache'],
