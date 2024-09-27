@@ -7,9 +7,6 @@ import {
   getTestFixturesDist,
 } from '@push-based/test-utils';
 
-// change 1
-// change 2
-
 describe('utils - sort user list', () => {
   const fixturesDist = getTestFixturesDist('sort-user-list', {
     root: getTestEnvironmentRoot(process.env['NX_TASK_TARGET_PROJECT']),
