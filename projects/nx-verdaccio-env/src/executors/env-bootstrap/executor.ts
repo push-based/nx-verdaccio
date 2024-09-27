@@ -26,21 +26,24 @@ export async function bootstrapExecutor(
   context: ExecutorContext
 ): Promise<BootstrapExecutorOutput> {
   const { configurationName, projectName } = context;
-  const { keepServerRunning, environmentRoot } = options;
+  const { keepServerRunning, environmentRoot, verbose } = options;
 
-  logger.info(
-    `Execute ${PACKAGE_NAME}:${TARGET_ENVIRONMENT_BOOTSTRAP} with options: ${JSON.stringify(
-      options,
-      null,
-      2
-    )}`
-  );
+  if(verbose) {
+    logger.info(
+      `Execute ${PACKAGE_NAME}:${TARGET_ENVIRONMENT_BOOTSTRAP} with options: ${JSON.stringify(
+        options,
+        null,
+        2
+      )}`
+    );
+  }
 
   let bootstrapResult: BootstrapEnvironmentResult;
   try {
     bootstrapResult = await bootstrapEnvironment({
       projectName,
       environmentRoot,
+      verbose
     });
   } catch (error) {
     logger.error(error);
@@ -64,6 +67,7 @@ export async function bootstrapExecutor(
         configuration: configurationName,
       },
       {
+        verbose,
         filePath: join(environmentRoot, VERDACCIO_REGISTRY_JSON),
       },
       context

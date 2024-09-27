@@ -1,12 +1,12 @@
-import { type ExecutorContext, logger } from '@nx/devkit';
-import type { KillProcessExecutorOptions } from './schema';
-import { join } from 'node:path';
-import { killProcessFromPid } from './kill-process';
+import {type ExecutorContext, logger} from '@nx/devkit';
+import type {KillProcessExecutorOptions} from './schema';
+import {join} from 'node:path';
+import {killProcessFromFilePath} from './kill-process';
 import {
   DEFAULT_PROCESS_FILENAME,
   EXECUTOR_ENVIRONMENT_KILL_PROCESS,
 } from './constant';
-import { PACKAGE_NAME } from '../../plugin/constants';
+import {PACKAGE_NAME} from '../../plugin/constants';
 
 export type ExecutorOutput = {
   success: boolean;
@@ -26,19 +26,22 @@ export default async function runKillProcessExecutor(
     filePath = join(environmentRoot ?? '', DEFAULT_PROCESS_FILENAME),
   } = options;
 
-  logger.info(
-    `Execute ${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_KILL_PROCESS} with options: ${JSON.stringify(
-      options,
-      null,
-      2
-    )}`
-  );
+  if (verbose) {
+    logger.info(
+      `Execute ${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_KILL_PROCESS} with options: ${JSON.stringify(
+        options,
+        null,
+        2
+      )}`
+    );
+  }
 
   try {
     if (pid) {
       process.kill(Number(pid));
+      logger.info(`Kill process with id: ${pid}.`);
     } else {
-      killProcessFromPid(filePath, { cleanFs, dryRun, verbose });
+      killProcessFromFilePath(filePath, {cleanFs, dryRun, verbose});
     }
   } catch (error) {
     logger.error(error);

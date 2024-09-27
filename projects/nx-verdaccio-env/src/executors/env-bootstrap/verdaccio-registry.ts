@@ -1,11 +1,11 @@
-import { bold } from 'ansis';
-import { logger } from '@nx/devkit';
-import { objectToCliArgs } from '../../internal/terminal';
-import { executeProcess } from '../../internal/execute-process';
-import { uniquePort } from './unique-port';
-import { formatError, formatInfo } from '../../internal/logging';
-import { TARGET_ENVIRONMENT_VERDACCIO_START } from '../../plugin/targets/environment.targets';
-import { DEFAULT_VERDACCIO_STORAGE_DIR } from './constants';
+import {bold} from 'ansis';
+import {logger} from '@nx/devkit';
+import {objectToCliArgs} from '../../internal/terminal';
+import {executeProcess} from '../../internal/execute-process';
+import {uniquePort} from './unique-port';
+import {formatError, formatInfo} from '../../internal/logging';
+import {TARGET_ENVIRONMENT_VERDACCIO_START} from '../../plugin/targets/environment.targets';
+import {DEFAULT_VERDACCIO_STORAGE_DIR} from './constants';
 
 const VERDACCIO_TOKEN = 'Verdaccio: ';
 
@@ -74,14 +74,14 @@ export type StartVerdaccioOptions = VerdaccioExecuterOptions &
   StarVerdaccioOnlyOptions;
 
 export async function startVerdaccioServer({
-  projectName,
-  port = String(uniquePort()),
-  location = 'none',
-  clear = true,
-  verbose = true,
-  storage = DEFAULT_VERDACCIO_STORAGE_DIR,
-  ...opt
-}: StartVerdaccioOptions): Promise<RegistryResult> {
+                                             projectName,
+                                             port = String(uniquePort()),
+                                             location = 'none',
+                                             clear = true,
+                                             verbose,
+                                             storage = DEFAULT_VERDACCIO_STORAGE_DIR,
+                                             ...opt
+                                           }: StartVerdaccioOptions): Promise<RegistryResult> {
   let verdaccioIsRunning = false;
 
   const startServerPromise = () =>
@@ -91,7 +91,7 @@ export async function startVerdaccioServer({
         args: objectToCliArgs({
           _: [TARGET_ENVIRONMENT_VERDACCIO_START, projectName ?? '', '--'],
           port,
-          verbose,
+          ...(verbose !== undefined ? {verbose} : {}),
           location,
           clear,
           storage,
@@ -130,15 +130,15 @@ export async function startVerdaccioServer({
                 },
               };
 
-              logger.info(
-                formatInfo(
-                  `Registry started on URL: ${bold(
-                    result.registry.url
-                  )}, ProcessID: ${bold(String(childProcess?.pid))}`,
-                  VERDACCIO_TOKEN
-                )
-              );
               if (verbose) {
+                logger.info(
+                  formatInfo(
+                    `Registry started on URL: ${bold(
+                      result.registry.url
+                    )}, ProcessID: ${bold(String(childProcess?.pid))}`,
+                    VERDACCIO_TOKEN
+                  )
+                );
                 logger.info(formatInfo('', VERDACCIO_TOKEN));
                 console.table(result);
               }

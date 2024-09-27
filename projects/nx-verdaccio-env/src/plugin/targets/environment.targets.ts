@@ -115,6 +115,7 @@ export function getEnvTargets(
     // runs env-bootstrap-env, install-env and stop-verdaccio
     [TARGET_ENVIRONMENT_SETUP]: {
       outputs: ['{options.environmentRoot}'],
+      cache: true,
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_SETUP}`,
       options: {
         environmentRoot,
