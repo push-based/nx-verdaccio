@@ -24,7 +24,7 @@ vi.mock('@nx/devkit', async () => {
 describe('runKillProcessExecutor', () => {
   const killSpy = vi.spyOn(process, 'kill').mockImplementation(vi.fn());
   const killProcessFromPidSpy = vi
-    .spyOn(killProcessModule, 'killProcessFromPid')
+    .spyOn(killProcessModule, 'killProcessFromFilePath')
     .mockImplementation(vi.fn());
 
   beforeEach(() => {
