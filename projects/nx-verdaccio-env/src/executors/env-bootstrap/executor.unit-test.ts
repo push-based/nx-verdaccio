@@ -65,6 +65,7 @@ describe('runBootstrapExecutor', () => {
       runBootstrapExecutor(
         {
           environmentRoot: `tmp/environments/${e2eProjectName}`,
+          verbose: true,
         },
         context
       )
@@ -79,6 +80,7 @@ describe('runBootstrapExecutor', () => {
       `Execute ${PACKAGE_NAME}:pb-ve-env-bootstrap with options: ${JSON.stringify(
         {
           environmentRoot: `tmp/environments/${e2eProjectName}`,
+          verbose: true,
         },
         null,
         2
@@ -90,6 +92,7 @@ describe('runBootstrapExecutor', () => {
       stopVerdaccioTask,
       {
         filePath: `tmp/environments/${e2eProjectName}/verdaccio-registry.json`,
+        verbose: true,
       },
       context
     );
@@ -127,11 +130,6 @@ describe('runBootstrapExecutor', () => {
       success: false,
       command: 'Failed to env-bootstrap environment',
     });
-
-    expect(infoLoggerSpy).toHaveBeenCalledTimes(1);
-    expect(infoLoggerSpy).toHaveBeenCalledWith(
-      `Execute ${PACKAGE_NAME}:pb-ve-env-bootstrap with options: {}`
-    );
 
     expect(errorLoggerSpy).toHaveBeenCalledTimes(1);
     expect(errorLoggerSpy).toHaveBeenCalledWith(

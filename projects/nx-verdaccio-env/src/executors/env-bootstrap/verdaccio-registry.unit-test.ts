@@ -87,6 +87,7 @@ describe('startVerdaccioServer', () => {
 
     const result = await startVerdaccioServer({
       projectName: 'test-project',
+      verbose: true,
     });
 
     expect(result).toStrictEqual({
