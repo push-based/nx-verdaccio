@@ -32,7 +32,7 @@ export async function killProcessFromFilePath(
     } else {
       process.kill(Number(pid));
       logger.info(
-        `Kill process with id: ${pid}.`
+        `Killed process with id: ${pid}.`
       );
     }
   } catch (e) {

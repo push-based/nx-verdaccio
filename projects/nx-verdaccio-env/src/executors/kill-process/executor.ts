@@ -1,4 +1,4 @@
-import {type ExecutorContext, logger} from '@nx/devkit';
+import { logger} from '@nx/devkit';
 import type {KillProcessExecutorOptions} from './schema';
 import {join} from 'node:path';
 import {killProcessFromFilePath} from './kill-process';
@@ -39,7 +39,7 @@ export default async function runKillProcessExecutor(
   try {
     if (pid) {
       process.kill(Number(pid));
-      logger.info(`Kill process with id: ${pid}.`);
+      logger.info(`Killed process with id: ${pid}.`);
     } else {
       killProcessFromFilePath(filePath, {cleanFs, dryRun, verbose});
     }
