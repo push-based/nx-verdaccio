@@ -78,7 +78,7 @@ export async function startVerdaccioServer({
   port = String(uniquePort()),
   location = 'none',
   clear = true,
-  verbose = true,
+  verbose,
   storage = DEFAULT_VERDACCIO_STORAGE_DIR,
   ...opt
 }: StartVerdaccioOptions): Promise<RegistryResult> {
@@ -91,7 +91,7 @@ export async function startVerdaccioServer({
         args: objectToCliArgs({
           _: [TARGET_ENVIRONMENT_VERDACCIO_START, projectName ?? '', '--'],
           port,
-          verbose,
+          ...(verbose !== undefined ? { verbose } : {}),
           location,
           clear,
           storage,
@@ -130,15 +130,15 @@ export async function startVerdaccioServer({
                 },
               };
 
-              logger.info(
-                formatInfo(
-                  `Registry started on URL: ${bold(
-                    result.registry.url
-                  )}, ProcessID: ${bold(String(childProcess?.pid))}`,
-                  VERDACCIO_TOKEN
-                )
-              );
               if (verbose) {
+                logger.info(
+                  formatInfo(
+                    `Registry started on URL: ${bold(
+                      result.registry.url
+                    )}, ProcessID: ${bold(String(childProcess?.pid))}`,
+                    VERDACCIO_TOKEN
+                  )
+                );
                 logger.info(formatInfo('', VERDACCIO_TOKEN));
                 console.table(result);
               }

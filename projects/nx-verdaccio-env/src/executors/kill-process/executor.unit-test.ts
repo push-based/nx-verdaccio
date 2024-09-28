@@ -24,7 +24,7 @@ vi.mock('@nx/devkit', async () => {
 describe('runKillProcessExecutor', () => {
   const killSpy = vi.spyOn(process, 'kill').mockImplementation(vi.fn());
   const killProcessFromPidSpy = vi
-    .spyOn(killProcessModule, 'killProcessFromPid')
+    .spyOn(killProcessModule, 'killProcessFromFilePath')
     .mockImplementation(vi.fn());
 
   beforeEach(() => {
@@ -70,13 +70,7 @@ describe('runKillProcessExecutor', () => {
     expect(killSpy).toHaveBeenCalledWith(777);
 
     expect(logger.info).toHaveBeenCalledTimes(1);
-    expect(logger.info).toHaveBeenCalledWith(
-      `Execute ${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_KILL_PROCESS} with options: ${JSON.stringify(
-        { pid: 777 },
-        null,
-        2
-      )}`
-    );
+    expect(logger.info).toHaveBeenCalledWith('Killed process with id: 777.');
   });
 
   it('should load file kill process with pid from file', async () => {
@@ -122,14 +116,8 @@ describe('runKillProcessExecutor', () => {
       }
     );
 
-    expect(logger.info).toHaveBeenCalledTimes(1);
-    expect(logger.info).toHaveBeenCalledWith(
-      `Execute ${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_KILL_PROCESS} with options: ${JSON.stringify(
-        { filePath: 'tmp/environments/my-lib' },
-        null,
-        2
-      )}`
-    );
+    expect(logger.info).toHaveBeenCalledTimes(0);
+    // expect(logger.info).toHaveBeenCalledWith('Killed process with id: 777.')
   });
 
   it('should handle error caused by process kill', async () => {

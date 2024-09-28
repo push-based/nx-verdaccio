@@ -1,7 +1,7 @@
 import { logger, readJsonFile } from '@nx/devkit';
 import { rm } from 'node:fs/promises';
 
-export async function killProcessFromPid(
+export async function killProcessFromFilePath(
   filePath: string,
   options?: {
     cleanFs?: boolean;
@@ -31,6 +31,7 @@ export async function killProcessFromPid(
       }
     } else {
       process.kill(Number(pid));
+      logger.info(`Killed process with id: ${pid}.`);
     }
   } catch (e) {
     logger.error(`Failed killing process with id: ${pid}\n${e}`);

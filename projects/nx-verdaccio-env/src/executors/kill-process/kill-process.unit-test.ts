@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { killProcessFromPid } from './kill-process';
+import { killProcessFromFilePath } from './kill-process';
 import { logger, readJsonFile } from '@nx/devkit';
 import { rm } from 'node:fs/promises';
 
@@ -21,7 +21,7 @@ describe('killProcessFromPid', () => {
   it('should kill the process if pid is found and dryRun is false', async () => {
     vi.mocked(readJsonFile).mockReturnValue({ pid: 1234 });
 
-    await killProcessFromPid('path/to/file', { dryRun: false });
+    await killProcessFromFilePath('path/to/file', { dryRun: false });
 
     expect(processKillSpy).toHaveBeenCalledWith(1234);
     expect(rm).toHaveBeenCalledWith('path/to/file');
@@ -30,7 +30,10 @@ describe('killProcessFromPid', () => {
   it('should not kill the process if dryRun is true but log a warning', async () => {
     vi.mocked(readJsonFile).mockReturnValue({ pid: 1234 });
 
-    await killProcessFromPid('path/to/file', { dryRun: true, verbose: true });
+    await killProcessFromFilePath('path/to/file', {
+      dryRun: true,
+      verbose: true,
+    });
 
     expect(processKillSpy).not.toHaveBeenCalled();
     expect(logger.warn).toHaveBeenCalledWith(
@@ -44,7 +47,7 @@ describe('killProcessFromPid', () => {
       throw new Error('File not found');
     });
 
-    await expect(killProcessFromPid('path/to/file')).rejects.toThrowError(
+    await expect(killProcessFromFilePath('path/to/file')).rejects.toThrowError(
       'Could not load path/to/file to get pid'
     );
     expect(processKillSpy).not.toHaveBeenCalled();
@@ -54,7 +57,7 @@ describe('killProcessFromPid', () => {
   it('should throw an error if pid is not found in the file', async () => {
     vi.mocked(readJsonFile).mockReturnValue({});
 
-    await expect(killProcessFromPid('path/to/file')).rejects.toThrowError(
+    await expect(killProcessFromFilePath('path/to/file')).rejects.toThrowError(
       'no pid found in file path/to/file'
     );
     expect(processKillSpy).not.toHaveBeenCalled();
@@ -68,7 +71,7 @@ describe('killProcessFromPid', () => {
       throw new Error('Failed to kill process');
     });
 
-    await killProcessFromPid('path/to/file', { dryRun: false });
+    await killProcessFromFilePath('path/to/file', { dryRun: false });
 
     expect(logger.error).toHaveBeenCalledWith(
       'Failed killing process with id: 1234\nError: Failed to kill process'
