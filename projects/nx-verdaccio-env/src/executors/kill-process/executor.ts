@@ -1,12 +1,12 @@
-import { logger} from '@nx/devkit';
-import type {KillProcessExecutorOptions} from './schema';
-import {join} from 'node:path';
-import {killProcessFromFilePath} from './kill-process';
+import { logger } from '@nx/devkit';
+import type { KillProcessExecutorOptions } from './schema';
+import { join } from 'node:path';
+import { killProcessFromFilePath } from './kill-process';
 import {
   DEFAULT_PROCESS_FILENAME,
   EXECUTOR_ENVIRONMENT_KILL_PROCESS,
 } from './constant';
-import {PACKAGE_NAME} from '../../plugin/constants';
+import { PACKAGE_NAME } from '../../plugin/constants';
 
 export type ExecutorOutput = {
   success: boolean;
@@ -41,7 +41,7 @@ export default async function runKillProcessExecutor(
       process.kill(Number(pid));
       logger.info(`Killed process with id: ${pid}.`);
     } else {
-      killProcessFromFilePath(filePath, {cleanFs, dryRun, verbose});
+      killProcessFromFilePath(filePath, { cleanFs, dryRun, verbose });
     }
   } catch (error) {
     logger.error(error);

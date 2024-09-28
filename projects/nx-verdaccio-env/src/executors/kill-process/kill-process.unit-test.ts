@@ -30,7 +30,10 @@ describe('killProcessFromPid', () => {
   it('should not kill the process if dryRun is true but log a warning', async () => {
     vi.mocked(readJsonFile).mockReturnValue({ pid: 1234 });
 
-    await killProcessFromFilePath('path/to/file', { dryRun: true, verbose: true });
+    await killProcessFromFilePath('path/to/file', {
+      dryRun: true,
+      verbose: true,
+    });
 
     expect(processKillSpy).not.toHaveBeenCalled();
     expect(logger.warn).toHaveBeenCalledWith(

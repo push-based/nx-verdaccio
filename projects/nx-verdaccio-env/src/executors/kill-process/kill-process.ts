@@ -31,9 +31,7 @@ export async function killProcessFromFilePath(
       }
     } else {
       process.kill(Number(pid));
-      logger.info(
-        `Killed process with id: ${pid}.`
-      );
+      logger.info(`Killed process with id: ${pid}.`);
     }
   } catch (e) {
     logger.error(`Failed killing process with id: ${pid}\n${e}`);

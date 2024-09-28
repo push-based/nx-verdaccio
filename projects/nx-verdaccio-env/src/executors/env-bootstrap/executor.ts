@@ -28,7 +28,7 @@ export async function bootstrapExecutor(
   const { configurationName, projectName } = context;
   const { keepServerRunning, environmentRoot, verbose } = options;
 
-  if(verbose) {
+  if (verbose) {
     logger.info(
       `Execute ${PACKAGE_NAME}:${TARGET_ENVIRONMENT_BOOTSTRAP} with options: ${JSON.stringify(
         options,
@@ -43,7 +43,7 @@ export async function bootstrapExecutor(
     bootstrapResult = await bootstrapEnvironment({
       projectName,
       environmentRoot,
-      verbose
+      verbose,
     });
   } catch (error) {
     logger.error(error);
