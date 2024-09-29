@@ -1,17 +1,12 @@
 # @push-based/nx-verdaccio
 
-## Plugins 🔌
+## 🔌 Plugins
 
-### Build Environment Plugin
+### Verdaccio Test Environment Plugin
 
-Add dynamic targets to execute environment tasks.
+Add dynamic targets to generate verdaccion environments for other tasks, e.g. testing.
 
-See [nx-verdaccio-environment plugin docs](./src/plugin/README.md) for details
-
-Examples:
-
-- `nx g @push-based/nx-verdaccio-env-setup` - generates NPM workspace and installs packages
-- `nx g @push-based/nx-verdaccio-env-setup  --keepServerRunning` - keeps Verdaccio running for debug reasons
+See [nx-verdaccio plugin docs](./src/plugin/README.md) for details
 
 ## Executor
 
@@ -25,8 +20,8 @@ This executor helps to initiate an [environment folder](../../../../../README.md
 {
   "name": "my-project",
   "targets": {
-    "nx-verdaccio--env-bootstrap": {
-      "executor": "@code-pushup/nx-verdaccio:env-bootstrap",
+    "env-setup": {
+      "executor": "@code-pushup/nx-verdaccio:env-setup",
       "options": {
         "keepServerRunning": false
         "envRoot": "/tmp/test-npm-workspace"
@@ -98,7 +93,7 @@ This executor helps to install a [`pubishable`](../../../../../README.md#fine-gr
   "name": "my-project",
   "targets": {
     "nx-verdaccio--npm-install": {
-      "executor": "@code-pushup/nx-verdaccio:release-install",
+      "executor": "@code-pushup/nx-verdaccio:pkg-install",
       "options": {
         "pkgVersion": "1.2.3"
         "envRoot": "/tmp/test-npm-workspace"
@@ -109,7 +104,7 @@ This executor helps to install a [`pubishable`](../../../../../README.md#fine-gr
 }
 ```
 
-Read more under [release install executor docs](./projects/nx-verdaccio/src/executors/npm-install/README.md).
+Read more under [pkg install executor docs](./projects/nx-verdaccio/src/executors/npm-install/README.md).
 
 ### NPM Publish Executor
 
@@ -122,7 +117,7 @@ This executor helps to publish a [`pubishable`](../../../../../README.md#fine-gr
   "name": "my-project",
   "targets": {
     "nx-verdaccio--npm-publish": {
-      "executor": "@code-pushup/nx-verdaccio:release-publish",
+      "executor": "@code-pushup/nx-verdaccio:pkg-publish",
       "options": {
         "pkgVersion": "1.2.3"
         "envRoot": "/tmp/test-npm-workspace"
@@ -133,15 +128,15 @@ This executor helps to publish a [`pubishable`](../../../../../README.md#fine-gr
 }
 ```
 
-Read more under [release publish executor docs](./projects/nx-verdaccio/src/executors/npm-publish/README.md).
+Read more under [pkg publish executor docs](./projects/nx-verdaccio/src/executors/npm-publish/README.md).
 
 ## Debugging e2e environments
 
 Debug full environment in 1 setup:
 
-- `nx run utils-e2e:setup-env` - setup environment for `utils-e2e`
-- `nx run utils-e2e:setup-env --keepServerRunning` - keeps Verdaccio running after setup
-- `nx run utils-e2e:stop-verdaccio` - stops the Verdaccio server for `utils-e2e`
+- `nx run utils-e2e:env-setup` - setup environment for `utils-e2e`
+- `nx run utils-e2e:env-setup --keepServerRunning` - keeps Verdaccio running after setup
+- `nx run utils-e2e:env-cleanup` - stops the Verdaccio server for `utils-e2e` folder and cleans up files
 
 Debug full environment in 2 steps:
 
@@ -152,6 +147,6 @@ Debug full environment in 2 steps:
 Debug packages:
 
 - `nx run utils-e2e:bootstrap-env` - setup folders and starts Verdaccio for `utils-e2e`
-- `nx run utils:npm-publish --envProject utils-e2e` - publishes `utils` and `models` to the Verdaccio registry configured for `utils-e2e`
-- `nx run utils:npm-install --envProject utils-e2e` - installs `utils` and `models` from the Verdaccio registry configured for `utils-e2e`
+- `nx run utils:pkg-publish --envProject utils-e2e` - publishes `utils` and `models` to the Verdaccio registry configured for `utils-e2e`
+- `nx run utils:pkg-install --envProject utils-e2e` - installs `utils` and `models` from the Verdaccio registry configured for `utils-e2e`
 - `nx run utils-e2e:stop-verdaccio` - stops the Verdaccio server for `utils-e2e`

@@ -12,7 +12,7 @@ This executor helps to kill processes by `ProcessID` or a JSON file containing a
 {
   "name": "my-project",
   "targets": {
-    "pb-ve--kill-process": {
+    "kill-process": {
       "executor": "@push-based/nx-verdaccio:kill-process"
     }
   }
@@ -25,7 +25,7 @@ By default, the Nx executor will derive the options from the executor options.
 {
   "name": "my-project",
   "targets": {
-    "pb-ve--kill-process": {
+    "kill-process": {
       "executor": "@push-based/nx-verdaccio:kill-process"
       "options": {
         "pid": "42312"
@@ -39,7 +39,7 @@ By default, the Nx executor will derive the options from the executor options.
 
 Show what will be executed without actually executing it:
 
-`nx run my-project:pb-ve--kill-process --print-config`
+`nx run my-project:kill-process --print-config`
 
 ## Options
 

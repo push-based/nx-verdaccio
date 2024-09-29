@@ -17,7 +17,7 @@ After running this task a ready to use environment is set up with packages publi
 {
   "name": "my-project",
   "targets": {
-    "pb-ve--env-setup": {
+    "env-setup": {
       "executor": "@push-based/nx-verdaccio:env-setup"
     }
   }
@@ -30,8 +30,8 @@ By default, the Nx executor will derive the options from the executor options.
 {
   "name": "my-project",
   "targets": {
-    "pb-ve--env-bootstrap": {
-      "executor": "@code-pushup/pb-ve:env-bootstrap",
+    "env-setup": {
+      "executor": "@code-pushup/nx-verdaccio:env-setup",
       "options": {
         "keepServerRunning": false
         "envRoot": "/tmp/test-npm-workspace"
@@ -44,7 +44,7 @@ By default, the Nx executor will derive the options from the executor options.
 
 Show what will be executed without actually executing it:
 
-`nx run my-project:pb-ve--env-setup --print-config`
+`nx run my-project:env-setup --print-config`
 
 ## Options
 

@@ -7,7 +7,7 @@ This folder has to contain all needed configuration and files for the `npm publi
 
 > [!notice]
 > To install or publish a package you need to have an environment set up.
-> Run `nx run <project-name>:pb-ve--bootstrap` to one
+> Run `nx run <project-name>:nxv--bootstrap` to one
 
 ## Usage
 
@@ -17,8 +17,8 @@ This folder has to contain all needed configuration and files for the `npm publi
 {
   "name": "my-project",
   "targets": {
-    "pb-ve--pkg-publish": {
-      "executor": "@push-based/nx-verdaccio:release-publish"
+    "pkg-publish": {
+      "executor": "@push-based/nx-verdaccio:pkg-publish"
     }
   }
 }
@@ -30,8 +30,8 @@ By default, the Nx executor will derive the options from the executor options.
 {
   "name": "my-project",
   "targets": {
-    "pb-ve--pkg-publish": {
-      "executor": "@code-pushup/pb-ve:release-publish",
+    "pkg-publish": {
+      "executor": "@code-pushup/nx-verdaccio:pkg-publish",
       "options": {
         "pkgVersion": "1.2.3"
         "envRoot": "/tmp/test-npm-workspace"
@@ -44,7 +44,7 @@ By default, the Nx executor will derive the options from the executor options.
 
 Show what will be executed without actually executing it:
 
-`nx run my-project:pb-ve--release-publish --print-config`
+`nx run my-project:pkg-publish --print-config`
 
 ## Options
 
