@@ -44,7 +44,7 @@ With this plugin, say goodbye to the old days of waiting around for your tests a
 {
   "plugins": [
     {
-      "plugin": "@push-based/build-env",
+      "plugin": "@push-based/nx-verdaccio",
       "options": {
         "environments": {
           "environmentsDir": "tmp/environments", // Optional
@@ -66,7 +66,7 @@ With this plugin, say goodbye to the old days of waiting around for your tests a
 >     "e2e": {
 >       "dependsOn": [
 >         // dynamically aded
->         { "target": "setup-env", "params": "forward" }
+>         { "target": "env-setup", "params": "forward" }
 >       ]
 >       // ...
 >     }
@@ -108,8 +108,8 @@ Tadaaaa! 🎉 You’re now testing at light speed!
 
 Out of the box, all library-type projects get these targets:
 
-- `build-env--npm-publish`
-- `build-env--npm-install`
+- `nx-verdaccio--pkg-publish`
+- `nx-verdaccio--pkg-install`
 
 But if you want to narrow it down:
 
@@ -117,7 +117,7 @@ But if you want to narrow it down:
 {
   "plugins": [
     {
-      "plugin": "@push-based/build-env",
+      "plugin": "@push-based/nx-verdaccio",
       "options": {
         "packages": {
           "filterByTags": ["publishable"]
@@ -150,7 +150,7 @@ Want more control over which projects get their environments set up?
 {
   "plugins": [
     {
-      "plugin": "@push-based/build-env",
+      "plugin": "@push-based/nx-verdaccio",
       "options": {
         "environments": {
           "targetNames": ["e2e", "e2e-static"]
@@ -169,7 +169,7 @@ Filter projects by tags to apply environment setup:
 {
   "plugins": [
     {
-      "plugin": "@push-based/build-env",
+      "plugin": "@push-based/nx-verdaccio",
       "options": {
         "environments": {
           "filterByTags": ["npm-env"]
@@ -268,10 +268,10 @@ This allows us to **cache** the environment and **reuse** it across tests, leadi
 
 ```mermaid
 flowchart TB
-P[project-e2e:e2e]:::e2e-.implicit.->S[project-e2e:setup-env]:::build;
+P[project-e2e:e2e]:::e2e-.implicit.->S[project-e2e:env-setup]:::build;
 S-.implicit.->E[project:build]:::build;
 classDef e2e stroke:#f00
-classDef setup-env stroke:#f00
+classDef env-setup stroke:#f00
 classDef build stroke:#f00
 ```
 
@@ -279,17 +279,17 @@ classDef build stroke:#f00
 
 ```mermaid
 flowchart TB
-P[project-e2e:e2e]:::e2e-.implicit.->S[project-e2e:setup-env]:::setup-env;
+P[project-e2e:e2e]:::e2e-.implicit.->S[project-e2e:env-setup]:::env-setup;
 S-.implicit.->E[project:build]:::build;
 classDef e2e stroke:#f00
-classDef setup-env stroke:#f00
+classDef env-setup stroke:#f00
 ```
 
 #### Changes in tests
 
 ```mermaid
 flowchart TB
-P[project-e2e:e2e]:::e2e-.implicit.->S[project-e2e:setup-env]:::build;
+P[project-e2e:e2e]:::e2e-.implicit.->S[project-e2e:env-setup]:::build;
 S-.implicit.->E[project:build]:::build;
 classDef e2e stroke:#f00
 ```
@@ -344,23 +344,22 @@ This is a first draft of how the benchmarks will look. ATM the data set it not b
 ```mermaid
 flowchart TB
   
-  UE["utils:e2e"] -->USE["utils:setup-env"]
+  UE["utils:e2e"] -->USE["utils:env-setup"]
 
-USE["utils:setup-env"] --> UIE["utils:install-env"]
-UIE["utils:install-env"] --> utils:install-env
+USE["utils:env-setup"] --> UIE["utils:env-install"]
+UIE["utils:env-install"] --> utils:env-install
 
-subgraph utils:install-env
+subgraph utils:env-install
 UI["utils:install"] --> UP["utils:publish"]
 UI["utils:install"] --> MI["models:install"]
 UP["utils:publish"] --> MP["models:publish"]
 MI["models:install"] --> MP["models:publish"]
 end
 
-utils:install-env --> UB["utils:build"]
+utils:env-install --> UB["utils:build"]
 UB["utils:build"] --> MB["models:build"]
 
 ```
 
 -->
-
 ```
