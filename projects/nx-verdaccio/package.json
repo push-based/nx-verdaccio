@@ -2,6 +2,7 @@
   "name": "@push-based/nx-verdaccio",
   "version": "0.0.0-alpha.5",
   "license": "MIT",
+  "private": false,
   "dependencies": {
     "@nx/devkit": "^19.6.4",
     "ansis": "^3.3.2",
