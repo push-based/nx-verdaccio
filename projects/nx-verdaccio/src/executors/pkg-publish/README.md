@@ -3,7 +3,7 @@
 This executor helps to publish a [`pubishable`](../../../../../README.md#fine-grained-selection-of-publishable-projects) projects into a given [environment folder](../../../../../README.md#-environment-folders-to-isolate-files-during-e2e-tests).
 This folder has to contain all needed configuration and files for the `npm publish` command to work.
 
-#### @push-based/nx-verdaccio-env:release-publish
+#### @push-based/nx-verdaccio:release-publish
 
 > [!notice]
 > To install or publish a package you need to have an environment set up.
@@ -18,7 +18,7 @@ This folder has to contain all needed configuration and files for the `npm publi
   "name": "my-project",
   "targets": {
     "pb-ve--pkg-publish": {
-      "executor": "@push-based/nx-verdaccio-env:release-publish"
+      "executor": "@push-based/nx-verdaccio:release-publish"
     }
   }
 }
