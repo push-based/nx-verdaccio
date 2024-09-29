@@ -1,3 +1,21 @@
+## 0.0.0-alpha.3 (2024-09-29)
+
+
+### 🚀 Features
+
+- implement proper v2 plugin code ([8c81c96](https://github.com/push-based/-nx-verdaccio-e2e-setup/commit/8c81c96))
+
+### 🩹 Fixes
+
+- fix test imports ([b6d651a](https://github.com/push-based/-nx-verdaccio-e2e-setup/commit/b6d651a))
+- adjust verbose logging ([6d3bf2f](https://github.com/push-based/-nx-verdaccio-e2e-setup/commit/6d3bf2f))
+- docs ([47da924](https://github.com/push-based/-nx-verdaccio-e2e-setup/commit/47da924))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+- Michael Hladky @BioPhoton
+
 ## 0.0.0-alpha.2 (2024-09-25)
 
 
