@@ -1,5 +1,5 @@
 {
-  "name": "@push-based/nx-verdaccio-env",
+  "name": "@push-based/nx-verdaccio",
   "version": "0.0.0-alpha.4",
   "license": "MIT",
   "dependencies": {

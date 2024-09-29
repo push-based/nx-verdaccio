@@ -9,7 +9,7 @@
     {
       "files": ["*.ts", "*.tsx"],
       "parserOptions": {
-        "project": ["projects/nx-verdaccio-env/tsconfig.*?.json"]
+        "project": ["projects/nx-verdaccio/tsconfig.*?.json"]
       },
       "rules": {
         "unicorn/prefer-module": "off",

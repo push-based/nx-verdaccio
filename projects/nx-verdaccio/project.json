@@ -1,7 +1,7 @@
 {
-  "name": "nx-verdaccio-env",
+  "name": "nx-verdaccio",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "projects/nx-verdaccio-env/src",
+  "sourceRoot": "projects/nx-verdaccio/src",
   "projectType": "library",
   "tags": ["scope:shared", "type:feature"],
   "implicitDependencies": [],
@@ -10,23 +10,23 @@
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/projects/nx-verdaccio-env",
-        "main": "projects/nx-verdaccio-env/src/index.ts",
-        "tsConfig": "projects/nx-verdaccio-env/tsconfig.lib.json",
+        "outputPath": "dist/projects/nx-verdaccio",
+        "main": "projects/nx-verdaccio/src/index.ts",
+        "tsConfig": "projects/nx-verdaccio/tsconfig.lib.json",
         "assets": [
-          "projects/nx-verdaccio-env/*.md",
+          "projects/nx-verdaccio/*.md",
           {
-            "input": "./projects/nx-verdaccio-env/src",
+            "input": "./projects/nx-verdaccio/src",
             "glob": "**/!(*.ts)",
             "output": "./src"
           },
           {
-            "input": "./projects/nx-verdaccio-env/src",
+            "input": "./projects/nx-verdaccio/src",
             "glob": "**/*.d.ts",
             "output": "./src"
           },
           {
-            "input": "./projects/nx-verdaccio-env",
+            "input": "./projects/nx-verdaccio",
             "glob": "executors.json",
             "output": "."
           }
@@ -45,7 +45,7 @@
     "unit-test": {
       "executor": "@nx/vite:test",
       "options": {
-        "configFile": "projects/nx-verdaccio-env/vite.config.ts"
+        "configFile": "projects/nx-verdaccio/vite.config.ts"
       }
     }
   }

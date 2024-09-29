@@ -3,7 +3,7 @@
 This executor helps to initiate an [environment folder](../../../../../README.md#-environment-folders-to-isolate-files-during-e2e-tests) and installs it`s dependent projects.
 After running this task a ready to use environment is set up with packages published and installed with Verdaccio.
 
-#### @push-based/nx-verdaccio-env:env-setup
+#### @push-based/nx-verdaccio:env-setup
 
 > [!notice]
 > The setup executor does not keep the Verdaccio server running.
@@ -18,7 +18,7 @@ After running this task a ready to use environment is set up with packages publi
   "name": "my-project",
   "targets": {
     "pb-ve--env-setup": {
-      "executor": "@push-based/nx-verdaccio-env:env-setup"
+      "executor": "@push-based/nx-verdaccio:env-setup"
     }
   }
 }

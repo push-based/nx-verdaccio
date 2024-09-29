@@ -86,7 +86,7 @@
   "plugins": [
     "./examples/e2e/cli-e2e-original/tooling/original.plugin.ts",
     {
-      "plugin": "./projects/nx-verdaccio-env/src/index.ts",
+      "plugin": "./projects/nx-verdaccio/src/index.ts",
       "options": {
         "packages": {
           "filterByTags": ["publishable"]
@@ -110,7 +110,7 @@
     }
   },
   "release": {
-    "projects": ["nx-verdaccio-env"],
+    "projects": ["nx-verdaccio"],
     "version": {
       "conventionalCommits": true,
       "preVersionCommand": "npx nx run-many -t build"

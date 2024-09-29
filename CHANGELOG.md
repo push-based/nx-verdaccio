@@ -1,18 +1,16 @@
 ## 0.0.0-alpha.4 (2024-09-29)
 
-
 ### 🚀 Features
 
 - implement caching of setup target ([63079a9](https://github.com/push-based/-nx-verdaccio-e2e-setup/commit/63079a9))
 - implement caching of the setup target (disabled by default) ([f4479e9](https://github.com/push-based/-nx-verdaccio-e2e-setup/commit/f4479e9))
 
-### ❤️  Thank You
+### ❤️ Thank You
 
 - Michael @rx-angular
 - Michael Hladky @BioPhoton
 
 ## 0.0.0-alpha.3 (2024-09-29)
-
 
 ### 🚀 Features
 
@@ -24,25 +22,23 @@
 - adjust verbose logging ([6d3bf2f](https://github.com/push-based/-nx-verdaccio-e2e-setup/commit/6d3bf2f))
 - docs ([47da924](https://github.com/push-based/-nx-verdaccio-e2e-setup/commit/47da924))
 
-### ❤️  Thank You
+### ❤️ Thank You
 
 - Michael @rx-angular
 - Michael Hladky @BioPhoton
 
 ## 0.0.0-alpha.2 (2024-09-25)
 
-
 ### 🩹 Fixes
 
 - adjust docs ([bc8fac1](https://github.com/push-based/-nx-verdaccio-e2e-setup/commit/bc8fac1))
-- **nx-verdaccio-env:** adjust test description ([f2411e3](https://github.com/push-based/-nx-verdaccio-e2e-setup/commit/f2411e3))
+- **nx-verdaccio:** adjust test description ([f2411e3](https://github.com/push-based/-nx-verdaccio-e2e-setup/commit/f2411e3))
 
-### ❤️  Thank You
+### ❤️ Thank You
 
 - Michael @rx-angular
 
 ## 0.0.0-alpha.1 (2024-09-25)
-
 
 ### 🚀 Features
 
@@ -70,7 +66,7 @@
 
 - setup code-pushup and add nx-perf plugin ([c796c6d](https://github.com/push-based/-nx-verdaccio-e2e-setup/commit/c796c6d))
 
-### ❤️  Thank You
+### ❤️ Thank You
 
 - getlarge
 - Michael @rx-angular

@@ -1,4 +1,4 @@
-# @push-based/nx-verdaccio-env
+# @push-based/nx-verdaccio
 
 ## Plugins 🔌
 
@@ -25,8 +25,8 @@ This executor helps to initiate an [environment folder](../../../../../README.md
 {
   "name": "my-project",
   "targets": {
-    "nx-verdaccio-env--env-bootstrap": {
-      "executor": "@code-pushup/nx-verdaccio-env:env-bootstrap",
+    "nx-verdaccio--env-bootstrap": {
+      "executor": "@code-pushup/nx-verdaccio:env-bootstrap",
       "options": {
         "keepServerRunning": false
         "envRoot": "/tmp/test-npm-workspace"
@@ -37,7 +37,7 @@ This executor helps to initiate an [environment folder](../../../../../README.md
 }
 ```
 
-Read more under [setup executor docs](./projects/nx-verdaccio-env/src/executors/setup/README.md).
+Read more under [setup executor docs](./projects/nx-verdaccio/src/executors/setup/README.md).
 
 ### Bootstrap Environment Executor
 
@@ -49,8 +49,8 @@ This executor helps to initiate [environment](../../../../../README.md#-environm
 {
   "name": "my-project",
   "targets": {
-    "nx-verdaccio-env--env-bootstrap": {
-      "executor": "@code-pushup/nx-verdaccio-env:env-bootstrap",
+    "nx-verdaccio--env-bootstrap": {
+      "executor": "@code-pushup/nx-verdaccio:env-bootstrap",
       "options": {
         "keepServerRunning": false
         "envRoot": "/tmp/test-npm-workspace"
@@ -61,7 +61,7 @@ This executor helps to initiate [environment](../../../../../README.md#-environm
 }
 ```
 
-Read more under [bootstrap executor docs](./projects/nx-verdaccio-env/src/executors/bootstrap/README.md).
+Read more under [bootstrap executor docs](./projects/nx-verdaccio/src/executors/bootstrap/README.md).
 
 ### Kill Process Executor
 
@@ -73,8 +73,8 @@ This executor helps to kill processes by `ProcessID` or a JSON file containing a
 {
   "name": "my-project",
   "targets": {
-    "nx-verdaccio-env--kill-process": {
-      "executor": "@push-based/nx-verdaccio-env:kill-process"
+    "nx-verdaccio--kill-process": {
+      "executor": "@push-based/nx-verdaccio:kill-process"
       "options": {
         "pid": "42312"
         "filePath": "/tmp/test-npm-workspace/process-id.json"
@@ -85,7 +85,7 @@ This executor helps to kill processes by `ProcessID` or a JSON file containing a
 }
 ```
 
-Read more under [kill-process executor docs](./projects/nx-verdaccio-env/src/executors/kill-process/README.md).
+Read more under [kill-process executor docs](./projects/nx-verdaccio/src/executors/kill-process/README.md).
 
 ### NPM Install Executor
 
@@ -97,8 +97,8 @@ This executor helps to install a [`pubishable`](../../../../../README.md#fine-gr
 {
   "name": "my-project",
   "targets": {
-    "nx-verdaccio-env--npm-install": {
-      "executor": "@code-pushup/nx-verdaccio-env:release-install",
+    "nx-verdaccio--npm-install": {
+      "executor": "@code-pushup/nx-verdaccio:release-install",
       "options": {
         "pkgVersion": "1.2.3"
         "envRoot": "/tmp/test-npm-workspace"
@@ -109,7 +109,7 @@ This executor helps to install a [`pubishable`](../../../../../README.md#fine-gr
 }
 ```
 
-Read more under [release install executor docs](./projects/nx-verdaccio-env/src/executors/npm-install/README.md).
+Read more under [release install executor docs](./projects/nx-verdaccio/src/executors/npm-install/README.md).
 
 ### NPM Publish Executor
 
@@ -121,8 +121,8 @@ This executor helps to publish a [`pubishable`](../../../../../README.md#fine-gr
 {
   "name": "my-project",
   "targets": {
-    "nx-verdaccio-env--npm-publish": {
-      "executor": "@code-pushup/nx-verdaccio-env:release-publish",
+    "nx-verdaccio--npm-publish": {
+      "executor": "@code-pushup/nx-verdaccio:release-publish",
       "options": {
         "pkgVersion": "1.2.3"
         "envRoot": "/tmp/test-npm-workspace"
@@ -133,8 +133,7 @@ This executor helps to publish a [`pubishable`](../../../../../README.md#fine-gr
 }
 ```
 
-
-Read more under [release publish executor docs](./projects/nx-verdaccio-env/src/executors/npm-publish/README.md).
+Read more under [release publish executor docs](./projects/nx-verdaccio/src/executors/npm-publish/README.md).
 
 ## Debugging e2e environments
 
