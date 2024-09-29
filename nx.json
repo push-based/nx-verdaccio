@@ -28,6 +28,9 @@
       "cache": true,
       "inputs": ["default", "^production"]
     },
+    "pb-ve-env-setup": {
+      "cache": true
+    },
     "nx-release-publish": {
       "dependsOn": [
         {
