@@ -4,7 +4,7 @@
 
 ### Verdaccio Test Environment Plugin
 
-Add dynamic targets to generate verdaccion environments for other tasks, e.g. testing.
+Add dynamic targets to generate Verdaccion environments for other tasks, e.g. testing.
 
 See [nx-verdaccio plugin docs](./src/plugin/README.md) for details
 
