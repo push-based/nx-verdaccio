@@ -1,3 +1,14 @@
+## 0.0.0-alpha.5 (2024-09-29)
+
+
+### 🩹 Fixes
+
+- fix typo ([8830e1a](https://github.com/push-based/-nx-verdaccio-e2e-setup/commit/8830e1a))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
 ## 0.0.0-alpha.4 (2024-09-29)
 
 ### 🚀 Features
