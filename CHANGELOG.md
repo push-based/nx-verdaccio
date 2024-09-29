@@ -1,3 +1,15 @@
+## 0.0.0-alpha.6 (2024-09-29)
+
+
+### 🩹 Fixes
+
+- make package public ([046a788](https://github.com/push-based/-nx-verdaccio-e2e-setup/commit/046a788))
+- change JS esm module type to CommonJS ([9d9d60d](https://github.com/push-based/-nx-verdaccio-e2e-setup/commit/9d9d60d))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
 ## 0.0.0-alpha.5 (2024-09-29)
 
 
