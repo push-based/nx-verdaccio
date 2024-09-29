@@ -133,6 +133,7 @@ This executor helps to publish a [`pubishable`](../../../../../README.md#fine-gr
 }
 ```
 
+
 Read more under [release publish executor docs](./projects/nx-verdaccio-env/src/executors/npm-publish/README.md).
 
 ## Debugging e2e environments
