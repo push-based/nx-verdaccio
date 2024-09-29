@@ -114,8 +114,13 @@ export function getEnvTargets(
     },
     // runs env-bootstrap-env, install-env and stop-verdaccio
     [TARGET_ENVIRONMENT_SETUP]: {
-      outputs: ['{options.environmentRoot}'],
-      cache: false,
+      outputs: [
+        '{options.environmentRoot}/node_modules',
+        '{options.environmentRoot}/package.json',
+        '{options.environmentRoot}/.npmrc',
+        '{options.environmentRoot}/package-lock.json',
+      ],
+      cache: false, // # @TODO enable by default after more research on cache size is done
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_SETUP}`,
       options: {
         environmentRoot,
