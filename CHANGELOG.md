@@ -1,3 +1,16 @@
+## 0.0.0-alpha.4 (2024-09-29)
+
+
+### 🚀 Features
+
+- implement caching of setup target ([63079a9](https://github.com/push-based/-nx-verdaccio-e2e-setup/commit/63079a9))
+- implement caching of the setup target (disabled by default) ([f4479e9](https://github.com/push-based/-nx-verdaccio-e2e-setup/commit/f4479e9))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+- Michael Hladky @BioPhoton
+
 ## 0.0.0-alpha.3 (2024-09-29)
 
 
