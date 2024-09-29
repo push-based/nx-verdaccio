@@ -32,16 +32,6 @@
       "cache": true
     },
     "nx-release-publish": {
-      "dependsOn": [
-        {
-          "projects": ["self"],
-          "target": "build"
-        },
-        {
-          "projects": ["dependencies"],
-          "target": "nx-release-publish"
-        }
-      ]
     },
     "lint": {
       "executor": "@nx/linter:eslint",
@@ -86,7 +76,7 @@
   "plugins": [
     "./examples/e2e/cli-e2e-original/tooling/original.plugin.ts",
     {
-      "plugin": "./projects/nx-verdaccio/src/index.ts",
+      "plugin": "./dist/projects/nx-verdaccio/src/index.js",
       "options": {
         "packages": {
           "filterByTags": ["publishable"]
