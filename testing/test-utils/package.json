@@ -1,8 +1,0 @@
-{
-  "name": "test-utils",
-  "version": "0.0.1",
-  "private": true,
-  "dependencies": {
-    "@code-pushup/models": "0.50.0"
-  }
-}

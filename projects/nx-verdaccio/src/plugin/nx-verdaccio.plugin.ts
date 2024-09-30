@@ -30,7 +30,9 @@ const PROJECT_JSON_FILE_GLOB = '**/project.json';
 export const createNodesV2: CreateNodesV2<BuildEnvPluginCreateNodeOptions> = [
   PROJECT_JSON_FILE_GLOB,
   async (configFiles, options, context) => {
-    const optionsHash = hashObject({ options });
+    const normalizedOptions = normalizeCreateNodesOptions(options);
+
+    const optionsHash = hashObject({ options: options ?? {} });
     const nxVerdaccioEnvPluginCachePath = join(
       workspaceDataDirectory,
       `push-based--${PLUGIN_NAME}-${optionsHash}.hash`
@@ -53,8 +55,6 @@ export const createNodesV2: CreateNodesV2<BuildEnvPluginCreateNodeOptions> = [
           ) {
             throw new Error('Project name is required');
           }
-
-          const normalizedOptions = normalizeCreateNodesOptions(options);
 
           let cachedProjectTargets = getCacheRecord<
             Record<string, TargetConfiguration>

@@ -4,8 +4,8 @@ import { PACKAGE_NAME } from '../constants';
 import { EXECUTOR_PACKAGE_NPM_PUBLISH } from '../../executors/pkg-publish/constants';
 import { EXECUTOR_PACKAGE_NPM_INSTALL } from '../../executors/pkg-install/constants';
 
-export const TARGET_PACKAGE_NPM_INSTALL = 'pb-ve-pkg-install';
-export const TARGET_PACKAGE_NPM_PUBLISH = 'pb-ve-pkg-publish';
+export const TARGET_PACKAGE_INSTALL = 'nxv-pkg-install';
+export const TARGET_PACKAGE_PUBLISH = 'nxv-pkg-publish';
 
 export function isPkgProject(
   projectConfig: ProjectConfiguration,
@@ -28,26 +28,26 @@ export function isPkgProject(
 
 export function getPkgTargets(): Record<string, TargetConfiguration> {
   return {
-    [TARGET_PACKAGE_NPM_PUBLISH]: {
+    [TARGET_PACKAGE_PUBLISH]: {
       dependsOn: [
         { target: 'build', params: 'forward' },
         {
           projects: 'dependencies',
-          target: TARGET_PACKAGE_NPM_PUBLISH,
+          target: TARGET_PACKAGE_PUBLISH,
           params: 'forward',
         },
       ],
       executor: `${PACKAGE_NAME}:${EXECUTOR_PACKAGE_NPM_PUBLISH}`,
     },
-    [TARGET_PACKAGE_NPM_INSTALL]: {
+    [TARGET_PACKAGE_INSTALL]: {
       dependsOn: [
         {
-          target: TARGET_PACKAGE_NPM_PUBLISH,
+          target: TARGET_PACKAGE_PUBLISH,
           params: 'forward',
         },
         {
           projects: 'dependencies',
-          target: TARGET_PACKAGE_NPM_INSTALL,
+          target: TARGET_PACKAGE_INSTALL,
           params: 'forward',
         },
       ],

@@ -78,7 +78,7 @@ describe('runSetupEnvironmentExecutor', () => {
     expect(executeProcessSpy).toHaveBeenCalledTimes(1);
     expect(executeProcessSpy).toHaveBeenCalledWith({
       args: [
-        'pb-ve-env-install',
+        'nxv-env-install',
         projectName,
         // @TODO check for --environmentRoot too be OS agnostic path
         expect.stringContaining(projectName),
@@ -141,7 +141,7 @@ describe('runSetupEnvironmentExecutor', () => {
     ).resolves.toStrictEqual({
       success: false,
       command:
-        'Failed executing target pb-ve-env-bootstrap\n Error in runBootstrapEnvironment',
+        'Failed executing target nxv-env-bootstrap\n Error in runBootstrapEnvironment',
     });
   });
 
@@ -205,7 +205,7 @@ describe('runSetupEnvironmentExecutor', () => {
     expect(executeProcessSpy).toHaveBeenCalledTimes(1);
     expect(executeProcessSpy).toHaveBeenCalledWith({
       args: [
-        'pb-ve-env-install',
+        'nxv-env-install',
         'my-lib-e2e',
         '--environmentRoot="tmp/environments/my-lib-e2e"',
       ],

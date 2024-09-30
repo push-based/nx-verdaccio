@@ -28,11 +28,10 @@
       "cache": true,
       "inputs": ["default", "^production"]
     },
-    "pb-ve-env-setup": {
-      "cache": true
+    "nxv-env-setup": {
+      "cache": false
     },
-    "nx-release-publish": {
-    },
+    "nx-release-publish": {},
     "lint": {
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
@@ -76,7 +75,7 @@
   "plugins": [
     "./examples/e2e/cli-e2e-original/tooling/original.plugin.ts",
     {
-      "plugin": "./dist/projects/nx-verdaccio/src/index.js",
+      "plugin": "@push-based/nx-verdaccio",
       "options": {
         "packages": {
           "filterByTags": ["publishable"]

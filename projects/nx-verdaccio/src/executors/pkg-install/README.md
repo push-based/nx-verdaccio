@@ -17,7 +17,7 @@ This folder has to contain all needed configuration and files for the `npm insta
 {
   "name": "my-project",
   "targets": {
-    "pb-ve--pkg-install": {
+    "nxv-pkg-install": {
       "executor": "@push-based/nx-verdaccio:pkg-install"
     }
   }

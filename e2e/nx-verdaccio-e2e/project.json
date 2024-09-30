@@ -1,0 +1,19 @@
+{
+  "name": "nx-verdaccio-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "projects/nx-verdaccio-e2e/test",
+  "projectType": "application",
+  "tags": ["type:e2e", "type:e2e-vi", "npm-env"],
+  "implicitDependencies": ["nx-verdaccio"],
+  "targets": {
+    "lint": {},
+    "e2e": {
+      "executor": "@nx/vite:test",
+      "inputs": ["default", "^production"],
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "../../../coverage/projects/nx-verdaccio-e2e"
+      }
+    }
+  }
+}

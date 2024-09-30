@@ -3,7 +3,7 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "projects/core-e2e/test",
   "projectType": "application",
-  "tags": ["type:e2e", "type:e2e-vi", "npm-env"],
+  "tags": ["type:e2e", "type:e2e-vi", "type:example"],
   "implicitDependencies": ["core"],
   "targets": {
     "lint": {},

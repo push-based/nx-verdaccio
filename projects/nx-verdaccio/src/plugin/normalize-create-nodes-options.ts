@@ -23,11 +23,9 @@ export function normalizeCreateNodesOptions(
   options: BuildEnvPluginCreateNodeOptions
 ): NormalizedCreateNodeOptions {
   const { environments = {}, packages = {} } = options ?? {};
+  const { targetNames = [] } = environments;
 
-  if (
-    !('targetNames' in environments) ||
-    environments.targetNames.length === 0
-  ) {
+  if (targetNames.length === 0) {
     throw new Error(
       'Option targetNames is required in plugin options under "environments". e.g.: ["e2e"] '
     );

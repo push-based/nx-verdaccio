@@ -44,7 +44,7 @@ This executor helps to initiate [environment](../../../../../README.md#-environm
 {
   "name": "my-project",
   "targets": {
-    "nx-verdaccio--env-bootstrap": {
+    "nx-verdaccio-env-bootstrap": {
       "executor": "@code-pushup/nx-verdaccio:env-bootstrap",
       "options": {
         "keepServerRunning": false
@@ -68,7 +68,7 @@ This executor helps to kill processes by `ProcessID` or a JSON file containing a
 {
   "name": "my-project",
   "targets": {
-    "nx-verdaccio--kill-process": {
+    "nx-verdaccio-kill-process": {
       "executor": "@push-based/nx-verdaccio:kill-process"
       "options": {
         "pid": "42312"
@@ -92,7 +92,7 @@ This executor helps to install a [`pubishable`](../../../../../README.md#fine-gr
 {
   "name": "my-project",
   "targets": {
-    "nx-verdaccio--npm-install": {
+    "nx-verdaccio-npm-install": {
       "executor": "@code-pushup/nx-verdaccio:pkg-install",
       "options": {
         "pkgVersion": "1.2.3"
@@ -116,7 +116,7 @@ This executor helps to publish a [`pubishable`](../../../../../README.md#fine-gr
 {
   "name": "my-project",
   "targets": {
-    "nx-verdaccio--npm-publish": {
+    "nx-verdaccio-npm-publish": {
       "executor": "@code-pushup/nx-verdaccio:pkg-publish",
       "options": {
         "pkgVersion": "1.2.3"
