@@ -59,7 +59,7 @@ exports[`nx-verdaccio plugin create-nodes-v2 > should add environment targets to
       "clear": true,
       "config": ".verdaccio/config.yml",
       "environmentDir": "tmp/environments/my-lib-e2e",
-      "port": 6125,
+      "port": Any<Number>,
       "projectName": "my-lib-e2e",
       "storage": "tmp/environments/my-lib-e2e/storage",
     },

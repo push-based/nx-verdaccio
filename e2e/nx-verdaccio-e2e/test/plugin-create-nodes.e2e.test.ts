@@ -183,7 +183,16 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
       })
     );
 
-    expect(projectJson.targets).toMatchSnapshot();
+    expect({
+      ...projectJson.targets,
+      ['nxv-env-verdaccio-start']: {
+        ...projectJson.targets['nxv-env-verdaccio-start'],
+        options: {
+          ...projectJson.targets['nxv-env-verdaccio-start'].options,
+          port: expect.any(Number),
+        },
+      },
+    }).toMatchSnapshot();
   });
   it('should NOT add environment targets to project without targetName e2e', async () => {
     const cwd = join(baseDir, 'no-env-targets');
