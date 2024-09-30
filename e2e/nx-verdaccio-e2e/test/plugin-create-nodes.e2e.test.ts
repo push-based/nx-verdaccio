@@ -143,7 +143,7 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
       projectA
     );
     expect(projectJsonA.name).toBe(projectA);
-    expect(projectJsonA.tags).toBe([]);
+    expect(projectJsonA.tags).toStrictEqual([]);
     expect(projectJsonA.targets).not.toStrictEqual(
       expect.not.objectContaining({
         'nxv-pkg-install': expect.any(Object),
