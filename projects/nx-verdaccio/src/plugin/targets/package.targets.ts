@@ -12,14 +12,17 @@ export function isPkgProject(
   options: NormalizedCreateNodeOptions['packages']
 ): boolean {
   const { projectType, tags: existingTags = [] } = projectConfig;
-  const { filterByTags: publishableTagFilters } = options;
+  const { filterByTags: publishableTagFilters = [] } = options;
   if (projectType !== 'library') {
     return false;
   }
   // if tags are configured check for at least one given tags
-  if (existingTags && publishableTagFilters) {
-    return existingTags.some((existingTag) =>
-      publishableTagFilters.includes(existingTag)
+  if (publishableTagFilters.length > 0) {
+    return (
+      existingTags.length > 0 &&
+      existingTags.some((existingTag) =>
+        publishableTagFilters.includes(existingTag)
+      )
     );
   }
 

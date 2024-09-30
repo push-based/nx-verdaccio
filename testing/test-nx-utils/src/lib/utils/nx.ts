@@ -104,8 +104,8 @@ export async function nxShowProjectJson<T extends ProjectConfiguration>(
   const { code, stderr, stdout } = await executeProcess({
     command: 'NX_DAEMON=false NX_PROJECT_GRAPH=false npx',
     args: objectToCliArgs({
-      _: ['nx', 'show', 'project', project],
-      verbose: true,
+      _: ['nx', 'show', 'project', project, '--skipNxCache'],
+      verbose: false, // debug errors
       json: true,
       prefix,
       userconfig,
@@ -113,5 +113,13 @@ export async function nxShowProjectJson<T extends ProjectConfiguration>(
     cwd,
   });
 
-  return { code, stderr, projectJson: JSON.parse(stdout) as T };
+  try {
+    return { code, stderr, projectJson: JSON.parse(stdout) as T };
+  } catch (error) {
+    throw new Error(
+      `Failed parsing show command result for string:\n${stdout}\n${
+        (error as Error).message
+      }`
+    );
+  }
 }

@@ -2,8 +2,8 @@
   "name": "@push-based/core",
   "version": "0.0.1",
   "dependencies": {
-    "@push-based/utils": "0.0.1",
-    "@push-based/models": "0.0.1",
+    "@push-based/utils": "*",
+    "@push-based/models": "*",
     "vite": "~5.0.0",
     "@nx/vite": "19.8.0"
   }

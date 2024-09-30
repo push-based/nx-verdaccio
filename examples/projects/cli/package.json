@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "dependencies": {
     "yargs": "^17.7.2",
-    "@push-based/core": "0.0.1"
+    "@push-based/core": "*"
   },
   "bin": "bin.js"
 }

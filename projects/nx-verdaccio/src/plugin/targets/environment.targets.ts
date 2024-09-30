@@ -2,7 +2,7 @@ import type { ProjectConfiguration, TargetConfiguration } from '@nx/devkit';
 import type { NormalizedCreateNodeOptions } from '../normalize-create-nodes-options';
 import { join } from 'node:path';
 import { TARGET_PACKAGE_INSTALL } from './package.targets';
-import type { BuildEnvEnvironmentsOptions } from '../schema';
+import type { NxVerdaccioEnvironmentsOptions } from '../schema';
 import type { StartVerdaccioOptions } from '../../executors/env-bootstrap/verdaccio-registry';
 import { uniquePort } from '../../executors/env-bootstrap/unique-port';
 import {
@@ -130,7 +130,7 @@ export function getEnvTargets(
 
 export function updateEnvTargetNames(
   projectConfig: ProjectConfiguration,
-  options: Required<Pick<BuildEnvEnvironmentsOptions, 'targetNames'>>
+  options: Required<Pick<NxVerdaccioEnvironmentsOptions, 'targetNames'>>
 ): Record<string, TargetConfiguration> {
   const { targetNames: envTargetNames } = options;
   const { targets: existingTargets = {} as TargetConfiguration } =

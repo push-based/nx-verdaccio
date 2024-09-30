@@ -31,7 +31,6 @@ export const createNodesV2: CreateNodesV2<BuildEnvPluginCreateNodeOptions> = [
   PROJECT_JSON_FILE_GLOB,
   async (configFiles, options, context) => {
     const normalizedOptions = normalizeCreateNodesOptions(options);
-
     const optionsHash = hashObject({ options: options ?? {} });
     const nxVerdaccioEnvPluginCachePath = join(
       workspaceDataDirectory,

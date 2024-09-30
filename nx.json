@@ -29,7 +29,7 @@
       "inputs": ["default", "^production"]
     },
     "nxv-env-setup": {
-      "cache": false
+      "cache": true
     },
     "nx-release-publish": {},
     "lint": {

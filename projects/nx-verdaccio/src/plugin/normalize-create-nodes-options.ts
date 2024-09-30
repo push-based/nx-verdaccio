@@ -1,7 +1,7 @@
 import type {
-  BuildEnvEnvironmentsOptions,
+  NxVerdaccioEnvironmentsOptions,
   BuildEnvPluginCreateNodeOptions,
-  BuildEnvPackagesOptions,
+  NxVerdaccioPackagesOptions,
 } from './schema';
 import {
   DEFAULT_ENVIRONMENTS_OUTPUT_DIR,
@@ -10,13 +10,13 @@ import {
 
 export type NormalizedCreateNodeOptions = {
   environments: Omit<
-    BuildEnvEnvironmentsOptions,
+    NxVerdaccioEnvironmentsOptions,
     'targetNames' | 'environmentsDir'
   > &
     Required<
-      Pick<BuildEnvEnvironmentsOptions, 'targetNames' | 'environmentsDir'>
+      Pick<NxVerdaccioEnvironmentsOptions, 'targetNames' | 'environmentsDir'>
     >;
-  packages: BuildEnvPackagesOptions;
+  packages: NxVerdaccioPackagesOptions;
 };
 
 export function normalizeCreateNodesOptions(
