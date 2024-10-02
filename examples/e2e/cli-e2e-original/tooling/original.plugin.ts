@@ -9,7 +9,7 @@ import { getBuildOutputPathFromBuildTarget } from './utils/build-target-helper';
 
 export const createNodes: CreateNodes = [
   '**/project.json',
-  (projectConfigurationFile: string, _: undefined | unknown) => {
+  (projectConfigurationFile: string) => {
     const root = dirname(projectConfigurationFile);
     const projectConfiguration: ProjectConfiguration = readJsonFile(
       join(process.cwd(), projectConfigurationFile)

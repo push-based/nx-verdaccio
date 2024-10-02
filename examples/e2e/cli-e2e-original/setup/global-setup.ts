@@ -12,7 +12,6 @@ import {
 const isVerbose = process.env['NX_VERBOSE_LOGGING'] === 'true' ?? false;
 const projectName = process.env['NX_TASK_TARGET_PROJECT'];
 let registryResult: RegistryResult;
-let stopFn: () => void;
 
 export async function setup() {
   if (projectName == null) {

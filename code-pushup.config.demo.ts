@@ -8,11 +8,17 @@ import {
 
 import {mergeConfigs} from '@code-pushup/utils';
 import type {CoreConfig} from '@code-pushup/models';
+import jsPackagesPlugin from "@code-pushup/js-packages-plugin";
 
 const config: CoreConfig = {
-  upload: getEnvVars(),
-  plugins: []
+  plugins: [
+    await jsPackagesPlugin()
+  ]
 };
+
+
+/*
+ upload: getEnvVars(),
 
 export default mergeConfigs(
   config,
@@ -21,3 +27,4 @@ export default mergeConfigs(
   await lighthouseCoreConfig('https://nx.dev/'),
   await eslintCoreConfigNx(),
 );
+*/

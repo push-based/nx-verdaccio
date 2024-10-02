@@ -21,8 +21,8 @@ jobs:
     env:
       CP_SERVER: ${{ secrets.CP_SERVER }}
       CP_API_KEY: ${{ secrets.CP_API_KEY }}
-      CP_ORGANIZATION: code-pushup
-      CP_PROJECT: cli
+      CP_ORGANIZATION: ${{ secrets.CP_ORGANIZATION }}
+      CP_PROJECT: nx-verdaccio-test
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

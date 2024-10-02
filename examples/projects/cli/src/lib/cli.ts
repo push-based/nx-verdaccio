@@ -1,11 +1,11 @@
-import yargs, { Argv, Options } from 'yargs';
+import yargs, { Options } from 'yargs';
 import { sortUserFile } from '@push-based/core';
 
 export type CliArgs = {
   filePath: string;
 };
 
-const NOOP_BUILDER = <T>(_: Argv<T>) => void 0;
+const NOOP_BUILDER = <T>() => void 0;
 export function cli(args: string[]) {
   return yargs(args)
     .version(false)
@@ -23,7 +23,7 @@ export function cli(args: string[]) {
 }
 
 export async function sortCommandHandle(args: CliArgs) {
-  const { filePath } = args;
+  const { filePath } = args as any;
   await sortUserFile(filePath);
   console.log(`Sorted users in ${filePath}`);
 }

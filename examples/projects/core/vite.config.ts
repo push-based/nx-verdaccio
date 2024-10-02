@@ -12,11 +12,7 @@ export default defineConfig({
   // worker: {
   //  plugins: [ nxViteTsPaths() ],
   // },
-  coverage: {
-    reporter: ['text', 'lcov'],
-    reportsDirectory: '../../coverage/core/unit-tests',
-    exclude: ['mocks/**', '**/types.ts'],
-  },
+
   test: {
     globals: true,
     cache: { dir: '../../../node_modules/.vitest' },
@@ -24,8 +20,10 @@ export default defineConfig({
     include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     reporters: ['default'],
     coverage: {
-      reportsDirectory: '../../../coverage/projects/core',
+      reporter: ['text', 'lcov'],
       provider: 'v8',
+      reportsDirectory: '../../../coverage/examples/projects/core',
+      exclude: ['mocks/**', '**/types.ts'],
     },
   },
 });
