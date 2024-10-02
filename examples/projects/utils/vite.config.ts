@@ -12,6 +12,11 @@ export default defineConfig({
   // worker: {
   //  plugins: [ nxViteTsPaths() ],
   // },
+  coverage: {
+    reporter: ['text', 'lcov'],
+    reportsDirectory: '../../coverage/utils/unit-tests',
+    exclude: ['mocks/**', '**/types.ts'],
+  },
 
   test: {
     globals: true,

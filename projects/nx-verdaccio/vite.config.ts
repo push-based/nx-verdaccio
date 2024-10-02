@@ -12,7 +12,11 @@ export default defineConfig({
   // worker: {
   //  plugins: [ nxViteTsPaths() ],
   // },
-
+  coverage: {
+    reporter: ['text', 'lcov'],
+    reportsDirectory: '../../coverage/nx-verdaccio/unit-tests',
+    exclude: ['mocks/**', '**/types.ts'],
+  },
   test: {
     globals: true,
     cache: { dir: '../../node_modules/.vitest' },
