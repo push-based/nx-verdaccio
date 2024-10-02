@@ -108,22 +108,6 @@
   },
   "plugins": [
     {
-      "plugin": "./dist/projects/nx-verdaccio/src/index.js",
-      "options": {
-        "packages": {
-          "filterByTags": [
-            "publishable"
-          ]
-        },
-        "environments": {
-          "targetNames": [
-            "e2e",
-            "e2e-static"
-          ]
-        }
-      }
-    },
-    {
       "plugin": "@nx/eslint/plugin",
       "options": {
         "targetName": "lint"
