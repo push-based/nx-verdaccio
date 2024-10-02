@@ -11,7 +11,7 @@
       }
     }
   },
-  "tags": ["type:app", "type:unit-test-vi", "publishable"],
+  "tags": ["type:example", "type:app", "type:unit-test-vi", "publishable"],
   "targets": {
     "lint": {},
     "build": {
