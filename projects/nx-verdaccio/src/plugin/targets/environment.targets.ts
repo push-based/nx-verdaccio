@@ -12,7 +12,6 @@ import {
 import { PACKAGE_NAME } from '../constants';
 import { EXECUTOR_ENVIRONMENT_KILL_PROCESS } from '../../executors/kill-process/constant';
 import { EXECUTOR_ENVIRONMENT_SETUP } from '../../executors/env-setup/constants';
-import * as constants from 'constants';
 import { iterateEntries } from '../../internal/transform';
 
 export const TARGET_ENVIRONMENT_VERDACCIO_START = 'pb-ve-env-verdaccio-start';
@@ -20,6 +19,8 @@ export const TARGET_ENVIRONMENT_BOOTSTRAP = 'pb-ve-env-bootstrap';
 export const TARGET_ENVIRONMENT_INSTALL = 'pb-ve-env-install';
 export const TARGET_ENVIRONMENT_SETUP = 'pb-ve-env-setup';
 export const TARGET_ENVIRONMENT_VERDACCIO_STOP = 'pb-ve-env-verdaccio-stop';
+
+const VERDACCIO_STORAGE_DIR = 'storage';
 
 export function isEnvProject(
   projectConfig: ProjectConfiguration,
@@ -63,7 +64,8 @@ export function verdaccioTargets(
   const { name: envProject } = projectConfig;
   const { environmentsDir, ...verdaccioOptions } = options;
   const environmentDir = join(environmentsDir, envProject);
-
+  // unless the verdaccio server port and pid is always the same, i don't see how to enable Distributed Task Execution with Nx agents...
+  // we cannot control which agent will run the task and we must enable cache for the task to be distributed
   return {
     [TARGET_ENVIRONMENT_VERDACCIO_START]: {
       // @TODO: consider using the executor function directly to reduce the number of targets
@@ -72,7 +74,7 @@ export function verdaccioTargets(
       options: {
         config: '.verdaccio/config.yml',
         port: uniquePort(),
-        storage: join(environmentDir, 'storage'),
+        storage: join(environmentDir, VERDACCIO_STORAGE_DIR),
         clear: true,
         environmentDir,
         projectName: envProject,
@@ -89,6 +91,14 @@ export function verdaccioTargets(
   };
 }
 
+/**
+ * Create new targets wrapping env-bootstrap, env-setup executors
+ * install-env (intermediate target to run dependency targets)
+ *
+ * @param projectConfig
+ * @param options
+ * @returns
+ */
 export function getEnvTargets(
   projectConfig: ProjectConfiguration,
   options: NormalizedCreateNodeOptions['environments']
@@ -98,6 +108,8 @@ export function getEnvTargets(
   const environmentRoot = join(environmentsDir, envProject);
   return {
     [TARGET_ENVIRONMENT_BOOTSTRAP]: {
+      //? how to cache this target individually? since it starts the verdaccio server
+      // problem is: if we can't cache, we can't distribute the task
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_BOOTSTRAP}`,
       options: { environmentRoot },
     },
@@ -114,13 +126,31 @@ export function getEnvTargets(
     },
     // runs env-bootstrap-env, install-env and stop-verdaccio
     [TARGET_ENVIRONMENT_SETUP]: {
-      outputs: [
-        '{options.environmentRoot}/node_modules',
-        '{options.environmentRoot}/package.json',
-        '{options.environmentRoot}/.npmrc',
-        '{options.environmentRoot}/package-lock.json',
+      // list of inputs that all subsequent tasks depend on
+      inputs: [
+        '{projectRoot}/project.json',
+        {
+          runtime: 'node --version',
+        },
+        {
+          runtime: 'npm --version',
+        },
+        {
+          externalDependencies: ['verdaccio'],
+        },
+        // depends on underlying project being e2e tested and its own dependencies
+        // ! it's important that implicitDependencies are correctly configured between this project and the project being tested
+        // '^build-artifacts',
+        '^production',
       ],
-      cache: false, // # @TODO enable by default after more research on cache size is done
+      outputs: [
+        `{options.environmentRoot}/${VERDACCIO_STORAGE_DIR}`,
+        '{options.environmentRoot}/.npmrc',
+        '{options.environmentRoot}/package.json',
+        '{options.environmentRoot}/package-lock.json',
+        '{options.environmentRoot}/node_modules',
+      ],
+      cache: true,
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_SETUP}`,
       options: {
         environmentRoot,
@@ -129,6 +159,13 @@ export function getEnvTargets(
   };
 }
 
+/**
+ * adjust targets to run env-setup-env
+ * this will add the dependsOn property to the targets that are in the targetNames array (usually e2e)
+ * @param projectConfig
+ * @param options
+ * @returns
+ */
 export function updateEnvTargetNames(
   projectConfig: ProjectConfiguration,
   options: Required<Pick<BuildEnvEnvironmentsOptions, 'targetNames'>>

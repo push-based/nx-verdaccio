@@ -1,5 +1,6 @@
 import { join } from 'node:path';
 import {
+  type RegistryResult,
   startVerdaccioServer,
   type StartVerdaccioOptions,
   type VercaddioServerResult,
@@ -28,7 +29,7 @@ export async function bootstrapEnvironment(
   const { verbose, environmentRoot, storage, ...rest } = options;
   const parsedStorage = storage ?? join(environmentRoot, 'storage');
 
-  let registryResult;
+  let registryResult: RegistryResult
   try {
     registryResult = await startVerdaccioServer({
       storage: parsedStorage,

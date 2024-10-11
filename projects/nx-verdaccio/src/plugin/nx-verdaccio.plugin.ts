@@ -6,8 +6,8 @@ import {
   logger,
   type ProjectConfiguration,
   readJsonFile,
-  type TargetConfiguration,
 } from '@nx/devkit';
+import { readFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import type { BuildEnvPluginCreateNodeOptions } from './schema';
 import {
@@ -23,7 +23,7 @@ import {
   setCacheRecord,
   writeTargetsToCache,
 } from './caching';
-import { createTargets } from './targets/create-targets';
+import { createProjectConfiguration } from './targets/create-targets';
 
 const PROJECT_JSON_FILE_GLOB = '**/project.json';
 
@@ -38,15 +38,11 @@ export const createNodesV2: CreateNodesV2<BuildEnvPluginCreateNodeOptions> = [
     const targetsCache = readTargetsCache(nxVerdaccioEnvPluginCachePath);
     try {
       return await createNodesFromFiles(
-        (projectConfigurationFile, internalOptions) => {
-          const projectConfiguration: ProjectConfiguration = readJsonFile(
-            join(process.cwd(), projectConfigurationFile)
-          );
-          const projectRoot = dirname(projectConfigurationFile);
-          const hashData = {
-            projectRoot,
-            internalOptions,
-          };
+        async (projectConfigurationFile, internalOptions) => {
+          const projectConfiguration: ProjectConfiguration = await readFile(
+            join(process.cwd(), projectConfigurationFile),
+            'utf8'
+          ).then(JSON.parse);
           if (
             !('name' in projectConfiguration) ||
             typeof projectConfiguration.name !== 'string'
@@ -55,28 +51,35 @@ export const createNodesV2: CreateNodesV2<BuildEnvPluginCreateNodeOptions> = [
           }
 
           const normalizedOptions = normalizeCreateNodesOptions(options);
-
-          let cachedProjectTargets = getCacheRecord<
-            Record<string, TargetConfiguration>
+          const projectRoot = dirname(projectConfigurationFile);
+          const hashData = {
+            projectRoot,
+            internalOptions,
+          };
+          let cachedProjectConfiguration = getCacheRecord<
+            Partial<ProjectConfiguration>
           >(targetsCache, projectRoot, hashData);
 
-          if (cachedProjectTargets === undefined) {
-            cachedProjectTargets = createTargets(
+          if (cachedProjectConfiguration === undefined) {
+            cachedProjectConfiguration = createProjectConfiguration(
               projectConfiguration,
               normalizedOptions
             );
-            setCacheRecord(
-              targetsCache,
-              projectRoot,
-              hashData,
-              cachedProjectTargets
-            );
+            if (cachedProjectConfiguration.targets) {
+              setCacheRecord(
+                targetsCache,
+                projectRoot,
+                hashData,
+                cachedProjectConfiguration
+              );
+            }
           }
-
+          const { targets, namedInputs = {} } = cachedProjectConfiguration;
           return {
             projects: {
               [projectRoot]: {
-                targets: cachedProjectTargets,
+                namedInputs,
+                targets,
               },
             },
           };
@@ -96,6 +99,7 @@ export const createNodes: CreateNodes = [
   (
     projectConfigurationFile: string,
     options: NormalizedCreateNodeOptions,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     context: CreateNodesContext
   ) => {
     logger.warn(
@@ -108,7 +112,8 @@ export const createNodes: CreateNodes = [
     return {
       projects: {
         [projectRoot]: {
-          targets: createTargets(projectConfiguration, options),
+          targets: createProjectConfiguration(projectConfiguration, options)
+            .targets,
         },
       },
     };

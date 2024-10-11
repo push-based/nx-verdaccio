@@ -1,5 +1,5 @@
 import type { BuildEnvPluginCreateNodeOptions } from '../schema';
-import type { CreateNodesResult, ProjectConfiguration } from '@nx/devkit';
+import type { ProjectConfiguration } from '@nx/devkit';
 import { normalizeCreateNodesOptions } from '../normalize-create-nodes-options';
 import {
   getEnvTargets,
@@ -9,10 +9,11 @@ import {
 } from './environment.targets';
 import { getPkgTargets, isPkgProject } from './package.targets';
 
-export function createTargets(
+export function createProjectConfiguration(
   projectConfiguration: ProjectConfiguration,
   options: BuildEnvPluginCreateNodeOptions
-): CreateNodesResult['projects'][string]['targets'] {
+): Pick<ProjectConfiguration, 'targets'> &
+  Partial<Pick<ProjectConfiguration, 'namedInputs'>> {
   const { environments, packages } = normalizeCreateNodesOptions(options);
 
   if (
@@ -22,20 +23,31 @@ export function createTargets(
     return {};
   }
 
+  // unfortunately namedInputs are not picked up by tasks graph: Error: Input 'build-artifacts' is not defined
+  const namedInputs: ProjectConfiguration['namedInputs'] = {
+    'build-artifacts': [
+      '{projectRoot}/**/*.{js,ts,tsx}',
+      '!{projectRoot}/**/*.spec.{ts,tsx}',
+    ],
+  };
   return {
-    // === ENVIRONMENT TARGETS ===
     ...(isEnvProject(projectConfiguration, environments) && {
-      // start-verdaccio, stop-verdaccio
-      ...verdaccioTargets(projectConfiguration, {
-        environmentsDir: environments.environmentsDir,
-      }),
-      // env-bootstrap-env, env-setup-env, install-env (intermediate target to run dependency targets)
-      ...getEnvTargets(projectConfiguration, environments),
-      // adjust targets to run env-setup-env
-      ...updateEnvTargetNames(projectConfiguration, environments),
+      namedInputs,
+      // === ENVIRONMENT TARGETS ===
+      targets: {
+        // start-verdaccio, stop-verdaccio
+        ...verdaccioTargets(projectConfiguration, {
+          environmentsDir: environments.environmentsDir,
+        }),
+        // env-bootstrap-env, env-setup-env, install-env (intermediate target to run dependency targets)
+        ...getEnvTargets(projectConfiguration, environments),
+        // adjust targets to run env-setup-env
+        ...updateEnvTargetNames(projectConfiguration, environments),
+      },
     }),
-    // === PACKAGE TARGETS ===
-    // pkg-publish, pkg-install
-    ...(isPkgProject(projectConfiguration, packages) && getPkgTargets()),
+    ...(isPkgProject(projectConfiguration, packages) && {
+      // === PACKAGE TARGETS ===
+      targets: getPkgTargets(),
+    }),
   };
 }
