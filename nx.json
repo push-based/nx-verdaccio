@@ -29,10 +29,22 @@
       "inputs": ["default", "^production"]
     },
     "pb-ve-env-setup": {
-      "cache": true
+      "cache": true,
+      "inputs": [
+        "{projectRoot}/project.json",
+        {
+          "runtime": "node --version"
+        },
+        {
+          "runtime": "npm --version"
+        },
+        {
+          "externalDependencies": ["verdaccio"]
+        },
+        "^production"
+      ]
     },
-    "nx-release-publish": {
-    },
+    "nx-release-publish": {},
     "lint": {
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
@@ -50,9 +62,6 @@
     },
     "build": {
       "inputs": ["production", "^production"]
-    },
-    "setup-env": {
-      "cache": true
     },
     "@nx/js:tsc": {
       "cache": true,
@@ -74,9 +83,9 @@
     }
   },
   "plugins": [
-    "./examples/e2e/cli-e2e-original/tooling/original.plugin.ts",
     {
-      "plugin": "./dist/projects/nx-verdaccio/src/index.js",
+      "plugin": "./projects/nx-verdaccio/src/plugin/nx-verdaccio.plugin.ts",
+      "include": ["examples/projects/**", "examples/e2e/**"],
       "options": {
         "packages": {
           "filterByTags": ["publishable"]
