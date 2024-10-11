@@ -73,7 +73,11 @@
     }
   },
   "plugins": [
-    "./examples/e2e/cli-e2e-original/tooling/original.plugin.ts",
+    {
+      "plugin": "./examples/e2e/cli-e2e-original/tooling/original.plugin.ts",
+      "include": ["./examples/e2e/cli-e2e-original", "./examples/projects/*"],
+      "exclude": ["./examples/e2e/cli-static"]
+    },
     {
       "plugin": "@push-based/nx-verdaccio",
       "options": {
@@ -83,7 +87,8 @@
         "environments": {
           "targetNames": ["e2e", "e2e-static"]
         }
-      }
+      },
+      "exclude": ["./examples/e2e/cli-e2e-original"]
     },
     {
       "plugin": "@nx/eslint/plugin",
