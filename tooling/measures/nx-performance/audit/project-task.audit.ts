@@ -1,9 +1,5 @@
 import { AuditOutput, Audit, Table, Issue } from '@code-pushup/models';
-import {
-  executeProcess,
-  slugify,
-  formatDuration,
-} from '@code-pushup/utils';
+import { executeProcess, slugify, formatDuration } from '@code-pushup/utils';
 import { logger, readJsonFile } from '@nx/devkit';
 import { DEFAULT_PLUGIN_OUTPUT } from '../constant';
 import { join } from 'node:path';
@@ -102,7 +98,7 @@ export async function projectTaskCacheSizeData<T extends string>(
         };
       });
 
-    const { project, target } = task.split(':');
+    const [project, target] = task.split(':');
     results.push({
       data: {
         title: `Task time for ${task}`,
