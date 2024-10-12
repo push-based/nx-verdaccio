@@ -52,7 +52,7 @@ export async function bootstrapEnvironment(
     const { url, port, host } = registry;
     await setupNpmWorkspace(environmentRoot, verbose);
     const userconfig = join(environmentRoot, '.npmrc');
-    configureRegistry({ url, port, host, userconfig }, verbose);
+    await configureRegistry({ url, port, host, userconfig }, verbose);
   } catch (error) {
     logger.error(
       formatError(
