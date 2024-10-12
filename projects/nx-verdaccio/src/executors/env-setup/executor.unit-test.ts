@@ -16,14 +16,24 @@ vi.mock('@nx/devkit', async () => {
       info: vi.fn(),
       error: vi.fn(),
     },
-    readJsonFile: vi.fn().mockReturnValue({
-      pid: 4873,
-      port: '4873',
-      url: 'http://localhost:4873',
-    }),
   };
 });
 
+vi.mock('fs/promises', async () => {
+  const actual = await vi.importActual<typeof import('fs/promises')>(
+    'fs/promises'
+  );
+  return {
+    ...actual,
+    readFile: vi.fn().mockResolvedValue(
+      JSON.stringify({
+        pid: 4873,
+        port: '4873',
+        url: 'http://localhost:4873',
+      })
+    ),
+  };
+});
 
 describe('runSetupEnvironmentExecutor', () => {
   const runExecutorSpy = vi.spyOn(devkit, 'runExecutor');
