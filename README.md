@@ -5,7 +5,9 @@
 [![version](https://img.shields.io/github/v/release/push-based/nx-verdaccio)](https://github.com/push-based/nx-verdaccio/releases/latest)
 [![release date](https://img.shields.io/github/release-date/push-based/nx-verdaccio)](https://github.com/push-based/nx-verdaccio/releases)
 [![license](https://img.shields.io/github/license/push-based/nx-verdaccio)](https://opensource.org/licenses/MIT)
+[![commit activity](https://img.shields.io/github/commit-activity/m/push-based/nx-verdaccio)](https://github.com/push-based/nx-verdaccio/pulse/monthly)
 [![CI](https://github.com/push-based/nx-verdaccio/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/push-based/nx-verdaccio/actions/workflows/ci.yml?query=branch%3Amain)
+
 
 Welcome to the **Verdaccio Testing Environments Nx Plugin** — your one-stop solution for running **blazingly fast**, **isolated**, and **scalable** end-to-end (e2e) tests with zero configuration. Yeah, you heard that right: **ZERO configuration**.
 
