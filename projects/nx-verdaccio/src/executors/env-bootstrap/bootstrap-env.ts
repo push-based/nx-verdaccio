@@ -29,7 +29,7 @@ export async function bootstrapEnvironment(
   const { verbose, environmentRoot, storage, ...rest } = options;
   const parsedStorage = storage ?? join(environmentRoot, 'storage');
 
-  let registryResult: RegistryResult
+  let registryResult: RegistryResult;
   try {
     registryResult = await startVerdaccioServer({
       storage: parsedStorage,
@@ -60,6 +60,7 @@ export async function bootstrapEnvironment(
         VERDACCIO_ENV_TOKEN
       )
     );
+    process.kill(Number(registry.pid));
     throw error;
   }
 
@@ -87,6 +88,7 @@ export async function bootstrapEnvironment(
         VERDACCIO_ENV_TOKEN
       )
     );
+    process.kill(Number(registry.pid));
     throw new Error(`Error saving verdaccio registry data. ${error.message}`);
   }
 }

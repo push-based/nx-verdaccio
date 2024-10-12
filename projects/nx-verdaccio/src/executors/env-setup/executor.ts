@@ -1,15 +1,17 @@
-import { type ExecutorContext, logger, readJsonFile } from '@nx/devkit';
+import { type ExecutorContext, logger } from '@nx/devkit';
+import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { executeProcess } from '../../internal/execute-process';
 import { objectToCliArgs } from '../../internal/terminal';
-import type { VerdaccioProcessResult } from '../env-bootstrap/verdaccio-registry';
+import {
+  stopVerdaccioServer,
+  type VerdaccioProcessResult,
+} from '../env-bootstrap/verdaccio-registry';
 import type { SetupEnvironmentExecutorOptions } from './schema';
-
 import { VERDACCIO_REGISTRY_JSON } from '../env-bootstrap/constants';
 import {
   TARGET_ENVIRONMENT_BOOTSTRAP,
   TARGET_ENVIRONMENT_INSTALL,
-  TARGET_ENVIRONMENT_VERDACCIO_STOP,
 } from '../../plugin/targets/environment.targets';
 import { runSingleExecutor } from '../../internal/run-executor';
 
@@ -62,6 +64,14 @@ export default async function runSetupEnvironmentExecutor(
     });
   } catch (error) {
     logger.error(error.message);
+    await stopVerdaccioServer({
+      projectName,
+      verbose,
+      context,
+      configuration,
+      environmentRoot,
+    });
+
     return {
       success: false,
       command: `Fails executing target ${TARGET_ENVIRONMENT_INSTALL}\n ${error.message}`,
@@ -70,25 +80,29 @@ export default async function runSetupEnvironmentExecutor(
 
   try {
     if (!keepServerRunning) {
-      await runSingleExecutor(
-        {
-          project: projectName,
-          target: TARGET_ENVIRONMENT_VERDACCIO_STOP,
-          configuration,
-        },
-        {
-          ...(verbose ? { verbose } : {}),
-          filePath: join(environmentRoot, VERDACCIO_REGISTRY_JSON),
-        },
-        context
-      );
+      await stopVerdaccioServer({
+        projectName,
+        verbose,
+        context,
+        configuration,
+        environmentRoot,
+      });
     } else {
-      const { url } = readJsonFile<VerdaccioProcessResult>(
-        join(environmentRoot, VERDACCIO_REGISTRY_JSON)
-      );
+      const { url } = await readFile(
+        join(environmentRoot, VERDACCIO_REGISTRY_JSON),
+        'utf8'
+      ).then((file) => JSON.parse(file) as VerdaccioProcessResult);
       logger.info(`Verdaccio server kept running under : ${url}`);
     }
   } catch (error) {
+    await stopVerdaccioServer({
+      projectName,
+      verbose,
+      context,
+      configuration,
+      environmentRoot,
+    });
+
     logger.error(error.message);
     return {
       success: false,
