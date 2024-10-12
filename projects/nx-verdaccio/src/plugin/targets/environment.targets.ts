@@ -64,12 +64,13 @@ export function verdaccioTargets(
   const { name: envProject } = projectConfig;
   const { environmentsDir, ...verdaccioOptions } = options;
   const environmentDir = join(environmentsDir, envProject);
-  // unless the verdaccio server port and pid is always the same, i don't see how to enable Distributed Task Execution with Nx agents...
-  // we cannot control which agent will run the task and we must enable cache for the task to be distributed
   return {
     [TARGET_ENVIRONMENT_VERDACCIO_START]: {
       // @TODO: consider using the executor function directly to reduce the number of targets
       // https://github.com/nrwl/nx/blob/b73f1e0e0002c55fc0bacaa1557140adb9eec8de/packages/js/src/executors/verdaccio/verdaccio.impl.ts#L22
+      outputs: [
+        `{options.environmentRoot}/${VERDACCIO_STORAGE_DIR}`,
+      ],
       executor: '@nx/js:verdaccio',
       options: {
         config: '.verdaccio/config.yml',
@@ -108,8 +109,6 @@ export function getEnvTargets(
   const environmentRoot = join(environmentsDir, envProject);
   return {
     [TARGET_ENVIRONMENT_BOOTSTRAP]: {
-      //? how to cache this target individually? since it starts the verdaccio server
-      // problem is: if we can't cache, we can't distribute the task
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_BOOTSTRAP}`,
       options: { environmentRoot },
     },
@@ -144,7 +143,6 @@ export function getEnvTargets(
         '^production',
       ],
       outputs: [
-        `{options.environmentRoot}/${VERDACCIO_STORAGE_DIR}`,
         '{options.environmentRoot}/.npmrc',
         '{options.environmentRoot}/package.json',
         '{options.environmentRoot}/package-lock.json',
