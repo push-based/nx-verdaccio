@@ -4,7 +4,13 @@ The following document explains the motivation behind this library and the probl
 We will discuss [common E2e setup for publishable packages](#Common-E2E-setup-for-publishable-packages) in the wild, what problems they have and why they are pretty limited in their scalability and performance.
 
 > [!NOTE]
-> What is not covered in this document is basic knowledge about Verdaccio as well as Nx.
+> 💡 Learn more about tthe benefits of nx-verdaccio **💡[docs/benefits.md](benefits.md)💡**.
+
+#### Project Graph
+
+Here the project graph of the research.
+
+![utils-project-graph-idle.png](docs%2Futils-project-graph-idle.png)
 
 Before we go into more detail let's quickly list the problems here to later on dive into each of them individually:
 
@@ -77,15 +83,13 @@ Viola, you have a working e2e setup for your package. 🎉
 
 **But wait!** There are MANY caveats with this setup. We mentioned them already in the beginning, now let's discuss them one by one.
 
-## Problems
-
 ##### Project Graph
 
 Here the project graph of the research.
 
 ![utils-project-graph-idle.png](utils-project-graph-idle.png)
 
-### 🚪 Isolation of the E2E tests
+## 🚪 Isolation of the E2E tests
 
 The following file tree is a result of running our e2e setup.
 It is particular bad as it interfere with your local package manager configuration as well as conflicts with other tests if not run in sequence.
@@ -134,7 +138,7 @@ You are forced to run the tests in sequence.
 4. Test B: `npm uninstall @push-based/pkg@0.0.1 --registry=http://localhost:4873` # ✅
 5. Test A: `nx e2e pkg` # ❌ package not installed
 
-### 📉 Scalability
+## 📉 Scalability
 
 As mentioned the tests don't scale, which is mostly related to the first problem.
 
@@ -167,7 +171,7 @@ If we would not have to keep the server running for the whole test we can also:
 - 🐢 Stop wasting CPU power and memory that is consumed by the server
 - 🐢 Think about options to cache parts of the steps
 
-![bad-dx-schema.png](bad-dx-schema.png)
+![task-architecture--schema-bad.png](task-architecture--schema-bad.png)
 
 Especially the caching is interesting to dive deeper in.
 Let's look at different scenarios and what they miss.
@@ -198,7 +202,7 @@ P[project-e2e:e2e]:::e2e-.implicit.->E[project:build]:::build;
 classDef e2e stroke:#f00
 ```
 
-### 🔫 DX
+## 🔫 DX
 
 As the logic that starts and stops Verdaccio is backed into the setup script it is very hard and cumbersome to debug or even see what is going on.
 
@@ -206,7 +210,7 @@ As the logic that starts and stops Verdaccio is backed into the setup script it 
 - After an error the server keeps running and there is no way to manually stop it again. A reboot or terminal command is necessary.
 - Another thing related to errors is the configuration for the local registry is made in the users setup and therefore if not reverted manually no other package can be installed. Not even running `npm ci`
 
-### 🧟‍ Maintainability
+## 🧟‍ Maintainability
 
 As mentioned the logic to set up and teardown the test environment is backed into the e2e tests global setup scripts.
 
