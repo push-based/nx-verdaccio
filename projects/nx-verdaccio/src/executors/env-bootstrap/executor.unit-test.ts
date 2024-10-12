@@ -4,6 +4,7 @@ import * as devkit from '@nx/devkit';
 import * as bootstrapExecutorModule from './bootstrap-env';
 import { PACKAGE_NAME } from '../../plugin/constants';
 import { TARGET_ENVIRONMENT_VERDACCIO_STOP } from '../../plugin/targets/environment.targets';
+import { MockAsyncIterableIterator } from '@push-based/test-utils';
 
 describe('runBootstrapExecutor', () => {
   const e2eProjectName = 'my-lib-e2e';
@@ -49,13 +50,15 @@ describe('runBootstrapExecutor', () => {
       environmentRoot: `tmp/environments/${e2eProjectName}`,
       stop: expect.any(Function),
     });
-    runExecutorSpy.mockResolvedValueOnce([
-      Promise.resolve({
+
+    runExecutorSpy.mockResolvedValue(
+      new MockAsyncIterableIterator<{ success: boolean; command: string }>({
         success: true,
         command: 'Process killed successfully.',
-      }),
-    ]);
+      })
+    );
   });
+
   afterEach(() => {
     runExecutorSpy.mockReset();
   });
