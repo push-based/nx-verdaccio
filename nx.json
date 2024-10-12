@@ -75,8 +75,7 @@
   "plugins": [
     {
       "plugin": "./examples/e2e/cli-e2e-original/tooling/original.plugin.ts",
-      "include": ["./examples/e2e/cli-e2e-original", "./examples/projects/*"],
-      "exclude": ["./examples/e2e/cli-static"]
+
     },
     {
       "plugin": "@push-based/nx-verdaccio",

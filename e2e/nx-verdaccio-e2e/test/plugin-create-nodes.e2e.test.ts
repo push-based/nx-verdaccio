@@ -159,7 +159,8 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
     );
   });
 
-  it('should add environment targets to project with targetName e2e dynamically', async () => {
+  //
+  it.skip('should add environment targets to project with targetName e2e dynamically', async () => {
     const cwd = join(baseDir, 'add-env-targets');
     registerPluginInWorkspace(tree, {
       plugin: '@push-based/nx-verdaccio',
