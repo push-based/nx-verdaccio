@@ -10,6 +10,7 @@ import {
   VERDACCIO_ENV_TOKEN,
 } from './npm';
 import { exec } from 'node:child_process';
+// import { promisify } from 'node:util';
 import { logger } from '@nx/devkit';
 import { formatInfo } from '../../internal/logging';
 
@@ -19,7 +20,7 @@ vi.mock('child_process', async () => {
   );
   return {
     ...actual,
-    exec: vi.fn(),
+    exec: vi.fn().mockImplementation((cmd, cb) => cb(null, '', '')),
   };
 });
 
@@ -46,11 +47,13 @@ describe('configureRegistry', () => {
 
     expect(exec).toHaveBeenCalledTimes(2);
     expect(exec).toHaveBeenCalledWith(
-      'npm config set registry="http://localhost:4873" --userconfig="test-config"'
+      'npm config set registry="http://localhost:4873" --userconfig="test-config"',
+      expect.any(Function)
     );
 
     expect(exec).toHaveBeenCalledWith(
-      'npm config set //localhost:4873/:_authToken "secretVerdaccioToken" --userconfig="test-config"'
+      'npm config set //localhost:4873/:_authToken "secretVerdaccioToken" --userconfig="test-config"',
+      expect.any(Function)
     );
   });
 
@@ -92,11 +95,13 @@ describe('unconfigureRegistry', () => {
 
     expect(exec).toHaveBeenCalledTimes(2);
     expect(exec).toHaveBeenCalledWith(
-      'npm config delete registry --userconfig="test-config"'
+      'npm config delete registry --userconfig="test-config"',
+      expect.any(Function)
     );
 
     expect(exec).toHaveBeenCalledWith(
-      'npm config delete //localhost:4873/:_authToken --userconfig="test-config"'
+      'npm config delete //localhost:4873/:_authToken --userconfig="test-config"',
+      expect.any(Function)
     );
   });
 
