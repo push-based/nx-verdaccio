@@ -83,9 +83,10 @@
     }
   },
   "plugins": [
+    "./examples/e2e/cli-e2e-original/tooling/original.plugin.ts",
     {
       "plugin": "./projects/nx-verdaccio/src/plugin/nx-verdaccio.plugin.ts",
-      "include": ["examples/projects/**", "examples/e2e/**"],
+      "exclude": ["examples/e2e/cli-e2e-original/**"],
       "options": {
         "packages": {
           "filterByTags": ["publishable"]
