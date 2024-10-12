@@ -1,0 +1,116 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`nx-verdaccio plugin create-nodes-v2 > should add environment targets to project with targetName e2e dynamically 1`] = `
+{
+  "e2e": {
+    "configurations": {},
+    "dependsOn": [
+      {
+        "params": "forward",
+        "target": "nxv-env-setup",
+      },
+    ],
+    "executor": "nx:noop",
+    "options": {},
+    "parallelism": true,
+  },
+  "nxv-env-bootstrap": {
+    "configurations": {},
+    "executor": "@push-based/nx-verdaccio:env-bootstrap",
+    "options": {
+      "environmentRoot": "tmp/environments/lib-a-e2e",
+    },
+    "parallelism": true,
+  },
+  "nxv-env-install": {
+    "configurations": {},
+    "dependsOn": [
+      {
+        "params": "forward",
+        "projects": "dependencies",
+        "target": "nxv-pkg-install",
+      },
+    ],
+    "executor": "nx:noop",
+    "options": {
+      "environmentRoot": "tmp/environments/lib-a-e2e",
+    },
+    "parallelism": true,
+  },
+  "nxv-env-setup": {
+    "cache": false,
+    "configurations": {},
+    "executor": "@push-based/nx-verdaccio:env-setup",
+    "options": {
+      "environmentRoot": "tmp/environments/lib-a-e2e",
+    },
+    "outputs": [
+      "{options.environmentRoot}/node_modules",
+      "{options.environmentRoot}/package.json",
+      "{options.environmentRoot}/.npmrc",
+      "{options.environmentRoot}/package-lock.json",
+    ],
+    "parallelism": true,
+  },
+  "nxv-verdaccio-start": {
+    "configurations": {},
+    "executor": "@nx/js:verdaccio",
+    "options": {
+      "clear": true,
+      "config": ".verdaccio/config.yml",
+      "environmentDir": "tmp/environments/lib-a-e2e",
+      "port": Any<Number>,
+      "projectName": "lib-a-e2e",
+      "storage": "tmp/environments/lib-a-e2e/storage",
+    },
+    "parallelism": true,
+  },
+  "nxv-verdaccio-stop": {
+    "configurations": {},
+    "executor": "@push-based/nx-verdaccio:kill-process",
+    "options": {
+      "filePath": "tmp/environments/verdaccio-registry.json",
+    },
+    "parallelism": true,
+  },
+}
+`;
+
+exports[`nx-verdaccio plugin create-nodes-v2 > should add package targets to library project 1`] = `
+{
+  "nxv-pkg-install": {
+    "configurations": {},
+    "dependsOn": [
+      {
+        "params": "forward",
+        "target": "nxv-pkg-publish",
+      },
+      {
+        "params": "forward",
+        "projects": "dependencies",
+        "target": "nxv-pkg-install",
+      },
+    ],
+    "executor": "@push-based/nx-verdaccio:pkg-install",
+    "options": {},
+    "parallelism": true,
+  },
+  "nxv-pkg-publish": {
+    "configurations": {},
+    "dependsOn": [
+      {
+        "params": "forward",
+        "target": "build",
+      },
+      {
+        "params": "forward",
+        "projects": "dependencies",
+        "target": "nxv-pkg-publish",
+      },
+    ],
+    "executor": "@push-based/nx-verdaccio:pkg-publish",
+    "options": {},
+    "parallelism": true,
+  },
+}
+`;

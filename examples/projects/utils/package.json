@@ -2,6 +2,6 @@
   "name": "@push-based/utils",
   "version": "0.0.1",
   "dependencies": {
-    "@push-based/models": "0.0.1"
+    "@push-based/models": "*"
   }
 }

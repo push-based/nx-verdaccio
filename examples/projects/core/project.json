@@ -11,7 +11,7 @@
       }
     }
   },
-  "tags": ["scope:core", "type:unit-test-vi", "publishable"],
+  "tags": ["scope:core", "type:unit-test-vi", "publishable", "type:example"],
   "targets": {
     "lint": {},
     "build": {

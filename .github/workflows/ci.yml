@@ -69,6 +69,5 @@ jobs:
         uses: nrwl/nx-set-shas@v4
       - name: Install dependencies
         run: npm i
-      - name: E2E test all projects with buildable environmnets
-        # run-many is only used to trigger the e2e tasks on every PR. npx nx affected:e2e would be a real life implementation
-        run: npx nx run-many -t e2e --parallel=1 --skipNxCache -- --verbose
+      - name: E2E test affected projects
+        run: npx nx affected -t e2e --exclude="tag:type:example"

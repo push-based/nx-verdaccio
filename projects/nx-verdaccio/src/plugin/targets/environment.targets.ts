@@ -1,8 +1,8 @@
 import type { ProjectConfiguration, TargetConfiguration } from '@nx/devkit';
 import type { NormalizedCreateNodeOptions } from '../normalize-create-nodes-options';
 import { join } from 'node:path';
-import { TARGET_PACKAGE_NPM_INSTALL } from './package.targets';
-import type { BuildEnvEnvironmentsOptions } from '../schema';
+import { TARGET_PACKAGE_INSTALL } from './package.targets';
+import type { NxVerdaccioEnvironmentsOptions } from '../schema';
 import type { StartVerdaccioOptions } from '../../executors/env-bootstrap/verdaccio-registry';
 import { uniquePort } from '../../executors/env-bootstrap/unique-port';
 import {
@@ -12,14 +12,13 @@ import {
 import { PACKAGE_NAME } from '../constants';
 import { EXECUTOR_ENVIRONMENT_KILL_PROCESS } from '../../executors/kill-process/constant';
 import { EXECUTOR_ENVIRONMENT_SETUP } from '../../executors/env-setup/constants';
-import * as constants from 'constants';
 import { iterateEntries } from '../../internal/transform';
 
-export const TARGET_ENVIRONMENT_VERDACCIO_START = 'pb-ve-env-verdaccio-start';
-export const TARGET_ENVIRONMENT_BOOTSTRAP = 'pb-ve-env-bootstrap';
-export const TARGET_ENVIRONMENT_INSTALL = 'pb-ve-env-install';
-export const TARGET_ENVIRONMENT_SETUP = 'pb-ve-env-setup';
-export const TARGET_ENVIRONMENT_VERDACCIO_STOP = 'pb-ve-env-verdaccio-stop';
+export const TARGET_ENVIRONMENT_BOOTSTRAP = 'nxv-env-bootstrap';
+export const TARGET_ENVIRONMENT_INSTALL = 'nxv-env-install';
+export const TARGET_ENVIRONMENT_SETUP = 'nxv-env-setup';
+export const TARGET_ENVIRONMENT_VERDACCIO_START = 'nxv-verdaccio-start';
+export const TARGET_ENVIRONMENT_VERDACCIO_STOP = 'nxv-verdaccio-stop';
 
 export function isEnvProject(
   projectConfig: ProjectConfiguration,
@@ -106,7 +105,7 @@ export function getEnvTargets(
       dependsOn: [
         {
           projects: 'dependencies',
-          target: TARGET_PACKAGE_NPM_INSTALL,
+          target: TARGET_PACKAGE_INSTALL,
           params: 'forward',
         },
       ],
@@ -131,7 +130,7 @@ export function getEnvTargets(
 
 export function updateEnvTargetNames(
   projectConfig: ProjectConfiguration,
-  options: Required<Pick<BuildEnvEnvironmentsOptions, 'targetNames'>>
+  options: Required<Pick<NxVerdaccioEnvironmentsOptions, 'targetNames'>>
 ): Record<string, TargetConfiguration> {
   const { targetNames: envTargetNames } = options;
   const { targets: existingTargets = {} as TargetConfiguration } =

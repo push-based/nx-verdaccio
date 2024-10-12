@@ -1,5 +1,6 @@
 import type { BuildEnvPluginCreateNodeOptions } from '../schema';
 import type { CreateNodesResult, ProjectConfiguration } from '@nx/devkit';
+import { logger } from '@nx/devkit';
 import { normalizeCreateNodesOptions } from '../normalize-create-nodes-options';
 import {
   getEnvTargets,

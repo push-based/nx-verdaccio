@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, vi, it } from 'vitest';
 import runNpmPublishExecutor from './executor';
 import { MEMFS_VOLUME } from '@push-based/test-utils';
 import * as execProcessModule from '../../internal/execute-process';
+import * as pkgVersionModule from './pkg-version';
 import { logger } from '@nx/devkit';
 
 vi.mock('@nx/devkit', async () => {
@@ -18,9 +19,13 @@ describe('runNpmPublishExecutor', () => {
   const executeProcessSpy = vi
     .spyOn(execProcessModule, 'executeProcess')
     .mockImplementation(vi.fn());
+  const pkgVersionModuleSpy = vi
+    .spyOn(pkgVersionModule, 'postfixVersion')
+    .mockResolvedValue(undefined);
 
   beforeEach(() => {
     executeProcessSpy.mockReset();
+    pkgVersionModuleSpy.mockReset();
   });
 
   it('should execute npm publish for the given project', async () => {
@@ -60,9 +65,13 @@ describe('runNpmPublishExecutor', () => {
     const userconfigRelative = '../../../tmp/environments/my-lib-e2e/.npmrc';
     const pkgDist = 'dist/projects/my-lib';
     const envRoot = 'tmp/environments/my-lib-e2e';
+
     expect(logger.info).toHaveBeenCalledWith(
       `Publishing package from ${pkgDist} to ${envRoot} with userconfig ${userconfigRelative}`
     );
+
+    expect(pkgVersionModuleSpy).toHaveBeenCalledTimes(1);
+    expect(pkgVersionModuleSpy).toHaveBeenCalledWith('dist/projects/my-lib');
 
     expect(executeProcessSpy).toHaveBeenCalledTimes(1);
     expect(executeProcessSpy).toHaveBeenCalledWith(
