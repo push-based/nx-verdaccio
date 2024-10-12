@@ -1,6 +1,6 @@
 # Benefits in depth
 
-Game changing **scalable** and **maintainable** setup for Verdaccio. 
+Game changing **scalable** and **maintainable** setup for Verdaccio.
 
 > [!NOTE]
 > 💡 Learn more about the common problems with shared environments in the **💡[docs/motivation.md](./docs/motivation.md)💡**.
@@ -115,4 +115,3 @@ This approach makes the E2E setup more **maintainable** and easier to serve edge
 
 In summary, this new setup offers a more scalable, maintainable, and performant way to handle E2E testing.
 By isolating environments and using NX’s powerful tools, it becomes easier to run, manage, and debug E2E tests across projects.
-

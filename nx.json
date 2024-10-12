@@ -31,8 +31,7 @@
     "pb-ve-env-setup": {
       "cache": true
     },
-    "nx-release-publish": {
-    },
+    "nx-release-publish": {},
     "lint": {
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
