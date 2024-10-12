@@ -17,6 +17,7 @@ import {
   TARGET_ENVIRONMENT_INSTALL,
   TARGET_ENVIRONMENT_VERDACCIO_STOP,
 } from '@push-based/nx-verdaccio';
+import { teardownTestFolder } from '@push-based/test-utils';
 
 describe('nx-verdaccio plugin create-nodes-v2', () => {
   let tree: Tree;
@@ -37,7 +38,7 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
   });
 
   afterEach(async () => {
-    //  await teardownTestFolder(baseDir);
+    await teardownTestFolder(baseDir);
   });
 
   it('should add package targets to library project', async () => {
@@ -159,8 +160,7 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
     );
   });
 
-  //
-  it.skip('should add environment targets to project with targetName e2e dynamically', async () => {
+  it('should add environment targets to project with targetName e2e dynamically', async () => {
     const cwd = join(baseDir, 'add-env-targets');
     registerPluginInWorkspace(tree, {
       plugin: '@push-based/nx-verdaccio',

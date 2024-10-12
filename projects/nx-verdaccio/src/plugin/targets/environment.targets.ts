@@ -14,11 +14,11 @@ import { EXECUTOR_ENVIRONMENT_KILL_PROCESS } from '../../executors/kill-process/
 import { EXECUTOR_ENVIRONMENT_SETUP } from '../../executors/env-setup/constants';
 import { iterateEntries } from '../../internal/transform';
 
-export const TARGET_ENVIRONMENT_VERDACCIO_START = 'nxv-env-verdaccio-start';
 export const TARGET_ENVIRONMENT_BOOTSTRAP = 'nxv-env-bootstrap';
 export const TARGET_ENVIRONMENT_INSTALL = 'nxv-env-install';
 export const TARGET_ENVIRONMENT_SETUP = 'nxv-env-setup';
-export const TARGET_ENVIRONMENT_VERDACCIO_STOP = 'nxv-env-verdaccio-stop';
+export const TARGET_ENVIRONMENT_VERDACCIO_START = 'nxv-verdaccio-start';
+export const TARGET_ENVIRONMENT_VERDACCIO_STOP = 'nxv-verdaccio-stop';
 
 export function isEnvProject(
   projectConfig: ProjectConfiguration,
