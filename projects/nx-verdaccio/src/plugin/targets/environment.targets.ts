@@ -14,7 +14,6 @@ import { EXECUTOR_ENVIRONMENT_KILL_PROCESS } from '../../executors/kill-process/
 import { EXECUTOR_ENVIRONMENT_SETUP } from '../../executors/env-setup/constants';
 import { iterateEntries } from '../../internal/transform';
 import { EXECUTOR_ENVIRONMENT_TEARDOWN } from '../../executors/env-teardown/constants';
-import {EXECUTOR_ENVIRONMENT_INSTALL} from "../../executors/env-install/constants";
 
 export const TARGET_ENVIRONMENT_BOOTSTRAP = 'nxv-env-bootstrap';
 export const TARGET_ENVIRONMENT_INSTALL = 'nxv-env-install';
@@ -96,20 +95,29 @@ export function getEnvTargets(
   projectConfig: ProjectConfiguration,
   options: NormalizedCreateNodeOptions['environments']
 ): Record<string, TargetConfiguration> {
-  const { name: envProject } = projectConfig;
-  const { targetNames } = options;
   return {
     [TARGET_ENVIRONMENT_BOOTSTRAP]: {
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_BOOTSTRAP}`,
     },
-    // intermediate task just here to execute dependent pkg-install tasks with the correct environmentProject
+    // intermediate task called in enc-setup to execute dependent pkg-install tasks with the correct environmentProject
     [TARGET_ENVIRONMENT_INSTALL]: {
-      executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_INSTALL}`
+      dependsOn: [
+        {
+          projects: 'dependencies',
+          target: TARGET_PACKAGE_INSTALL,
+          params: 'forward',
+        },
+      ],
     },
     // runs install-env and stop-verdaccio
     [TARGET_ENVIRONMENT_SETUP]: {
-      dependsOn: [TARGET_ENVIRONMENT_BOOTSTRAP],
-      executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_SETUP}`
+      dependsOn: [
+        {
+          target: TARGET_ENVIRONMENT_BOOTSTRAP,
+          params: 'forward',
+        },
+      ],
+      executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_SETUP}`,
     },
     [TARGET_ENVIRONMENT_TEARDOWN]: {
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_TEARDOWN}`,

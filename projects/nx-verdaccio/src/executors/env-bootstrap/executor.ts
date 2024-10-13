@@ -14,7 +14,7 @@ import {
 } from '../../plugin/targets/environment.targets';
 import { runSingleExecutor } from '../../internal/run-executor';
 import { PACKAGE_NAME } from '../../plugin/constants';
-import {getEnvironmentRoot} from "../../internal/environment-root";
+import { getEnvironmentRoot } from '../../internal/environment-root';
 
 export type BootstrapExecutorOutput = {
   success: boolean;
