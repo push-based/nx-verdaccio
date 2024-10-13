@@ -7,9 +7,6 @@
   "implicitDependencies": ["models"],
   "targets": {
     "lint": {},
-    "teardown": {
-      "executor": "@push-based/nx-verdaccio:env-teardown"
-    },
     "e2e": {
       "executor": "@nx/vite:test",
       "inputs": ["default", "^production"],

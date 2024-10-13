@@ -18,6 +18,7 @@ import {EXECUTOR_ENVIRONMENT_TEARDOWN} from "../../executors/env-teardown/consta
 export const TARGET_ENVIRONMENT_BOOTSTRAP = 'nxv-env-bootstrap';
 export const TARGET_ENVIRONMENT_INSTALL = 'nxv-env-install';
 export const TARGET_ENVIRONMENT_SETUP = 'nxv-env-setup';
+export const TARGET_ENVIRONMENT_TEARDOWN = 'nxv-env-teardown';
 export const TARGET_ENVIRONMENT_E2E = 'nxv-e2e';
 export const TARGET_ENVIRONMENT_VERDACCIO_START = 'nxv-verdaccio-start';
 export const TARGET_ENVIRONMENT_VERDACCIO_STOP = 'nxv-verdaccio-stop';
@@ -126,6 +127,9 @@ export function getEnvTargets(
       options: {
         environmentRoot,
       },
+    },
+    [TARGET_ENVIRONMENT_TEARDOWN]: {
+      executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_TEARDOWN}`,
     },
     [TARGET_ENVIRONMENT_E2E]: {
       dependsOn: targetNames,

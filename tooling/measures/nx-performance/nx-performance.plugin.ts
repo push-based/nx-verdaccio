@@ -4,7 +4,7 @@ import {
   CategoryRef,
   PluginConfig,
 } from '@code-pushup/models';
-import { PLUGIN_SLUG } from './constant';
+import {PLUGIN_SLUG} from './constant';
 import {
   PROJECT_GRAPH_PERFORMANCE_AUDIT,
   PROJECT_GRAPH_PERFORMANCE_AUDIT_SLUG,
@@ -13,16 +13,16 @@ import {
 } from './audit/project-graph.audit';
 import {
   getTaskTimeAudits,
-  ProjectTaskAuditOptions,
+  TaskTimeAuditOptions,
   TASK_TIME_AUDIT_POSTFIX,
   taskTimeAudits,
-} from './audit/project-task.audit';
+} from './audit/task-time.audit';
 import {
   CACHE_SIZE_AUDIT_POSTFIX,
   CacheSizeAuditOptions,
   cacheSizeAudits,
   getCacheSizeAudits,
-} from './audit/cache-size.audit';
+} from './audit/task-cache.audit';
 import {
   getTaskGraphTimeAudits,
   TASK_GRAPH_TIME_AUDIT_POSTFIX,
@@ -31,10 +31,10 @@ import {
 } from './audit/task-graph.audit';
 
 export const nxPerformanceAudits = ({
-  taskTimeTasks,
-  cacheSizeTasks,
-  taskGraphTasks,
-}: NxPerfPluginConfig) => [
+                                      taskTimeTasks,
+                                      cacheSizeTasks,
+                                      taskGraphTasks,
+                                    }: NxPerfPluginConfig) => [
   PROJECT_GRAPH_PERFORMANCE_AUDIT,
   ...(taskTimeTasks ? getTaskTimeAudits(taskTimeTasks) : []),
   ...(cacheSizeTasks ? getCacheSizeAudits(cacheSizeTasks) : []),
@@ -48,7 +48,7 @@ export const nxPerformanceCategoryRefs = (
   const audits = options?.onlyAudits
     ? filterOnlyAudits(allAudits, options.onlyAudits)
     : allAudits;
-  return audits.map(({ slug }) => ({
+  return audits.map(({slug}) => ({
     type: 'audit',
     plugin: PLUGIN_SLUG,
     slug,
@@ -63,10 +63,11 @@ export type OnlyAudit =
   | typeof TASK_GRAPH_TIME_AUDIT_POSTFIX;
 export type NxPerfPluginConfig = {
   onlyAudits?: OnlyAudit[];
-} & ProjectGraphAuditOptions &
-  ProjectTaskAuditOptions &
-  CacheSizeAuditOptions &
-  TaskGraphAuditOptions;
+} &
+  Partial<ProjectGraphAuditOptions &
+    TaskTimeAuditOptions &
+    CacheSizeAuditOptions &
+    TaskGraphAuditOptions>;
 
 export function nxPerformancePlugin(
   options?: NxPerfPluginConfig
@@ -93,7 +94,7 @@ export function filterOnlyAudits(
   onlyAudits: OnlyAudit[]
 ): Audit[] {
   const onlyAuditsSet = new Set(onlyAudits);
-  return audits.filter(({ slug }) => {
+  return audits.filter(({slug}) => {
     if (
       onlyAuditsSet.has(CACHE_SIZE_AUDIT_POSTFIX) &&
       slug.endsWith(CACHE_SIZE_AUDIT_POSTFIX)
@@ -137,16 +138,16 @@ export async function runnerFunction(
   const onlyAuditsSet = new Set(onlyAudits);
   return [
     ...(onlyAuditsSet.has(PROJECT_GRAPH_PERFORMANCE_AUDIT_SLUG)
-      ? [await projectGraphAudit({ maxProjectGraphTime })]
+      ? [await projectGraphAudit({maxProjectGraphTime})]
       : []),
     ...(onlyAuditsSet.has(CACHE_SIZE_AUDIT_POSTFIX)
-      ? await cacheSizeAudits({ maxCacheSize, cacheSizeTasks })
+      ? await cacheSizeAudits({maxCacheSize, cacheSizeTasks})
       : []),
     ...(onlyAuditsSet.has(TASK_GRAPH_TIME_AUDIT_POSTFIX)
-      ? await taskGraphAudits({ maxTaskGraphTime, taskGraphTasks })
+      ? await taskGraphAudits({maxTaskGraphTime, taskGraphTasks})
       : []),
     ...(onlyAuditsSet.has(TASK_TIME_AUDIT_POSTFIX)
-      ? await taskTimeAudits({ maxTaskTime, taskTimeTasks })
+      ? await taskTimeAudits({maxTaskTime, taskTimeTasks})
       : []),
   ];
 }

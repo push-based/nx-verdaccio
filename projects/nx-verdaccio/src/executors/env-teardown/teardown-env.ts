@@ -17,11 +17,11 @@ export async function teardownEnvironment(
   options: TeardownEnvironmentOptions,
   git: SimpleGit = gitClient
 ): Promise<void> {
-  const {environmentRoot: optEnvPath} = options;
-  const environmentRoot = optEnvPath ?? context.nxJsonConfiguration.plugins.find(pCfg => {
+  const {environmentRoot: optEnvironmentRoot} = options;
+  const environmentsDir = context.nxJsonConfiguration.plugins.find(pCfg => {
     return typeof pCfg === 'object' && pCfg?.plugin === '@push-based/nx-verdaccio';
-  }) ?.options.environments.environmentsDir ?? DEFAULT_ENVIRONMENTS_OUTPUT_DIR;
-
+  })?.options?.environments?.environmentsDir ?? DEFAULT_ENVIRONMENTS_OUTPUT_DIR;
+  const environmentRoot = optEnvironmentRoot ?? join(environmentsDir, context.projectName);
   // kill verdaccio process if running
   const registryPath = join(environmentRoot, VERDACCIO_REGISTRY_JSON);
   const registryJsonExists = await fileExists(registryPath);
@@ -31,7 +31,7 @@ export async function teardownEnvironment(
     logger.info(`No verdaccio-registry.json file found in ${environmentRoot}`);
   }
 
-  if(environmentRoot === '.') {
+  if (environmentRoot === '.') {
     logger.info(`Skip teardown environment in root folder`);
     return;
   }
