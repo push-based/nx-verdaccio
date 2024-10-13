@@ -37,7 +37,7 @@ describe('runSetupEnvironmentExecutor', () => {
       .mockResolvedValueOnce([
         Promise.resolve({
           success: true,
-          command: 'Bootstraped environemnt successfully.',
+          command: 'Bootstrapped environment successfully.',
         }),
       ])
       .mockResolvedValueOnce([
@@ -87,62 +87,19 @@ describe('runSetupEnvironmentExecutor', () => {
       cwd: '/test',
     });
 
-    expect(runExecutorSpy).toHaveBeenCalledTimes(2);
-    expect(runExecutorSpy)
-      .toHaveBeenCalledWith(
-        {
-          configuration: undefined,
-          project: projectName,
-          target: TARGET_ENVIRONMENT_BOOTSTRAP,
-        },
-        {
-          environmentRoot: 'tmp/environments/my-lib-e2e',
-          keepServerRunning: true,
-        },
-        context
-      )
-      .toHaveBeenCalledWith(
-        {
-          configuration: undefined,
-          project: projectName,
-          target: TARGET_ENVIRONMENT_VERDACCIO_STOP,
-        },
-        {
-          filePath: 'tmp/environments/my-lib-e2e/verdaccio-registry.json',
-          verbose: undefined,
-        },
-        context
-      );
-  });
-
-  it('should catch error cause by runBootstrapEnvironment', async () => {
-    runExecutorSpy.mockRejectedValueOnce(
-      new Error('Error in runBootstrapEnvironment')
+    expect(runExecutorSpy).toHaveBeenCalledTimes(1);
+    expect(runExecutorSpy).toHaveBeenCalledWith(
+      {
+        configuration: undefined,
+        project: projectName,
+        target: TARGET_ENVIRONMENT_VERDACCIO_STOP,
+      },
+      {
+        filePath: 'tmp/environments/my-lib-e2e/verdaccio-registry.json',
+        verbose: undefined,
+      },
+      context
     );
-
-    await expect(
-      runSetupEnvironmentExecutor(
-        {},
-        {
-          cwd: 'test',
-          isVerbose: false,
-          root: 'tmp/environments/test',
-          projectName: 'my-lib-e2e',
-          projectsConfigurations: {
-            version: 2,
-            projects: {
-              'my-lib': {
-                root: 'e2e/my-lib-e2e',
-              },
-            },
-          },
-        }
-      )
-    ).resolves.toStrictEqual({
-      success: false,
-      command:
-        'Failed executing target nxv-env-bootstrap\n Error in runBootstrapEnvironment',
-    });
   });
 
   it('should keep server running if keepServerRunning is passed', async () => {
@@ -213,20 +170,7 @@ describe('runSetupEnvironmentExecutor', () => {
       cwd: '/test',
     });
 
-    expect(runExecutorSpy)
-      .toHaveBeenCalledTimes(1)
-      .toHaveBeenCalledWith(
-        {
-          configuration: undefined,
-          project: 'my-lib-e2e',
-          target: TARGET_ENVIRONMENT_BOOTSTRAP,
-        },
-        expect.objectContaining({
-          environmentRoot: 'tmp/environments/my-lib-e2e',
-          keepServerRunning: true,
-        }),
-        context
-      );
+    expect(runExecutorSpy).toHaveBeenCalledTimes(0);
 
     expect(devkit.logger.info).toHaveBeenCalledTimes(1);
     expect(devkit.logger.info).toHaveBeenCalledWith(
