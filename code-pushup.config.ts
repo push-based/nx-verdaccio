@@ -6,26 +6,24 @@ import nxPerformancePlugin, {
 import {TaskTimeAuditOption} from "./tooling/measures/nx-performance";
 
 const onlyAudits: OnlyAudit[] = [
-  // 'graph-time-project',
-  // 'graph-time-task',
-  // 'cache-size',
+  'graph-time-project',
+  'graph-time-task',
+  'cache-size',
   'task-time',
 ];
 const taskGraphTasks = ['cli-e2e:nxv-env-install'];
 const taskTimeTasks: TaskTimeAuditOption[] = [
-  // {task: 'models-e2e:nxv-env-teardown'},
+  {task: 'models-e2e:nxv-env-teardown'},
   {task: 'models-e2e:nxv-env-bootstrap'},
   {task: 'models-e2e:nxv-env-setup'},
   {task: 'models-e2e:e2e'},
   {task: 'models-e2e:nxv-e2e'},
-  // 'cli-e2e-original:original-e2e',
+  // {task: 'nx-verdaccio-e2e:nxv-e2e'},
+  {task: 'cli-e2e-original:original-e2e'}
 ];
 const cacheSizeTasks = [
   'models-e2e:nxv-env-setup',
-  'utils-e2e:nxv-env-setup',
-  'core-e2e:nxv-env-setup',
-  'cli-e2e:nxv-env-setup',
-  'playground-e2e:nxv-env-setup',
+  'nx-verdaccio-e2e:nxv-env-setup'
 ];
 export default {
   plugins: [

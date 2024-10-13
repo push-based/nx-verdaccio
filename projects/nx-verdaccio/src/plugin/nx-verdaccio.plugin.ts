@@ -9,7 +9,7 @@ import {
   type TargetConfiguration,
 } from '@nx/devkit';
 import { dirname, join } from 'node:path';
-import type { BuildEnvPluginCreateNodeOptions } from './schema';
+import type { NxVerdaccioCreateNodeOptions } from './schema';
 import {
   normalizeCreateNodesOptions,
   type NormalizedCreateNodeOptions,
@@ -27,7 +27,7 @@ import { createTargets } from './targets/create-targets';
 
 const PROJECT_JSON_FILE_GLOB = '**/project.json';
 
-export const createNodesV2: CreateNodesV2<BuildEnvPluginCreateNodeOptions> = [
+export const createNodesV2: CreateNodesV2<NxVerdaccioCreateNodeOptions> = [
   PROJECT_JSON_FILE_GLOB,
   async (configFiles, options, context) => {
     const normalizedOptions = normalizeCreateNodesOptions(options);

@@ -8,7 +8,7 @@ export type NxVerdaccioPackagesOptions = {
   targetNames?: string[];
   filterByTags?: string[];
 };
-export type BuildEnvPluginCreateNodeOptions = {
+export type NxVerdaccioCreateNodeOptions = {
   environments?: NxVerdaccioEnvironmentsOptions;
   packages?: NxVerdaccioPackagesOptions;
 };
