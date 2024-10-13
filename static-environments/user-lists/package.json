@@ -7,11 +7,5 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "@push-based/cli": "^0.0.1-e2e",
-    "@push-based/core": "^0.0.1-e2e",
-    "@push-based/models": "^0.0.1-e2e",
-    "@push-based/utils": "^0.0.1-e2e"
-  }
+  "description": ""
 }
