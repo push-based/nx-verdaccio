@@ -95,6 +95,7 @@ export function getEnvTargets(
   projectConfig: ProjectConfiguration,
   options: NormalizedCreateNodeOptions['environments']
 ): Record<string, TargetConfiguration> {
+  const { targetNames } = options;
   return {
     [TARGET_ENVIRONMENT_BOOTSTRAP]: {
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_BOOTSTRAP}`,
@@ -123,7 +124,7 @@ export function getEnvTargets(
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_TEARDOWN}`,
     },
     [TARGET_ENVIRONMENT_E2E]: {
-      dependsOn: targetNames,
+      dependsOn: [...targetNames],
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_TEARDOWN}`,
     },
   };
