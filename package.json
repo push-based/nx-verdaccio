@@ -6,7 +6,7 @@
   "private": true,
   "dependencies": {
     "memfs": "^4.11.1",
-    "simplegit": "^1.0.2",
+    "simple-git": "^3.27.0",
     "tslib": "^2.3.0",
     "yargs": "^17.7.2"
   },
