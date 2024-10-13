@@ -13,7 +13,7 @@ import { PACKAGE_NAME } from '../constants';
 import { EXECUTOR_ENVIRONMENT_KILL_PROCESS } from '../../executors/kill-process/constant';
 import { EXECUTOR_ENVIRONMENT_SETUP } from '../../executors/env-setup/constants';
 import { iterateEntries } from '../../internal/transform';
-import {EXECUTOR_ENVIRONMENT_TEARDOWN} from "../../executors/env-teardown/constants";
+import { EXECUTOR_ENVIRONMENT_TEARDOWN } from '../../executors/env-teardown/constants';
 
 export const TARGET_ENVIRONMENT_BOOTSTRAP = 'nxv-env-bootstrap';
 export const TARGET_ENVIRONMENT_INSTALL = 'nxv-env-install';
@@ -133,7 +133,7 @@ export function getEnvTargets(
     },
     [TARGET_ENVIRONMENT_E2E]: {
       dependsOn: targetNames,
-      executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_TEARDOWN}`
+      executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_TEARDOWN}`,
     },
   };
 }

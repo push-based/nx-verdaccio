@@ -1,9 +1,5 @@
 import { AuditOutput, Audit, Table, Issue } from '@code-pushup/models';
-import {
-  executeProcess,
-  slugify,
-  formatDuration,
-} from '@code-pushup/utils';
+import { executeProcess, slugify, formatDuration } from '@code-pushup/utils';
 import { logger, readJsonFile } from '@nx/devkit';
 import { DEFAULT_PLUGIN_OUTPUT } from '../constant';
 import { join } from 'node:path';
@@ -19,15 +15,15 @@ export function getTaskTimeAuditSlug(task: string): string {
 export type TaskTimeAuditOption = {
   task: string;
   cleanup?: () => void | Promise<void>;
-}
+};
 
 export const getTaskTimeAudits = (tasks: TaskTimeAuditOption[]): Audit[] => {
-  return tasks.map(({task}) => {
-    return ({
+  return tasks.map(({ task }) => {
+    return {
       slug: getTaskTimeAuditSlug(task), // Unique slug for each task
       title: `[Task Time] ${task}`,
       description: 'An audit to check performance of the Nx task.',
-    })
+    };
   });
 };
 
@@ -84,7 +80,7 @@ export async function taskTimeData<T extends TaskTimeAuditOption>(
 ): Promise<TaskTimeResult[]> {
   const results: TaskTimeResult[] = [];
 
-  for (const {task} of tasks) {
+  for (const { task } of tasks) {
     const dist = join(DEFAULT_PLUGIN_OUTPUT, 'task-time');
     await executeProcess({
       command: `NX_DAEMON=false NX_PROFILE=${dist}/${slugify(

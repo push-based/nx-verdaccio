@@ -12,7 +12,7 @@ import {
   TARGET_ENVIRONMENT_VERDACCIO_STOP,
 } from '../../plugin/targets/environment.targets';
 import { runSingleExecutor } from '../../internal/run-executor';
-import {rm} from "node:fs/promises";
+import { rm } from 'node:fs/promises';
 
 export type ExecutorOutput = {
   success: boolean;
@@ -24,8 +24,8 @@ export default async function runSetupEnvironmentExecutor(
   terminalAndExecutorOptions: SetupEnvironmentExecutorOptions,
   context: ExecutorContext
 ) {
-  const {configurationName: configuration, projectName} = context;
-  const {verbose, environmentRoot, keepServerRunning} =
+  const { configurationName: configuration, projectName } = context;
+  const { verbose, environmentRoot, keepServerRunning } =
     terminalAndExecutorOptions;
   try {
     await runSingleExecutor(
@@ -56,10 +56,10 @@ export default async function runSetupEnvironmentExecutor(
       args: objectToCliArgs({
         _: [TARGET_ENVIRONMENT_INSTALL, projectName],
         environmentRoot,
-        ...(verbose ? {verbose} : {}),
+        ...(verbose ? { verbose } : {}),
       }),
       cwd: process.cwd(),
-      ...(verbose ? {verbose} : {}),
+      ...(verbose ? { verbose } : {}),
     });
   } catch (error) {
     logger.error(error.message);
@@ -78,16 +78,26 @@ export default async function runSetupEnvironmentExecutor(
           configuration,
         },
         {
-          ...(verbose ? {verbose} : {}),
+          ...(verbose ? { verbose } : {}),
           filePath: join(environmentRoot, VERDACCIO_REGISTRY_JSON),
         },
         context
       );
       // delete storage, npmrc
-      await rm(join(environmentRoot, 'storage'), {recursive: true, force: true, retryDelay: 100, maxRetries: 2});
-      await rm(join(environmentRoot, '.npmrc'), {recursive: true, force: true, retryDelay: 100, maxRetries: 2});
+      await rm(join(environmentRoot, 'storage'), {
+        recursive: true,
+        force: true,
+        retryDelay: 100,
+        maxRetries: 2,
+      });
+      await rm(join(environmentRoot, '.npmrc'), {
+        recursive: true,
+        force: true,
+        retryDelay: 100,
+        maxRetries: 2,
+      });
     } else {
-      const {url} = readJsonFile<VerdaccioProcessResult>(
+      const { url } = readJsonFile<VerdaccioProcessResult>(
         join(environmentRoot, VERDACCIO_REGISTRY_JSON)
       );
       logger.info(`Verdaccio server kept running under : ${url}`);

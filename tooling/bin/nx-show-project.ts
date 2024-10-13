@@ -9,14 +9,14 @@ const argv = yargs(hideBin(process.argv))
     pkgRange: { type: 'string', demandOption: true },
     registry: { type: 'string' },
   })
-  .coerce('pkgRange', rawVersion => {
+  .coerce('pkgRange', (rawVersion) => {
     if (rawVersion != null && rawVersion !== '') {
       return rawVersion;
     } else {
       return undefined;
     }
   })
-  .coerce('registry', rawRegistry => {
+  .coerce('registry', (rawRegistry) => {
     if (rawRegistry != null && rawRegistry !== '') {
       return rawRegistry;
     } else {
@@ -43,7 +43,7 @@ try {
     ],
     {
       shell: true,
-    },
+    }
   ).toString();
 
   const existingPackage = viewResult

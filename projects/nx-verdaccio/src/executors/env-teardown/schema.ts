@@ -1,5 +1,7 @@
-import {Environment} from "../env-bootstrap/npm";
+import { Environment } from '../env-bootstrap/npm';
 
-export type TeardownExecutorOptions = Partial<Environment & {
-  verbose: boolean;
-}>;
+export type TeardownExecutorOptions = Partial<
+  Environment & {
+    verbose: boolean;
+  }
+>;

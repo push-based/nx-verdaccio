@@ -1,13 +1,13 @@
-import type {Tree} from '@nx/devkit';
-import {join} from 'node:path';
-import {afterEach, expect} from 'vitest';
+import type { Tree } from '@nx/devkit';
+import { join } from 'node:path';
+import { afterEach, expect } from 'vitest';
 import {
   addJsLibToWorkspace,
   materializeTree,
   nxShowProjectJson,
   registerPluginInWorkspace,
 } from '@push-based/test-nx-utils';
-import {updateProjectConfiguration} from 'nx/src/generators/utils/project-configuration';
+import { updateProjectConfiguration } from 'nx/src/generators/utils/project-configuration';
 import {
   TARGET_ENVIRONMENT_BOOTSTRAP,
   TARGET_ENVIRONMENT_SETUP,
@@ -17,11 +17,11 @@ import {
   TARGET_ENVIRONMENT_INSTALL,
   TARGET_ENVIRONMENT_VERDACCIO_STOP,
 } from '@push-based/nx-verdaccio';
-import {teardownTestFolder} from '@push-based/test-utils';
+import { teardownTestFolder } from '@push-based/test-utils';
 import {
   TARGET_ENVIRONMENT_E2E,
-  TARGET_ENVIRONMENT_TEARDOWN
-} from "../../../projects/nx-verdaccio/src/plugin/targets/environment.targets";
+  TARGET_ENVIRONMENT_TEARDOWN,
+} from '../../../projects/nx-verdaccio/src/plugin/targets/environment.targets';
 
 describe('nx-verdaccio plugin create-nodes-v2', () => {
   let tree: Tree;
@@ -57,7 +57,7 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
     });
     await materializeTree(tree, cwd);
 
-    const {code, projectJson} = await nxShowProjectJson(cwd, projectA);
+    const { code, projectJson } = await nxShowProjectJson(cwd, projectA);
     expect(code).toBe(0);
 
     expect(projectJson.targets).toStrictEqual({
@@ -106,7 +106,7 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
     });
     await materializeTree(tree, cwd);
 
-    const {projectJson} = await nxShowProjectJson(cwd, projectAE2e);
+    const { projectJson } = await nxShowProjectJson(cwd, projectAE2e);
 
     expect(projectJson.targets).toStrictEqual(
       expect.not.objectContaining({
@@ -137,7 +137,7 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
     });
     await materializeTree(tree, cwd);
 
-    const {projectJson: projectJsonB} = await nxShowProjectJson(
+    const { projectJson: projectJsonB } = await nxShowProjectJson(
       cwd,
       projectB
     );
@@ -150,7 +150,7 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
       })
     );
 
-    const {projectJson: projectJsonA} = await nxShowProjectJson(
+    const { projectJson: projectJsonA } = await nxShowProjectJson(
       cwd,
       projectA
     );
@@ -183,7 +183,7 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
     });
     await materializeTree(tree, cwd);
 
-    const {code, projectJson} = await nxShowProjectJson(cwd, projectAE2e);
+    const { code, projectJson } = await nxShowProjectJson(cwd, projectAE2e);
     expect(code).toBe(0);
 
     expect(projectJson.targets).toStrictEqual(
@@ -211,7 +211,7 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
             },
           ],
           executor: 'nx:noop',
-          options: {environmentRoot: 'tmp/environments/lib-a-e2e'},
+          options: { environmentRoot: 'tmp/environments/lib-a-e2e' },
         }),
         [TARGET_ENVIRONMENT_SETUP]: expect.objectContaining({
           cache: false,
@@ -245,10 +245,10 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
         }),
         [TARGET_ENVIRONMENT_E2E]: expect.objectContaining({
           executor: '@push-based/nx-verdaccio:env-teardown',
-          dependsOn: ["e2e"]
+          dependsOn: ['e2e'],
         }),
         [TARGET_ENVIRONMENT_TEARDOWN]: expect.objectContaining({
-          executor: '@push-based/nx-verdaccio:env-teardown'
+          executor: '@push-based/nx-verdaccio:env-teardown',
         }),
       })
     );
@@ -277,7 +277,7 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
     });
     await materializeTree(tree, cwd);
 
-    const {projectJson} = await nxShowProjectJson(cwd, projectAE2e);
+    const { projectJson } = await nxShowProjectJson(cwd, projectAE2e);
 
     expect(projectJson.targets).toStrictEqual(
       expect.not.objectContaining({

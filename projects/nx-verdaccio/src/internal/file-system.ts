@@ -1,4 +1,4 @@
-import {mkdir, stat} from 'node:fs/promises';
+import { mkdir, stat } from 'node:fs/promises';
 
 export async function ensureDirectoryExists(baseDir: string) {
   try {
