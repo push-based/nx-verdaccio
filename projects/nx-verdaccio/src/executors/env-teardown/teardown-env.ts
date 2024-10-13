@@ -2,11 +2,11 @@ import {Environment} from "../env-bootstrap/npm";
 import {simpleGit, type SimpleGit} from "simple-git";
 import {isFolderInRepo} from "./git";
 import {ExecutorContext, logger} from "@nx/devkit";
-import {runSingleExecutor} from "../../internal/run-executor";
 import {join} from "node:path";
 import {VERDACCIO_REGISTRY_JSON} from "../env-bootstrap/constants";
-import {TARGET_ENVIRONMENT_VERDACCIO_STOP} from "@push-based/nx-verdaccio";
 import {fileExists} from "../../internal/file-system";
+import {rm} from "node:fs/promises";
+import runKillProcessExecutor from "../kill-process/executor";
 
 export const gitClient: SimpleGit = simpleGit(process.cwd());
 export type TeardownEnvironmentOptions = Environment & { verbose?: boolean };
@@ -16,37 +16,32 @@ export async function teardownEnvironment(
   options: TeardownEnvironmentOptions,
   git: SimpleGit = gitClient
 ): Promise<void> {
-  const {verbose, environmentRoot} = options;
+  const { environmentRoot} = options;
 
   // kill verdaccio process if running
-  const registryJsonExists = await fileExists(join(environmentRoot, VERDACCIO_REGISTRY_JSON));
+  const registryPath = join(environmentRoot, VERDACCIO_REGISTRY_JSON);
+  const registryJsonExists = await fileExists(registryPath);
   if (registryJsonExists) {
-    await runSingleExecutor(
-      {
-        project: context.projectName,
-        target: TARGET_ENVIRONMENT_VERDACCIO_STOP,
-      },
-      {
-        ...(verbose ? {verbose} : {}),
-        filePath: join(environmentRoot, VERDACCIO_REGISTRY_JSON),
-      },
-      context
-    );
+    await runKillProcessExecutor({...options, filePath: registryPath});
   } else {
     logger.info(`No verdaccio-registry.json file found in ${environmentRoot}.`);
   }
 
   // clean environmentRoot
-
   const environmentRootInRepo = await isFolderInRepo(environmentRoot);
-    if (environmentRootInRepo) {
+  if (environmentRootInRepo && environmentRootInRepo !== '.') {
     await git.checkout([environmentRoot]);
+    await git.clean('f', [environmentRoot]);
     logger.info(`Cleaned git history in ${environmentRoot}.`);
   } else {
     try {
-
+      const registryFiles = [
+        join(environmentRoot)
+      ];
+      await rm(environmentRoot, {recursive: true, force: true, retryDelay: 100, maxRetries: 2});
+      logger.info(`deleted folder ${environmentRoot}.`);
     } catch (error) {
-     // throw new Error(`Error cleaning history of folder ${environmentRoot}. ${error.message}`);
+      throw new Error(`Error cleaning history of folder ${environmentRoot}. ${error.message}`);
     }
   }
 

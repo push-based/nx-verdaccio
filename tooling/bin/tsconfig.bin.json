@@ -1,0 +1,21 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../dist/out-tsc",
+    "declaration": true,
+    "types": ["node"],
+    "resolveJsonModule": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": [
+    "vite.config.ts",
+    "src/**/__snapshots__/*.ts",
+    "src/**/*.test.ts",
+    "src/**/*.unit-test.ts",
+    "src/**/*.integration-test.ts",
+    "src/**/*.spec.ts",
+    "src/**/*.mock.ts",
+    "test/**/*.ts",
+    "mock/**/*.ts"
+  ]
+}
