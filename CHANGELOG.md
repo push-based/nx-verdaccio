@@ -1,3 +1,25 @@
+## 0.0.0-alpha.7 (2024-10-13)
+
+
+### 🚀 Features
+
+- modify package json before publishing ([3faf91c](https://github.com/push-based/nx-verdaccio/commit/3faf91c))
+- add env-teardown executor ([33b1d3b](https://github.com/push-based/nx-verdaccio/commit/33b1d3b))
+- improve teardown logic ([cba2e67](https://github.com/push-based/nx-verdaccio/commit/cba2e67))
+
+### 🩹 Fixes
+
+- adjust target names in code pushup config ([26fd287](https://github.com/push-based/nx-verdaccio/commit/26fd287))
+- remove port from snapshot ([c8ef956](https://github.com/push-based/nx-verdaccio/commit/c8ef956))
+- adjust packages.filterByTag ([2c7b139](https://github.com/push-based/nx-verdaccio/commit/2c7b139))
+- refactor testing API usage ([f3e4c29](https://github.com/push-based/nx-verdaccio/commit/f3e4c29))
+- refactor testing ([7425758](https://github.com/push-based/nx-verdaccio/commit/7425758))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+- Michael Hladky @BioPhoton
+
 ## 0.0.0-alpha.6 (2024-09-29)
 
 
