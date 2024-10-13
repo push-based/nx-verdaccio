@@ -15,5 +15,5 @@
     }
   },
   "additionalProperties": true,
-  "required": ["environmentRoot"]
+  "required": []
 }
