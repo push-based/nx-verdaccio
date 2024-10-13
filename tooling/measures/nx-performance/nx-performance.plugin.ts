@@ -8,9 +8,9 @@ import { PLUGIN_SLUG } from './constant';
 import {
   PROJECT_GRAPH_PERFORMANCE_AUDIT,
   PROJECT_GRAPH_PERFORMANCE_AUDIT_SLUG,
-  projectGraphAudit,
+  graphProjectTimeAudit,
   ProjectGraphAuditOptions,
-} from './audit/project-graph.audit';
+} from './audit/graph-project-time.audit';
 import {
   getTaskTimeAudits,
   TaskTimeAuditOptions,
@@ -28,7 +28,7 @@ import {
   TASK_GRAPH_TIME_AUDIT_POSTFIX,
   TaskGraphAuditOptions,
   taskGraphAudits,
-} from './audit/task-graph.audit';
+} from './audit/graph-task-time.audit';
 
 export const nxPerformanceAudits = ({
   taskTimeTasks,
@@ -139,7 +139,7 @@ export async function runnerFunction(
   const onlyAuditsSet = new Set(onlyAudits);
   return [
     ...(onlyAuditsSet.has(PROJECT_GRAPH_PERFORMANCE_AUDIT_SLUG)
-      ? [await projectGraphAudit({ maxProjectGraphTime })]
+      ? [await graphProjectTimeAudit({ maxProjectGraphTime })]
       : []),
     ...(onlyAuditsSet.has(CACHE_SIZE_AUDIT_POSTFIX)
       ? await cacheSizeAudits({ maxCacheSize, cacheSizeTasks })
