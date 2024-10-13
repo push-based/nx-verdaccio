@@ -2,8 +2,12 @@ import {simpleGit} from 'simple-git';
 
 export async function isFolderInGit(folderPath: string): Promise<boolean> {
   try {
+    // Initialize simple-git with the folder path
     const git = simpleGit(folderPath);
-    return (await git.checkIgnore(folderPath)).length === 0;
+    // Check if the folder is a git repository
+    const isRepo = (await git.checkIgnore(folderPath)).length === 0;
+    // console.log(`${folderPath} is ${isRepo ? '' : 'not '} in Git repository.`);
+    return isRepo;
   } catch (error) {
     if (
       (error as Error).message.includes(
