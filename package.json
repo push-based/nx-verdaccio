@@ -6,6 +6,7 @@
   "private": true,
   "dependencies": {
     "memfs": "^4.11.1",
+    "simple-git": "^3.27.0",
     "tslib": "^2.3.0",
     "yargs": "^17.7.2"
   },
@@ -68,5 +69,9 @@
     "verdaccio",
     "performance"
   ],
-  "author": "Michael Hladky"
+  "author": "Michael Hladky",
+  "directories": {
+    "doc": "docs",
+    "example": "examples"
+  }
 }

@@ -14,6 +14,15 @@ exports[`nx-verdaccio plugin create-nodes-v2 > should add environment targets to
     "options": {},
     "parallelism": true,
   },
+  "nxv-e2e": {
+    "configurations": {},
+    "dependsOn": [
+      "e2e",
+    ],
+    "executor": "@push-based/nx-verdaccio:env-teardown",
+    "options": {},
+    "parallelism": true,
+  },
   "nxv-env-bootstrap": {
     "configurations": {},
     "executor": "@push-based/nx-verdaccio:env-bootstrap",
@@ -50,6 +59,12 @@ exports[`nx-verdaccio plugin create-nodes-v2 > should add environment targets to
       "{options.environmentRoot}/.npmrc",
       "{options.environmentRoot}/package-lock.json",
     ],
+    "parallelism": true,
+  },
+  "nxv-env-teardown": {
+    "configurations": {},
+    "executor": "@push-based/nx-verdaccio:env-teardown",
+    "options": {},
     "parallelism": true,
   },
   "nxv-verdaccio-start": {

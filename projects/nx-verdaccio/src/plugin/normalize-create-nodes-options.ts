@@ -1,6 +1,6 @@
 import type {
   NxVerdaccioEnvironmentsOptions,
-  BuildEnvPluginCreateNodeOptions,
+  NxVerdaccioCreateNodeOptions,
   NxVerdaccioPackagesOptions,
 } from './schema';
 import {
@@ -20,7 +20,7 @@ export type NormalizedCreateNodeOptions = {
 };
 
 export function normalizeCreateNodesOptions(
-  options: BuildEnvPluginCreateNodeOptions
+  options: NxVerdaccioCreateNodeOptions
 ): NormalizedCreateNodeOptions {
   const { environments = {}, packages = {} } = options ?? {};
   const { targetNames = [] } = environments;

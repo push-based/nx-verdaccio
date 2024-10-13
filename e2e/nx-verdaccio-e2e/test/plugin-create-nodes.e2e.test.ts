@@ -18,6 +18,10 @@ import {
   TARGET_ENVIRONMENT_VERDACCIO_STOP,
 } from '@push-based/nx-verdaccio';
 import { teardownTestFolder } from '@push-based/test-utils';
+import {
+  TARGET_ENVIRONMENT_E2E,
+  TARGET_ENVIRONMENT_TEARDOWN,
+} from '../../../projects/nx-verdaccio/src/plugin/targets/environment.targets';
 
 describe('nx-verdaccio plugin create-nodes-v2', () => {
   let tree: Tree;
@@ -238,6 +242,13 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
           options: {
             filePath: 'tmp/environments/verdaccio-registry.json',
           },
+        }),
+        [TARGET_ENVIRONMENT_E2E]: expect.objectContaining({
+          executor: '@push-based/nx-verdaccio:env-teardown',
+          dependsOn: ['e2e'],
+        }),
+        [TARGET_ENVIRONMENT_TEARDOWN]: expect.objectContaining({
+          executor: '@push-based/nx-verdaccio:env-teardown',
         }),
       })
     );

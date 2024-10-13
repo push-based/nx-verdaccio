@@ -12,7 +12,6 @@
       "inputs": ["default", "^production"],
       "outputs": ["{options.reportsDirectory}"],
       "options": {
-        "environmentRoot": "static-environments/user-lists",
         "reportsDirectory": "../../../coverage/projects/cli-static-e2e"
       }
     }

@@ -1,9 +1,5 @@
 import { AuditOutput, Audit, Table, Issue } from '@code-pushup/models';
-import {
-  executeProcess,
-  slugify,
-  formatDuration,
-} from '@code-pushup/utils';
+import { executeProcess, slugify, formatDuration } from '@code-pushup/utils';
 import { logger, readJsonFile } from '@nx/devkit';
 import { DEFAULT_PLUGIN_OUTPUT } from '../constant';
 import { join } from 'node:path';
@@ -16,27 +12,34 @@ export function getTaskTimeAuditSlug(task: string): string {
   return `nx-${slugify(task)}-${TASK_TIME_AUDIT_POSTFIX}`;
 }
 
-export const getTaskTimeAudits = (tasks: string[]): Audit[] => {
-  return tasks.map((task) => ({
-    slug: getTaskTimeAuditSlug(task), // Unique slug for each task
-    title: `[Task Time] ${task}`,
-    description: 'An audit to check performance of the Nx task.',
-  }));
+export type TaskTimeAuditOption = {
+  task: string;
+  cleanup?: () => void | Promise<void>;
 };
 
-export type ProjectTaskAuditOptions = {
-  taskTimeTasks: string[];
+export const getTaskTimeAudits = (tasks: TaskTimeAuditOption[]): Audit[] => {
+  return tasks.map(({ task }) => {
+    return {
+      slug: getTaskTimeAuditSlug(task), // Unique slug for each task
+      title: `[Task Time] ${task}`,
+      description: 'An audit to check performance of the Nx task.',
+    };
+  });
+};
+
+export type TaskTimeAuditOptions = {
+  taskTimeTasks: TaskTimeAuditOption[];
   maxTaskTime?: number;
 };
 
 export async function taskTimeAudits(
-  options?: ProjectTaskAuditOptions
+  options?: TaskTimeAuditOptions
 ): Promise<AuditOutput[]> {
   const { taskTimeTasks = [], maxTaskTime = DEFAULT_MAX_PROJECT_TARGET_TIME } =
     options ?? {};
 
   // Get the timings for each task
-  const timings = await projectTaskCacheSizeData(taskTimeTasks);
+  const timings = await taskTimeData(taskTimeTasks);
 
   // Return an array of audits, one per task
   return timings.map(({ task, taskTime, data, issues }) => ({
@@ -72,12 +75,12 @@ export type TaskTimeResult = {
   issues?: Issue[];
 };
 
-export async function projectTaskCacheSizeData<T extends string>(
+export async function taskTimeData<T extends TaskTimeAuditOption>(
   tasks: T[]
 ): Promise<TaskTimeResult[]> {
   const results: TaskTimeResult[] = [];
 
-  for (const task of tasks) {
+  for (const { task } of tasks) {
     const dist = join(DEFAULT_PLUGIN_OUTPUT, 'task-time');
     await executeProcess({
       command: `NX_DAEMON=false NX_PROFILE=${dist}/${slugify(

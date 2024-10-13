@@ -2,6 +2,10 @@
   "name": "user-lists",
   "private": true,
   "scripts": {},
-  "dependencies": {},
-  "devDependencies": {}
+  "version": "1.0.0",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }

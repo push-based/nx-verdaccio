@@ -74,9 +74,6 @@
   },
   "plugins": [
     {
-      "plugin": "./examples/e2e/cli-e2e-original/tooling/original.plugin.ts"
-    },
-    {
       "plugin": "@push-based/nx-verdaccio",
       "options": {
         "packages": {
@@ -87,6 +84,9 @@
         }
       },
       "exclude": ["./examples/e2e/cli-e2e-original"]
+    },
+    {
+      "plugin": "./examples/e2e/cli-e2e-original/tooling/original.plugin.ts"
     },
     {
       "plugin": "@nx/eslint/plugin",

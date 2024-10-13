@@ -12,6 +12,7 @@ import {
   TARGET_ENVIRONMENT_VERDACCIO_STOP,
 } from '../../plugin/targets/environment.targets';
 import { runSingleExecutor } from '../../internal/run-executor';
+import { rm } from 'node:fs/promises';
 
 export type ExecutorOutput = {
   success: boolean;
@@ -82,6 +83,19 @@ export default async function runSetupEnvironmentExecutor(
         },
         context
       );
+      // delete storage, npmrc
+      await rm(join(environmentRoot, 'storage'), {
+        recursive: true,
+        force: true,
+        retryDelay: 100,
+        maxRetries: 2,
+      });
+      await rm(join(environmentRoot, '.npmrc'), {
+        recursive: true,
+        force: true,
+        retryDelay: 100,
+        maxRetries: 2,
+      });
     } else {
       const { url } = readJsonFile<VerdaccioProcessResult>(
         join(environmentRoot, VERDACCIO_REGISTRY_JSON)
