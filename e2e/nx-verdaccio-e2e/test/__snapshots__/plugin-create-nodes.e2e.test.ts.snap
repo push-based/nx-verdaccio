@@ -26,9 +26,7 @@ exports[`nx-verdaccio plugin create-nodes-v2 > should add environment targets to
   "nxv-env-bootstrap": {
     "configurations": {},
     "executor": "@push-based/nx-verdaccio:env-bootstrap",
-    "options": {
-      "environmentRoot": "tmp/environments/lib-a-e2e",
-    },
+    "options": {},
     "parallelism": true,
   },
   "nxv-env-install": {
@@ -41,24 +39,19 @@ exports[`nx-verdaccio plugin create-nodes-v2 > should add environment targets to
       },
     ],
     "executor": "nx:noop",
-    "options": {
-      "environmentRoot": "tmp/environments/lib-a-e2e",
-    },
+    "options": {},
     "parallelism": true,
   },
   "nxv-env-setup": {
-    "cache": false,
     "configurations": {},
-    "executor": "@push-based/nx-verdaccio:env-setup",
-    "options": {
-      "environmentRoot": "tmp/environments/lib-a-e2e",
-    },
-    "outputs": [
-      "{options.environmentRoot}/node_modules",
-      "{options.environmentRoot}/package.json",
-      "{options.environmentRoot}/.npmrc",
-      "{options.environmentRoot}/package-lock.json",
+    "dependsOn": [
+      {
+        "params": "forward",
+        "target": "nxv-env-bootstrap",
+      },
     ],
+    "executor": "@push-based/nx-verdaccio:env-setup",
+    "options": {},
     "parallelism": true,
   },
   "nxv-env-teardown": {
