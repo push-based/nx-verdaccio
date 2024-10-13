@@ -12,7 +12,7 @@ export function getEnvironmentDir(context: ExecutorContext) {
     );
   }) as ExpandedPluginConfiguration<NxVerdaccioCreateNodeOptions>;
   return (
-    plugin.options.environments?.environmentsDir ??
+    plugin?.options?.environments?.environmentsDir ??
     DEFAULT_ENVIRONMENTS_OUTPUT_DIR
   );
 }
