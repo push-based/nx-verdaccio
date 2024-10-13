@@ -13,10 +13,12 @@ import { PACKAGE_NAME } from '../constants';
 import { EXECUTOR_ENVIRONMENT_KILL_PROCESS } from '../../executors/kill-process/constant';
 import { EXECUTOR_ENVIRONMENT_SETUP } from '../../executors/env-setup/constants';
 import { iterateEntries } from '../../internal/transform';
+import {EXECUTOR_ENVIRONMENT_TEARDOWN} from "../../executors/env-teardown/constants";
 
 export const TARGET_ENVIRONMENT_BOOTSTRAP = 'nxv-env-bootstrap';
 export const TARGET_ENVIRONMENT_INSTALL = 'nxv-env-install';
 export const TARGET_ENVIRONMENT_SETUP = 'nxv-env-setup';
+export const TARGET_ENVIRONMENT_E2E = 'nxv-e2e';
 export const TARGET_ENVIRONMENT_VERDACCIO_START = 'nxv-verdaccio-start';
 export const TARGET_ENVIRONMENT_VERDACCIO_STOP = 'nxv-verdaccio-stop';
 
@@ -93,7 +95,7 @@ export function getEnvTargets(
   options: NormalizedCreateNodeOptions['environments']
 ): Record<string, TargetConfiguration> {
   const { name: envProject } = projectConfig;
-  const { environmentsDir } = options;
+  const { environmentsDir, targetNames } = options;
   const environmentRoot = join(environmentsDir, envProject);
   return {
     [TARGET_ENVIRONMENT_BOOTSTRAP]: {
@@ -124,6 +126,10 @@ export function getEnvTargets(
       options: {
         environmentRoot,
       },
+    },
+    [TARGET_ENVIRONMENT_E2E]: {
+      dependsOn: targetNames,
+      executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_TEARDOWN}`
     },
   };
 }

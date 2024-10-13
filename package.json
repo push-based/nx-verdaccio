@@ -69,5 +69,9 @@
     "verdaccio",
     "performance"
   ],
-  "author": "Michael Hladky"
+  "author": "Michael Hladky",
+  "directories": {
+    "doc": "docs",
+    "example": "examples"
+  }
 }

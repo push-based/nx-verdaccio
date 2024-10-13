@@ -10,10 +10,6 @@
     "teardown": {
       "executor": "@push-based/nx-verdaccio:env-teardown"
     },
-    "nxv-e2e": {
-      "dependsOn": ["e2e"],
-      "executor": "@push-based/nx-verdaccio:env-teardown"
-    },
     "e2e": {
       "executor": "@nx/vite:test",
       "inputs": ["default", "^production"],
