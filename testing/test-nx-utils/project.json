@@ -1,0 +1,28 @@
+{
+  "name": "test-nx-utils",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "projects/test-nx-utils/src",
+  "projectType": "library",
+  "tags": ["scope:shared", "type:testing"],
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/testing/test-nx-utils",
+        "main": "testing/test-nx-utils/src/index.ts",
+        "tsConfig": "testing/test-nx-utils/tsconfig.lib.json",
+        "assets": ["testing/test-nx-utils/*.md"],
+        "generatePackageJson": true,
+        "format": ["esm"]
+      }
+    },
+    "unit-test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "../../coverage/testing/test-nx-utils"
+      }
+    }
+  }
+}

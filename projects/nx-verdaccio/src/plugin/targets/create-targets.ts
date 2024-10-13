@@ -1,4 +1,4 @@
-import type { BuildEnvPluginCreateNodeOptions } from '../schema';
+import type { NxVerdaccioCreateNodeOptions } from '../schema';
 import { logger, type ProjectConfiguration } from '@nx/devkit';
 import { normalizeCreateNodesOptions } from '../normalize-create-nodes-options';
 import {
@@ -11,7 +11,7 @@ import { getPkgTargets, isPkgProject } from './package.targets';
 
 export function createProjectConfiguration(
   projectConfiguration: ProjectConfiguration,
-  options: BuildEnvPluginCreateNodeOptions
+  options: NxVerdaccioCreateNodeOptions
 ): Pick<ProjectConfiguration, 'targets'> &
   Partial<Pick<ProjectConfiguration, 'namedInputs'>> {
   const { environments, packages } = normalizeCreateNodesOptions(options);

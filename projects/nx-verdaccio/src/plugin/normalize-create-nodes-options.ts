@@ -1,7 +1,7 @@
 import type {
-  BuildEnvEnvironmentsOptions,
-  BuildEnvPluginCreateNodeOptions,
-  BuildEnvPackagesOptions,
+  NxVerdaccioEnvironmentsOptions,
+  NxVerdaccioCreateNodeOptions,
+  NxVerdaccioPackagesOptions,
 } from './schema';
 import {
   DEFAULT_ENVIRONMENTS_OUTPUT_DIR,
@@ -10,24 +10,22 @@ import {
 
 export type NormalizedCreateNodeOptions = {
   environments: Omit<
-    BuildEnvEnvironmentsOptions,
+    NxVerdaccioEnvironmentsOptions,
     'targetNames' | 'environmentsDir'
   > &
     Required<
-      Pick<BuildEnvEnvironmentsOptions, 'targetNames' | 'environmentsDir'>
+      Pick<NxVerdaccioEnvironmentsOptions, 'targetNames' | 'environmentsDir'>
     >;
-  packages: BuildEnvPackagesOptions;
+  packages: NxVerdaccioPackagesOptions;
 };
 
 export function normalizeCreateNodesOptions(
-  options: BuildEnvPluginCreateNodeOptions
+  options: NxVerdaccioCreateNodeOptions
 ): NormalizedCreateNodeOptions {
   const { environments = {}, packages = {} } = options ?? {};
+  const { targetNames = [] } = environments;
 
-  if (
-    !('targetNames' in environments) ||
-    environments.targetNames.length === 0
-  ) {
+  if (targetNames.length === 0) {
     throw new Error(
       'Option targetNames is required in plugin options under "environments". e.g.: ["e2e"] '
     );

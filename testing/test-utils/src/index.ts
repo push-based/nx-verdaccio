@@ -6,3 +6,5 @@ export * from './lib/setup';
 export * from './lib/execute-process-helper.mock';
 export * from './lib/test-folder.setup';
 export * from './lib/constants';
+export * from './lib/file-system';
+export * from './lib/string';

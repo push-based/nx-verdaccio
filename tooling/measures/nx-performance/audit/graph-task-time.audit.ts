@@ -12,11 +12,13 @@ export function getTaskGraphTimeAuditSlug(task: string): string {
 }
 
 export const getTaskGraphTimeAudits = (tasks: string[]): Audit[] => {
-  return tasks.map((task) => ({
-    slug: getTaskGraphTimeAuditSlug(task), // Unique slug for each task
-    title: '[Graph Time] task graph',
-    description: 'An audit to check performance of the Nx task graph',
-  }));
+  return tasks.map((task) => {
+    return {
+      slug: getTaskGraphTimeAuditSlug(task), // Unique slug for each task
+      title: '[Graph Time] task graph',
+      description: 'An audit to check performance of the Nx task graph',
+    };
+  });
 };
 
 export type TaskGraphAuditOptions = {

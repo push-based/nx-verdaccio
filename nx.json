@@ -28,7 +28,7 @@
       "cache": true,
       "inputs": ["default", "^production"]
     },
-    "pb-ve-env-setup": {
+    "nxv-env-setup": {
       "cache": true,
       "inputs": [
         "{projectRoot}/project.json",
@@ -83,9 +83,8 @@
     }
   },
   "plugins": [
-    "./examples/e2e/cli-e2e-original/tooling/original.plugin.ts",
     {
-      "plugin": "./projects/nx-verdaccio/src/plugin/nx-verdaccio.plugin.ts",
+      "plugin": "@push-based/nx-verdaccio",
       "exclude": ["examples/e2e/cli-e2e-original/**"],
       "options": {
         "packages": {
@@ -95,6 +94,9 @@
           "targetNames": ["e2e", "e2e-static"]
         }
       }
+    },
+    {
+      "plugin": "./examples/e2e/cli-e2e-original/tooling/original.plugin.ts"
     },
     {
       "plugin": "@nx/eslint/plugin",

@@ -3,7 +3,6 @@ import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 
 export const DEFAULT_MAX_PROJECT_GRAPH_TIME = 300;
-
 export const PROJECT_GRAPH_PERFORMANCE_AUDIT_SLUG = 'graph-time-project';
 export const PROJECT_GRAPH_PERFORMANCE_AUDIT = {
   slug: PROJECT_GRAPH_PERFORMANCE_AUDIT_SLUG,
@@ -15,7 +14,7 @@ export type ProjectGraphAuditOptions = {
   maxProjectGraphTime?: number;
 };
 
-export async function projectGraphAudit(
+export async function graphProjectTimeAudit(
   options?: ProjectGraphAuditOptions
 ): Promise<AuditOutput> {
   const { maxProjectGraphTime = DEFAULT_MAX_PROJECT_GRAPH_TIME } =

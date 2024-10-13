@@ -4,6 +4,12 @@
   "includedScripts": [],
   "// targets": "to see all targets run: nx show project workspace-source --web",
   "targets": {
+    "show-project": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsx --tsconfig=./tooling/bin/tsconfig.bin.json ./tooling/bin/nx-show-project.ts"
+      }
+    },
     "code-pushup": {
       "executor": "nx:run-commands",
       "options": {

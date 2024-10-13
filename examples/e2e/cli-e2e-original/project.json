@@ -8,6 +8,7 @@
   "targets": {
     "lint": {},
     "original-e2e": {
+      "dependsOn": ["^build"],
       "executor": "@nx/vite:test",
       "inputs": ["default", "^production"],
       "outputs": ["{options.reportsDirectory}"],

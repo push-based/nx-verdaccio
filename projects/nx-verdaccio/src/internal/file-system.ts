@@ -1,4 +1,4 @@
-import { mkdir } from 'node:fs/promises';
+import { mkdir, stat } from 'node:fs/promises';
 
 export async function ensureDirectoryExists(baseDir: string) {
   try {
@@ -9,5 +9,14 @@ export async function ensureDirectoryExists(baseDir: string) {
     if ((error as { code: string }).code !== 'EEXIST') {
       throw error;
     }
+  }
+}
+
+export async function fileExists(path: string): Promise<boolean> {
+  try {
+    const stats = await stat(path);
+    return stats.isFile();
+  } catch {
+    return false;
   }
 }

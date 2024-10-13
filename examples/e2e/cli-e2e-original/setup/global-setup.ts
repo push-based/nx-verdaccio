@@ -36,6 +36,7 @@ export async function setup() {
       targets: 'original-npm-publish',
       exclude: 'tag:type:testing',
       skipNxCache: true,
+      projects: 'tag:type:example',
       verbose: isVerbose,
     }),
     verbose: isVerbose,
@@ -49,7 +50,7 @@ export async function setup() {
       targets: 'original-npm-install',
       exclude: 'tag:type:testing',
       skipNxCache: true,
-      parallel: 1,
+      parallel: 1, // can't run parallel
       verbose: isVerbose,
     }),
     verbose: isVerbose,
@@ -61,7 +62,7 @@ export async function teardown() {
   const { registry, stop } = registryResult;
   // uninstall all projects
   await executeProcess({
-    command: 'nx',
+    command: 'NX_DAEMON=false nx',
     args: objectToCliArgs({
       _: ['run-many'],
       targets: 'original-npm-uninstall',

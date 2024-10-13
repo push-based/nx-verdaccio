@@ -31,7 +31,7 @@ Root/
 
 > [!notice]
 > The bootstrap executor keeps the Verdaccio server running.
-> To stop the server **`nx run <project-name>:pb-ve--verdaccio-stop --environmentRoot path/to/environment`**
+> To stop the server **`nx run <project-name>:nxv--verdaccio-stop --environmentRoot path/to/environment`**
 > To avoid keeping the server running pass **`--no-keepServerRunning`**
 
 ## Usage

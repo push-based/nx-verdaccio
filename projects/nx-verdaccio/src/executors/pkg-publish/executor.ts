@@ -7,6 +7,10 @@ import { objectToCliArgs } from '../../internal/terminal';
 import { getTargetOutputPath } from '../../internal/target';
 import { NPMRC_FILENAME } from './constants';
 import * as process from 'process';
+import { readFile } from '@nx/plugin/testing';
+import { type PackageJson } from 'nx/src/utils/package-json';
+import { writeFile } from 'node:fs/promises';
+import { postfixVersion } from './pkg-version';
 
 export type NpmPublishExecutorOutput = {
   success: boolean;
@@ -22,7 +26,7 @@ export default async function runNpmPublishExecutor(
   context: ExecutorContext
 ) {
   const { projectsConfigurations } = context;
-  const { environmentRoot } = options;
+  const { environmentRoot, verbose } = options;
 
   const { projectName } = context;
   const { targets } = projectsConfigurations.projects[projectName];
@@ -35,6 +39,9 @@ export default async function runNpmPublishExecutor(
   logger.info(
     `Publishing package from ${packageDistPath} to ${environmentRoot} with userconfig ${userconfig}`
   );
+
+  await postfixVersion(packageDistPath);
+
   try {
     // @TODO: try leverage nx-release-publish
     await executeProcess({
@@ -44,7 +51,7 @@ export default async function runNpmPublishExecutor(
         userconfig,
       }),
       cwd: packageDistPath,
-      verbose: true,
+      verbose,
     });
   } catch (error) {
     // if package already exists, log and go on

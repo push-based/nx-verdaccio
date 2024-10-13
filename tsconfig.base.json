@@ -19,6 +19,7 @@
       "@push-based/core": ["examples/projects/core/src/index.ts"],
       "@push-based/models": ["examples/projects/models/src/index.ts"],
       "@push-based/nx-verdaccio": ["projects/nx-verdaccio/src/index.ts"],
+      "@push-based/test-nx-utils": ["testing/test-nx-utils/src/index.ts"],
       "@push-based/test-setup": ["testing/test-setup/src/index.ts"],
       "@push-based/test-utils": ["testing/test-utils/src/index.ts"],
       "@push-based/utils": ["examples/projects/utils/src/index.ts"]

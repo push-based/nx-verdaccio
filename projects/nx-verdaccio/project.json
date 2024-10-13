@@ -3,7 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "projects/nx-verdaccio/src",
   "projectType": "library",
-  "tags": ["scope:shared", "type:feature"],
+  "tags": ["publishable"],
   "implicitDependencies": [],
   "targets": {
     "build": {

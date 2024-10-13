@@ -1,14 +1,14 @@
-export type BuildEnvEnvironmentsOptions = {
+export type NxVerdaccioEnvironmentsOptions = {
   environmentsDir?: string;
   targetNames?: string[];
   filterByTags?: string[];
 };
-export type BuildEnvPackagesOptions = {
+export type NxVerdaccioPackagesOptions = {
   environmentsDir?: string;
   targetNames?: string[];
   filterByTags?: string[];
 };
-export type BuildEnvPluginCreateNodeOptions = {
-  environments?: BuildEnvEnvironmentsOptions;
-  packages?: BuildEnvPackagesOptions;
+export type NxVerdaccioCreateNodeOptions = {
+  environments?: NxVerdaccioEnvironmentsOptions;
+  packages?: NxVerdaccioPackagesOptions;
 };

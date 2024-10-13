@@ -24,8 +24,8 @@ export default async function runNpmInstallExecutor(
   const { name: packageName, version } = readJsonFile<PackageJson>(
     join(packageDistPath, 'package.json')
   );
-  const { pkgVersion = version, environmentRoot } = options;
-  const packageNameAndVersion = `${packageName}@${pkgVersion}`;
+  const { environmentRoot } = options;
+  const packageNameAndVersion = `${packageName}@${version}`;
 
   logger.info(`Installing ${packageNameAndVersion} in ${environmentRoot}`);
 
@@ -35,7 +35,6 @@ export default async function runNpmInstallExecutor(
       _: ['install', `${packageNameAndVersion}`],
       fund: false, // avoid polluted terminal
       shrinkwrap: false, // avoid package-lock creation or update
-      // packageLockOnly: true, // avoid package-lock creation or update
       save: true, // save to package.json dependencies
     }),
     cwd: environmentRoot,

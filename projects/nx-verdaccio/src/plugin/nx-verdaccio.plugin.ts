@@ -9,7 +9,7 @@ import {
 } from '@nx/devkit';
 import { readFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
-import type { BuildEnvPluginCreateNodeOptions } from './schema';
+import type { NxVerdaccioCreateNodeOptions } from './schema';
 import {
   normalizeCreateNodesOptions,
   type NormalizedCreateNodeOptions,
@@ -27,10 +27,10 @@ import { createProjectConfiguration } from './targets/create-targets';
 
 const PROJECT_JSON_FILE_GLOB = '**/project.json';
 
-export const createNodesV2: CreateNodesV2<BuildEnvPluginCreateNodeOptions> = [
+export const createNodesV2: CreateNodesV2<NxVerdaccioCreateNodeOptions> = [
   PROJECT_JSON_FILE_GLOB,
   async (configFiles, options, context) => {
-    const optionsHash = hashObject({ options });
+    const optionsHash = hashObject({ options: options ?? {} });
     const nxVerdaccioEnvPluginCachePath = join(
       workspaceDataDirectory,
       `push-based--${PLUGIN_NAME}-${optionsHash}.hash`
