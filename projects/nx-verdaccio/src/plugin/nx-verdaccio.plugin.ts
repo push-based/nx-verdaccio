@@ -90,6 +90,9 @@ export const createNodesV2: CreateNodesV2<NxVerdaccioCreateNodeOptions> = [
   },
 ];
 
+/**
+ * @deprecated Use `createNodesV2` form instead.
+ */
 export const createNodes: CreateNodes = [
   PROJECT_JSON_FILE_GLOB,
   (
