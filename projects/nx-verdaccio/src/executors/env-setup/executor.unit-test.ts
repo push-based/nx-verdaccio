@@ -6,6 +6,7 @@ import {
   TARGET_ENVIRONMENT_BOOTSTRAP,
   TARGET_ENVIRONMENT_VERDACCIO_STOP,
 } from '../../plugin/targets/environment.targets';
+import { MockAsyncIterableIterator } from '@push-based/test-utils';
 
 vi.mock('@nx/devkit', async () => {
   const actual = await vi.importActual('@nx/devkit');
@@ -15,11 +16,22 @@ vi.mock('@nx/devkit', async () => {
       info: vi.fn(),
       error: vi.fn(),
     },
-    readJsonFile: vi.fn().mockReturnValue({
-      pid: 4873,
-      port: '4873',
-      url: 'http://localhost:4873',
-    }),
+  };
+});
+
+vi.mock('fs/promises', async () => {
+  const actual = await vi.importActual<typeof import('fs/promises')>(
+    'fs/promises'
+  );
+  return {
+    ...actual,
+    readFile: vi.fn().mockResolvedValue(
+      JSON.stringify({
+        pid: 4873,
+        port: '4873',
+        url: 'http://localhost:4873',
+      })
+    ),
   };
 });
 
@@ -34,18 +46,19 @@ describe('runSetupEnvironmentExecutor', () => {
 
   it('should env-setup environment correctly', async () => {
     runExecutorSpy
-      .mockResolvedValueOnce([
-        Promise.resolve({
+      .mockResolvedValueOnce(
+        new MockAsyncIterableIterator<{ success: boolean; command: string }>({
           success: true,
           command: 'Bootstraped environemnt successfully.',
-        }),
-      ])
-      .mockResolvedValueOnce([
-        Promise.resolve({
+        })
+      )
+      .mockResolvedValueOnce(
+        new MockAsyncIterableIterator<{ success: boolean; command: string }>({
           success: true,
           command: 'Kill process successfully',
-        }),
-      ]);
+        })
+      );
+
     const projectName = 'my-lib-e2e';
 
     const context = {
@@ -88,31 +101,30 @@ describe('runSetupEnvironmentExecutor', () => {
     });
 
     expect(runExecutorSpy).toHaveBeenCalledTimes(2);
-    expect(runExecutorSpy)
-      .toHaveBeenCalledWith(
-        {
-          configuration: undefined,
-          project: projectName,
-          target: TARGET_ENVIRONMENT_BOOTSTRAP,
-        },
-        {
-          environmentRoot: 'tmp/environments/my-lib-e2e',
-          keepServerRunning: true,
-        },
-        context
-      )
-      .toHaveBeenCalledWith(
-        {
-          configuration: undefined,
-          project: projectName,
-          target: TARGET_ENVIRONMENT_VERDACCIO_STOP,
-        },
-        {
-          filePath: 'tmp/environments/my-lib-e2e/verdaccio-registry.json',
-          verbose: undefined,
-        },
-        context
-      );
+    expect(runExecutorSpy).toHaveBeenCalledWith(
+      {
+        configuration: undefined,
+        project: projectName,
+        target: TARGET_ENVIRONMENT_BOOTSTRAP,
+      },
+      {
+        environmentRoot: 'tmp/environments/my-lib-e2e',
+        keepServerRunning: true,
+      },
+      context
+    );
+    expect(runExecutorSpy).toHaveBeenCalledWith(
+      {
+        configuration: undefined,
+        project: projectName,
+        target: TARGET_ENVIRONMENT_VERDACCIO_STOP,
+      },
+      {
+        filePath: 'tmp/environments/my-lib-e2e/verdaccio-registry.json',
+        verbose: undefined,
+      },
+      context
+    );
   });
 
   it('should catch error cause by runBootstrapEnvironment', async () => {
@@ -147,18 +159,19 @@ describe('runSetupEnvironmentExecutor', () => {
 
   it('should keep server running if keepServerRunning is passed', async () => {
     runExecutorSpy
-      .mockResolvedValueOnce([
-        Promise.resolve({
+      .mockResolvedValueOnce(
+        new MockAsyncIterableIterator<{ success: boolean; command: string }>({
           success: true,
           command: 'Bootstraped environemnt successfully.',
-        }),
-      ])
-      .mockResolvedValueOnce([
-        Promise.resolve({
+        })
+      )
+      .mockResolvedValueOnce(
+        new MockAsyncIterableIterator<{ success: boolean; command: string }>({
           success: true,
           command: 'Kill process successfully',
-        }),
-      ]);
+        })
+      );
+
     const projectName = 'my-lib-e2e';
 
     const context = {
@@ -213,20 +226,19 @@ describe('runSetupEnvironmentExecutor', () => {
       cwd: '/test',
     });
 
-    expect(runExecutorSpy)
-      .toHaveBeenCalledTimes(1)
-      .toHaveBeenCalledWith(
-        {
-          configuration: undefined,
-          project: 'my-lib-e2e',
-          target: TARGET_ENVIRONMENT_BOOTSTRAP,
-        },
-        expect.objectContaining({
-          environmentRoot: 'tmp/environments/my-lib-e2e',
-          keepServerRunning: true,
-        }),
-        context
-      );
+    expect(runExecutorSpy).toHaveBeenCalledTimes(1);
+    expect(runExecutorSpy).toHaveBeenCalledWith(
+      {
+        configuration: undefined,
+        project: 'my-lib-e2e',
+        target: TARGET_ENVIRONMENT_BOOTSTRAP,
+      },
+      expect.objectContaining({
+        environmentRoot: 'tmp/environments/my-lib-e2e',
+        keepServerRunning: true,
+      }),
+      context
+    );
 
     expect(devkit.logger.info).toHaveBeenCalledTimes(1);
     expect(devkit.logger.info).toHaveBeenCalledWith(

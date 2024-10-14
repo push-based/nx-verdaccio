@@ -29,7 +29,20 @@
       "inputs": ["default", "^production"]
     },
     "nxv-env-setup": {
-      "cache": true
+      "cache": true,
+      "inputs": [
+        "{projectRoot}/project.json",
+        {
+          "runtime": "node --version"
+        },
+        {
+          "runtime": "npm --version"
+        },
+        {
+          "externalDependencies": ["verdaccio"]
+        },
+        "^production"
+      ]
     },
     "nx-release-publish": {},
     "lint": {
@@ -49,9 +62,6 @@
     },
     "build": {
       "inputs": ["production", "^production"]
-    },
-    "setup-env": {
-      "cache": true
     },
     "@nx/js:tsc": {
       "cache": true,
@@ -75,6 +85,7 @@
   "plugins": [
     {
       "plugin": "@push-based/nx-verdaccio",
+      "exclude": ["examples/e2e/cli-e2e-original/**"],
       "options": {
         "packages": {
           "filterByTags": ["publishable"]
@@ -82,8 +93,7 @@
         "environments": {
           "targetNames": ["e2e", "e2e-static"]
         }
-      },
-      "exclude": ["./examples/e2e/cli-e2e-original"]
+      }
     },
     {
       "plugin": "./examples/e2e/cli-e2e-original/tooling/original.plugin.ts"

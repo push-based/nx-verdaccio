@@ -5,8 +5,5 @@ export async function runSingleExecutor(
   options: Record<string, unknown>,
   context: ExecutorContext
 ) {
-  /* eslint-disable @typescript-eslint/no-unused-vars,no-empty */
-  for await (const { success } of await runExecutor(target, options, context)) {
-  }
-  /* eslint-enable @typescript-eslint/no-unused-vars,no-empty */
+  await (await runExecutor(target, options, context)).next();
 }

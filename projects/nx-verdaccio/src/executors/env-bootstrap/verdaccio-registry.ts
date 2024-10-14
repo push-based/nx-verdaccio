@@ -1,11 +1,19 @@
 import { bold } from 'ansis';
-import { logger } from '@nx/devkit';
+import { type ExecutorContext, logger } from '@nx/devkit';
+import { join } from 'node:path';
 import { objectToCliArgs } from '../../internal/terminal';
 import { executeProcess } from '../../internal/execute-process';
 import { uniquePort } from './unique-port';
 import { formatError, formatInfo } from '../../internal/logging';
-import { TARGET_ENVIRONMENT_VERDACCIO_START } from '../../plugin/targets/environment.targets';
-import { DEFAULT_VERDACCIO_STORAGE_DIR } from './constants';
+import {
+  TARGET_ENVIRONMENT_VERDACCIO_START,
+  TARGET_ENVIRONMENT_VERDACCIO_STOP,
+} from '../../plugin/targets/environment.targets';
+import {
+  DEFAULT_VERDACCIO_STORAGE_DIR,
+  VERDACCIO_REGISTRY_JSON,
+} from './constants';
+import { runSingleExecutor } from '../../internal/run-executor';
 
 const VERDACCIO_TOKEN = 'Verdaccio: ';
 
@@ -164,4 +172,27 @@ export async function startVerdaccioServer({
     logger.error(formatError(error, VERDACCIO_TOKEN));
     throw error;
   }
+}
+
+export function stopVerdaccioServer(options: {
+  projectName: string;
+  verbose?: boolean;
+  configuration?: string;
+  environmentRoot: string;
+  context: ExecutorContext;
+}): Promise<void> {
+  const { projectName, verbose, context, configuration, environmentRoot } =
+    options;
+  return runSingleExecutor(
+    {
+      project: projectName,
+      target: TARGET_ENVIRONMENT_VERDACCIO_STOP,
+      configuration,
+    },
+    {
+      ...(verbose ? { verbose } : {}),
+      filePath: join(environmentRoot, VERDACCIO_REGISTRY_JSON),
+    },
+    context
+  );
 }

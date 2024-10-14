@@ -1,5 +1,6 @@
-import { execFileSync, execSync } from 'node:child_process';
+import { exec, execFile } from 'node:child_process';
 import { join } from 'node:path';
+import { promisify } from 'node:util';
 import { ensureDirectoryExists } from '../../internal/file-system';
 import { formatError, formatInfo } from '../../internal/logging';
 import { logger } from '@nx/devkit';
@@ -31,9 +32,10 @@ export async function setupNpmWorkspace(
   }
   const cwd = process.cwd();
   await ensureDirectoryExists(environmentRoot);
-  chdir(join(cwd, environmentRoot));
   try {
-    execFileSync('npm', ['init', '--force']).toString();
+    await promisify(execFile)('npm', ['init', '--force'], {
+      cwd: join(cwd, environmentRoot),
+    });
   } catch (error) {
     logger.error(
       formatError(
@@ -41,8 +43,6 @@ export async function setupNpmWorkspace(
         NPM_ENV_TOKEN
       )
     );
-  } finally {
-    chdir(cwd);
   }
 }
 
@@ -66,7 +66,7 @@ export type ConfigureRegistryOptions = Pick<
   userconfig?: string;
 };
 
-export function configureRegistry(
+export async function configureRegistry(
   { port, host, url, userconfig }: ConfigureRegistryOptions,
   verbose?: boolean
 ) {
@@ -78,7 +78,8 @@ export function configureRegistry(
       formatInfo(`Set registry:\n${setRegistry}`, VERDACCIO_ENV_TOKEN)
     );
   }
-  execSync(setRegistry);
+
+  await promisify(exec)(setRegistry);
 
   /**
    * Protocol-Agnostic Configuration: The use of // allows NPM to configure authentication for a registry without tying it to a specific protocol (http: or https:).
@@ -96,7 +97,7 @@ export function configureRegistry(
       formatInfo(`Set authToken:\n${setAuthToken}`, VERDACCIO_ENV_TOKEN)
     );
   }
-  execSync(setAuthToken);
+  await promisify(exec)(setAuthToken);
 }
 
 export type UnconfigureRegistryOptions = Pick<
@@ -113,7 +114,7 @@ export type UnconfigureRegistryOptions = Pick<
  * - `npm config delete registry`
  * @see {@link VerdaccioProcessResult}
  **/
-export function unconfigureRegistry(
+export async function unconfigureRegistry(
   { port, host, userconfig }: UnconfigureRegistryOptions,
   verbose?: boolean
 ) {
@@ -132,7 +133,7 @@ export function unconfigureRegistry(
       formatInfo(`Delete authToken:\n${setAuthToken}`, VERDACCIO_ENV_TOKEN)
     );
   }
-  execSync(setAuthToken);
+  await promisify(exec)(setAuthToken);
 
   const setRegistry = `npm config delete registry ${objectToCliArgs({
     userconfig,
@@ -142,5 +143,5 @@ export function unconfigureRegistry(
       formatInfo(`Delete registry:\n${setRegistry}`, VERDACCIO_ENV_TOKEN)
     );
   }
-  execSync(setRegistry);
+  await promisify(exec)(setRegistry);
 }
