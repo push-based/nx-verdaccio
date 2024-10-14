@@ -37,9 +37,8 @@ Read more under [setup executor docs](./projects/nx-verdaccio/src/executors/setu
 
 This executor helps to initiate [environment](../../../../../README.md#-environment-folders-to-isolate-files-during-e2e-tests) into a given folder.
 
-// project.json
-
 ```jsonc
+// project.json
 {
   "name": "my-project",
   "targets": {
