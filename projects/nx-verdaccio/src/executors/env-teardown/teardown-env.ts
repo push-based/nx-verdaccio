@@ -1,14 +1,14 @@
-import { Environment } from '../env-bootstrap/npm';
+import { type Environment } from '../env-bootstrap/npm';
 import { simpleGit, type SimpleGit } from 'simple-git';
 import { isFolderInGit } from './git';
-import { ExecutorContext, logger } from '@nx/devkit';
+import { type ExecutorContext, logger } from '@nx/devkit';
 import { join } from 'node:path';
 import { VERDACCIO_REGISTRY_JSON } from '../env-bootstrap/constants';
 import { fileExists } from '../../internal/file-system';
 import { rm } from 'node:fs/promises';
 import runKillProcessExecutor from '../kill-process/executor';
 import { DEFAULT_ENVIRONMENTS_OUTPUT_DIR } from '../../plugin/constants';
-import { ExpandedPluginConfiguration } from 'nx/src/config/nx-json';
+import { type ExpandedPluginConfiguration } from 'nx/src/config/nx-json';
 import type { NxVerdaccioCreateNodeOptions } from '../../plugin/schema';
 
 export const gitClient: SimpleGit = simpleGit(process.cwd());
