@@ -60,9 +60,9 @@ Read more under [bootstrap executor docs](./projects/nx-verdaccio/src/executors/
 
 This executor helps to kill processes by `ProcessID` or a JSON file containing a property `pid` as number.
 
-// project.json
 
 ```jsonc
+// project.json
 {
   "name": "my-project",
   "targets": {
