@@ -1,3 +1,15 @@
+## 0.0.0-alpha.9 (2024-10-14)
+
+
+### 🩹 Fixes
+
+- deps ([ceeb41b](https://github.com/push-based/nx-verdaccio/commit/ceeb41b))
+- deps ([4f5303e](https://github.com/push-based/nx-verdaccio/commit/4f5303e))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
 ## 0.0.0-alpha.8 (2024-10-14)
 
 
