@@ -4,14 +4,14 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "verdaccio": "^5.1.0",
-    "simple-git": "^3.27.0",
-    "@nx/devkit": "^19.6.4",
+    "@nx/devkit": "19.8.0",
     "ansis": "^3.3.2",
-    "tslib": "^2.3.0",
+    "simple-git": "^3.27.0",
     "nx": "19.8.0",
-    "memfs": "^4.11.1",
-    "@nx/plugin": "19.8.0"
+    "@nx/plugin": "19.8.0",
+    "tslib": "^2.3.0",
+    "@code-pushup/models": "^0.50.0",
+    "verdaccio": "*"
   },
   "type": "commonjs",
   "main": "./src/index.js",

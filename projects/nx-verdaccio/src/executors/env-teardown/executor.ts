@@ -3,7 +3,7 @@ import type { TeardownExecutorOptions } from './schema';
 import { teardownEnvironment } from './teardown-env';
 import { PACKAGE_NAME } from '../../plugin/constants';
 import { EXECUTOR_ENVIRONMENT_TEARDOWN } from './constants';
-import { ExecutorOutput } from '../internal/executor-output';
+import { type ExecutorOutput } from '../internal/executor-output';
 
 export async function teardownExecutor(
   options: TeardownExecutorOptions,
