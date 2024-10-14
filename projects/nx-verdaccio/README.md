@@ -14,9 +14,8 @@ See [nx-verdaccio plugin docs](./src/plugin/README.md) for details
 
 This executor helps to initiate an [environment folder](../../../../../README.md#-environment-folders-to-isolate-files-during-e2e-tests) and installs it`s dependent projects.
 
-// project.json
-
 ```jsonc
+// project.json
 {
   "name": "my-project",
   "targets": {
