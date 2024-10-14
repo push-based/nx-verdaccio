@@ -10,7 +10,6 @@ import {
   VERDACCIO_ENV_TOKEN,
 } from './npm';
 import { exec } from 'node:child_process';
-// import { promisify } from 'node:util';
 import { logger } from '@nx/devkit';
 import { formatInfo } from '../../internal/logging';
 
