@@ -1,3 +1,14 @@
+## 0.0.0-alpha.11 (2024-10-14)
+
+
+### 🩹 Fixes
+
+- readme 2 ([2540ebd](https://github.com/push-based/nx-verdaccio/commit/2540ebd))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
 ## 0.0.0-alpha.10 (2024-10-14)
 
 
