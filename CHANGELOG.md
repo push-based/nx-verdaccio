@@ -1,3 +1,22 @@
+## 0.0.0-alpha.8 (2024-10-14)
+
+
+### 🚀 Features
+
+- **nx-verdaccio:** update plugin to enable env-setup caching ([f129325](https://github.com/push-based/nx-verdaccio/commit/f129325))
+- **nx-verdaccio:** stop verdaccio in case of executors error ([98cba24](https://github.com/push-based/nx-verdaccio/commit/98cba24))
+- **nx-verdaccio:** refactor registry configuration to use async exec ([a3f4694](https://github.com/push-based/nx-verdaccio/commit/a3f4694))
+
+### 🩹 Fixes
+
+- tweak CPU Nx audits ([b461f89](https://github.com/push-based/nx-verdaccio/commit/b461f89))
+- set default values for cacheSizeTasks and options in plugin ([b782914](https://github.com/push-based/nx-verdaccio/commit/b782914))
+- mock exec implementation to handle callbacks in unit tests ([88ebbd4](https://github.com/push-based/nx-verdaccio/commit/88ebbd4))
+
+### ❤️  Thank You
+
+- getlarge
+
 ## 0.0.0-alpha.7 (2024-10-13)
 
 
