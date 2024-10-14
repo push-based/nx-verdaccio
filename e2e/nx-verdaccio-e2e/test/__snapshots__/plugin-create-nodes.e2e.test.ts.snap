@@ -47,17 +47,32 @@ exports[`nx-verdaccio plugin create-nodes-v2 > should add environment targets to
     "parallelism": true,
   },
   "nxv-env-setup": {
-    "cache": false,
+    "cache": true,
     "configurations": {},
     "executor": "@push-based/nx-verdaccio:env-setup",
+    "inputs": [
+      "{projectRoot}/project.json",
+      {
+        "runtime": "node --version",
+      },
+      {
+        "runtime": "npm --version",
+      },
+      {
+        "externalDependencies": [
+          "verdaccio",
+        ],
+      },
+      "^production",
+    ],
     "options": {
       "environmentRoot": "tmp/environments/lib-a-e2e",
     },
     "outputs": [
-      "{options.environmentRoot}/node_modules",
-      "{options.environmentRoot}/package.json",
       "{options.environmentRoot}/.npmrc",
+      "{options.environmentRoot}/package.json",
       "{options.environmentRoot}/package-lock.json",
+      "{options.environmentRoot}/node_modules",
     ],
     "parallelism": true,
   },
@@ -78,6 +93,9 @@ exports[`nx-verdaccio plugin create-nodes-v2 > should add environment targets to
       "projectName": "lib-a-e2e",
       "storage": "tmp/environments/lib-a-e2e/storage",
     },
+    "outputs": [
+      "{options.environmentRoot}/storage",
+    ],
     "parallelism": true,
   },
   "nxv-verdaccio-stop": {

@@ -18,6 +18,7 @@ import {
   TARGET_ENVIRONMENT_VERDACCIO_STOP,
 } from '@push-based/nx-verdaccio';
 import { teardownTestFolder } from '@push-based/test-utils';
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import {
   TARGET_ENVIRONMENT_E2E,
   TARGET_ENVIRONMENT_TEARDOWN,
@@ -214,16 +215,29 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
           options: { environmentRoot: 'tmp/environments/lib-a-e2e' },
         }),
         [TARGET_ENVIRONMENT_SETUP]: expect.objectContaining({
-          cache: false,
+          cache: true,
           executor: '@push-based/nx-verdaccio:env-setup',
           options: {
             environmentRoot: 'tmp/environments/lib-a-e2e',
           },
+          inputs: [
+            '{projectRoot}/project.json',
+            {
+              runtime: 'node --version',
+            },
+            {
+              runtime: 'npm --version',
+            },
+            {
+              externalDependencies: ['verdaccio'],
+            },
+            '^production',
+          ],
           outputs: [
-            '{options.environmentRoot}/node_modules',
-            '{options.environmentRoot}/package.json',
             '{options.environmentRoot}/.npmrc',
+            '{options.environmentRoot}/package.json',
             '{options.environmentRoot}/package-lock.json',
+            '{options.environmentRoot}/node_modules',
           ],
         }),
         [TARGET_ENVIRONMENT_VERDACCIO_START]: expect.objectContaining({
@@ -256,9 +270,9 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
     expect({
       ...projectJson.targets,
       [TARGET_ENVIRONMENT_VERDACCIO_START]: {
-        ...projectJson.targets[TARGET_ENVIRONMENT_VERDACCIO_START],
+        ...projectJson.targets?.[TARGET_ENVIRONMENT_VERDACCIO_START],
         options: {
-          ...projectJson.targets[TARGET_ENVIRONMENT_VERDACCIO_START].options,
+          ...projectJson.targets?.[TARGET_ENVIRONMENT_VERDACCIO_START].options,
           port: expect.any(Number),
         },
       },
