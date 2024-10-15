@@ -72,7 +72,7 @@ export function executeProcess(cfg: ProcessConfig): Promise<ProcessResult> {
   const start = performance.now();
 
   return new Promise((resolve, reject) => {
-    // shell:true tells Windows to use shell command for spawning a child process
+    // shell:true tells Windows to use shell command for spawning a child process.
     const spawnedProcess = spawn(command, args ?? [], {
       shell: true,
       ...options,
