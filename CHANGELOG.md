@@ -1,3 +1,14 @@
+## 0.0.0-alpha.16 (2024-10-15)
+
+
+### 🩹 Fixes
+
+- mark package ([8a0630b](https://github.com/push-based/nx-verdaccio/commit/8a0630b))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
 ## 0.0.0-alpha.15 (2024-10-15)
 
 
