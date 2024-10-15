@@ -1,3 +1,14 @@
+## 0.0.0-alpha.21 (2024-10-15)
+
+
+### 🩹 Fixes
+
+- remove detached ([558a25e](https://github.com/push-based/nx-verdaccio/commit/558a25e))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
 ## 0.0.0-alpha.20 (2024-10-15)
 
 
