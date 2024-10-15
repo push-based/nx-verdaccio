@@ -1,3 +1,14 @@
+## 0.0.0-alpha.15 (2024-10-15)
+
+
+### 🩹 Fixes
+
+- nx17 fix ([ebbfe6b](https://github.com/push-based/nx-verdaccio/commit/ebbfe6b))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
 ## 0.0.0-alpha.14 (2024-10-15)
 
 
