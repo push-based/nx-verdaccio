@@ -20,7 +20,7 @@ describe('runNpmPublishExecutor', () => {
     .spyOn(execProcessModule, 'executeProcess')
     .mockImplementation(vi.fn());
   const pkgVersionModuleSpy = vi
-    .spyOn(pkgVersionModule, 'postfixVersion')
+    .spyOn(pkgVersionModule, 'markPackageJson')
     .mockResolvedValue(undefined);
 
   beforeEach(() => {

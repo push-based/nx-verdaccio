@@ -1,16 +1,13 @@
-import { type ExecutorContext, logger } from '@nx/devkit';
+import {type ExecutorContext, logger} from '@nx/devkit';
 
-import type { NpmPublishExecutorOptions } from './schema';
-import { join, relative } from 'node:path';
-import { executeProcess } from '../../internal/execute-process';
-import { objectToCliArgs } from '../../internal/terminal';
-import { getTargetOutputPath } from '../../internal/target';
-import { NPMRC_FILENAME } from './constants';
+import type {NpmPublishExecutorOptions} from './schema';
+import {join, relative} from 'node:path';
+import {executeProcess} from '../../internal/execute-process';
+import {objectToCliArgs} from '../../internal/terminal';
+import {getTargetOutputPath} from '../../internal/target';
+import {NPMRC_FILENAME} from './constants';
 import * as process from 'process';
-import { readFile } from '@nx/plugin/testing';
-import { type PackageJson } from 'nx/src/utils/package-json';
-import { writeFile } from 'node:fs/promises';
-import { postfixVersion } from './pkg-version';
+import {markPackageJson} from './pkg-version';
 
 export type NpmPublishExecutorOutput = {
   success: boolean;
@@ -40,7 +37,7 @@ export default async function runNpmPublishExecutor(
     `Publishing package from ${packageDistPath} to ${environmentRoot} with userconfig ${userconfig}`
   );
 
-  await postfixVersion(packageDistPath);
+  await markPackageJson(packageDistPath);
 
   try {
     // @TODO: try leverage nx-release-publish
