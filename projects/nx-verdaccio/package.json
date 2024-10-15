@@ -1,6 +1,6 @@
 {
   "name": "@push-based/nx-verdaccio",
-  "version": "0.0.0-alpha.13",
+  "version": "0.0.0-alpha.12",
   "description": "Nx plugin for blazing fast Verdaccio setup and testing",
   "license": "MIT",
   "private": false,
