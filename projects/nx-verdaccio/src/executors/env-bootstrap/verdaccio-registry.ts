@@ -105,8 +105,6 @@ export async function startVerdaccioServer({
           storage,
           ...opt,
         }),
-        // This ensures the process runs independently and does not get closed on parent process exit
-        detached: true,
         shell: true,
         observer: {
           onStdout: (stdout: string, childProcess) => {
