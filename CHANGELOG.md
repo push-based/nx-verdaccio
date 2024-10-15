@@ -1,3 +1,15 @@
+## 0.0.0-alpha.13 (2024-10-15)
+
+
+### 🩹 Fixes
+
+- add command to make it work in older nx versions ([8cca3b7](https://github.com/push-based/nx-verdaccio/commit/8cca3b7))
+- add description ([9af5dd2](https://github.com/push-based/nx-verdaccio/commit/9af5dd2))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
 ## 0.0.0-alpha.12 (2024-10-14)
 
 
