@@ -1,3 +1,14 @@
+## 0.0.0-alpha.17 (2024-10-15)
+
+
+### 🩹 Fixes
+
+- forward params of nxv-e2e target ([8348d94](https://github.com/push-based/nx-verdaccio/commit/8348d94))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
 ## 0.0.0-alpha.16 (2024-10-15)
 
 
