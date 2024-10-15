@@ -125,7 +125,7 @@ export function getEnvTargets(
         },
       ],
       options: { environmentRoot },
-      // this is here to make it appear in the graph in older nx versions (otherwise it is filtered out)
+      // This is here to make it appear in the graph in older nx versions (otherwise it is filtered out)
       command: `echo "dependencies installed for ${environmentRoot}"`
     },
     // runs env-bootstrap-env, install-env and stop-verdaccio
