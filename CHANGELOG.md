@@ -1,3 +1,15 @@
+## 0.0.0-alpha.14 (2024-10-15)
+
+
+### 🩹 Fixes
+
+- version ([55a8bb1](https://github.com/push-based/nx-verdaccio/commit/55a8bb1))
+- version 1 ([9cfa53e](https://github.com/push-based/nx-verdaccio/commit/9cfa53e))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
 ## 0.0.0-alpha.13 (2024-10-15)
 
 
