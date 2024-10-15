@@ -163,7 +163,10 @@ export function getEnvTargets(
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_TEARDOWN}`,
     },
     [TARGET_ENVIRONMENT_E2E]: {
-      dependsOn: targetNames,
+      dependsOn: targetNames.map((targetName) => ({
+        target: targetName,
+        params: 'forward'
+      })),
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_TEARDOWN}`,
     },
   };
