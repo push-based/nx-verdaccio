@@ -1,3 +1,14 @@
+## 0.0.0-alpha.19 (2024-10-15)
+
+
+### 🩹 Fixes
+
+- deps ([daec92d](https://github.com/push-based/nx-verdaccio/commit/daec92d))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
 ## 0.0.0-alpha.18 (2024-10-15)
 
 
