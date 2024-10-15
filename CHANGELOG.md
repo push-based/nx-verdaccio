@@ -1,3 +1,14 @@
+## 0.0.0-alpha.18 (2024-10-15)
+
+
+### 🩹 Fixes
+
+- use info to log ([fce0cab](https://github.com/push-based/nx-verdaccio/commit/fce0cab))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
 ## 0.0.0-alpha.17 (2024-10-15)
 
 
