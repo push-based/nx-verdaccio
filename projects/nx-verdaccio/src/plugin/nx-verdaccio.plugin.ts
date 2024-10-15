@@ -102,7 +102,7 @@ export const createNodes: CreateNodes = [
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     context: CreateNodesContext
   ) => {
-    logger.warn(
+    logger.info(
       '`createNodes` is deprecated. Update Nx utilize createNodesV2 instead.'
     );
     const projectRoot = dirname(projectConfigurationFile);
