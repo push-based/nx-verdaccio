@@ -123,5 +123,6 @@
         "createRelease": "github"
       }
     }
-  }
+  },
+  "useLegacyCache": true
 }

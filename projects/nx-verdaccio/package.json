@@ -5,10 +5,10 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "@nx/devkit": "19.8.0",
+    "@nx/devkit": "^20.0.0",
     "ansis": "^3.3.2",
     "simple-git": "^3.27.0",
-    "nx": "19.8.0",
+    "nx": "^20.0.0",
     "tslib": "^2.3.0",
     "verdaccio": "*"
   },

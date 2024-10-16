@@ -5,7 +5,6 @@ import type {
 } from '@nx/devkit';
 import { vol } from 'memfs';
 import { MEMFS_VOLUME } from '@push-based/test-utils';
-import { workspaceRoot } from '@nx/devkit';
 
 /**
  * Unit Testing helper for the createNodes function of a Nx plugin.

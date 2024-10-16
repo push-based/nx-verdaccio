@@ -19,6 +19,19 @@ describe('executorContext', () => {
         version: 1,
       },
       root: '.',
+      projectGraph: {
+        nodes: {
+          'my-lib': {
+            type: 'lib',
+            name: 'my-lib',
+            data: { root: 'libs/my-lib' },
+          },
+        },
+        dependencies: {},
+        externalNodes: {},
+        version: '',
+      },
+      nxJsonConfiguration: {},
     });
   });
 
@@ -39,6 +52,19 @@ describe('executorContext', () => {
         version: 1,
       },
       root: '.',
+      projectGraph: {
+        nodes: {
+          'other-lib': {
+            type: 'lib',
+            name: 'other-lib',
+            data: { root: 'libs/other-lib' },
+          },
+        },
+        dependencies: {},
+        externalNodes: {},
+        version: '',
+      },
+      nxJsonConfiguration: {},
     });
   });
 });
