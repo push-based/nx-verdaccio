@@ -105,7 +105,7 @@ export async function taskTimeData<T extends TaskTimeAuditOption>(
         };
       });
 
-    const { project, target } = task.split(':');
+    const [project, target] = task.split(':');
     results.push({
       data: {
         title: `Task time for ${task}`,

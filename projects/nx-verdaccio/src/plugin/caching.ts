@@ -1,6 +1,6 @@
 import { hashObject } from 'nx/src/hasher/file-hasher';
 import {
-  type CreateNodesResult,
+  type ProjectConfiguration,
   readJsonFile,
   writeJsonFile,
 } from '@nx/devkit';
@@ -36,7 +36,7 @@ export function setCacheRecord<T>(
 
 export function readTargetsCache(
   cachePath: string
-): Record<string, CreateNodesResult['projects']> {
+): Record<string, Partial<ProjectConfiguration>> {
   return process.env.NX_CACHE_PROJECT_GRAPH !== 'false' && existsSync(cachePath)
     ? readJsonFile(cachePath)
     : {};
@@ -44,7 +44,7 @@ export function readTargetsCache(
 
 export function writeTargetsToCache(
   cachePath: string,
-  results: Record<string, CreateNodesResult['projects']>
+  results: Record<string, Partial<ProjectConfiguration>>
 ) {
   writeJsonFile(cachePath, results);
 }

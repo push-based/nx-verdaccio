@@ -1,3 +1,190 @@
+## 0.0.0-alpha.21 (2024-10-15)
+
+
+### 🩹 Fixes
+
+- remove detached ([558a25e](https://github.com/push-based/nx-verdaccio/commit/558a25e))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
+## 0.0.0-alpha.20 (2024-10-15)
+
+
+### 🩹 Fixes
+
+- docs ([4921af8](https://github.com/push-based/nx-verdaccio/commit/4921af8))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
+## 0.0.0-alpha.19 (2024-10-15)
+
+
+### 🩹 Fixes
+
+- deps ([daec92d](https://github.com/push-based/nx-verdaccio/commit/daec92d))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
+## 0.0.0-alpha.18 (2024-10-15)
+
+
+### 🩹 Fixes
+
+- use info to log ([fce0cab](https://github.com/push-based/nx-verdaccio/commit/fce0cab))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
+## 0.0.0-alpha.17 (2024-10-15)
+
+
+### 🩹 Fixes
+
+- forward params of nxv-e2e target ([8348d94](https://github.com/push-based/nx-verdaccio/commit/8348d94))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
+## 0.0.0-alpha.16 (2024-10-15)
+
+
+### 🩹 Fixes
+
+- mark package ([8a0630b](https://github.com/push-based/nx-verdaccio/commit/8a0630b))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
+## 0.0.0-alpha.15 (2024-10-15)
+
+
+### 🩹 Fixes
+
+- nx17 fix ([ebbfe6b](https://github.com/push-based/nx-verdaccio/commit/ebbfe6b))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
+## 0.0.0-alpha.14 (2024-10-15)
+
+
+### 🩹 Fixes
+
+- version ([55a8bb1](https://github.com/push-based/nx-verdaccio/commit/55a8bb1))
+- version 1 ([9cfa53e](https://github.com/push-based/nx-verdaccio/commit/9cfa53e))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
+## 0.0.0-alpha.13 (2024-10-15)
+
+
+### 🩹 Fixes
+
+- add command to make it work in older nx versions ([8cca3b7](https://github.com/push-based/nx-verdaccio/commit/8cca3b7))
+- add description ([9af5dd2](https://github.com/push-based/nx-verdaccio/commit/9af5dd2))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
+## 0.0.0-alpha.12 (2024-10-14)
+
+
+### 🩹 Fixes
+
+- readme 3 ([7b2422b](https://github.com/push-based/nx-verdaccio/commit/7b2422b))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
+## 0.0.0-alpha.11 (2024-10-14)
+
+
+### 🩹 Fixes
+
+- readme 2 ([2540ebd](https://github.com/push-based/nx-verdaccio/commit/2540ebd))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
+## 0.0.0-alpha.10 (2024-10-14)
+
+
+### 🩹 Fixes
+
+- readme ([26f1b13](https://github.com/push-based/nx-verdaccio/commit/26f1b13))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
+## 0.0.0-alpha.9 (2024-10-14)
+
+
+### 🩹 Fixes
+
+- deps ([ceeb41b](https://github.com/push-based/nx-verdaccio/commit/ceeb41b))
+- deps ([4f5303e](https://github.com/push-based/nx-verdaccio/commit/4f5303e))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
+## 0.0.0-alpha.8 (2024-10-14)
+
+
+### 🚀 Features
+
+- **nx-verdaccio:** update plugin to enable env-setup caching ([f129325](https://github.com/push-based/nx-verdaccio/commit/f129325))
+- **nx-verdaccio:** stop verdaccio in case of executors error ([98cba24](https://github.com/push-based/nx-verdaccio/commit/98cba24))
+- **nx-verdaccio:** refactor registry configuration to use async exec ([a3f4694](https://github.com/push-based/nx-verdaccio/commit/a3f4694))
+
+### 🩹 Fixes
+
+- tweak CPU Nx audits ([b461f89](https://github.com/push-based/nx-verdaccio/commit/b461f89))
+- set default values for cacheSizeTasks and options in plugin ([b782914](https://github.com/push-based/nx-verdaccio/commit/b782914))
+- mock exec implementation to handle callbacks in unit tests ([88ebbd4](https://github.com/push-based/nx-verdaccio/commit/88ebbd4))
+
+### ❤️  Thank You
+
+- getlarge
+
+## 0.0.0-alpha.7 (2024-10-13)
+
+
+### 🚀 Features
+
+- modify package json before publishing ([3faf91c](https://github.com/push-based/nx-verdaccio/commit/3faf91c))
+- add env-teardown executor ([33b1d3b](https://github.com/push-based/nx-verdaccio/commit/33b1d3b))
+- improve teardown logic ([cba2e67](https://github.com/push-based/nx-verdaccio/commit/cba2e67))
+
+### 🩹 Fixes
+
+- adjust target names in code pushup config ([26fd287](https://github.com/push-based/nx-verdaccio/commit/26fd287))
+- remove port from snapshot ([c8ef956](https://github.com/push-based/nx-verdaccio/commit/c8ef956))
+- adjust packages.filterByTag ([2c7b139](https://github.com/push-based/nx-verdaccio/commit/2c7b139))
+- refactor testing API usage ([f3e4c29](https://github.com/push-based/nx-verdaccio/commit/f3e4c29))
+- refactor testing ([7425758](https://github.com/push-based/nx-verdaccio/commit/7425758))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+- Michael Hladky @BioPhoton
+
 ## 0.0.0-alpha.6 (2024-09-29)
 
 

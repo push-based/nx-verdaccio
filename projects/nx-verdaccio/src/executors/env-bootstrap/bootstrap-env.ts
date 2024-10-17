@@ -1,5 +1,6 @@
 import { join } from 'node:path';
 import {
+  type RegistryResult,
   startVerdaccioServer,
   type StartVerdaccioOptions,
   type VercaddioServerResult,
@@ -28,7 +29,7 @@ export async function bootstrapEnvironment(
   const { verbose, environmentRoot, storage, ...rest } = options;
   const parsedStorage = storage ?? join(environmentRoot, 'storage');
 
-  let registryResult;
+  let registryResult: RegistryResult;
   try {
     registryResult = await startVerdaccioServer({
       storage: parsedStorage,
@@ -51,7 +52,7 @@ export async function bootstrapEnvironment(
     const { url, port, host } = registry;
     await setupNpmWorkspace(environmentRoot, verbose);
     const userconfig = join(environmentRoot, '.npmrc');
-    configureRegistry({ url, port, host, userconfig }, verbose);
+    await configureRegistry({ url, port, host, userconfig }, verbose);
   } catch (error) {
     logger.error(
       formatError(
@@ -59,6 +60,7 @@ export async function bootstrapEnvironment(
         VERDACCIO_ENV_TOKEN
       )
     );
+    process.kill(Number(registry.pid));
     throw error;
   }
 
@@ -86,6 +88,7 @@ export async function bootstrapEnvironment(
         VERDACCIO_ENV_TOKEN
       )
     );
+    process.kill(Number(registry.pid));
     throw new Error(`Error saving verdaccio registry data. ${error.message}`);
   }
 }

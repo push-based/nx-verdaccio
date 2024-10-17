@@ -4,7 +4,7 @@
 
 Prerequisites:
 
-- Node.js installed (LTS version)
+- Node.js installed (LTS version).
 
 Make sure to install dependencies from the `package-jock.json`:
 

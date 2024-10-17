@@ -10,11 +10,12 @@
       "default",
       "!{projectRoot}/.eslintrc.json",
       "!{projectRoot}/eslint.config.js",
-      "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
+      "!{projectRoot}/**/?(*.)+(unit-test|spec|test).[jt]s?(x)?(.snap)",
       "!{projectRoot}/tsconfig.spec.json",
       "!{projectRoot}/jest.config.[jt]s",
       "!{projectRoot}/src/test-setup.[jt]s",
-      "!{projectRoot}/test-setup.[jt]s"
+      "!{projectRoot}/test-setup.[jt]s",
+      "!{projectRoot}/vite.config.[jt]s"
     ],
     "sharedGlobals": []
   },
@@ -29,7 +30,20 @@
       "inputs": ["default", "^production"]
     },
     "nxv-env-setup": {
-      "cache": true
+      "cache": true,
+      "inputs": [
+        "{projectRoot}/project.json",
+        {
+          "runtime": "node --version"
+        },
+        {
+          "runtime": "npm --version"
+        },
+        {
+          "externalDependencies": ["verdaccio"]
+        },
+        "^production"
+      ]
     },
     "nx-release-publish": {},
     "lint": {
@@ -72,6 +86,7 @@
   "plugins": [
     {
       "plugin": "@push-based/nx-verdaccio",
+      "exclude": ["examples/e2e/cli-e2e-original/**"],
       "options": {
         "packages": {
           "filterByTags": ["publishable"]
@@ -79,8 +94,7 @@
         "environments": {
           "targetNames": ["e2e", "e2e-static"]
         }
-      },
-      "exclude": ["./examples/e2e/cli-e2e-original"]
+      }
     },
     {
       "plugin": "./examples/e2e/cli-e2e-original/tooling/original.plugin.ts"

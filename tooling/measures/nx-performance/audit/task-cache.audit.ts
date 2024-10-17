@@ -41,7 +41,7 @@ export async function cacheSizeAudits(
   options?: CacheSizeAuditOptions
 ): Promise<AuditOutput[]> {
   const {
-    cacheSizeTasks,
+    cacheSizeTasks = [],
     maxCacheSize = DEFAULT_MAX_PROJECT_TARGET_CACHE_SIZE,
   } = options ?? {};
 

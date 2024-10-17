@@ -23,6 +23,8 @@ export const TARGET_ENVIRONMENT_E2E = 'nxv-e2e';
 export const TARGET_ENVIRONMENT_VERDACCIO_START = 'nxv-verdaccio-start';
 export const TARGET_ENVIRONMENT_VERDACCIO_STOP = 'nxv-verdaccio-stop';
 
+const VERDACCIO_STORAGE_DIR = 'storage';
+
 export function isEnvProject(
   projectConfig: ProjectConfiguration,
   options: NormalizedCreateNodeOptions['environments']
@@ -65,16 +67,18 @@ export function verdaccioTargets(
   const { name: envProject } = projectConfig;
   const { environmentsDir, ...verdaccioOptions } = options;
   const environmentDir = join(environmentsDir, envProject);
-
   return {
     [TARGET_ENVIRONMENT_VERDACCIO_START]: {
       // @TODO: consider using the executor function directly to reduce the number of targets
       // https://github.com/nrwl/nx/blob/b73f1e0e0002c55fc0bacaa1557140adb9eec8de/packages/js/src/executors/verdaccio/verdaccio.impl.ts#L22
+      outputs: [
+        `{options.environmentRoot}/${VERDACCIO_STORAGE_DIR}`,
+      ],
       executor: '@nx/js:verdaccio',
       options: {
         config: '.verdaccio/config.yml',
         port: uniquePort(),
-        storage: join(environmentDir, 'storage'),
+        storage: join(environmentDir, VERDACCIO_STORAGE_DIR),
         clear: true,
         environmentDir,
         projectName: envProject,
@@ -91,11 +95,21 @@ export function verdaccioTargets(
   };
 }
 
+/**
+ * Create new targets wrapping env-bootstrap, env-setup executors
+ * install-env (intermediate target to run dependency targets)
+ *
+ * @param projectConfig
+ * @param options
+ * @returns
+ */
 export function getEnvTargets(
   projectConfig: ProjectConfiguration,
   options: NormalizedCreateNodeOptions['environments']
 ): Record<string, TargetConfiguration> {
-  const { targetNames } = options;
+  const { name: envProject } = projectConfig;
+  const { environmentsDir, targetNames } = options;
+  const environmentRoot = join(environmentsDir, envProject);
   return {
     [TARGET_ENVIRONMENT_BOOTSTRAP]: {
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_BOOTSTRAP}`,
@@ -109,6 +123,8 @@ export function getEnvTargets(
           params: 'forward',
         },
       ],
+      // This is here to make it appear in the graph in older nx versions (otherwise it is filtered out)
+      command: `echo "dependencies installed for ${environmentRoot}"`
     },
     // runs install-env and stop-verdaccio
     [TARGET_ENVIRONMENT_SETUP]: {
@@ -118,18 +134,52 @@ export function getEnvTargets(
           params: 'forward',
         },
       ],
+      // list of inputs that all subsequent tasks depend on
+      inputs: [
+        '{projectRoot}/project.json',
+        {
+          runtime: 'node --version',
+        },
+        {
+          runtime: 'npm --version',
+        },
+        {
+          externalDependencies: ['verdaccio'],
+        },
+        // depends on underlying project being e2e tested and its own dependencies
+        // ! it's important that implicitDependencies are correctly configured between this project and the project being tested
+        // '^build-artifacts',
+        '^production',
+      ],
+      outputs: [
+        '{options.environmentRoot}/.npmrc',
+        '{options.environmentRoot}/package.json',
+        '{options.environmentRoot}/package-lock.json',
+        '{options.environmentRoot}/node_modules',
+      ],
+      cache: true,
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_SETUP}`,
     },
     [TARGET_ENVIRONMENT_TEARDOWN]: {
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_TEARDOWN}`,
     },
     [TARGET_ENVIRONMENT_E2E]: {
-      dependsOn: [...targetNames],
+      dependsOn: targetNames.map((targetName) => ({
+        target: targetName,
+        params: 'forward'
+      })),
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_TEARDOWN}`,
     },
   };
 }
 
+/**
+ * adjust targets to run env-setup-env
+ * this will add the dependsOn property to the targets that are in the targetNames array (usually e2e)
+ * @param projectConfig
+ * @param options
+ * @returns
+ */
 export function updateEnvTargetNames(
   projectConfig: ProjectConfiguration,
   options: Required<Pick<NxVerdaccioEnvironmentsOptions, 'targetNames'>>

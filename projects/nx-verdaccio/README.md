@@ -14,9 +14,8 @@ See [nx-verdaccio plugin docs](./src/plugin/README.md) for details
 
 This executor helps to initiate an [environment folder](../../../../../README.md#-environment-folders-to-isolate-files-during-e2e-tests) and installs it`s dependent projects.
 
-// project.json
-
 ```jsonc
+// project.json
 {
   "name": "my-project",
   "targets": {
@@ -38,9 +37,8 @@ Read more under [setup executor docs](./projects/nx-verdaccio/src/executors/setu
 
 This executor helps to initiate [environment](../../../../../README.md#-environment-folders-to-isolate-files-during-e2e-tests) into a given folder.
 
-// project.json
-
 ```jsonc
+// project.json
 {
   "name": "my-project",
   "targets": {
@@ -62,9 +60,9 @@ Read more under [bootstrap executor docs](./projects/nx-verdaccio/src/executors/
 
 This executor helps to kill processes by `ProcessID` or a JSON file containing a property `pid` as number.
 
-// project.json
 
 ```jsonc
+// project.json
 {
   "name": "my-project",
   "targets": {

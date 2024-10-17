@@ -71,7 +71,11 @@ export type NxPerfPluginConfig = {
 >;
 
 export function nxPerformancePlugin(
-  options?: NxPerfPluginConfig
+  options: NxPerfPluginConfig = {
+    taskTimeTasks: [],
+    cacheSizeTasks: [],
+    taskGraphTasks: [],
+  }
 ): PluginConfig {
   const allAudits = nxPerformanceAudits(options);
   return {

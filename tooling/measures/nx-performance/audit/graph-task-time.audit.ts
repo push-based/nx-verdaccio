@@ -1,6 +1,8 @@
 import { Audit, AuditOutputs } from '@code-pushup/models';
 import { execFile } from 'node:child_process';
 import { slugify } from '@code-pushup/utils';
+import { promisify } from 'node:util';
+import { join } from 'node:path';
 
 export const DEFAULT_MAX_TASK_GRAPH_TIME = 300;
 export const TASK_GRAPH_TIME_AUDIT_POSTFIX = 'graph-time-task';
@@ -27,8 +29,10 @@ export type TaskGraphAuditOptions = {
 export async function taskGraphAudits(
   options?: TaskGraphAuditOptions
 ): Promise<AuditOutputs> {
-  const { maxTaskGraphTime = DEFAULT_MAX_TASK_GRAPH_TIME, taskGraphTasks } =
-    options ?? {};
+  const {
+    maxTaskGraphTime = DEFAULT_MAX_TASK_GRAPH_TIME,
+    taskGraphTasks = [],
+  } = options ?? {};
   const results = await taskGraphTiming(taskGraphTasks);
 
   return results.map(({ duration, task }) => ({
@@ -56,10 +60,28 @@ export async function taskGraphTiming(
   tasks: string[]
 ): Promise<{ duration: number; task: string }[]> {
   const results: { duration: number; task: string }[] = [];
+  const isWindows = process.platform === 'win32';
   for (const task of tasks) {
     const start = performance.now();
-    execFile(
-      `NX_DAEMON=true NX_CACHE_PROJECT_GRAPH=false NX_ISOLATE_PLUGINS=true npx nx run-many -t ${task} --graph tmp/nx-performance/task-graph/${task}.graph.json`
+    await promisify(execFile)(
+      'npx',
+      [
+        'nx',
+        'run-many',
+        '-t',
+        task,
+        '--graph',
+        join('tmp', 'nx-performance', 'task-graph', `${task}.graph.json`),
+      ],
+      {
+        shell: isWindows,
+        env: {
+          ...process.env,
+          NX_CACHE_PROJECT_GRAPH: 'false',
+          NX_ISOLATE_PLUGINS: 'true',
+          NX_DAEMON: 'false',
+        },
+      }
     );
     const execFileDuration = Number((performance.now() - start).toFixed(3));
     results.push({
