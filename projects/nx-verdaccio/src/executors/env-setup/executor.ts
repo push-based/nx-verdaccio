@@ -10,7 +10,6 @@ import {
 import type { SetupEnvironmentExecutorOptions } from './schema';
 import { VERDACCIO_REGISTRY_JSON } from '../env-bootstrap/constants';
 import {
-  TARGET_ENVIRONMENT_BOOTSTRAP,
   TARGET_ENVIRONMENT_INSTALL,
 } from '../../plugin/targets/environment.targets';
 import { runSingleExecutor } from '../../internal/run-executor';
@@ -29,28 +28,6 @@ export default async function runSetupEnvironmentExecutor(
   const { configurationName: configuration, projectName } = context;
   const { verbose, environmentRoot, keepServerRunning } =
     terminalAndExecutorOptions;
-  try {
-    await runSingleExecutor(
-      {
-        project: projectName,
-        target: TARGET_ENVIRONMENT_BOOTSTRAP,
-        configuration,
-      },
-      {
-        ...terminalAndExecutorOptions,
-        // we always want to keep the server running as in the next step we install packages
-        // the `keepServerRunning` passed in `options` is only used to stop the server after the installation (or keep it running for debug reasons)
-        keepServerRunning: true,
-      },
-      context
-    );
-  } catch (error) {
-    logger.error(error.message);
-    return {
-      success: false,
-      command: `Failed executing target ${TARGET_ENVIRONMENT_BOOTSTRAP}\n ${error.message}`,
-    };
-  }
 
   try {
     await executeProcess({

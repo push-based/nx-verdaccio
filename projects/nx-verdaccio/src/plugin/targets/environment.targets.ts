@@ -113,9 +113,8 @@ export function getEnvTargets(
   return {
     [TARGET_ENVIRONMENT_BOOTSTRAP]: {
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_BOOTSTRAP}`,
-      options: { environmentRoot },
     },
-    // intermediate task just here to execute dependent pkg-install tasks with the correct environmentProject
+    // intermediate task called in enc-setup to execute dependent pkg-install tasks with the correct environmentProject
     [TARGET_ENVIRONMENT_INSTALL]: {
       dependsOn: [
         {
@@ -124,12 +123,17 @@ export function getEnvTargets(
           params: 'forward',
         },
       ],
-      options: { environmentRoot },
       // This is here to make it appear in the graph in older nx versions (otherwise it is filtered out)
       command: `echo "dependencies installed for ${environmentRoot}"`
     },
-    // runs env-bootstrap-env, install-env and stop-verdaccio
+    // runs install-env and stop-verdaccio
     [TARGET_ENVIRONMENT_SETUP]: {
+      dependsOn: [
+        {
+          target: TARGET_ENVIRONMENT_BOOTSTRAP,
+          params: 'forward',
+        },
+      ],
       // list of inputs that all subsequent tasks depend on
       inputs: [
         '{projectRoot}/project.json',
@@ -155,9 +159,6 @@ export function getEnvTargets(
       ],
       cache: true,
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_SETUP}`,
-      options: {
-        environmentRoot,
-      },
     },
     [TARGET_ENVIRONMENT_TEARDOWN]: {
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_TEARDOWN}`,

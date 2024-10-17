@@ -49,7 +49,7 @@ describe('runSetupEnvironmentExecutor', () => {
       .mockResolvedValueOnce(
         new MockAsyncIterableIterator<{ success: boolean; command: string }>({
           success: true,
-          command: 'Bootstraped environemnt successfully.',
+          command: 'Bootstrapped environment successfully.',
         })
       )
       .mockResolvedValueOnce(
@@ -127,36 +127,6 @@ describe('runSetupEnvironmentExecutor', () => {
     );
   });
 
-  it('should catch error cause by runBootstrapEnvironment', async () => {
-    runExecutorSpy.mockRejectedValueOnce(
-      new Error('Error in runBootstrapEnvironment')
-    );
-
-    await expect(
-      runSetupEnvironmentExecutor(
-        {},
-        {
-          cwd: 'test',
-          isVerbose: false,
-          root: 'tmp/environments/test',
-          projectName: 'my-lib-e2e',
-          projectsConfigurations: {
-            version: 2,
-            projects: {
-              'my-lib': {
-                root: 'e2e/my-lib-e2e',
-              },
-            },
-          },
-        }
-      )
-    ).resolves.toStrictEqual({
-      success: false,
-      command:
-        'Failed executing target nxv-env-bootstrap\n Error in runBootstrapEnvironment',
-    });
-  });
-
   it('should keep server running if keepServerRunning is passed', async () => {
     runExecutorSpy
       .mockResolvedValueOnce(
@@ -226,19 +196,7 @@ describe('runSetupEnvironmentExecutor', () => {
       cwd: '/test',
     });
 
-    expect(runExecutorSpy).toHaveBeenCalledTimes(1);
-    expect(runExecutorSpy).toHaveBeenCalledWith(
-      {
-        configuration: undefined,
-        project: 'my-lib-e2e',
-        target: TARGET_ENVIRONMENT_BOOTSTRAP,
-      },
-      expect.objectContaining({
-        environmentRoot: 'tmp/environments/my-lib-e2e',
-        keepServerRunning: true,
-      }),
-      context
-    );
+    expect(runExecutorSpy).toHaveBeenCalledTimes(0);
 
     expect(devkit.logger.info).toHaveBeenCalledTimes(1);
     expect(devkit.logger.info).toHaveBeenCalledWith(

@@ -199,9 +199,6 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
         }),
         [TARGET_ENVIRONMENT_BOOTSTRAP]: expect.objectContaining({
           executor: '@push-based/nx-verdaccio:env-bootstrap',
-          options: {
-            environmentRoot: 'tmp/environments/lib-a-e2e',
-          },
         }),
         [TARGET_ENVIRONMENT_INSTALL]: expect.objectContaining({
           dependsOn: [
@@ -212,14 +209,20 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
             },
           ],
           executor: 'nx:noop',
-          options: { environmentRoot: 'tmp/environments/lib-a-e2e' },
+          //  options: { environmentRoot: 'tmp/environments/lib-a-e2e' },
         }),
         [TARGET_ENVIRONMENT_SETUP]: expect.objectContaining({
-          cache: true,
+          dependsOn: [
+            {
+              params: 'forward',
+              target: TARGET_ENVIRONMENT_BOOTSTRAP,
+            },
+          ],
           executor: '@push-based/nx-verdaccio:env-setup',
           options: {
             environmentRoot: 'tmp/environments/lib-a-e2e',
           },
+          cache: true,
           inputs: [
             '{projectRoot}/project.json',
             {

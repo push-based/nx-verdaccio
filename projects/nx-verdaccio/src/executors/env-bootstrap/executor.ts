@@ -14,6 +14,7 @@ import {
 } from '../../plugin/targets/environment.targets';
 import { runSingleExecutor } from '../../internal/run-executor';
 import { PACKAGE_NAME } from '../../plugin/constants';
+import { getEnvironmentRoot } from '../../internal/environment-root';
 
 export type BootstrapExecutorOutput = {
   success: boolean;
@@ -26,7 +27,8 @@ export async function bootstrapExecutor(
   context: ExecutorContext
 ): Promise<BootstrapExecutorOutput> {
   const { configurationName, projectName } = context;
-  const { keepServerRunning, environmentRoot, verbose } = options;
+  const { keepServerRunning, verbose } = options;
+  const environmentRoot = getEnvironmentRoot(context, options);
 
   if (verbose) {
     logger.info(
