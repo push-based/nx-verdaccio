@@ -3,11 +3,12 @@ import {
   type NxJsonConfiguration,
   type PluginConfiguration,
   type ProjectConfiguration,
+  type ProjectGraph,
   type Tree,
-  updateJson,
+  updateJson
 } from '@nx/devkit';
 import { libraryGenerator } from '@nx/js';
-import type { LibraryGeneratorSchema } from '@nx/js/src/utils/schema';
+import type { LibraryGeneratorSchema } from '@nx/js/src/generators/library/schema';
 import { createTreeWithEmptyWorkspace } from 'nx/src/generators/testing-utils/create-tree-with-empty-workspace';
 import { executeProcess } from '@code-pushup/utils';
 import { objectToCliArgs } from '@push-based/test-utils';
@@ -18,6 +19,18 @@ export function executorContext<
 >(nameOrOpt: string | T): ExecutorContext {
   const { projectName, cwd = process.cwd() } =
     typeof nameOrOpt === 'string' ? { projectName: nameOrOpt } : nameOrOpt;
+  const graph: ProjectGraph = {
+    nodes: {
+      [projectName]: {
+        type: 'lib',
+        name: projectName,
+        data: { root: `libs/${projectName}` },
+      },
+    },
+    dependencies: {},
+    externalNodes: {},
+    version: '',
+  };
   return {
     cwd,
     isVerbose: false,
@@ -32,6 +45,8 @@ export function executorContext<
       },
       version: 1,
     },
+    projectGraph: graph,
+    nxJsonConfiguration: {},
   };
 }
 
