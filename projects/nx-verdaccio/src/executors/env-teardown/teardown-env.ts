@@ -7,9 +7,7 @@ import { VERDACCIO_REGISTRY_JSON } from '../env-bootstrap/constants';
 import { fileExists } from '../../internal/file-system';
 import { rm } from 'node:fs/promises';
 import runKillProcessExecutor from '../kill-process/executor';
-import { DEFAULT_ENVIRONMENTS_OUTPUT_DIR } from '../../plugin/constants';
-import { type ExpandedPluginConfiguration } from 'nx/src/config/nx-json';
-import type { NxVerdaccioCreateNodeOptions } from '../../plugin/schema';
+import { getEnvironmentRoot } from '../../internal/environment-root';
 
 export const gitClient: SimpleGit = simpleGit(process.cwd());
 export type TeardownEnvironmentOptions = Environment & { verbose?: boolean };
@@ -19,17 +17,7 @@ export async function teardownEnvironment(
   options: TeardownEnvironmentOptions,
   git: SimpleGit = gitClient
 ): Promise<void> {
-  const { environmentRoot: optEnvironmentRoot } = options;
-  const plugin = context.nxJsonConfiguration.plugins.find((pCfg) => {
-    return (
-      typeof pCfg === 'object' && pCfg?.plugin === '@push-based/nx-verdaccio'
-    );
-  }) as ExpandedPluginConfiguration<NxVerdaccioCreateNodeOptions>;
-  const environmentsDir =
-    plugin.options.environments?.environmentsDir ??
-    DEFAULT_ENVIRONMENTS_OUTPUT_DIR;
-  const environmentRoot =
-    optEnvironmentRoot ?? join(environmentsDir, context.projectName);
+  const environmentRoot = getEnvironmentRoot(context, options);
   // kill verdaccio process if running
   const registryPath = join(environmentRoot, VERDACCIO_REGISTRY_JSON);
   const registryJsonExists = await fileExists(registryPath);

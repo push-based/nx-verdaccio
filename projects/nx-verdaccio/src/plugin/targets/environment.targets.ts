@@ -112,8 +112,7 @@ export function getEnvTargets(
   const environmentRoot = join(environmentsDir, envProject);
   return {
     [TARGET_ENVIRONMENT_BOOTSTRAP]: {
-      executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_BOOTSTRAP}`,
-      options: { environmentRoot },
+      executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_BOOTSTRAP}`
     },
     // intermediate task just here to execute dependent pkg-install tasks with the correct environmentProject
     [TARGET_ENVIRONMENT_INSTALL]: {
@@ -154,10 +153,7 @@ export function getEnvTargets(
         '{options.environmentRoot}/node_modules',
       ],
       cache: true,
-      executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_SETUP}`,
-      options: {
-        environmentRoot,
-      },
+      executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_SETUP}`
     },
     [TARGET_ENVIRONMENT_TEARDOWN]: {
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_TEARDOWN}`,
