@@ -95,18 +95,7 @@ describe('runSetupEnvironmentExecutor', () => {
       cwd: '/test',
     });
 
-    expect(runExecutorSpy).toHaveBeenCalledTimes(2);
-    expect(runExecutorSpy).toHaveBeenCalledWith(
-      {
-        configuration: undefined,
-        project: projectName,
-        target: TARGET_ENVIRONMENT_BOOTSTRAP,
-      },
-      {
-        keepServerRunning: true,
-      },
-      context
-    );
+    expect(runExecutorSpy).toHaveBeenCalledTimes(1);
     expect(runExecutorSpy).toHaveBeenCalledWith(
       {
         configuration: undefined,

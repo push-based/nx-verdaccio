@@ -32,8 +32,6 @@ export default async function runSetupEnvironmentExecutor(
     terminalAndExecutorOptions
   );
 
-  }
-
   try {
     await executeProcess({
       command: 'nx',
