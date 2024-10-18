@@ -17,7 +17,10 @@ exports[`nx-verdaccio plugin create-nodes-v2 > should add environment targets to
   "nxv-e2e": {
     "configurations": {},
     "dependsOn": [
-      "e2e",
+      {
+        "params": "forward",
+        "target": "e2e",
+      },
     ],
     "executor": "@push-based/nx-verdaccio:env-teardown",
     "options": {},
@@ -26,9 +29,7 @@ exports[`nx-verdaccio plugin create-nodes-v2 > should add environment targets to
   "nxv-env-bootstrap": {
     "configurations": {},
     "executor": "@push-based/nx-verdaccio:env-bootstrap",
-    "options": {
-      "environmentRoot": "tmp/environments/lib-a-e2e",
-    },
+    "options": {},
     "parallelism": true,
   },
   "nxv-env-install": {
@@ -40,8 +41,9 @@ exports[`nx-verdaccio plugin create-nodes-v2 > should add environment targets to
         "target": "nxv-pkg-install",
       },
     ],
-    "executor": "nx:noop",
+    "executor": "nx:run-commands",
     "options": {
+      "command": "echo "dependencies installed for tmp/environments/lib-a-e2e"",
       "environmentRoot": "tmp/environments/lib-a-e2e",
     },
     "parallelism": true,
@@ -65,9 +67,7 @@ exports[`nx-verdaccio plugin create-nodes-v2 > should add environment targets to
       },
       "^production",
     ],
-    "options": {
-      "environmentRoot": "tmp/environments/lib-a-e2e",
-    },
+    "options": {},
     "outputs": [
       "{options.environmentRoot}/.npmrc",
       "{options.environmentRoot}/package.json",
@@ -104,45 +104,6 @@ exports[`nx-verdaccio plugin create-nodes-v2 > should add environment targets to
     "options": {
       "filePath": "tmp/environments/verdaccio-registry.json",
     },
-    "parallelism": true,
-  },
-}
-`;
-
-exports[`nx-verdaccio plugin create-nodes-v2 > should add package targets to library project 1`] = `
-{
-  "nxv-pkg-install": {
-    "configurations": {},
-    "dependsOn": [
-      {
-        "params": "forward",
-        "target": "nxv-pkg-publish",
-      },
-      {
-        "params": "forward",
-        "projects": "dependencies",
-        "target": "nxv-pkg-install",
-      },
-    ],
-    "executor": "@push-based/nx-verdaccio:pkg-install",
-    "options": {},
-    "parallelism": true,
-  },
-  "nxv-pkg-publish": {
-    "configurations": {},
-    "dependsOn": [
-      {
-        "params": "forward",
-        "target": "build",
-      },
-      {
-        "params": "forward",
-        "projects": "dependencies",
-        "target": "nxv-pkg-publish",
-      },
-    ],
-    "executor": "@push-based/nx-verdaccio:pkg-publish",
-    "options": {},
     "parallelism": true,
   },
 }
