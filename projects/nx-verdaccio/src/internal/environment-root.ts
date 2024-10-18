@@ -6,7 +6,7 @@ import { DEFAULT_ENVIRONMENTS_OUTPUT_DIR } from '../plugin/constants';
 import { Environment } from '../executors/env-bootstrap/npm';
 
 export function getEnvironmentDir(context: ExecutorContext) {
-  const plugin = context.nxJsonConfiguration.plugins.find((pCfg) => {
+  const plugin = context.nxJsonConfiguration?.plugins?.find((pCfg) => {
     return (
       typeof pCfg === 'object' && pCfg?.plugin === '@push-based/nx-verdaccio'
     );
