@@ -15,6 +15,8 @@ import {
 } from '../../plugin/targets/environment.targets';
 import { runSingleExecutor } from '../../internal/run-executor';
 import { rm } from 'node:fs/promises';
+import { options } from 'yargs';
+import { getEnvironmentRoot } from '../../internal/environment-root';
 
 export type ExecutorOutput = {
   success: boolean;
@@ -27,8 +29,11 @@ export default async function runSetupEnvironmentExecutor(
   context: ExecutorContext
 ) {
   const { configurationName: configuration, projectName } = context;
-  const { verbose, environmentRoot, keepServerRunning } =
-    terminalAndExecutorOptions;
+  const { verbose, keepServerRunning } = terminalAndExecutorOptions;
+  const environmentRoot = getEnvironmentRoot(
+    context,
+    terminalAndExecutorOptions
+  );
   try {
     await runSingleExecutor(
       {

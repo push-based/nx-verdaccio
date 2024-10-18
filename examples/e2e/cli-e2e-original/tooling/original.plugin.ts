@@ -54,12 +54,16 @@ function verdaccioTargets(): Record<string, TargetConfiguration> {
 function npmTargets(
   projectConfiguration: ProjectConfiguration & { name: string }
 ): Record<string, TargetConfiguration> {
-  const { root } = projectConfiguration;
+  const { root, name, tags } = projectConfiguration;
   const outputPath = getBuildOutputPathFromBuildTarget(projectConfiguration);
 
   const { name: packageName, version: pkgVersion } = readJsonFile(
     join(root, 'package.json')
   );
+  //
+  if(!tags.some(i => i === 'type:example')) {
+    return {};
+  }
   return {
     'original-npm-publish': {
       command: 'npm publish',
