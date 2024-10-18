@@ -1,3 +1,16 @@
+## 0.0.0-alpha.22 (2024-10-18)
+
+
+### 🩹 Fixes
+
+- envRoot derivation in executor ([ae6b9aa](https://github.com/push-based/nx-verdaccio/commit/ae6b9aa))
+- **nx-verdaccio:** move envRoot into executors ([3818fba](https://github.com/push-based/nx-verdaccio/commit/3818fba))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+- Michael Hladky @BioPhoton
+
 ## 0.0.0-alpha.21 (2024-10-15)
 
 
