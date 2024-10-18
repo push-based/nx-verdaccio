@@ -7,9 +7,6 @@ import { VERDACCIO_REGISTRY_JSON } from '../env-bootstrap/constants';
 import { fileExists } from '../../internal/file-system';
 import { rm } from 'node:fs/promises';
 import runKillProcessExecutor from '../kill-process/executor';
-import { DEFAULT_ENVIRONMENTS_OUTPUT_DIR } from '../../plugin/constants';
-import { type ExpandedPluginConfiguration } from 'nx/src/config/nx-json';
-import type { NxVerdaccioCreateNodeOptions } from '../../plugin/schema';
 import { getEnvironmentRoot } from '../../internal/environment-root';
 
 export const gitClient: SimpleGit = simpleGit(process.cwd());

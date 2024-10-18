@@ -9,6 +9,12 @@ uplinks:
     maxage: 60m
 
 packages:
+  # allow publishing local packages
+  '@push-based/*':
+    access: $all
+    publish: $all
+    unpublish: $all
+
   '**':
     # give all users (including non-authenticated users) full access
     # because it is a local registry

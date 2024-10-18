@@ -77,12 +77,7 @@ describe('runSetupEnvironmentExecutor', () => {
     };
 
     await expect(
-      runSetupEnvironmentExecutor(
-        {
-          environmentRoot: 'tmp/environments/my-lib-e2e',
-        },
-        context
-      )
+      runSetupEnvironmentExecutor({}, context)
     ).resolves.toStrictEqual({
       success: true,
       command: 'Environment env-setup complete.',
@@ -108,7 +103,6 @@ describe('runSetupEnvironmentExecutor', () => {
         target: TARGET_ENVIRONMENT_BOOTSTRAP,
       },
       {
-        environmentRoot: 'tmp/environments/my-lib-e2e',
         keepServerRunning: true,
       },
       context

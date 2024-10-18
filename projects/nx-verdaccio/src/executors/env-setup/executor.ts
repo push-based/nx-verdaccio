@@ -12,8 +12,8 @@ import { VERDACCIO_REGISTRY_JSON } from '../env-bootstrap/constants';
 import {
   TARGET_ENVIRONMENT_INSTALL,
 } from '../../plugin/targets/environment.targets';
-import { runSingleExecutor } from '../../internal/run-executor';
 import { rm } from 'node:fs/promises';
+import { getEnvironmentRoot } from '../../internal/environment-root';
 
 export type ExecutorOutput = {
   success: boolean;
@@ -26,8 +26,13 @@ export default async function runSetupEnvironmentExecutor(
   context: ExecutorContext
 ) {
   const { configurationName: configuration, projectName } = context;
-  const { verbose, environmentRoot, keepServerRunning } =
-    terminalAndExecutorOptions;
+  const { verbose, keepServerRunning } = terminalAndExecutorOptions;
+  const environmentRoot = getEnvironmentRoot(
+    context,
+    terminalAndExecutorOptions
+  );
+
+  }
 
   try {
     await executeProcess({

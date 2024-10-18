@@ -14,6 +14,7 @@ import {
   VERDACCIO_REGISTRY_JSON,
 } from './constants';
 import { runSingleExecutor } from '../../internal/run-executor';
+import { getEnvironmentRoot } from '../../internal/environment-root';
 
 const VERDACCIO_TOKEN = 'Verdaccio: ';
 
@@ -179,8 +180,8 @@ export function stopVerdaccioServer(options: {
   environmentRoot: string;
   context: ExecutorContext;
 }): Promise<void> {
-  const { projectName, verbose, context, configuration, environmentRoot } =
-    options;
+  const { projectName, verbose, context, configuration } = options;
+  const environmentRoot = getEnvironmentRoot(context, options);
   return runSingleExecutor(
     {
       project: projectName,

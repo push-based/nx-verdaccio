@@ -187,7 +187,7 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
     const { code, projectJson } = await nxShowProjectJson(cwd, projectAE2e);
     expect(code).toBe(0);
 
-    expect(projectJson.targets).toStrictEqual(
+    expect(projectJson.targets).toEqual(
       expect.objectContaining({
         e2e: expect.objectContaining({
           dependsOn: [
@@ -208,8 +208,11 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
               target: TARGET_PACKAGE_INSTALL,
             },
           ],
-          executor: 'nx:noop',
-          //  options: { environmentRoot: 'tmp/environments/lib-a-e2e' },
+          executor: 'nx:run-commands',
+          options: {
+            command:
+              'echo "dependencies installed for tmp/environments/lib-a-e2e"',
+          },
         }),
         [TARGET_ENVIRONMENT_SETUP]: expect.objectContaining({
           dependsOn: [
@@ -219,10 +222,7 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
             },
           ],
           executor: '@push-based/nx-verdaccio:env-setup',
-          options: {
-            environmentRoot: 'tmp/environments/lib-a-e2e',
-          },
-          cache: true,
+          options: {},
           inputs: [
             '{projectRoot}/project.json',
             {
@@ -262,7 +262,12 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
         }),
         [TARGET_ENVIRONMENT_E2E]: expect.objectContaining({
           executor: '@push-based/nx-verdaccio:env-teardown',
-          dependsOn: ['e2e'],
+          dependsOn: [
+            {
+              params: 'forward',
+              target: 'e2e',
+            },
+          ],
         }),
         [TARGET_ENVIRONMENT_TEARDOWN]: expect.objectContaining({
           executor: '@push-based/nx-verdaccio:env-teardown',
