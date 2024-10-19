@@ -1,3 +1,14 @@
+## 0.0.0-alpha.23 (2024-10-19)
+
+
+### 🩹 Fixes
+
+- detach if not windows ([5f0e94e](https://github.com/push-based/nx-verdaccio/commit/5f0e94e))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
 ## 0.0.0-alpha.22 (2024-10-18)
 
 
