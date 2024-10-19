@@ -32,6 +32,7 @@ export type ProcessConfig = Omit<
   SpawnOptionsWithStdioTuple<StdioPipe, StdioPipe, StdioPipe>,
   'stdio'
 > & {
+  stdio?: 'pipe' | 'inherit' | 'ignore' | (StdioPipe | 'pipe' | 'inherit' | 'ignore')[];
   command: string;
   args?: string[];
   verbose?: boolean;

@@ -95,6 +95,8 @@ export async function startVerdaccioServer({
 
   const startServerPromise = () =>
     new Promise<RegistryResult>((resolve, reject) => {
+      const isWindows = process.platform === 'win32';
+
       executeProcess({
         command: 'nx',
         args: objectToCliArgs({
@@ -106,6 +108,8 @@ export async function startVerdaccioServer({
           storage,
           ...opt,
         }),
+        detached: !isWindows,
+        //stdio: ['ignore', 'ignore', 'ignore'], // Ignore I/O streams
         shell: true,
         observer: {
           onStdout: (stdout: string, childProcess) => {
