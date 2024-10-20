@@ -34,6 +34,7 @@ export default async function runNpmInstallExecutor(
     args: objectToCliArgs({
       _: ['install', `${packageNameAndVersion}`],
       fund: false, // avoid polluted terminal
+      optional: true, // install optional deps of the package
       shrinkwrap: false, // avoid package-lock creation or update
       save: true, // save to package.json dependencies
     }),
