@@ -1,3 +1,14 @@
+## 0.0.0-alpha.24 (2024-10-20)
+
+
+### 🩹 Fixes
+
+- install optional deps with package ([abf41db](https://github.com/push-based/nx-verdaccio/commit/abf41db))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
 ## 0.0.0-alpha.23 (2024-10-19)
 
 
