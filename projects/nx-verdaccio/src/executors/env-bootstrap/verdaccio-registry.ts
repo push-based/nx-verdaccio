@@ -98,9 +98,14 @@ export async function startVerdaccioServer({
       const isWindows = process.platform === 'win32';
 
       executeProcess({
-        command: 'nx',
+        command: 'npx',
         args: objectToCliArgs({
-          _: [TARGET_ENVIRONMENT_VERDACCIO_START, projectName ?? '', '--'],
+          _: [
+            'nx',
+            TARGET_ENVIRONMENT_VERDACCIO_START,
+            projectName ?? '',
+            '--',
+          ],
           port,
           ...(verbose !== undefined ? { verbose } : {}),
           location,
@@ -111,6 +116,7 @@ export async function startVerdaccioServer({
         detached: !isWindows,
         //stdio: ['ignore', 'ignore', 'ignore'], // Ignore I/O streams
         shell: true,
+        windowsHide: true,
         observer: {
           onStdout: (stdout: string, childProcess) => {
             if (verbose) {

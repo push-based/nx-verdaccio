@@ -34,6 +34,8 @@ export async function setupNpmWorkspace(
   await ensureDirectoryExists(environmentRoot);
   try {
     await promisify(execFile)('npm', ['init', '--force'], {
+      shell: true,
+      windowsHide: true,
       cwd: join(cwd, environmentRoot),
     });
   } catch (error) {
@@ -79,7 +81,7 @@ export async function configureRegistry(
     );
   }
 
-  await promisify(exec)(setRegistry);
+  await promisify(exec)(setRegistry, { windowsHide: true });
 
   /**
    * Protocol-Agnostic Configuration: The use of // allows NPM to configure authentication for a registry without tying it to a specific protocol (http: or https:).
@@ -97,7 +99,7 @@ export async function configureRegistry(
       formatInfo(`Set authToken:\n${setAuthToken}`, VERDACCIO_ENV_TOKEN)
     );
   }
-  await promisify(exec)(setAuthToken);
+  await promisify(exec)(setAuthToken, { windowsHide: true });
 }
 
 export type UnconfigureRegistryOptions = Pick<
@@ -133,7 +135,7 @@ export async function unconfigureRegistry(
       formatInfo(`Delete authToken:\n${setAuthToken}`, VERDACCIO_ENV_TOKEN)
     );
   }
-  await promisify(exec)(setAuthToken);
+  await promisify(exec)(setAuthToken, { windowsHide: true });
 
   const setRegistry = `npm config delete registry ${objectToCliArgs({
     userconfig,
@@ -143,5 +145,5 @@ export async function unconfigureRegistry(
       formatInfo(`Delete registry:\n${setRegistry}`, VERDACCIO_ENV_TOKEN)
     );
   }
-  await promisify(exec)(setRegistry);
+  await promisify(exec)(setRegistry, { windowsHide: true });
 }

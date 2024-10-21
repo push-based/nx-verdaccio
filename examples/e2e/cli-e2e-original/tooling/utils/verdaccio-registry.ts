@@ -86,9 +86,9 @@ export async function startVerdaccioServer({
 
   return new Promise<RegistryResult>((resolve, reject) => {
     executeProcess({
-      command: 'nx',
+      command: 'npx',
       args: objectToCliArgs({
-        _: [targetName, projectName ?? '', '--'],
+        _: ['nx', targetName, projectName ?? '', '--'],
         storage,
         port,
         verbose,
@@ -96,6 +96,7 @@ export async function startVerdaccioServer({
         clear,
       }),
       shell: true,
+      windowsHide: true,
       observer: {
         onStdout: (stdout: string, childProcess) => {
           if (verbose) {

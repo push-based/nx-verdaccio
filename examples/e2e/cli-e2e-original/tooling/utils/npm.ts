@@ -19,7 +19,10 @@ export async function setupNpmWorkspace(directory: string, verbose?: boolean) {
   await ensureDirectoryExists(directory);
   process.chdir(join(cwd, directory));
   try {
-    execFileSync('npm', ['init', '--force']).toString();
+    execFileSync('npm', ['init', '--force'], {
+      shell: true,
+      windowsHide: true,
+    }).toString();
   } catch (error) {
     logError(`Error creating NPM workspace: ${(error as Error).message}`);
   } finally {

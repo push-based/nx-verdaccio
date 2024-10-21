@@ -75,6 +75,7 @@ export async function taskGraphTiming(
       ],
       {
         shell: isWindows,
+        windowsHide: true,
         env: {
           ...process.env,
           NX_CACHE_PROJECT_GRAPH: 'false',
