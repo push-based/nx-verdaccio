@@ -9,7 +9,7 @@ import { rm, writeFile } from 'node:fs/promises';
 import { setupNpmWorkspace } from '../utils/npm';
 import { error, info } from '../utils/logging';
 import { objectToCliArgs } from '@push-based/test-utils';
-import { execSync } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 
 function logInfo(msg: string) {
   info(msg, 'Verdaccio Env: ');
@@ -95,7 +95,7 @@ export function configureRegistry(
   if (verbose) {
     logInfo(`Set registry:\n${setRegistry}`);
   }
-  execSync(setRegistry);
+  execFileSync(setRegistry, { shell: true, windowsHide: true });
 
   /**
    * Protocol-Agnostic Configuration: The use of // allows NPM to configure authentication for a registry without tying it to a specific protocol (http: or https:).
@@ -111,7 +111,10 @@ export function configureRegistry(
   if (verbose) {
     logInfo(`Set authToken:\n${setAuthToken}`);
   }
-  execSync(setAuthToken);
+  execFileSync(setAuthToken, {
+    shell: true,
+    windowsHide: true,
+  });
 }
 
 export function unconfigureRegistry(
@@ -125,7 +128,10 @@ export function unconfigureRegistry(
   if (verbose) {
     logInfo(`Delete authToken:\n${setAuthToken}`);
   }
-  execSync(setAuthToken);
+  execFileSync(setAuthToken, {
+    shell: true,
+    windowsHide: true,
+  });
 
   const setRegistry = `npm config delete registry ${objectToCliArgs({
     userconfig,
@@ -133,5 +139,5 @@ export function unconfigureRegistry(
   if (verbose) {
     logInfo(`Delete registry:\n${setRegistry}`);
   }
-  execSync(setRegistry);
+  execFileSync(setRegistry, { shell: true, windowsHide: true });
 }

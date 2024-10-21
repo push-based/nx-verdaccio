@@ -59,9 +59,9 @@ export default async function runSetupEnvironmentExecutor(
 
   try {
     await executeProcess({
-      command: 'nx',
+      command: 'npx',
       args: objectToCliArgs({
-        _: [TARGET_ENVIRONMENT_INSTALL, projectName],
+        _: ['nx', TARGET_ENVIRONMENT_INSTALL, projectName],
         environmentRoot,
         ...(verbose ? { verbose } : {}),
       }),

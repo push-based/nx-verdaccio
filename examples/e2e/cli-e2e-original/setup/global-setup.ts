@@ -30,9 +30,9 @@ export async function setup() {
 
   // package publish all projects
   await executeProcess({
-    command: 'nx',
+    command: 'npx',
     args: objectToCliArgs({
-      _: ['run-many'],
+      _: ['nx', 'run-many'],
       targets: 'original-npm-publish',
       exclude: 'tag:type:testing',
       skipNxCache: true,
@@ -44,9 +44,9 @@ export async function setup() {
 
   // package install all projects
   await executeProcess({
-    command: 'nx',
+    command: 'npx',
     args: objectToCliArgs({
-      _: ['run-many'],
+      _: ['nx', 'run-many'],
       targets: 'original-npm-install',
       exclude: 'tag:type:testing',
       skipNxCache: true,

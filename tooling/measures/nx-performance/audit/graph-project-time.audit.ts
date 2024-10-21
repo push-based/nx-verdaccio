@@ -47,6 +47,7 @@ export async function projectGraphTiming(): Promise<{ duration: number }> {
   const isWindows = process.platform === 'win32';
   await promisify(execFile)('npx', ['nx', 'show', 'projects'], {
     shell: isWindows,
+    windowsHide: true,
     env: {
       ...process.env,
       NX_CACHE_PROJECT_GRAPH: 'false',

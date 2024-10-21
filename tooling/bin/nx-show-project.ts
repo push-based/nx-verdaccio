@@ -1,4 +1,4 @@
-import { execFileSync, execSync } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import { objectToCliArgs } from '../../../../packages/utils/src';
@@ -41,9 +41,7 @@ try {
       // Hide process output via "2>/dev/null". Otherwise, it will print the error message to the terminal.
       '2>/dev/null',
     ],
-    {
-      shell: true,
-    }
+    { shell: true, windowsHide: true }
   ).toString();
 
   const existingPackage = viewResult
