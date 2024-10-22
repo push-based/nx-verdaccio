@@ -1,3 +1,16 @@
+## 0.0.0-alpha.25 (2024-10-22)
+
+
+### 🩹 Fixes
+
+- pkg-install unit tests ([9c6e64d](https://github.com/push-based/nx-verdaccio/commit/9c6e64d))
+- npmWorkspace tests unit tests ([7485fe4](https://github.com/push-based/nx-verdaccio/commit/7485fe4))
+- e2e ([10a7c76](https://github.com/push-based/nx-verdaccio/commit/10a7c76))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
 ## 0.0.0-alpha.24 (2024-10-20)
 
 
