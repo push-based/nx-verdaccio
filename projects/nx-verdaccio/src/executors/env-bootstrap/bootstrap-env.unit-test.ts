@@ -68,14 +68,14 @@ describe('bootstrapEnvironment', () => {
       //environmentRoot: 'tmp/environments/my-lib-e2e',
       //keepServerRunning: true,
       projectName: 'my-lib-e2e',
-      storage: 'tmp/environments/my-lib-e2e/storage',
+      storage: expect.toMatchPath('tmp/environments/my-lib-e2e/storage'),
       readyWhen: 'Environment ready under',
       verbose: undefined,
     });
 
     expect(setupNpmWorkspaceSpy).toHaveBeenCalledTimes(1);
     expect(setupNpmWorkspaceSpy).toHaveBeenCalledWith(
-      'tmp/environments/my-lib-e2e',
+      expect.toMatchPath('tmp/environments/my-lib-e2e'),
       undefined
     );
 
