@@ -85,7 +85,7 @@ describe('bootstrapEnvironment', () => {
         host: 'localhost',
         port: 4387,
         url: 'http://localhost:4873',
-        userconfig: 'tmp/environments/my-lib-e2e/.npmrc',
+        userconfig: expect.toMatchPath('tmp/environments/my-lib-e2e/.npmrc'),
       },
       undefined
     );
