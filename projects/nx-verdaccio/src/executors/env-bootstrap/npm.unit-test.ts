@@ -3,12 +3,11 @@ import { bold, red } from 'ansis';
 import { MEMFS_VOLUME } from '@push-based/test-utils';
 import {
   configureRegistry,
-  ConfigureRegistryOptions,
+  type ConfigureRegistryOptions,
   setupNpmWorkspace,
   unconfigureRegistry,
   VERDACCIO_ENV_TOKEN,
 } from './npm';
-import { exec } from 'node:child_process';
 import { logger } from '@nx/devkit';
 import { formatInfo } from '../../internal/logging';
 

@@ -14,8 +14,7 @@ export type TeardownEnvironmentOptions = Environment & { verbose?: boolean };
 
 export async function teardownEnvironment(
   context: ExecutorContext,
-  options: TeardownEnvironmentOptions,
-  git: SimpleGit = gitClient
+  options: TeardownEnvironmentOptions
 ): Promise<void> {
   const environmentRoot = getEnvironmentRoot(context, options);
   // kill verdaccio process if running

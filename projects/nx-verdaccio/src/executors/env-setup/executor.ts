@@ -15,7 +15,6 @@ import {
 } from '../../plugin/targets/environment.targets';
 import { runSingleExecutor } from '../../internal/run-executor';
 import { rm } from 'node:fs/promises';
-import { options } from 'yargs';
 import { getEnvironmentRoot } from '../../internal/environment-root';
 
 export type ExecutorOutput = {

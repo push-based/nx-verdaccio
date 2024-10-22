@@ -5,7 +5,7 @@ import * as bootstrapExecutorModule from './bootstrap-env';
 import { PACKAGE_NAME } from '../../plugin/constants';
 import { TARGET_ENVIRONMENT_VERDACCIO_STOP } from '../../plugin/targets/environment.targets';
 import { MockAsyncIterableIterator } from '@push-based/test-utils';
-import { ExecutorContext } from '@nx/devkit';
+import { type ExecutorContext } from '@nx/devkit';
 
 describe('runBootstrapExecutor', () => {
   const e2eProjectName = 'my-lib-e2e';
