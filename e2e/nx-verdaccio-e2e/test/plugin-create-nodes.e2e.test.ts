@@ -187,9 +187,10 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
     const { code, projectJson } = await nxShowProjectJson(cwd, projectAE2e);
     expect(code).toBe(0);
 
-    expect(projectJson.targets).toEqual(
+    expect(projectJson.targets).toStrictEqual(
       expect.objectContaining({
         e2e: expect.objectContaining({
+          configurations: {},
           dependsOn: [
             {
               params: 'forward',
