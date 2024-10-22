@@ -25,12 +25,8 @@ jobs:
         run: npm audit --omit=dev --omit=optional
 
   lint:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest]
     name: Lint
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

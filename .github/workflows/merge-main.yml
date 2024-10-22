@@ -1,0 +1,49 @@
+name: Main
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      dryRun:
+        type: choice
+        description: 'Dry run'
+        required: true
+        default: 'false'
+        options:
+          - 'true'
+          - 'false'
+
+env:
+  NX_NON_NATIVE_HASHER: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Set base and head for Nx affected commands
+        uses: nrwl/nx-set-shas@v4
+      - name: Install dependencies
+        run: npm ci
+      - name: Run Code PushUp on release commit
+        uses: code-pushup/github-action@v0
+        with:
+          bin: npx nx code-pushup --
+        env:
+          CP_SERVER: ${{ secrets.CP_SERVER }}
+          CP_API_KEY: ${{ secrets.CP_API_KEY }}
+          CP_ORGANIZATION: code-pushup
+          CP_PROJECT: cli
