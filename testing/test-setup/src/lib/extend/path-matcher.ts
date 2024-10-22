@@ -1,4 +1,4 @@
-import {expect} from 'vitest';
+import { expect } from 'vitest';
 import path from 'path';
 
 expect.extend({
