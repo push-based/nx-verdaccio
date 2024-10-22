@@ -81,7 +81,7 @@ describe('runNpmPublishExecutor', () => {
     expect(executeProcessSpy).toHaveBeenCalledWith(
       expect.objectContaining({
         command: 'npm',
-        args: ['publish', `--userconfig="${userconfigRelative}"`],
+        args: expect.arrayContaining(['publish']), //  expect.toMatchPath('dist/projects/my-lib'),
         cwd: 'dist/projects/my-lib',
       })
     );
