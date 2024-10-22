@@ -1,4 +1,4 @@
-import { Environment } from '../env-bootstrap/npm';
+import { type Environment } from '../env-bootstrap/npm';
 
 export type SetupEnvironmentExecutorOptions = Partial<
   Environment & {

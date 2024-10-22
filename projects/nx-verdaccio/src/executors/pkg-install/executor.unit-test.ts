@@ -81,6 +81,10 @@ describe('runNpmInstallExecutor', () => {
         args: [
           'install',
           'my-lib@1.0.0',
+          '--include=prod',
+          '--include=dev',
+          '--include=optional',
+          '--include=peer',
           '--no-fund',
           '--no-shrinkwrap',
           '--save',

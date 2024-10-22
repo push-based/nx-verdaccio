@@ -15,7 +15,6 @@ import {
 } from '../../plugin/targets/environment.targets';
 import { runSingleExecutor } from '../../internal/run-executor';
 import { rm } from 'node:fs/promises';
-import { options } from 'yargs';
 import { getEnvironmentRoot } from '../../internal/environment-root';
 
 export type ExecutorOutput = {
@@ -59,9 +58,9 @@ export default async function runSetupEnvironmentExecutor(
 
   try {
     await executeProcess({
-      command: 'nx',
+      command: 'npx',
       args: objectToCliArgs({
-        _: [TARGET_ENVIRONMENT_INSTALL, projectName],
+        _: ['nx', TARGET_ENVIRONMENT_INSTALL, projectName],
         environmentRoot,
         ...(verbose ? { verbose } : {}),
       }),

@@ -86,12 +86,13 @@ describe('runSetupEnvironmentExecutor', () => {
     expect(executeProcessSpy).toHaveBeenCalledTimes(1);
     expect(executeProcessSpy).toHaveBeenCalledWith({
       args: [
+        'nx',
         'nxv-env-install',
         projectName,
         // @TODO check for --environmentRoot too be OS agnostic path
         expect.stringContaining(projectName),
       ],
-      command: 'nx',
+      command: 'npx',
       cwd: '/test',
     });
 
@@ -212,11 +213,12 @@ describe('runSetupEnvironmentExecutor', () => {
     expect(executeProcessSpy).toHaveBeenCalledTimes(1);
     expect(executeProcessSpy).toHaveBeenCalledWith({
       args: [
+        'nx',
         'nxv-env-install',
         'my-lib-e2e',
         '--environmentRoot="tmp/environments/my-lib-e2e"',
       ],
-      command: 'nx',
+      command: 'npx',
       cwd: '/test',
     });
 

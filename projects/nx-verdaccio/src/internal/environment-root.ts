@@ -1,9 +1,9 @@
 import { join } from 'node:path';
-import { ExecutorContext } from '@nx/devkit';
-import { ExpandedPluginConfiguration } from 'nx/src/config/nx-json';
-import { NxVerdaccioCreateNodeOptions } from '../plugin/schema';
+import { type ExecutorContext } from '@nx/devkit';
+import { type ExpandedPluginConfiguration } from 'nx/src/config/nx-json';
+import { type NxVerdaccioCreateNodeOptions } from '../plugin/schema';
 import { DEFAULT_ENVIRONMENTS_OUTPUT_DIR } from '../plugin/constants';
-import { Environment } from '../executors/env-bootstrap/npm';
+import { type Environment } from '../executors/env-bootstrap/npm';
 
 export function getEnvironmentDir(context: ExecutorContext) {
   const plugin = context.nxJsonConfiguration?.plugins?.find((pCfg) => {

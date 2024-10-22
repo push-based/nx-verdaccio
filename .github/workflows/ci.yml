@@ -24,6 +24,26 @@ jobs:
       - name: Audit production dependencies
         run: npm audit --omit=dev --omit=optional
 
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Set base and head for Nx affected commands
+        uses: nrwl/nx-set-shas@v4
+      - name: Install dependencies
+        run: npm ci
+      - name: Lint affected projects
+        run: npx nx affected -t lint --parallel=3 --verbose
+
   unit-test:
     strategy:
       fail-fast: false
@@ -70,4 +90,4 @@ jobs:
       - name: Install dependencies
         run: npm i
       - name: E2E test affected projects
-        run: npx nx affected -t nxv-e2e --exclude="tag:type:example"
+        run: NX_DAEMON=false; npx nx affected -t nxv-e2e --exclude="tag:type:example" --skipNxCache --verbose
