@@ -82,7 +82,7 @@ describe('runNpmPublishExecutor', () => {
       expect.objectContaining({
         command: 'npm',
         args: expect.arrayContaining(['publish']), //  expect.toMatchPath('dist/projects/my-lib'),
-        cwd: 'dist/projects/my-lib',
+        cwd: expect.toMatchPath('dist/projects/my-lib'),
       })
     );
   });
