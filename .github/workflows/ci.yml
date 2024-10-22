@@ -70,4 +70,4 @@ jobs:
       - name: Install dependencies
         run: npm i
       - name: E2E test affected projects
-        run: NX_DAEMON=false; npx nx affected -t nxv-e2e --exclude="tag:type:example" --skipNxCache
+        run: NX_DAEMON=false; npx nx affected -t nxv-e2e --exclude="tag:type:example" --skipNxCache --verbose
