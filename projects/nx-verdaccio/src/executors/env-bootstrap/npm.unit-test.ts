@@ -48,12 +48,12 @@ describe('configureRegistry', () => {
     expect(execMock).toHaveBeenCalledTimes(2);
     expect(execMock).toHaveBeenCalledWith(
       'npm config set registry="http://localhost:4873" --userconfig="test-config"',
-      { windowsHide: true, shell: true }
+      { windowsHide: true }
     );
 
     expect(execMock).toHaveBeenCalledWith(
       'npm config set //localhost:4873/:_authToken "secretVerdaccioToken" --userconfig="test-config"',
-      { windowsHide: true, shell: true }
+      { windowsHide: true }
     );
   });
 
@@ -100,12 +100,12 @@ describe('unconfigureRegistry', () => {
     expect(execMock).toHaveBeenCalledTimes(2);
     expect(execMock).toHaveBeenCalledWith(
       'npm config delete registry --userconfig="test-config"',
-      { windowsHide: true, shell: true }
+      { windowsHide: true }
     );
 
     expect(execMock).toHaveBeenCalledWith(
       'npm config delete //localhost:4873/:_authToken --userconfig="test-config"',
-      { windowsHide: true, shell: true }
+      { windowsHide: true }
     );
   });
 
