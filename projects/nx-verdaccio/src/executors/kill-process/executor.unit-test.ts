@@ -75,7 +75,7 @@ describe('runKillProcessExecutor', () => {
     await expect(
       runKillProcessExecutor(
         {
-          filePath: 'tmp/environments/my-lib',
+          filePath: expect.toMatchPath('tmp/environments/my-lib'),
         },
         {
           root: 'tmp/environments/test',
