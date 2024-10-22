@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, vi, it } from 'vitest';
 import runNpmPublishExecutor from './executor';
-import {MEMFS_VOLUME, osAgnosticPath} from '@push-based/test-utils';
+import { MEMFS_VOLUME, osAgnosticPath } from '@push-based/test-utils';
 import * as execProcessModule from '../../internal/execute-process';
 import * as pkgVersionModule from './pkg-version';
 import { logger } from '@nx/devkit';
@@ -67,11 +67,15 @@ describe('runNpmPublishExecutor', () => {
     const envRoot = 'tmp/environments/my-lib-e2e';
 
     expect(logger.info).toHaveBeenCalledWith(
-      expect.stringContaining(`Publishing package from ${pkgDist} to ${envRoot} with userconfig`)
+      expect.stringContaining(
+        `Publishing package from ${pkgDist} to ${envRoot} with userconfig`
+      )
     );
 
     expect(pkgVersionModuleSpy).toHaveBeenCalledTimes(1);
-    expect(pkgVersionModuleSpy).toHaveBeenCalledWith(expect.toMatchPath('dist/projects/my-lib'));
+    expect(pkgVersionModuleSpy).toHaveBeenCalledWith(
+      expect.toMatchPath('dist/projects/my-lib')
+    );
 
     expect(executeProcessSpy).toHaveBeenCalledTimes(1);
     expect(executeProcessSpy).toHaveBeenCalledWith(
