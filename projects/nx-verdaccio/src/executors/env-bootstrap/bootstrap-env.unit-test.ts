@@ -92,7 +92,7 @@ describe('bootstrapEnvironment', () => {
 
     expect(writeFileSpy).toHaveBeenCalledTimes(1);
     expect(writeFileSpy).toHaveBeenCalledWith(
-      'tmp/environments/my-lib-e2e/verdaccio-registry.json',
+      expect.toMatchPath('tmp/environments/my-lib-e2e/verdaccio-registry.json'),
       JSON.stringify(
         {
           host: 'localhost',
