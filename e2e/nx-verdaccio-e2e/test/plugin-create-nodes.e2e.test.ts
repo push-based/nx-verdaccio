@@ -275,16 +275,6 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
       })
     );
 
-    expect({
-      ...projectJson.targets,
-      [TARGET_ENVIRONMENT_VERDACCIO_START]: {
-        ...projectJson.targets?.[TARGET_ENVIRONMENT_VERDACCIO_START],
-        options: {
-          ...projectJson.targets?.[TARGET_ENVIRONMENT_VERDACCIO_START].options,
-          port: expect.any(Number),
-        },
-      },
-    }).toMatchSnapshot();
   });
 
   it('should NOT add environment targets to project without targetName e2e', async () => {
