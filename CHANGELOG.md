@@ -1,3 +1,16 @@
+## 0.0.0-alpha.26 (2024-10-23)
+
+
+### 🩹 Fixes
+
+- add skipTeardown to env-teardown executor ([ff52749](https://github.com/push-based/nx-verdaccio/commit/ff52749))
+- add skipTeardown to env-teardown executor ([664c6bd](https://github.com/push-based/nx-verdaccio/commit/664c6bd))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+- Michael Hladky @BioPhoton
+
 ## 0.0.0-alpha.25 (2024-10-22)
 
 
