@@ -98,7 +98,9 @@ describe('runBootstrapExecutor', () => {
     expect(runExecutorSpy).toHaveBeenCalledWith(
       stopVerdaccioTask,
       {
-        filePath: `tmp/environments/${e2eProjectName}/verdaccio-registry.json`,
+        filePath: expect.toMatchPath(
+          `tmp/environments/${e2eProjectName}/verdaccio-registry.json`
+        ),
         verbose: true,
       },
       context
@@ -122,7 +124,9 @@ describe('runBootstrapExecutor', () => {
     expect(runExecutorSpy).toHaveBeenCalledWith(
       stopVerdaccioTask,
       {
-        filePath: `${environmentRoot}/verdaccio-registry.json`,
+        filePath: expect.toMatchPath(
+          `${environmentRoot}/verdaccio-registry.json`
+        ),
       },
       context
     );

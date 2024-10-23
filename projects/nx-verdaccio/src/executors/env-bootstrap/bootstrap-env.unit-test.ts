@@ -68,14 +68,14 @@ describe('bootstrapEnvironment', () => {
       //environmentRoot: 'tmp/environments/my-lib-e2e',
       //keepServerRunning: true,
       projectName: 'my-lib-e2e',
-      storage: 'tmp/environments/my-lib-e2e/storage',
+      storage: expect.toMatchPath('tmp/environments/my-lib-e2e/storage'),
       readyWhen: 'Environment ready under',
       verbose: undefined,
     });
 
     expect(setupNpmWorkspaceSpy).toHaveBeenCalledTimes(1);
     expect(setupNpmWorkspaceSpy).toHaveBeenCalledWith(
-      'tmp/environments/my-lib-e2e',
+      expect.toMatchPath('tmp/environments/my-lib-e2e'),
       undefined
     );
 
@@ -85,14 +85,14 @@ describe('bootstrapEnvironment', () => {
         host: 'localhost',
         port: 4387,
         url: 'http://localhost:4873',
-        userconfig: 'tmp/environments/my-lib-e2e/.npmrc',
+        userconfig: expect.toMatchPath('tmp/environments/my-lib-e2e/.npmrc'),
       },
       undefined
     );
 
     expect(writeFileSpy).toHaveBeenCalledTimes(1);
     expect(writeFileSpy).toHaveBeenCalledWith(
-      'tmp/environments/my-lib-e2e/verdaccio-registry.json',
+      expect.toMatchPath('tmp/environments/my-lib-e2e/verdaccio-registry.json'),
       JSON.stringify(
         {
           host: 'localhost',

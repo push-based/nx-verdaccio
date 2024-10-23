@@ -115,7 +115,9 @@ describe('runSetupEnvironmentExecutor', () => {
         target: TARGET_ENVIRONMENT_VERDACCIO_STOP,
       },
       {
-        filePath: 'tmp/environments/my-lib-e2e/verdaccio-registry.json',
+        filePath: expect.toMatchPath(
+          'tmp/environments/my-lib-e2e/verdaccio-registry.json'
+        ),
         verbose: undefined,
       },
       context

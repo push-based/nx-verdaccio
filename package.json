@@ -56,7 +56,8 @@
     "@nx/nx-darwin-arm64": "^19.6.6",
     "@nx/nx-darwin-x64": "^19.6.6",
     "@nx/nx-linux-x64-gnu": "^19.6.6",
-    "@rollup/rollup-linux-x64-gnu": "^4.24.0"
+    "@rollup/rollup-linux-x64-gnu": "^4.24.0",
+    "@rollup/rollup-win32-x64-msvc": "^4.24.0"
   },
   "nx": {
     "includedScripts": []
