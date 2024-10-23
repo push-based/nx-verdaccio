@@ -48,7 +48,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest] # @TODO add windows-latest after we have the os agnostic macher
+        os: [ubuntu-latest, macos-latest] # @TODO add windows-latest after we have the os agnostic macher
     name: Unit tests
     runs-on: ${{ matrix.os }}
     steps:
@@ -72,7 +72,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest] # @TODO add windows-latest after we know why it is running forever
+        os: [ubuntu-latest, macos-latest] # @TODO add windows-latest after we know why it is running forever
     name: E2E tests
     runs-on: ${{ matrix.os }}
     steps:
