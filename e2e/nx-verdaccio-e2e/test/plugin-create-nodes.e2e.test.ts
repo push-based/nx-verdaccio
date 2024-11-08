@@ -211,7 +211,7 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
           ],
           executor: 'nx:run-commands',
           options: {
-            environmentRoot: 'tmp/environments/lib-a-e2e',
+            environmentRoot: expect.toMatchPath('tmp/environments/lib-a-e2e'),
             command: expect.stringContaining(
               'echo "dependencies installed for'
             ),
@@ -246,7 +246,7 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
           options: expect.objectContaining({
             clear: true,
             config: '.verdaccio/config.yml',
-            environmentDir: 'tmp/environments/lib-a-e2e',
+            environmentDir: expect.toMatchPath('tmp/environments/lib-a-e2e'),
             port: expect.any(Number), // random port number
             projectName: 'lib-a-e2e',
             storage: expect.toMatchPath('tmp/environments/lib-a-e2e/storage'),

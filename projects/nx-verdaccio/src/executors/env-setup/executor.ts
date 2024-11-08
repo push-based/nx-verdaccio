@@ -14,8 +14,8 @@ import {
   TARGET_ENVIRONMENT_INSTALL,
 } from '../../plugin/targets/environment.targets';
 import { runSingleExecutor } from '../../internal/run-executor';
-import { rm } from 'node:fs/promises';
 import { getEnvironmentRoot } from '../../internal/environment-root';
+import {cleanupEnv} from "../internal/cleanup-env";
 
 export type ExecutorOutput = {
   success: boolean;
@@ -92,19 +92,8 @@ export default async function runSetupEnvironmentExecutor(
         configuration,
         environmentRoot,
       });
-      // delete storage, npmrc
-      await rm(join(environmentRoot, 'storage'), {
-        recursive: true,
-        force: true,
-        retryDelay: 100,
-        maxRetries: 2,
-      });
-      await rm(join(environmentRoot, '.npmrc'), {
-        recursive: true,
-        force: true,
-        retryDelay: 100,
-        maxRetries: 2,
-      });
+      // delete storage, .npmrc
+      await cleanupEnv(environmentRoot)
     } else {
       const { url } = await readFile(
         join(environmentRoot, VERDACCIO_REGISTRY_JSON),
