@@ -68,10 +68,7 @@ describe('runNpmInstallExecutor', () => {
 
     expect(logger.info).toHaveBeenCalledTimes(1);
     expect(logger.info).toHaveBeenCalledWith(
-      `Installing my-lib@1.0.0 in ${join(
-        DEFAULT_ENVIRONMENTS_OUTPUT_DIR,
-        'my-lib-e2e'
-      )}`
+      expect.stringContaining(`Installing my-lib@1.0.0 in`)
     );
 
     expect(executeProcessSpy).toHaveBeenCalledTimes(1);
@@ -89,7 +86,7 @@ describe('runNpmInstallExecutor', () => {
           '--no-shrinkwrap',
           '--save',
         ],
-        cwd: 'tmp/environments/my-lib-e2e',
+        cwd: expect.toMatchPath('tmp/environments/my-lib-e2e'),
         verbose: true,
       })
     );

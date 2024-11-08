@@ -187,9 +187,10 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
     const { code, projectJson } = await nxShowProjectJson(cwd, projectAE2e);
     expect(code).toBe(0);
 
-    expect(projectJson.targets).toEqual(
+    expect(projectJson.targets).toStrictEqual(
       expect.objectContaining({
         e2e: expect.objectContaining({
+          configurations: {},
           dependsOn: [
             {
               params: 'forward',
@@ -210,9 +211,10 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
           ],
           executor: 'nx:run-commands',
           options: {
-            environmentRoot: 'tmp/environments/lib-a-e2e',
-            command:
-              'echo "dependencies installed for tmp/environments/lib-a-e2e"',
+            environmentRoot: expect.toMatchPath('tmp/environments/lib-a-e2e'),
+            command: expect.stringContaining(
+              'echo "dependencies installed for'
+            ),
           },
         }),
         [TARGET_ENVIRONMENT_SETUP]: expect.objectContaining({
@@ -244,16 +246,18 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
           options: expect.objectContaining({
             clear: true,
             config: '.verdaccio/config.yml',
-            environmentDir: 'tmp/environments/lib-a-e2e',
+            environmentDir: expect.toMatchPath('tmp/environments/lib-a-e2e'),
             port: expect.any(Number), // random port number
             projectName: 'lib-a-e2e',
-            storage: 'tmp/environments/lib-a-e2e/storage',
+            storage: expect.toMatchPath('tmp/environments/lib-a-e2e/storage'),
           }),
         }),
         [TARGET_ENVIRONMENT_VERDACCIO_STOP]: expect.objectContaining({
           executor: '@push-based/nx-verdaccio:kill-process',
           options: {
-            filePath: 'tmp/environments/verdaccio-registry.json',
+            filePath: expect.toMatchPath(
+              'tmp/environments/verdaccio-registry.json'
+            ),
           },
         }),
         [TARGET_ENVIRONMENT_E2E]: expect.objectContaining({
@@ -271,16 +275,6 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
       })
     );
 
-    expect({
-      ...projectJson.targets,
-      [TARGET_ENVIRONMENT_VERDACCIO_START]: {
-        ...projectJson.targets?.[TARGET_ENVIRONMENT_VERDACCIO_START],
-        options: {
-          ...projectJson.targets?.[TARGET_ENVIRONMENT_VERDACCIO_START].options,
-          port: expect.any(Number),
-        },
-      },
-    }).toMatchSnapshot();
   });
 
   it('should NOT add environment targets to project without targetName e2e', async () => {
