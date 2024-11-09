@@ -1,28 +1,22 @@
-import { dirname, join, basename } from 'node:path';
+import { basename, dirname, join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { readFile, rm } from 'node:fs/promises';
 import { executeProcess, objectToCliArgs } from '@push-based/test-utils';
-import {
-  getTestFixturesDist,
-  getTestEnvironmentRoot,
-} from '@push-based/test-utils';
+import type { SimpleGit } from 'simple-git';
+import { simpleGit } from 'simple-git';
 
 describe('CLI command - sort', () => {
-  const fixturesDist = getTestFixturesDist('cli-command-sort', {
-    root: getTestEnvironmentRoot(process.env['NX_TASK_TARGET_PROJECT']),
-  });
+  const envRoot = join('static-environments', 'user-lists');
+  const baseDir = join(envRoot, 'src', 'lib');
+  export const gitClient: SimpleGit = simpleGit(process.cwd());
 
   afterEach(async () => {
-    await rm(fixturesDist, { recursive: true, force: true });
+    await gitClient.checkout([envRoot]);
+    await gitClient.clean('f', [envRoot]);
   });
 
   it('should execute CLI command sort when param file is given', async () => {
-    const testPath = join(fixturesDist, 'execute-sort-command', 'users.json');
-    await mkdir(dirname(testPath), { recursive: true });
-    await writeFile(
-      testPath,
-      JSON.stringify([{ name: 'Michael' }, { name: 'Alice' }])
-    );
+    const testPath = join(baseDir, 'unsorted-users.json');
 
     const { code } = await executeProcess({
       command: 'npx',

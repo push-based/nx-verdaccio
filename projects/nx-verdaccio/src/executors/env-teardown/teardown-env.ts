@@ -33,8 +33,8 @@ export async function teardownEnvironment(
 
   const environmentRootInRepo = await isFolderInGit(environmentRoot);
   if (environmentRootInRepo) {
-    // await git.checkout([environmentRoot]);
-    // await git.clean('f', [environmentRoot]);
+    await gitClient.checkout([environmentRoot]);
+    await gitClient.clean('f', [environmentRoot]);
     logger.info(`Cleaned git history in ${environmentRoot}`);
   } else {
     try {

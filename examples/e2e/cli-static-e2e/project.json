@@ -7,6 +7,11 @@
   "implicitDependencies": ["cli"],
   "targets": {
     "lint": {},
+    "nxv-env-setup": {
+      "options": {
+        "environmentRoot": "static-environments/user-lists"
+      }
+    },
     "e2e-static": {
       "executor": "@nx/vite:test",
       "inputs": ["default", "^production"],
