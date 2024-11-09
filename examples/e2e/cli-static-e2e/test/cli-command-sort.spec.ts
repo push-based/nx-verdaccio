@@ -8,11 +8,11 @@ import { simpleGit } from 'simple-git';
 describe('CLI command - sort', () => {
   const envRoot = join('static-environments', 'user-lists');
   const baseDir = join(envRoot, 'src', 'lib');
-  export const gitClient: SimpleGit = simpleGit(process.cwd());
+  const gitClient: SimpleGit = simpleGit(process.cwd());
 
   afterEach(async () => {
-    await gitClient.checkout([envRoot]);
-    await gitClient.clean('f', [envRoot]);
+    await gitClient.checkout([baseDir]);
+    await gitClient.clean('f', [baseDir]);
   });
 
   it('should execute CLI command sort when param file is given', async () => {
@@ -31,7 +31,34 @@ describe('CLI command - sort', () => {
     expect(code).toBe(0);
 
     const content = (await readFile(testPath)).toString();
-    expect(JSON.parse(content)).toEqual([
+    expect(JSON.parse(content)).toStrictEqual([
+      { name: 'Alice' },
+      { name: 'Michael' },
+    ]);
+  });
+
+  it('should execute CLI command sort on sorted file', async () => {
+    const testPath = join(baseDir, 'sorted-users.json');
+
+    const contentBefore = (await readFile(testPath)).toString();
+    expect(JSON.parse(contentBefore)).toStrictEqual([
+      { name: 'Alice' },
+      { name: 'Michael' },
+    ]);
+
+    const { code } = await executeProcess({
+      command: 'npx',
+      args: objectToCliArgs({
+        _: ['cli', 'sort'],
+        filePath: basename(testPath),
+      }),
+      cwd: baseDir,
+    });
+
+    expect(code).toBe(0);
+
+    const content = (await readFile(testPath)).toString();
+    expect(JSON.parse(content)).toStrictEqual([
       { name: 'Alice' },
       { name: 'Michael' },
     ]);

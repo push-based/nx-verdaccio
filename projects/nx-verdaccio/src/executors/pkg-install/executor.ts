@@ -36,9 +36,10 @@ export default async function runNpmInstallExecutor(
         'install',
         `${packageNameAndVersion}`,
         '--include=prod',
-        '--include=dev',
-        '--include=optional',
-        '--include=peer', // install all the deps of the package
+        '--include=peer',
+        // @TODO: implement options for dev and optional dependencies
+        //'--include=dev',
+        //'--include=optional',
       ],
       fund: false, // avoid polluted terminal
       shrinkwrap: false, // avoid package-lock creation or update
