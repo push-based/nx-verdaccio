@@ -27,6 +27,7 @@ export default defineConfig({
       '../../testing/test-setup/src/lib/reset.mock.ts',
     ],
     coverage: {
+      reporter: ['lcov', 'text-summary'],
       reportsDirectory: '../../coverage/projects/build-env',
       provider: 'v8',
     },

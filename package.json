@@ -5,12 +5,15 @@
   "scripts": {},
   "private": true,
   "dependencies": {
-    "memfs": "^4.11.1",
     "simple-git": "^3.27.0",
-    "tslib": "^2.3.0",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
+    "memfs": "^4.11.1",
+    "tslib": "^2.3.0",
+    "@code-pushup/coverage-plugin": "^0.54.0",
+    "@code-pushup/eslint-plugin": "^0.54.0",
+    "@code-pushup/js-packages-plugin": "^0.54.0",
     "@code-pushup/cli": "^0.54.0",
     "@code-pushup/core": "^0.54.0",
     "@code-pushup/models": "^0.54.0",
