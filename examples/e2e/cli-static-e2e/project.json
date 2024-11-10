@@ -7,13 +7,19 @@
   "implicitDependencies": ["cli"],
   "targets": {
     "lint": {},
-    "e2e-static": {
-      "executor": "@nx/vite:test",
-      "inputs": ["default", "^production"],
-      "outputs": ["{options.reportsDirectory}"],
+    "nxv-e2e": {
       "options": {
-        "reportsDirectory": "../../../coverage/projects/cli-static-e2e"
+        "envRoot": "static-environments/user-lists"
       }
+    },
+    "nxv-env-setup": {
+      "options": {
+        "envRoot": "static-environments/user-lists"
+      }
+    },
+    "e2e": {
+      "executor": "@nx/vite:test",
+      "inputs": ["default", "^production"]
     }
   }
 }

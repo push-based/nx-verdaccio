@@ -33,9 +33,24 @@ export async function teardownEnvironment(
 
   const environmentRootInRepo = await isFolderInGit(environmentRoot);
   if (environmentRootInRepo) {
-    // await git.checkout([environmentRoot]);
-    // await git.clean('f', [environmentRoot]);
+    await gitClient.checkout([environmentRoot]);
+    await gitClient.clean('f', [environmentRoot]);
     logger.info(`Cleaned git history in ${environmentRoot}`);
+
+    const nodeModules = join(environmentRoot, 'node_modules');
+    try {
+      await rm(nodeModules, {
+        recursive: true,
+        force: true,
+        retryDelay: 100,
+        maxRetries: 2,
+      });
+      logger.info(`deleted folder ${nodeModules}.`);
+    } catch (error) {
+      throw new Error(
+        `Error cleaning history of folder ${nodeModules}. ${error.message}`
+      );
+    }
   } else {
     try {
       await rm(environmentRoot, {

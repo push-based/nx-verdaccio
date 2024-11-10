@@ -21,7 +21,7 @@ export function getEnvironmentRoot(
   context: ExecutorContext,
   options: Partial<Environment>
 ) {
-  const { environmentRoot: optEnvironmentRoot } = options;
+  const { environmentRoot } = options;
   const environmentsDir = getEnvironmentDir(context);
-  return optEnvironmentRoot ?? join(environmentsDir, context.projectName);
+  return environmentRoot ?? join(environmentsDir, context.projectName);
 }
