@@ -8,8 +8,8 @@ import { mergeConfigs } from '@code-pushup/utils';
 const onlyAudits: OnlyAudit[] = [
   'graph-time-project',
   'graph-time-task',
-  'cache-size',
-  'task-time',
+  //'cache-size',
+  //'task-time',
 ];
 const taskGraphTasks = ['cli-e2e:nxv-env-install'];
 const taskTimeTasks: TaskTimeAuditOption[] = [
@@ -19,10 +19,10 @@ const taskTimeTasks: TaskTimeAuditOption[] = [
   { task: 'models-e2e:e2e' },
   { task: 'models-e2e:nxv-e2e' },
   { task: 'nx-verdaccio-e2e:nxv-e2e' },
-  {
+ /* {
     task: 'cli-e2e-original:original-e2e',
     options: { exclude: ['nx-verdaccio'] },
-  },
+  },*/
 ];
 const cacheSizeTasks = [
   'models-e2e:nxv-env-setup',
