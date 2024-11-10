@@ -1,6 +1,6 @@
-import { beforeEach, describe, expect, vi, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import runNpmPublishExecutor from './executor';
-import { MEMFS_VOLUME, osAgnosticPath } from '@push-based/test-utils';
+import { MEMFS_VOLUME } from '@push-based/test-utils';
 import * as execProcessModule from '../../internal/execute-process';
 import * as pkgVersionModule from './pkg-version';
 import { logger } from '@nx/devkit';
@@ -62,7 +62,7 @@ describe('runNpmPublishExecutor', () => {
     });
 
     expect(logger.info).toHaveBeenCalledTimes(1);
-    const userconfigRelative = '../../../tmp/environments/my-lib-e2e/.npmrc';
+    // const userconfigRelative = '../../../tmp/environments/my-lib-e2e/.npmrc';
     const pkgDist = 'dist/projects/my-lib';
     const envRoot = 'tmp/environments/my-lib-e2e';
 

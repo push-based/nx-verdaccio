@@ -4,8 +4,7 @@
   "license": "MIT",
   "scripts": {},
   "private": true,
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "memfs": "^4.11.1",
     "simple-git": "^3.27.0",

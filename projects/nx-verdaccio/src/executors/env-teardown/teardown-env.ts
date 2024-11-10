@@ -1,5 +1,5 @@
 import { type Environment } from '../env-bootstrap/npm';
-import { simpleGit, type SimpleGit } from 'simple-git';
+import { simpleGit } from 'simple-git';
 import { isFolderInGit } from './git';
 import { type ExecutorContext, logger } from '@nx/devkit';
 import { join } from 'node:path';

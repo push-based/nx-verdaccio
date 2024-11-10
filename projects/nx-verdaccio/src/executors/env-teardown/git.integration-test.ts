@@ -2,11 +2,7 @@ import { beforeEach, describe } from 'vitest';
 import { join } from 'node:path';
 import { simpleGit } from 'simple-git';
 import { isFolderInGit } from './git';
-import {
-  commitFile,
-  initGitRepo,
-  teardownTestFolder,
-} from '@push-based/test-utils';
+import { commitFile, initGitRepo } from '@push-based/test-utils';
 import { writeFile } from 'node:fs/promises';
 
 describe('isFolderInGit in a fresh repo', () => {
