@@ -8,7 +8,11 @@ describe('plugin', () => {
     const testPath = join('sort', 'users.json');
     vol.fromJSON(
       {
-        [testPath]: JSON.stringify([{ name: 'b' }, { name: 'a' }]),
+        [testPath]: JSON.stringify([
+          { name: 'B' },
+          { name: 'A' },
+          { name: 'C' },
+        ]),
       },
       MEMFS_VOLUME
     );
@@ -16,6 +20,10 @@ describe('plugin', () => {
     await expect(plugin1(testPath)).resolves.not.toThrow();
 
     const content = JSON.parse(await vol.promises.readFile(testPath));
-    expect(content).toStrictEqual([{ name: 'a' }, { name: 'b' }]);
+    expect(content).toStrictEqual([
+      { name: 'C' },
+      { name: 'B' },
+      { name: 'A' },
+    ]);
   });
 });
