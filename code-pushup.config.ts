@@ -4,11 +4,6 @@ import nxPerformancePlugin, {
 } from './tooling/measures/nx-performance/nx-performance.plugin';
 import { TaskTimeAuditOption } from './tooling/measures/nx-performance';
 import { mergeConfigs } from '@code-pushup/utils';
-import {
-  eslintCoreConfigNx,
-  jsPackagesCoreConfig,
-  coverageCoreConfigNx,
-} from './code-pushup.preset';
 
 const onlyAudits: OnlyAudit[] = [
   'graph-time-project',
@@ -61,7 +56,7 @@ export default mergeConfigs(
         ],
       },
     ],
-  },
- // await jsPackagesCoreConfig(),
- // await eslintCoreConfigNx()
+  }
+  // await jsPackagesCoreConfig(),
+  // await eslintCoreConfigNx()
 );

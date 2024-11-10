@@ -31,7 +31,14 @@ export async function teardownEnvironment(
     return;
   }
 
-  const environmentRootInRepo = await isFolderInGit(environmentRoot);
+  let environmentRootInRepo = false;
+  try {
+    environmentRootInRepo = await isFolderInGit(environmentRoot);
+  } catch (error) {
+    logger.verbose(
+      `Error checking if ${environmentRoot} is in a git repository: ${error.message}`
+    );
+  }
   if (environmentRootInRepo) {
     await gitClient.checkout([environmentRoot]);
     await gitClient.clean('f', [environmentRoot]);
