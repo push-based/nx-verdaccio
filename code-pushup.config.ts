@@ -62,6 +62,6 @@ export default mergeConfigs(
       },
     ],
   },
-  await jsPackagesCoreConfig(),
-  await eslintCoreConfigNx()
+ // await jsPackagesCoreConfig(),
+ // await eslintCoreConfigNx()
 );
