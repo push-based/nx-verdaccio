@@ -8,8 +8,8 @@ import { fileExists } from '../../internal/file-system';
 import { rm } from 'node:fs/promises';
 import runKillProcessExecutor from '../kill-process/executor';
 import { getEnvironmentRoot } from '../../internal/environment-root';
+import * as process from "process";
 
-export const gitClient: SimpleGit = simpleGit(process.cwd());
 export type TeardownEnvironmentOptions = Environment & { verbose?: boolean };
 
 export async function teardownEnvironment(
@@ -31,17 +31,11 @@ export async function teardownEnvironment(
     return;
   }
 
-  let environmentRootInRepo = false;
-  try {
-    environmentRootInRepo = await isFolderInGit(environmentRoot);
-  } catch (error) {
-    logger.verbose(
-      `Error checking if ${environmentRoot} is in a git repository: ${error.message}`
-    );
-  }
+  const environmentRootInRepo = await isFolderInGit(environmentRoot);
   if (environmentRootInRepo) {
-    await gitClient.checkout([environmentRoot]);
-    await gitClient.clean('f', [environmentRoot]);
+    const git = simpleGit(process.cwd());
+    await git.checkout([environmentRoot]);
+    await git.clean('f', [environmentRoot]);
     logger.info(`Cleaned git history in ${environmentRoot}`);
 
     const nodeModules = join(environmentRoot, 'node_modules');
