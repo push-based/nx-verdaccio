@@ -1,3 +1,64 @@
+## 0.0.0-alpha.26 (2024-10-23)
+
+
+### 🩹 Fixes
+
+- add skipTeardown to env-teardown executor ([ff52749](https://github.com/push-based/nx-verdaccio/commit/ff52749))
+- add skipTeardown to env-teardown executor ([664c6bd](https://github.com/push-based/nx-verdaccio/commit/664c6bd))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+- Michael Hladky @BioPhoton
+
+## 0.0.0-alpha.25 (2024-10-22)
+
+
+### 🩹 Fixes
+
+- pkg-install unit tests ([9c6e64d](https://github.com/push-based/nx-verdaccio/commit/9c6e64d))
+- npmWorkspace tests unit tests ([7485fe4](https://github.com/push-based/nx-verdaccio/commit/7485fe4))
+- e2e ([10a7c76](https://github.com/push-based/nx-verdaccio/commit/10a7c76))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
+## 0.0.0-alpha.24 (2024-10-20)
+
+
+### 🩹 Fixes
+
+- install optional deps with package ([abf41db](https://github.com/push-based/nx-verdaccio/commit/abf41db))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
+## 0.0.0-alpha.23 (2024-10-19)
+
+
+### 🩹 Fixes
+
+- detach if not windows ([5f0e94e](https://github.com/push-based/nx-verdaccio/commit/5f0e94e))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
+## 0.0.0-alpha.22 (2024-10-18)
+
+
+### 🩹 Fixes
+
+- envRoot derivation in executor ([ae6b9aa](https://github.com/push-based/nx-verdaccio/commit/ae6b9aa))
+- **nx-verdaccio:** move envRoot into executors ([3818fba](https://github.com/push-based/nx-verdaccio/commit/3818fba))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+- Michael Hladky @BioPhoton
+
 ## 0.0.0-alpha.21 (2024-10-15)
 
 

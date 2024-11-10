@@ -3,8 +3,6 @@
   "version": "0.0.1",
   "dependencies": {
     "@push-based/utils": "*",
-    "@push-based/models": "*",
-    "vite": "~5.0.0",
-    "@nx/vite": "19.8.0"
+    "@push-based/models": "*"
   }
 }

@@ -23,5 +23,6 @@ export default defineConfig({
       reportsDirectory: '../../coverage/projects/test-utils',
       provider: 'v8',
     },
+    setupFiles: ['../testing/test-setup/src/lib/extend/path-matcher.ts'],
   },
 });

@@ -117,7 +117,7 @@ export async function nxShowProjectJson<T extends ProjectConfiguration>(
 ) {
   const { prefix, userconfig } = options ?? {};
   const { code, stderr, stdout } = await executeProcess({
-    command: 'NX_DAEMON=false NX_CACHE_PROJECT_GRAPH=false npx',
+    command: 'npx',
     args: objectToCliArgs({
       _: ['nx', 'show', 'project', project, '--skipNxCache'],
       verbose: false, // debug errors
@@ -126,6 +126,11 @@ export async function nxShowProjectJson<T extends ProjectConfiguration>(
       userconfig,
     }),
     cwd,
+    env: {
+      ...process.env,
+      NX_DAEMON: 'false',
+      NX_CACHE_PROJECT_GRAPH: 'false',
+    },
   });
 
   try {

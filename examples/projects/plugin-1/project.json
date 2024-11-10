@@ -1,0 +1,37 @@
+{
+  "name": "plugin-1",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "examples/projects/plugin-1/src",
+  "projectType": "library",
+  "release": {
+    "version": {
+      "generatorOptions": {
+        "packageRoot": "dist/{projectRoot}",
+        "currentVersionResolver": "git-tag"
+      }
+    }
+  },
+  "tags": ["type:app", "type:unit-test-vi", "publishable", "type:example"],
+  "targets": {
+    "lint": {},
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/examples/projects/plugin-1",
+        "main": "examples/projects/plugin-1/src/index.ts",
+        "tsConfig": "examples/projects/plugin-1/tsconfig.lib.json",
+        "assets": ["examples/projects/plugin-1/*.md"],
+        "generatePackageJson": true,
+        "format": ["esm"]
+      }
+    },
+    "unit-test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "../../../coverage/examples/projects/cli"
+      }
+    }
+  }
+}

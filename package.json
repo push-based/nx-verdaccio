@@ -11,10 +11,10 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@code-pushup/cli": "^0.50.0",
-    "@code-pushup/core": "^0.50.0",
-    "@code-pushup/models": "^0.50.0",
-    "@code-pushup/utils": "^0.50.0",
+    "@code-pushup/cli": "^0.54.0",
+    "@code-pushup/core": "^0.54.0",
+    "@code-pushup/models": "^0.54.0",
+    "@code-pushup/utils": "^0.54.0",
     "@nx/devkit": "20.0.2",
     "@nx/esbuild": "20.0.2",
     "@nx/eslint": "20.0.2",
@@ -27,7 +27,7 @@
     "@nx/workspace": "20.0.2",
     "@swc-node/register": "~1.9.1",
     "@swc/cli": "~0.3.12",
-    "@swc/core": "^1.7.22",
+    "@swc/core": "^1.7.39",
     "@swc/helpers": "~0.5.11",
     "@types/jest": "^29.5.12",
     "@types/node": "18.16.9",
@@ -55,7 +55,9 @@
   "optionalDependencies": {
     "@nx/nx-darwin-arm64": "^19.6.6",
     "@nx/nx-darwin-x64": "^19.6.6",
-    "@nx/nx-linux-x64-gnu": "^19.6.6"
+    "@nx/nx-linux-x64-gnu": "^19.6.6",
+    "@rollup/rollup-linux-x64-gnu": "^4.24.0",
+    "@rollup/rollup-win32-x64-msvc": "^4.24.0"
   },
   "nx": {
     "includedScripts": []

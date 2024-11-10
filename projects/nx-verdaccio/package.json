@@ -1,6 +1,6 @@
 {
   "name": "@push-based/nx-verdaccio",
-  "version": "0.0.0-alpha.21",
+  "version": "0.0.0-alpha.26",
   "description": "Nx plugin for blazing fast Verdaccio setup & testing",
   "license": "MIT",
   "private": false,
@@ -8,9 +8,7 @@
     "@nx/devkit": "^20.0.0",
     "ansis": "^3.3.2",
     "simple-git": "^3.27.0",
-    "nx": "^20.0.0",
-    "tslib": "^2.3.0",
-    "verdaccio": "*"
+    "tslib": "^2.3.0"
   },
   "type": "commonjs",
   "main": "./src/index.js",

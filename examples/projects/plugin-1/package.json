@@ -1,0 +1,7 @@
+{
+  "name": "@push-based/plugin-1",
+  "version": "0.0.1",
+  "dependencies": {
+    "@push-based/models": "0.0.1"
+  }
+}

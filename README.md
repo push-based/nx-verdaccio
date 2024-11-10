@@ -8,7 +8,6 @@
 [![commit activity](https://img.shields.io/github/commit-activity/m/push-based/nx-verdaccio)](https://github.com/push-based/nx-verdaccio/pulse/monthly)
 [![CI](https://github.com/push-based/nx-verdaccio/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/push-based/nx-verdaccio/actions/workflows/ci.yml?query=branch%3Amain)
 
-
 Welcome to the **Verdaccio Testing Environments Nx Plugin** — your one-stop solution for running **blazingly fast**, **isolated**, and **scalable** end-to-end (e2e) tests with zero configuration. Yeah, you heard that right: **ZERO configuration**.
 
 With this plugin, say goodbye to the old days of waiting around for your tests and hello to _next-level speed_. Plug it in, and you're good to go.
@@ -239,6 +238,12 @@ This is a first draft of how the benchmarks will look. ATM the data set it not b
 |           Cacheable           |   ❌   |    ✅     |        n/a        |        n/a         |
 |          Graph Nodes          |   1    |    13     |        n/a        |        n/a         |
 |          Parallelism          |   ❌   |    ✅     |        n/a        |        n/a         |
+
+## Next Steps
+
+- [configure cacheable environments](./projects/nx-verdaccio/docs/static-environments.md)
+- [static environments](.)
+- [debugging](.)
 
 ## Stay Connected! 🔗
 

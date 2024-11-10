@@ -6,22 +6,19 @@ import {
   type ConfigureRegistryOptions,
   setupNpmWorkspace,
   unconfigureRegistry,
-  type UnconfigureRegistryOptions,
   VERDACCIO_ENV_TOKEN,
 } from './npm';
-import { exec } from 'node:child_process';
 import { logger } from '@nx/devkit';
 import { formatInfo } from '../../internal/logging';
 
-vi.mock('child_process', async () => {
-  const actual = await vi.importActual<typeof import('child_process')>(
-    'child_process'
-  );
-  return {
-    ...actual,
-    exec: vi.fn().mockImplementation((cmd, cb) => cb(null, '', '')),
-  };
-});
+const execMock = vi.fn();
+vi.mock('util', () => ({
+  promisify: vi.fn(
+    () =>
+      (...args) =>
+        execMock(...args)
+  ),
+}));
 
 vi.mock('@nx/devkit', async () => {
   const actual = await vi.importActual('@nx/devkit');
@@ -34,6 +31,9 @@ vi.mock('@nx/devkit', async () => {
 });
 
 describe('configureRegistry', () => {
+  beforeEach(() => {
+    execMock.mockRestore();
+  });
   it('should set the npm registry and authToken', async () => {
     const processResult: ConfigureRegistryOptions = {
       port: 4873,
@@ -44,15 +44,15 @@ describe('configureRegistry', () => {
 
     await configureRegistry(processResult);
 
-    expect(exec).toHaveBeenCalledTimes(2);
-    expect(exec).toHaveBeenCalledWith(
+    expect(execMock).toHaveBeenCalledTimes(2);
+    expect(execMock).toHaveBeenCalledWith(
       'npm config set registry="http://localhost:4873" --userconfig="test-config"',
-      expect.any(Function)
+      { windowsHide: true }
     );
 
-    expect(exec).toHaveBeenCalledWith(
+    expect(execMock).toHaveBeenCalledWith(
       'npm config set //localhost:4873/:_authToken "secretVerdaccioToken" --userconfig="test-config"',
-      expect.any(Function)
+      { windowsHide: true }
     );
   });
 
@@ -66,7 +66,7 @@ describe('configureRegistry', () => {
 
     await configureRegistry(processResult, true);
 
-    expect(exec).toHaveBeenCalledTimes(2);
+    expect(execMock).toHaveBeenCalledTimes(2);
     expect(logger.info).toHaveBeenCalledWith(
       formatInfo(
         'Set registry:\nnpm config set registry="http://localhost:4873" --userconfig="test-config"',
@@ -83,6 +83,10 @@ describe('configureRegistry', () => {
 });
 
 describe('unconfigureRegistry', () => {
+  beforeEach(() => {
+    execMock.mockRestore();
+  });
+
   it('should delete the npm registry and authToken', async () => {
     const processResult: UnconfigureRegistryOptions = {
       userconfig: 'test-config',
@@ -92,15 +96,15 @@ describe('unconfigureRegistry', () => {
 
     await unconfigureRegistry(processResult);
 
-    expect(exec).toHaveBeenCalledTimes(2);
-    expect(exec).toHaveBeenCalledWith(
+    expect(execMock).toHaveBeenCalledTimes(2);
+    expect(execMock).toHaveBeenCalledWith(
       'npm config delete registry --userconfig="test-config"',
-      expect.any(Function)
+      { windowsHide: true }
     );
 
-    expect(exec).toHaveBeenCalledWith(
+    expect(execMock).toHaveBeenCalledWith(
       'npm config delete //localhost:4873/:_authToken --userconfig="test-config"',
-      expect.any(Function)
+      { windowsHide: true }
     );
   });
 
@@ -113,7 +117,7 @@ describe('unconfigureRegistry', () => {
 
     await unconfigureRegistry(processResult, true);
 
-    expect(exec).toHaveBeenCalledTimes(2);
+    expect(execMock).toHaveBeenCalledTimes(2);
     expect(logger.info).toHaveBeenCalledWith(
       formatInfo(
         'Delete registry:\nnpm config delete registry --userconfig="test-config"',

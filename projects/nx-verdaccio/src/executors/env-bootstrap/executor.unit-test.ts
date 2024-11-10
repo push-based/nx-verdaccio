@@ -5,13 +5,14 @@ import * as bootstrapExecutorModule from './bootstrap-env';
 import { PACKAGE_NAME } from '../../plugin/constants';
 import { TARGET_ENVIRONMENT_VERDACCIO_STOP } from '../../plugin/targets/environment.targets';
 import { MockAsyncIterableIterator } from '@push-based/test-utils';
+import { type ExecutorContext } from '@nx/devkit';
 
 describe('runBootstrapExecutor', () => {
   const e2eProjectName = 'my-lib-e2e';
   const e2eProjectsConfiguration = {
     root: `e2e/${e2eProjectName}`,
   };
-  const context = {
+  const context: ExecutorContext = {
     cwd: 'test',
     isVerbose: false,
     root: 'tmp/environments/test',
@@ -21,6 +22,9 @@ describe('runBootstrapExecutor', () => {
       projects: {
         [e2eProjectName]: e2eProjectsConfiguration,
       },
+    },
+    nxJsonConfiguration: {
+      plugins: [],
     },
   };
   const stopVerdaccioTask = {
@@ -94,7 +98,9 @@ describe('runBootstrapExecutor', () => {
     expect(runExecutorSpy).toHaveBeenCalledWith(
       stopVerdaccioTask,
       {
-        filePath: `tmp/environments/${e2eProjectName}/verdaccio-registry.json`,
+        filePath: expect.toMatchPath(
+          `tmp/environments/${e2eProjectName}/verdaccio-registry.json`
+        ),
         verbose: true,
       },
       context
@@ -118,7 +124,9 @@ describe('runBootstrapExecutor', () => {
     expect(runExecutorSpy).toHaveBeenCalledWith(
       stopVerdaccioTask,
       {
-        filePath: `${environmentRoot}/verdaccio-registry.json`,
+        filePath: expect.toMatchPath(
+          `${environmentRoot}/verdaccio-registry.json`
+        ),
       },
       context
     );

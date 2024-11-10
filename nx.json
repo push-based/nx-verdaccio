@@ -29,6 +29,7 @@
       "cache": true,
       "inputs": ["default", "^production"]
     },
+    "nxv-e2e": {},
     "nxv-env-setup": {
       "cache": true,
       "inputs": [

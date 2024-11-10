@@ -77,12 +77,7 @@ describe('runSetupEnvironmentExecutor', () => {
     };
 
     await expect(
-      runSetupEnvironmentExecutor(
-        {
-          environmentRoot: 'tmp/environments/my-lib-e2e',
-        },
-        context
-      )
+      runSetupEnvironmentExecutor({}, context)
     ).resolves.toStrictEqual({
       success: true,
       command: 'Environment env-setup complete.',
@@ -91,12 +86,13 @@ describe('runSetupEnvironmentExecutor', () => {
     expect(executeProcessSpy).toHaveBeenCalledTimes(1);
     expect(executeProcessSpy).toHaveBeenCalledWith({
       args: [
+        'nx',
         'nxv-env-install',
         projectName,
         // @TODO check for --environmentRoot too be OS agnostic path
         expect.stringContaining(projectName),
       ],
-      command: 'nx',
+      command: 'npx',
       cwd: '/test',
     });
 
@@ -108,7 +104,6 @@ describe('runSetupEnvironmentExecutor', () => {
         target: TARGET_ENVIRONMENT_BOOTSTRAP,
       },
       {
-        environmentRoot: 'tmp/environments/my-lib-e2e',
         keepServerRunning: true,
       },
       context
@@ -120,7 +115,9 @@ describe('runSetupEnvironmentExecutor', () => {
         target: TARGET_ENVIRONMENT_VERDACCIO_STOP,
       },
       {
-        filePath: 'tmp/environments/my-lib-e2e/verdaccio-registry.json',
+        filePath: expect.toMatchPath(
+          'tmp/environments/my-lib-e2e/verdaccio-registry.json'
+        ),
         verbose: undefined,
       },
       context
@@ -218,11 +215,12 @@ describe('runSetupEnvironmentExecutor', () => {
     expect(executeProcessSpy).toHaveBeenCalledTimes(1);
     expect(executeProcessSpy).toHaveBeenCalledWith({
       args: [
+        'nx',
         'nxv-env-install',
         'my-lib-e2e',
         '--environmentRoot="tmp/environments/my-lib-e2e"',
       ],
-      command: 'nx',
+      command: 'npx',
       cwd: '/test',
     });
 

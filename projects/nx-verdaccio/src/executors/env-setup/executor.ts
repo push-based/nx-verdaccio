@@ -14,7 +14,8 @@ import {
   TARGET_ENVIRONMENT_INSTALL,
 } from '../../plugin/targets/environment.targets';
 import { runSingleExecutor } from '../../internal/run-executor';
-import { rm } from 'node:fs/promises';
+import { getEnvironmentRoot } from '../../internal/environment-root';
+import {cleanupEnv} from "../internal/cleanup-env";
 
 export type ExecutorOutput = {
   success: boolean;
@@ -27,8 +28,11 @@ export default async function runSetupEnvironmentExecutor(
   context: ExecutorContext
 ) {
   const { configurationName: configuration, projectName } = context;
-  const { verbose, environmentRoot, keepServerRunning } =
-    terminalAndExecutorOptions;
+  const { verbose, keepServerRunning } = terminalAndExecutorOptions;
+  const environmentRoot = getEnvironmentRoot(
+    context,
+    terminalAndExecutorOptions
+  );
   try {
     await runSingleExecutor(
       {
@@ -54,9 +58,9 @@ export default async function runSetupEnvironmentExecutor(
 
   try {
     await executeProcess({
-      command: 'nx',
+      command: 'npx',
       args: objectToCliArgs({
-        _: [TARGET_ENVIRONMENT_INSTALL, projectName],
+        _: ['nx', TARGET_ENVIRONMENT_INSTALL, projectName],
         environmentRoot,
         ...(verbose ? { verbose } : {}),
       }),
@@ -88,19 +92,8 @@ export default async function runSetupEnvironmentExecutor(
         configuration,
         environmentRoot,
       });
-      // delete storage, npmrc
-      await rm(join(environmentRoot, 'storage'), {
-        recursive: true,
-        force: true,
-        retryDelay: 100,
-        maxRetries: 2,
-      });
-      await rm(join(environmentRoot, '.npmrc'), {
-        recursive: true,
-        force: true,
-        retryDelay: 100,
-        maxRetries: 2,
-      });
+      // delete storage, .npmrc
+      await cleanupEnv(environmentRoot)
     } else {
       const { url } = await readFile(
         join(environmentRoot, VERDACCIO_REGISTRY_JSON),

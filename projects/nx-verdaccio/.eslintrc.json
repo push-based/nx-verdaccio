@@ -40,7 +40,12 @@
           "error",
           {
             "buildTargets": ["build"],
-            "ignoredDependencies": ["verdaccio"],
+            "ignoredDependencies": [
+              "verdaccio",
+              "nx",
+              "@code-pushup/models",
+              "@nx/plugin"
+            ],
             "checkMissingDependencies": true,
             "checkObsoleteDependencies": true,
             "checkVersionMismatches": true,

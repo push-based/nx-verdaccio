@@ -32,7 +32,15 @@ export default async function runNpmInstallExecutor(
   await executeProcess({
     command: 'npm',
     args: objectToCliArgs({
-      _: ['install', `${packageNameAndVersion}`],
+      _: [
+        'install',
+        `${packageNameAndVersion}`,
+        '--include=prod',
+        '--include=peer',
+        // @TODO: implement options for dev and optional dependencies
+        //'--include=dev',
+        //'--include=optional',
+      ],
       fund: false, // avoid polluted terminal
       shrinkwrap: false, // avoid package-lock creation or update
       save: true, // save to package.json dependencies

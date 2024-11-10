@@ -24,11 +24,31 @@ jobs:
       - name: Audit production dependencies
         run: npm audit --omit=dev --omit=optional
 
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Set base and head for Nx affected commands
+        uses: nrwl/nx-set-shas@v4
+      - name: Install dependencies
+        run: npm ci
+      - name: Lint affected projects
+        run: npx nx affected -t lint --parallel=3 --verbose
+
   unit-test:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest] # @TODO add windows-latest after we have the os agnostic macher
+        os: [ubuntu-latest, macos-latest, windows-latest] # @TODO add windows-latest after we have the os agnostic macher
     name: Unit tests
     runs-on: ${{ matrix.os }}
     steps:
@@ -46,13 +66,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Unit test affected projects
-        run: npx nx affected -t unit-test --parallel=3 --verbose --coverage.enabled
+        run: npx nx affected -t unit-test --parallel=3 --coverage.enabled
 
   e2e:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest] # @TODO add windows-latest after we know why it is running forever
+        os: [ubuntu-latest, macos-latest, windows-latest] # @TODO add windows-latest after we know why it is running forever
     name: E2E tests
     runs-on: ${{ matrix.os }}
     steps:
@@ -70,4 +90,4 @@ jobs:
       - name: Install dependencies
         run: npm i
       - name: E2E test affected projects
-        run: npx nx affected -t nxv-e2e --exclude="tag:type:example"
+        run: npx nx affected -t nxv-e2e --exclude="tag:type:example" --skipNxCache --verbose

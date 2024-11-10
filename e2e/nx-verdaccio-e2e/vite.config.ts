@@ -24,5 +24,6 @@ export default defineConfig({
       reportsDirectory: '../../coverage/projects/nx-verdaccio-e2e',
       provider: 'v8',
     },
+    setupFiles: ['../../testing/test-setup/src/lib/extend/path-matcher.ts'],
   },
 });

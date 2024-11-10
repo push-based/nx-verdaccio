@@ -14,6 +14,7 @@ import {
   VERDACCIO_REGISTRY_JSON,
 } from './constants';
 import { runSingleExecutor } from '../../internal/run-executor';
+import { getEnvironmentRoot } from '../../internal/environment-root';
 
 const VERDACCIO_TOKEN = 'Verdaccio: ';
 
@@ -94,10 +95,17 @@ export async function startVerdaccioServer({
 
   const startServerPromise = () =>
     new Promise<RegistryResult>((resolve, reject) => {
+      const isWindows = process.platform === 'win32';
+
       executeProcess({
-        command: 'nx',
+        command: 'npx',
         args: objectToCliArgs({
-          _: [TARGET_ENVIRONMENT_VERDACCIO_START, projectName ?? '', '--'],
+          _: [
+            'nx',
+            TARGET_ENVIRONMENT_VERDACCIO_START,
+            projectName ?? '',
+            '--',
+          ],
           port,
           ...(verbose !== undefined ? { verbose } : {}),
           location,
@@ -105,7 +113,10 @@ export async function startVerdaccioServer({
           storage,
           ...opt,
         }),
+        detached: !isWindows,
+        //stdio: ['ignore', 'ignore', 'ignore'], // Ignore I/O streams
         shell: true,
+        windowsHide: true,
         observer: {
           onStdout: (stdout: string, childProcess) => {
             if (verbose) {
@@ -179,8 +190,8 @@ export function stopVerdaccioServer(options: {
   environmentRoot: string;
   context: ExecutorContext;
 }): Promise<void> {
-  const { projectName, verbose, context, configuration, environmentRoot } =
-    options;
+  const { projectName, verbose, context, configuration } = options;
+  const environmentRoot = getEnvironmentRoot(context, options);
   return runSingleExecutor(
     {
       project: projectName,
