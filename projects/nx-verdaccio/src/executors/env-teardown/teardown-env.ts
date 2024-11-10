@@ -8,7 +8,7 @@ import { fileExists } from '../../internal/file-system';
 import { rm } from 'node:fs/promises';
 import runKillProcessExecutor from '../kill-process/executor';
 import { getEnvironmentRoot } from '../../internal/environment-root';
-import * as process from "process";
+import * as process from 'process';
 
 export type TeardownEnvironmentOptions = Environment & { verbose?: boolean };
 

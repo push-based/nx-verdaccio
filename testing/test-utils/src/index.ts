@@ -8,3 +8,4 @@ export * from './lib/test-folder.setup';
 export * from './lib/constants';
 export * from './lib/file-system';
 export * from './lib/string';
+export * from './lib/git';
