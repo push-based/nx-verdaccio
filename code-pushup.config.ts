@@ -4,6 +4,7 @@ import nxPerformancePlugin, {
 } from './tooling/measures/nx-performance/nx-performance.plugin';
 import { TaskTimeAuditOption } from './tooling/measures/nx-performance';
 import { mergeConfigs } from '@code-pushup/utils';
+import { eslintCoreConfigNx, jsPackagesCoreConfig } from './code-pushup.preset';
 
 const onlyAudits: OnlyAudit[] = [
   'graph-time-project',
@@ -19,10 +20,10 @@ const taskTimeTasks: TaskTimeAuditOption[] = [
   { task: 'models-e2e:e2e' },
   { task: 'models-e2e:nxv-e2e' },
   { task: 'nx-verdaccio-e2e:nxv-e2e' },
-  /* {
+  {
     task: 'cli-e2e-original:original-e2e',
     options: { exclude: ['nx-verdaccio'] },
-  },*/
+  },
 ];
 const cacheSizeTasks = [
   'models-e2e:nxv-env-setup',
