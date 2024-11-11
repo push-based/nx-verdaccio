@@ -1,11 +1,6 @@
-import type {
-  CreateNodes,
-  CreateNodesContext,
-  CreateNodesResult,
-} from '@nx/devkit';
-import { vol } from 'memfs';
-import { MEMFS_VOLUME } from '@push-based/test-utils';
-import { workspaceRoot } from '@nx/devkit';
+import type {CreateNodes, CreateNodesContext, CreateNodesResult,} from '@nx/devkit';
+import {vol} from 'memfs';
+import {MEMFS_VOLUME} from '@push-based/test-utils';
 
 /**
  * Unit Testing helper for the createNodes function of a Nx plugin.

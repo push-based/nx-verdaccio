@@ -5,6 +5,7 @@
   "scripts": {},
   "private": true,
   "devDependencies": {
+    "@code-pushup/cli": "^0.54.0",
     "@nx/devkit": "19.8.0",
     "@nx/esbuild": "19.8.0",
     "@nx/eslint": "19.8.0",
