@@ -6,6 +6,11 @@
   "private": true,
   "devDependencies": {
     "@code-pushup/cli": "^0.54.0",
+    "@code-pushup/core": "^0.54.0",
+    "@code-pushup/coverage-plugin": "^0.54.0",
+    "@code-pushup/eslint-plugin": "^0.54.0",
+    "@code-pushup/models": "^0.54.0",
+    "@code-pushup/utils": "^0.54.0",
     "@nx/devkit": "19.8.0",
     "@nx/esbuild": "19.8.0",
     "@nx/eslint": "19.8.0",
