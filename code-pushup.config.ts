@@ -19,7 +19,7 @@ const taskTimeTasks: TaskTimeAuditOption[] = [
   { task: 'models-e2e:e2e' },
   { task: 'models-e2e:nxv-e2e' },
   { task: 'nx-verdaccio-e2e:nxv-e2e' },
- /* {
+  /* {
     task: 'cli-e2e-original:original-e2e',
     options: { exclude: ['nx-verdaccio'] },
   },*/
@@ -31,7 +31,7 @@ const cacheSizeTasks = [
 export default mergeConfigs(
   {
     plugins: [
-     /* nxPerformancePlugin({
+      /* nxPerformancePlugin({
         taskTimeTasks,
         taskGraphTasks,
         // ~ 1 minutes 20 seconds
@@ -43,7 +43,7 @@ export default mergeConfigs(
       }),*/
     ],
     categories: [
-     /* {
+      /* {
         slug: 'performance',
         title: 'Performance',
         refs: [
@@ -57,6 +57,6 @@ export default mergeConfigs(
       },*/
     ],
   },
-   await jsPackagesCoreConfig(),
-   await eslintCoreConfigNx()
+  await jsPackagesCoreConfig(),
+  await eslintCoreConfigNx()
 );

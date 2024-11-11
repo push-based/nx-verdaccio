@@ -46,7 +46,8 @@ export function osAgnosticPath(filePath?: string): string | undefined {
   }
   // prepare the path for comparison
   // normalize path separators od cwd: "Users\\repo" => "Users/repo"
-  const osAgnosticCwd = process.cwd()
+  const osAgnosticCwd = process
+    .cwd()
     .split(AGNOSTIC_PATH_SEP_REGEX)
     .join(OS_AGNOSTIC_PATH_SEP);
   // normalize path separators  => "..\\folder\\repo.ts" => => "../folder/repo.ts"

@@ -122,6 +122,7 @@ export const coverageCoreConfigNx = async (
               ? `run --projects ${projectName.join(' ')}`
               : 'run-many',
             ...targetArgs,
+            '--exclude=tags:type:example',
           ],
         },
         reports: await getNxCoveragePaths(targetNames),
