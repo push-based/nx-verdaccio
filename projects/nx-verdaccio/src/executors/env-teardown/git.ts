@@ -14,6 +14,7 @@ export async function isFolderInGit(folderPath: string): Promise<boolean> {
         'Cannot use simple-git on a directory that does not exist'
       )
     ) {
+      // return and swallow error
       return false;
     }
     // @TODO handle better
