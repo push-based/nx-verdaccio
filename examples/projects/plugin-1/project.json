@@ -30,7 +30,7 @@
       "executor": "@nx/vite:test",
       "outputs": ["{options.reportsDirectory}"],
       "options": {
-        "reportsDirectory": "../../../coverage/examples/projects/cli"
+        "reportsDirectory": "../../../coverage/examples/projects/push-based"
       }
     }
   }

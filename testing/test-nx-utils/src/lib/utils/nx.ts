@@ -9,9 +9,9 @@ import {
 import { libraryGenerator } from '@nx/js';
 import type { LibraryGeneratorSchema } from '@nx/js/src/utils/schema';
 import { createTreeWithEmptyWorkspace } from 'nx/src/generators/testing-utils/create-tree-with-empty-workspace';
-import { executeProcess } from '@code-pushup/utils';
 import { objectToCliArgs } from '@push-based/test-utils';
 import { join, relative } from 'node:path';
+import { executeProcess } from '../execute-process';
 
 export function executorContext<
   T extends { projectName: string; cwd?: string }

@@ -47,6 +47,12 @@
       "options": {
         "configFile": "projects/nx-verdaccio/vite.config.ts"
       }
+    },
+    "integration-test": {
+      "executor": "@nx/vite:test",
+      "options": {
+        "configFile": "projects/nx-verdaccio/vite.integration.config.ts"
+      }
     }
   }
 }

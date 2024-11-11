@@ -8,25 +8,16 @@ export default defineConfig({
 
   plugins: [nxViteTsPaths()],
 
-  // Uncomment this if you are using workers.
-  // worker: {
-  //  plugins: [ nxViteTsPaths() ],
-  // },
-
   test: {
     globals: true,
     cache: { dir: '../../node_modules/.vitest' },
     environment: 'node',
-    include: ['src/**/*.{spec,test,unit-test}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    include: ['src/**/*.integration-test.{js,mjs,ts}'],
     reporters: ['default'],
-    setupFiles: [
-      '../../testing/test-setup/src/lib/extend/path-matcher.ts',
-      '../../testing/test-setup/src/lib/fs.mock.ts',
-      '../../testing/test-setup/src/lib/reset.mock.ts',
-    ],
+    setupFiles: ['../../testing/test-setup/src/lib/extend/path-matcher.ts'],
     coverage: {
       reporter: ['lcov', 'text-summary'],
-      reportsDirectory: '../../coverage/projects/build-env',
+      reportsDirectory: '../../coverage/projects/integration/nx-verdaccio',
       provider: 'v8',
     },
   },
