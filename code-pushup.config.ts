@@ -9,8 +9,8 @@ import { eslintCoreConfigNx, jsPackagesCoreConfig } from './code-pushup.preset';
 const onlyAudits: OnlyAudit[] = [
   'graph-time-project',
   'graph-time-task',
-  //'cache-size',
-  //'task-time',
+  'cache-size',
+  'task-time',
 ];
 const taskGraphTasks = ['cli-e2e:nxv-env-install'];
 const taskTimeTasks: TaskTimeAuditOption[] = [
@@ -41,7 +41,7 @@ export default mergeConfigs(
         // ~ 250MB
         maxCacheSize: 262_144_000,
         onlyAudits,
-      }),/**/
+      }),
     ],
     categories: [
        {
@@ -55,7 +55,7 @@ export default mergeConfigs(
             onlyAudits,
           }),
         ],
-      },/**/
+      },
     ],
   },
   await jsPackagesCoreConfig(),
