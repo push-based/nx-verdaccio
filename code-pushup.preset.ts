@@ -119,13 +119,15 @@ export const coverageCoreConfigNx = async (
           args: [
             'nx',
             projectName
-              ? `run --projects ${projectName.join(' ')}`
-              : 'run-many',
-            ...targetArgs,
-            '--exclude=tags:type:example',
+              ? `run-many --projects ${projectName.join(' ')}`
+              : 'run',
+            ...targetArgs
           ],
         },
-        reports: await getNxCoveragePaths(targetNames),
+        reports: [
+          'coverage/projects/unit/nx-verdaccio/lcov.info',
+          'coverage/projects/integration/nx-verdaccio/lcov.info',
+        ],
       }),
     ],
     categories: coverageCategories,
