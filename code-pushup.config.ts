@@ -32,7 +32,7 @@ const cacheSizeTasks = [
 export default mergeConfigs(
   {
     plugins: [
-      /* nxPerformancePlugin({
+       nxPerformancePlugin({
         taskTimeTasks,
         taskGraphTasks,
         // ~ 1 minutes 20 seconds
@@ -41,10 +41,10 @@ export default mergeConfigs(
         // ~ 250MB
         maxCacheSize: 262_144_000,
         onlyAudits,
-      }),*/
+      }),/**/
     ],
     categories: [
-      /* {
+       {
         slug: 'performance',
         title: 'Performance',
         refs: [
@@ -55,7 +55,7 @@ export default mergeConfigs(
             onlyAudits,
           }),
         ],
-      },*/
+      },/**/
     ],
   },
   await jsPackagesCoreConfig(),
