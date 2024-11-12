@@ -4,7 +4,7 @@ import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 
 export default defineConfig({
   root: __dirname,
-  cacheDir: '../../node_modules/.vite/projects/build-env',
+  cacheDir: '../../node_modules/.vite/projects/nx-verdaccio',
 
   plugins: [nxViteTsPaths()],
 
@@ -26,7 +26,7 @@ export default defineConfig({
     ],
     coverage: {
       reporter: ['lcov', 'text-summary'],
-      reportsDirectory: '../../coverage/projects/build-env',
+      reportsDirectory: '../../coverage/projects/unit/nx-verdaccio',
       provider: 'v8',
     },
   },
