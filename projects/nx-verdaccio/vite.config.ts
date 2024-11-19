@@ -21,8 +21,8 @@ export default defineConfig({
     reporters: ['default'],
     setupFiles: [
       '../../testing/test-setup/src/lib/extend/path-matcher.ts',
-      '../../testing/test-setup/src/lib/fs.mock.ts',
       '../../testing/test-setup/src/lib/reset.mock.ts',
+      '../../testing/test-setup/src/lib/fs.mock.ts',
     ],
     coverage: {
       reporter: ['lcov', 'text-summary'],

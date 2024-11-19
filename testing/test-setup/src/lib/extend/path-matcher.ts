@@ -1,6 +1,12 @@
 import { expect } from 'vitest';
 import path from 'path';
 
+/**
+ * Custom matcher to check if a path contains another path.
+ *
+ * @example
+ * expect('path\\to\\file').pathToMatch('to/file');
+ */
 expect.extend({
   toMatchPath(received, expected) {
     const normalizedReceived = path.normalize(received);
