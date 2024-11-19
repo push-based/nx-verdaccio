@@ -26,7 +26,7 @@ export default defineConfig({
     ],
     coverage: {
       reporter: ['lcov', 'text-summary'],
-      reportsDirectory: '../../coverage/projects/build-env',
+      reportsDirectory: '../../coverage/projects/unit/nx-verdaccio',
       provider: 'v8',
     },
   },

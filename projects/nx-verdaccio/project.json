@@ -45,7 +45,7 @@
     "unit-test": {
       "executor": "@nx/vite:test",
       "options": {
-        "configFile": "projects/nx-verdaccio/vite.config.ts"
+        "configFile": "projects/nx-verdaccio/vite.unit.config.ts"
       }
     },
     "integration-test": {
