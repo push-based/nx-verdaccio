@@ -4,13 +4,15 @@ import { join } from 'node:path';
 import {
   DEFAULT_TEST_FIXTURE_DIST,
   getTestEnvironmentRoot,
+  teardownTestFolder,
 } from '@push-based/test-utils';
 
 export const projectName = 'cli-post-script-e2e';
-export const repoPath = join(
-  getTestEnvironmentRoot(projectName),
-  DEFAULT_TEST_FIXTURE_DIST,
-  REPO_NAME
-);
+const envRoot = getTestEnvironmentRoot(projectName);
+export const repoPath = join(envRoot, DEFAULT_TEST_FIXTURE_DIST, REPO_NAME);
 
-(async () => await setup(repoPath, REPO_NAME, projectName))();
+(async () => {
+  // clean up previous runs
+  await teardownTestFolder(repoPath);
+  await setup({ envRoot: repoPath, repoName: REPO_NAME, projectName });
+})();

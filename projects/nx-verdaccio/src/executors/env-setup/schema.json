@@ -23,8 +23,7 @@
     },
     "postScript": {
       "type": "string",
-      "description": "The script to run after the setup task have been executed",
-      "default": false
+      "description": "The script to run after the setup task have been executed"
     },
     "dryRun": {
       "type": "boolean",

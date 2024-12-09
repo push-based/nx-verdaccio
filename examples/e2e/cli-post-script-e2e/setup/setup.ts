@@ -3,27 +3,32 @@ import {
   executeProcess,
   getTestEnvironmentRoot,
   objectToCliArgs,
-  teardownTestFolder,
 } from '@push-based/test-utils';
-import { join, dirname } from 'node:path';
-import { copyFile, mkdir } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
+import { copyFile, cp, mkdir, readFile, writeFile } from 'node:fs/promises';
 
-export async function setup(
-  repoPath: string,
-  repoName: string,
-  projectName: string
-) {
+export async function setup({
+  envRoot,
+  projectName,
+  repoName,
+}: {
+  envRoot: string;
+  repoName: string;
+  projectName: string;
+}) {
+  await mkdir(envRoot, { recursive: true });
   // setup nx environment for e2e tests
   await executeProcess({
     command: 'npx',
     args: objectToCliArgs({
       _: ['--yes', 'create-nx-workspace'],
-      name: repoPath,
+      name: repoName,
       preset: 'ts-standalone',
       ci: 'skip',
       interactive: false,
     }),
     verbose: true,
+    cwd: dirname(envRoot),
   });
   await mkdir(
     join(
@@ -35,7 +40,7 @@ export async function setup(
   );
   await copyFile(
     join(getTestEnvironmentRoot(projectName), '.npmrc'),
-    join(repoPath, '.npmrc')
+    join(envRoot, '.npmrc')
   );
 
   await executeProcess({
@@ -44,29 +49,28 @@ export async function setup(
       _: ['install', '@push-based/cli'],
       save: true,
     }),
-    cwd: repoPath,
+    cwd: envRoot,
+    verbose: true,
   });
 
-  const testPath = join(repoPath, 'users.json');
-  await mkdir(dirname(testPath), { recursive: true });
-  await writeFile(
-    testPath,
-    JSON.stringify([{ name: 'Michael' }, { name: 'Alice' }])
+  await cp(
+    join('examples', 'e2e', 'cli-post-script-e2e', 'fixtures', 'small-data'),
+    envRoot,
+    { recursive: true }
   );
+
   const json = JSON.parse(
-    (await readFile(join(repoPath, 'project.json'))).toString()
+    (await readFile(join(envRoot, 'project.json'))).toString()
   );
+
   await writeFile(
-    join(repoPath, 'project.json'),
+    join(envRoot, 'project.json'),
     JSON.stringify({
       ...json,
       targets: {
         ...json.targets,
         sort: {
-          executor: '@push-based/cli:sort',
-          options: {
-            filePath: 'users.json',
-          },
+          command: 'npx cli sort --filePath=users.json',
         },
       },
     })

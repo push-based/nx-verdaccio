@@ -15,6 +15,7 @@ import {
   TARGET_ENVIRONMENT_BOOTSTRAP,
   TARGET_ENVIRONMENT_INSTALL,
   TARGET_ENVIRONMENT_PUBLISH_ONLY,
+  TARGET_ENVIRONMENT_SETUP,
 } from '../../plugin/targets/environment.targets';
 import { runSingleExecutor } from '../../internal/run-executor';
 import { getEnvironmentRoot } from '../../internal/environment-root';
@@ -25,6 +26,8 @@ export type ExecutorOutput = {
   command?: string;
   error?: Error;
 };
+
+const INFO_TOKEN = 'ENV SETUP';
 
 export default async function runSetupEnvironmentExecutor(
   terminalAndExecutorOptions: SetupEnvironmentExecutorOptions,
@@ -63,10 +66,7 @@ export default async function runSetupEnvironmentExecutor(
   try {
     if (skipInstall) {
       logger.info(
-        formatInfo(
-          `Run target: ${TARGET_ENVIRONMENT_PUBLISH_ONLY}`,
-          'VERDACCIO_ENV'
-        )
+        formatInfo(`Run target: ${TARGET_ENVIRONMENT_PUBLISH_ONLY}`, INFO_TOKEN)
       );
       await executeProcess({
         command: 'npx',
@@ -80,7 +80,7 @@ export default async function runSetupEnvironmentExecutor(
       });
     } else {
       logger.info(
-        formatInfo(`Run target: ${TARGET_ENVIRONMENT_INSTALL}`, 'VERDACCIO_ENV')
+        formatInfo(`Run target: ${TARGET_ENVIRONMENT_INSTALL}`, INFO_TOKEN)
       );
       await executeProcess({
         command: 'npx',
@@ -96,10 +96,7 @@ export default async function runSetupEnvironmentExecutor(
     if (postScript) {
       const [command, ...args] = postScript.split(' ');
       logger.info(
-        formatInfo(
-          `Run postScript: ${command} ${args.join(' ')}`,
-          'VERDACCIO_ENV'
-        )
+        formatInfo(`Run postScript: ${command} ${args.join(' ')}`, INFO_TOKEN)
       );
       await executeProcess({
         command,

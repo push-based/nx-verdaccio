@@ -6,12 +6,9 @@
   "tags": ["type:e2e", "type:e2e-vi", "type:example"],
   "implicitDependencies": ["cli"],
   "targets": {
-    "lint": {},
     "nxv-env-setup": {
-      "cache": false,
       "options": {
         "skipInstall": true,
-        "keepServerRunning": true,
         "postScript": "npx tsx --tsconfig examples/e2e/cli-post-script-e2e/tsconfig.spec.json examples/e2e/cli-post-script-e2e/setup/exec-global-setup.ts"
       }
     },
