@@ -6,11 +6,11 @@ import {
   teardownTestFolder,
 } from '@push-based/test-utils';
 import { join } from 'node:path';
+import { REPO_NAME } from './config';
 import { copyFile, mkdir } from 'node:fs/promises';
 
-const projectName = 'cli-custom-install-e2e';
-const repoName = 'nx-ts-repo';
-const repoPath = join(
+const projectName = process.env['NX_TASK_TARGET_PROJECT'];
+export const repoPath = join(
   getTestEnvironmentRoot(projectName),
   DEFAULT_TEST_FIXTURE_DIST,
   repoName

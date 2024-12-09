@@ -4,7 +4,7 @@ import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 
 export default defineConfig({
   root: __dirname,
-  cacheDir: '../../../node_modules/.vite/projects/cli-custom-install-e2e',
+  cacheDir: '../../../node_modules/.vite/projects/cli-post-script-e2e',
 
   plugins: [nxViteTsPaths()],
 
@@ -20,7 +20,7 @@ export default defineConfig({
     include: ['test/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     reporters: ['default'],
     coverage: {
-      reportsDirectory: '../../../coverage/projects/cli-custom-install-e2e',
+      reportsDirectory: '../../../coverage/projects/cli-post-script-e2e',
       provider: 'v8',
     },
   },

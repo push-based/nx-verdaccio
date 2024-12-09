@@ -7,6 +7,8 @@ import {
   stopVerdaccioServer,
   type VerdaccioProcessResult,
 } from '../env-bootstrap/verdaccio-registry';
+import { formatError, formatInfo } from '../../internal/logging';
+
 import type { SetupEnvironmentExecutorOptions } from './schema';
 import { VERDACCIO_REGISTRY_JSON } from '../env-bootstrap/constants';
 import {
@@ -60,6 +62,12 @@ export default async function runSetupEnvironmentExecutor(
 
   try {
     if (skipInstall) {
+      logger.info(
+        formatInfo(
+          `Run target: ${TARGET_ENVIRONMENT_PUBLISH_ONLY}`,
+          'VERDACCIO_ENV'
+        )
+      );
       await executeProcess({
         command: 'npx',
         args: objectToCliArgs({
@@ -71,6 +79,9 @@ export default async function runSetupEnvironmentExecutor(
         ...(verbose ? { verbose } : {}),
       });
     } else {
+      logger.info(
+        formatInfo(`Run target: ${TARGET_ENVIRONMENT_INSTALL}`, 'VERDACCIO_ENV')
+      );
       await executeProcess({
         command: 'npx',
         args: objectToCliArgs({
@@ -82,13 +93,21 @@ export default async function runSetupEnvironmentExecutor(
         ...(verbose ? { verbose } : {}),
       });
     }
-    const [command, ...args] = postScript.split(' ');
-    await executeProcess({
-      command,
-      args,
-      cwd: process.cwd(),
-      ...(verbose ? { verbose } : {}),
-    });
+    if (postScript) {
+      const [command, ...args] = postScript.split(' ');
+      logger.info(
+        formatInfo(
+          `Run postScript: ${command} ${args.join(' ')}`,
+          'VERDACCIO_ENV'
+        )
+      );
+      await executeProcess({
+        command,
+        args,
+        cwd: process.cwd(),
+        ...(verbose ? { verbose } : {}),
+      });
+    }
   } catch (error) {
     logger.error(error.message);
     await stopVerdaccioServer({

@@ -1,7 +1,7 @@
 {
-  "name": "cli-custom-install-e2e",
+  "name": "cli-post-script-e2e",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "projects/cli-custom-install-e2e/test",
+  "sourceRoot": "projects/cli-post-script-e2e/test",
   "projectType": "application",
   "tags": ["type:e2e", "type:e2e-vi", "type:example"],
   "implicitDependencies": ["cli"],
@@ -12,7 +12,7 @@
       "options": {
         "skipInstall": true,
         "keepServerRunning": true,
-        "postScript": "npx tsx --tsconfig examples/e2e/cli-custom-install-e2e/tsconfig.spec.json examples/e2e/cli-custom-install-e2e/setup/exec-global-setup.ts"
+        "postScript": "npx tsx --tsconfig examples/e2e/cli-post-script-e2e/tsconfig.spec.json examples/e2e/cli-post-script-e2e/setup/exec-global-setup.ts"
       }
     },
     "e2e": {

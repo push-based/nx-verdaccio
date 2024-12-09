@@ -5,7 +5,7 @@ import {
   objectToCliArgs,
   teardownTestFolder,
 } from '@push-based/test-utils';
-import { join } from 'node:path';
+import { join, dirname } from 'node:path';
 import { copyFile, mkdir } from 'node:fs/promises';
 
 export async function setup(
