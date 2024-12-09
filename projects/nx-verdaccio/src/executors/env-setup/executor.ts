@@ -12,10 +12,11 @@ import { VERDACCIO_REGISTRY_JSON } from '../env-bootstrap/constants';
 import {
   TARGET_ENVIRONMENT_BOOTSTRAP,
   TARGET_ENVIRONMENT_INSTALL,
+  TARGET_ENVIRONMENT_PUBLISH_ONLY,
 } from '../../plugin/targets/environment.targets';
 import { runSingleExecutor } from '../../internal/run-executor';
 import { getEnvironmentRoot } from '../../internal/environment-root';
-import {cleanupEnv} from "../internal/cleanup-env";
+import { cleanupEnv } from '../internal/cleanup-env';
 
 export type ExecutorOutput = {
   success: boolean;
@@ -28,7 +29,8 @@ export default async function runSetupEnvironmentExecutor(
   context: ExecutorContext
 ) {
   const { configurationName: configuration, projectName } = context;
-  const { verbose, keepServerRunning } = terminalAndExecutorOptions;
+  const { verbose, keepServerRunning, skipInstall, postScript } =
+    terminalAndExecutorOptions;
   const environmentRoot = getEnvironmentRoot(
     context,
     terminalAndExecutorOptions
@@ -57,13 +59,33 @@ export default async function runSetupEnvironmentExecutor(
   }
 
   try {
-    await executeProcess({
-      command: 'npx',
-      args: objectToCliArgs({
-        _: ['nx', TARGET_ENVIRONMENT_INSTALL, projectName],
-        environmentRoot,
+    if (skipInstall) {
+      await executeProcess({
+        command: 'npx',
+        args: objectToCliArgs({
+          _: ['nx', TARGET_ENVIRONMENT_PUBLISH_ONLY, projectName],
+          environmentRoot,
+          ...(verbose ? { verbose } : {}),
+        }),
+        cwd: process.cwd(),
         ...(verbose ? { verbose } : {}),
-      }),
+      });
+    } else {
+      await executeProcess({
+        command: 'npx',
+        args: objectToCliArgs({
+          _: ['nx', TARGET_ENVIRONMENT_INSTALL, projectName],
+          environmentRoot,
+          ...(verbose ? { verbose } : {}),
+        }),
+        cwd: process.cwd(),
+        ...(verbose ? { verbose } : {}),
+      });
+    }
+    const [command, ...args] = postScript.split(' ');
+    await executeProcess({
+      command,
+      args,
       cwd: process.cwd(),
       ...(verbose ? { verbose } : {}),
     });
@@ -93,7 +115,7 @@ export default async function runSetupEnvironmentExecutor(
         environmentRoot,
       });
       // delete storage, .npmrc
-      await cleanupEnv(environmentRoot)
+      await cleanupEnv(environmentRoot);
     } else {
       const { url } = await readFile(
         join(environmentRoot, VERDACCIO_REGISTRY_JSON),

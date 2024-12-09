@@ -1,0 +1,23 @@
+{
+  "name": "cli-custom-install-e2e",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "projects/cli-custom-install-e2e/test",
+  "projectType": "application",
+  "tags": ["type:e2e", "type:e2e-vi", "type:example"],
+  "implicitDependencies": ["cli"],
+  "targets": {
+    "lint": {},
+    "nxv-env-setup": {
+      "cache": false,
+      "options": {
+        "skipInstall": true,
+        "keepServerRunning": true,
+        "postScript": "npx tsx --tsconfig examples/e2e/cli-custom-install-e2e/tsconfig.spec.json examples/e2e/cli-custom-install-e2e/setup/exec-global-setup.ts"
+      }
+    },
+    "e2e": {
+      "executor": "@nx/vite:test",
+      "inputs": ["default", "^production"]
+    }
+  }
+}
