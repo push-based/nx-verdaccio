@@ -1,59 +1,46 @@
-import { afterEach, describe, expect, type MockInstance } from 'vitest';
-import { cacheKey } from './caching';
-import * as fileHasher from 'nx/src/hasher/file-hasher';
+import { afterEach, beforeEach, describe, expect } from 'vitest';
+import * as moduleUnderTest from './caching';
+import * as cachingUtils from './utils/caching.utils';
 
-
-describe('cacheKey', (): void => {
+describe('getCacheRecord', () => {
   const prefix = 'warcraft';
   const hashData = { race: 'orc' };
-  let hashObjectSpy: MockInstance<[obj: object], string>;
+  let cacheKeySpy: ReturnType<typeof vi.spyOn>;
+  const cacheItem = { thunderfury: 'Blessed Blade of the Windseeker' };
+  const targetsCache = { 'ragnaros': cacheItem };
 
-  describe('hashed object', (): void => {
-    beforeEach((): void => {
-      hashObjectSpy = vi.spyOn(fileHasher, 'hashObject');
-    });
-    afterEach((): void => {
-      hashObjectSpy.mockRestore();
-    });
-    it('should return cache key with hashed object when it is empty', (): void => {
-      // {} = 3244421341483603138
-      expect(cacheKey(prefix, {})).toBe(`${prefix}-3244421341483603138`);
-    });
-    it('should return cache key with hashed object when it is NOT empty', (): void => {
-      // { race: 'orc' } = 9075797468634534731
-      expect(cacheKey(prefix, hashData)).toBe(`${prefix}-5048043832971198124`);
-    });
-    it('should call hashObject with the correct data', () => {
-      const hashObjectSpy = vi.spyOn(fileHasher, 'hashObject');
+  beforeEach((): void => {
+    cacheKeySpy = vi.spyOn(cachingUtils, 'cacheKey');
 
-      const result = cacheKey(prefix, hashData);
-
-      expect(hashObjectSpy).toHaveBeenCalledTimes(1);
-      expect(hashObjectSpy).toHaveBeenCalledWith(hashData);
-      expect(result).toContain(prefix);
-    });
-    it('should return unmodified hashObject return value', (): void => {
-      const hashObjectSpy = vi
-        .spyOn(fileHasher, 'hashObject')
-        .mockImplementation((): string => 'mocked-hash');
-      const result = cacheKey(prefix, hashData);
-
-      expect(result).toBe(`${prefix}-mocked-hash`);
-      expect(hashObjectSpy).toHaveBeenCalledTimes(1);
-      expect(hashObjectSpy).toHaveBeenCalledWith(hashData);
-    });
   });
-  describe('prefix', (): void => {
-    it('should return cache key with unmodified prefix', (): void => {
-      // {} = 3244421341483603138
-      expect(cacheKey(prefix, {})).toBe(`${prefix}-3244421341483603138`);
-    });
+  afterEach((): void => {
+    cacheKeySpy.mockRestore();
   });
-  describe('format', (): void => {
-    const regex = /^[a-zA-Z]+-\d+$/;
-    it('should return a value in the format "string-numbers"', (): void => {
-      const result = cacheKey(prefix, hashData);
-      expect(result).toMatch(regex);
-    });
+
+  it('should call cacheKey with the correct arguments', () => {
+
+    cacheKeySpy.mockReturnValue('ragnaros');
+    moduleUnderTest.getCacheRecord(targetsCache, prefix, hashData);
+
+    expect(cacheKeySpy).toHaveBeenCalledWith(prefix, hashData);
+    expect(cacheKeySpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should return the correct record if cacheKey matches', () => {
+    cacheKeySpy.mockReturnValue('ragnaros');
+
+    const result = moduleUnderTest.getCacheRecord(targetsCache, prefix, hashData);
+
+    expect(result).toEqual(cacheItem);
+  });
+
+  it('should return undefined if no matching key exists in the cache', () => {
+    cacheKeySpy.mockReturnValue('non-existent-key');
+
+    const result = moduleUnderTest.getCacheRecord(targetsCache, prefix, hashData);
+
+    expect(result).toBeUndefined();
   });
 });
+
+
