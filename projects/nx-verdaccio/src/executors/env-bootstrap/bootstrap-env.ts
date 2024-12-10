@@ -6,7 +6,6 @@ import {
   type VercaddioServerResult,
 } from './verdaccio-registry';
 import { writeFile } from 'node:fs/promises';
-import { setupNpmWorkspace } from './npm';
 import { formatError, formatInfo } from '../../internal/logging';
 import { VERDACCIO_REGISTRY_JSON } from './constants';
 import { logger } from '@nx/devkit';
@@ -15,6 +14,7 @@ import {
   type Environment,
   VERDACCIO_ENV_TOKEN,
 } from './npm';
+import { setupNpmWorkspace } from '../env-setup/npm';
 
 export type BootstrapEnvironmentOptions = StartVerdaccioOptions & Environment;
 

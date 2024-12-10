@@ -7,6 +7,7 @@ import {
   TARGET_ENVIRONMENT_VERDACCIO_STOP,
 } from '../../plugin/targets/environment.targets';
 import { MockAsyncIterableIterator } from '@push-based/test-utils';
+import * as npmModule from './npm';
 
 vi.mock('@nx/devkit', async () => {
   const actual = await vi.importActual('@nx/devkit');
@@ -38,6 +39,7 @@ vi.mock('fs/promises', async () => {
 describe('runSetupEnvironmentExecutor', () => {
   const runExecutorSpy = vi.spyOn(devkit, 'runExecutor');
   const executeProcessSpy = vi.spyOn(executeProcessModule, 'executeProcess');
+  const setupNpmWorkspaceSpy = vi.spyOn(npmModule, 'setupNpmWorkspace');
 
   beforeEach(() => {
     runExecutorSpy.mockReset();
@@ -121,6 +123,12 @@ describe('runSetupEnvironmentExecutor', () => {
         verbose: undefined,
       },
       context
+    );
+
+    expect(setupNpmWorkspaceSpy).toHaveBeenCalledTimes(1);
+    expect(setupNpmWorkspaceSpy).toHaveBeenCalledWith(
+      expect.toMatchPath('tmp/environments/my-lib-e2e'),
+      undefined
     );
   });
 

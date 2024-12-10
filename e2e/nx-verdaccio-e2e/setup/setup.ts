@@ -6,10 +6,9 @@ import {
   updateJson,
 } from '@push-based/test-utils';
 import { dirname, join } from 'node:path';
-import { copyFile, cp, mkdir, readFile, writeFile } from 'node:fs/promises';
+import { copyFile, mkdir } from 'node:fs/promises';
 import { logger, NxJsonConfiguration } from '@nx/devkit';
 import { PackageJson } from 'nx/src/utils/package-json';
-import { NxJson } from 'nx/src/native';
 
 export async function setup({
   envRoot,
@@ -95,7 +94,7 @@ export async function setup({
   await updateJson<NxJsonConfiguration>(join(envRoot, 'nx.json'), (json) => ({
     ...json,
     plugins: [
-      ...json?.plugins,
+      ...(json?.plugins ?? {}),
       {
         plugin: '@push-based/nx-verdaccio',
         options: {
