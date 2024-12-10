@@ -29,9 +29,7 @@
       "cache": true,
       "inputs": ["default", "^production"]
     },
-    "nxv-e2e": {},
-    "nxv-env-setup": {
-      "executor": "@nx/verdaccio:env-setup",
+    "@nx/verdaccio:env-setup": {
       "cache": true,
       "inputs": [
         "{projectRoot}/project.json",
@@ -46,6 +44,12 @@
         },
         "^production"
       ]
+    },
+    "nxv-env-setup": {
+      "executor": "@nx/verdaccio:env-setup",
+      "options": {
+        "keepServerRunning": true
+      }
     },
     "nx-release-publish": {},
     "lint": {
