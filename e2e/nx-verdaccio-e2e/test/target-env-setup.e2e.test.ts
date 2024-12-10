@@ -17,7 +17,6 @@ describe('nx-verdaccio plugin nxv-env-setup target', () => {
   const e2eProjectARoot = join('projects', projectAE2e);
   const baseDir = `tmp/environments/${process.env['NX_TASK_TARGET_PROJECT']}/__test__/target-env-setup`;
 
-
   afterEach(async () => {
     // await teardownTestFolder(baseDir);
   });

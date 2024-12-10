@@ -31,6 +31,7 @@
     },
     "nxv-e2e": {},
     "nxv-env-setup": {
+      "executor": "@nx/verdaccio:env-setup",
       "cache": true,
       "inputs": [
         "{projectRoot}/project.json",

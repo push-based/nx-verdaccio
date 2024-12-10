@@ -143,4 +143,3 @@ If you want to inspect the environment setup with the server running, you can us
 
 Executing the above configuration will keep the Verdaccio server running after the environment setup is finished.
 The URL under which the Verdaccio server is running will be printed to the console and is also available in the `verdaccio.regirsty.json` file in the projects environment folder.
-
