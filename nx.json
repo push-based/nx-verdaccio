@@ -46,10 +46,7 @@
       ]
     },
     "nxv-env-setup": {
-      "executor": "@push-based/nx-verdaccio:env-setup",
-      "options": {
-        "keepServerRunning": true
-      }
+      "executor": "@push-based/nx-verdaccio:env-setup"
     },
     "nx-release-publish": {},
     "lint": {
