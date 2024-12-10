@@ -43,7 +43,7 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
   });
 
   afterEach(async () => {
-    await teardownTestFolder(baseDir);
+    // await teardownTestFolder(baseDir);
   });
 
   it('should add package targets to library project', async () => {
@@ -274,7 +274,6 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
         }),
       })
     );
-
   });
 
   it('should NOT add environment targets to project without targetName e2e', async () => {

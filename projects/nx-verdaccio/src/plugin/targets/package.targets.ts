@@ -41,6 +41,7 @@ export function getPkgTargets(): Record<string, TargetConfiguration> {
         },
       ],
       executor: `${PACKAGE_NAME}:${EXECUTOR_PACKAGE_NPM_PUBLISH}`,
+      options: {},
     },
     [TARGET_PACKAGE_INSTALL]: {
       dependsOn: [
@@ -55,6 +56,7 @@ export function getPkgTargets(): Record<string, TargetConfiguration> {
         },
       ],
       executor: `${PACKAGE_NAME}:${EXECUTOR_PACKAGE_NPM_INSTALL}`,
+      options: {},
     },
   };
 }

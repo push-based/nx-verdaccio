@@ -1,13 +1,13 @@
-import {type ExecutorContext, logger} from '@nx/devkit';
+import { type ExecutorContext, logger } from '@nx/devkit';
 
-import type {NpmPublishExecutorOptions} from './schema';
-import {join, relative} from 'node:path';
-import {executeProcess} from '../../internal/execute-process';
-import {objectToCliArgs} from '../../internal/terminal';
-import {getTargetOutputPath} from '../../internal/target';
-import {NPMRC_FILENAME} from './constants';
+import type { NpmPublishExecutorOptions } from './schema';
+import { join, relative } from 'node:path';
+import { executeProcess } from '../../internal/execute-process';
+import { objectToCliArgs } from '../../internal/terminal';
+import { getTargetOutputPath } from '../../internal/target';
+import { NPMRC_FILENAME } from './constants';
 import * as process from 'process';
-import {markPackageJson} from './pkg-version';
+import { markPackageJson } from './pkg-version';
 
 export type NpmPublishExecutorOutput = {
   success: boolean;
@@ -28,6 +28,7 @@ export default async function runNpmPublishExecutor(
   const { projectName } = context;
   const { targets } = projectsConfigurations.projects[projectName];
   const packageDistPath = getTargetOutputPath(targets['build']);
+  logger.info(`Publishing package from ${environmentRoot}`);
   const userconfig = join(
     relativeFromDist(packageDistPath),
     join(environmentRoot, NPMRC_FILENAME)
@@ -53,7 +54,7 @@ export default async function runNpmPublishExecutor(
   } catch (error) {
     // if package already exists, log and go on
     if (error.message.includes('EPUBLISHCONFLICT')) {
-      logger.warn(`Package for ${projectName} already published. Proceeding.`);
+      logger.warn(`Package for ${projectName} already published.`);
       return {
         success: false,
         command: error,

@@ -4,12 +4,12 @@ import { MEMFS_VOLUME } from '@push-based/test-utils';
 import {
   configureRegistry,
   type ConfigureRegistryOptions,
-  setupNpmWorkspace,
   unconfigureRegistry,
   VERDACCIO_ENV_TOKEN,
 } from './npm';
 import { logger } from '@nx/devkit';
 import { formatInfo } from '../../internal/logging';
+import { setupNpmWorkspace } from '../env-setup/npm';
 
 const execMock = vi.fn();
 vi.mock('util', () => ({
@@ -130,39 +130,6 @@ describe('unconfigureRegistry', () => {
         'Delete authToken:\nnpm config delete //localhost:4873/:_authToken --userconfig="test-config"',
         VERDACCIO_ENV_TOKEN
       )
-    );
-  });
-});
-
-describe.skip('setupNpmWorkspace', () => {
-  let cwdSpy;
-  let chdirSpy;
-  let consoleInfoSpy;
-
-  beforeEach(() => {
-    cwdSpy = vi.spyOn(process, 'cwd').mockReturnValue(MEMFS_VOLUME);
-    chdirSpy = vi.spyOn(process, 'chdir').mockImplementation(vi.fn());
-    consoleInfoSpy = vi.spyOn(console, 'info').mockImplementation(vi.fn());
-  });
-
-  afterEach(() => {
-    cwdSpy.mockRestore();
-    chdirSpy.mockRestore();
-    consoleInfoSpy.mockRestore();
-  });
-
-  it('should create npm workspace in given folder', async () => {
-    await setupNpmWorkspace('tmp');
-    expect(chdirSpy).toHaveBeenCalledTimes(1);
-    expect(chdirSpy).toHaveBeenCalledWith('tmp');
-    expect(consoleInfoSpy).not.toHaveBeenCalled();
-  });
-
-  it('should call infoLog if verbose is given', async () => {
-    await setupNpmWorkspace('tmp', true);
-    expect(consoleInfoSpy).toHaveBeenCalledTimes(1);
-    expect(consoleInfoSpy).toHaveBeenCalledWith(
-      `${red('>')} ${red(bold('Npm Env: '))} Execute: npm init in directory tmp`
     );
   });
 });

@@ -1,6 +1,6 @@
 import { join } from 'node:path';
 
-export const DEFAULT_TEST_FIXTURE_DIST = '__test_env__';
+export const DEFAULT_TEST_FIXTURE_DIST = '__test__';
 
 export function getTestFixturesDist(
   groupName: string,
