@@ -20,6 +20,7 @@ import {
 import { runSingleExecutor } from '../../internal/run-executor';
 import { getEnvironmentRoot } from '../../internal/environment-root';
 import { cleanupEnv } from '../internal/cleanup-env';
+import {setupNpmWorkspace} from "../env-bootstrap/npm";
 
 export type ExecutorOutput = {
   success: boolean;
@@ -82,6 +83,7 @@ export default async function runSetupEnvironmentExecutor(
       logger.info(
         formatInfo(`Run target: ${TARGET_ENVIRONMENT_INSTALL}`, INFO_TOKEN)
       );
+      await setupNpmWorkspace(environmentRoot, verbose);
       await executeProcess({
         command: 'npx',
         args: objectToCliArgs({
