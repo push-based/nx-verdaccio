@@ -29,7 +29,7 @@
       "cache": true,
       "inputs": ["default", "^production"]
     },
-    "@nx/verdaccio:env-setup": {
+    "@push-based/nx-verdaccio:env-setup": {
       "cache": true,
       "inputs": [
         "{projectRoot}/project.json",
@@ -46,7 +46,7 @@
       ]
     },
     "nxv-env-setup": {
-      "executor": "@nx/verdaccio:env-setup",
+      "executor": "@push-based/nx-verdaccio:env-setup",
       "options": {
         "keepServerRunning": true
       }
