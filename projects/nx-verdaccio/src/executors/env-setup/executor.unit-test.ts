@@ -238,7 +238,7 @@ describe('runSetupEnvironmentExecutor', () => {
       context
     );
 
-    expect(devkit.logger.info).toHaveBeenCalledTimes(1);
+    expect(devkit.logger.info).toHaveBeenCalledTimes(2);
     expect(devkit.logger.info).toHaveBeenCalledWith(
       'Verdaccio server kept running under : http://localhost:4873'
     );

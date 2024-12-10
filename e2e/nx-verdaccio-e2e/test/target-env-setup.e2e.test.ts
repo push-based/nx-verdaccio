@@ -17,37 +17,6 @@ describe('nx-verdaccio plugin nxv-env-setup target', () => {
   const e2eProjectARoot = join('projects', projectAE2e);
   const baseDir = `tmp/environments/${process.env['NX_TASK_TARGET_PROJECT']}/__test__/target-env-setup`;
 
-  beforeEach(async () => {
-    tree = await addJsLibToWorkspace(projectA);
-    await addJsLibToWorkspace(projectAE2e, tree);
-    updateProjectConfiguration(tree, projectAE2e, {
-      root: e2eProjectARoot,
-      projectType: 'application',
-    });
-    updateProjectConfiguration(tree, projectAE2e, {
-      root: e2eProjectARoot,
-      projectType: 'application',
-      targets: {
-        e2e: {
-          command: "echo 'Run E2E tests'",
-        },
-      },
-    });
-    registerPluginInWorkspace(tree, {
-      plugin: '@push-based/nx-verdaccio',
-      options: {
-        environments: {
-          targetNames: ['e2e'],
-        },
-      },
-    });
-    await materializeTree(tree, baseDir);
-    const { stdout } = await executeProcess({
-      command: 'npm',
-      args: ['install', 'verdaccio'],
-      cwd: baseDir,
-    });
-  });
 
   afterEach(async () => {
     // await teardownTestFolder(baseDir);

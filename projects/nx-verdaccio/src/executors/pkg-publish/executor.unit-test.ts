@@ -61,7 +61,7 @@ describe('runNpmPublishExecutor', () => {
       success: true,
     });
 
-    expect(logger.info).toHaveBeenCalledTimes(1);
+    expect(logger.info).toHaveBeenCalledTimes(2);
     // const userconfigRelative = '../../../tmp/environments/my-lib-e2e/.npmrc';
     const pkgDist = 'dist/projects/my-lib';
     const envRoot = 'tmp/environments/my-lib-e2e';

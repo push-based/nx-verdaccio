@@ -86,7 +86,7 @@ That means if you run `nx run my-project:env-setup` the environment root will be
 
 With the above configuration, the environment root will be `/tmp/e2e/my-project` and all environment files will be stored there.
 
-### Use a custom script for the setup
+### Use a custom script for the environment setup
 
 If you want to run a custom script after the environment is set up, you can use the `postScript` option.
 
@@ -114,10 +114,33 @@ After the packages are published, the post script executes, installs the needed 
 ```ts
 // projects/my-project/setup/global-setup.ts
 
-//
 await copyFile(join(getTestEnvironmentRoot('my-project'), '.npmrc'), join(repoPath, '.npmrc'));
 execSync('npm init @org/create-my-project');
 ```
 
-In the above example, the `postScript` option is used to copy the to programmatic install the dependencies after the packages are published.
+In the above example, the `postScript` option is used to programmatically install the dependencies while still using the published packages from the Verdaccio registry.
 This gives flexibility and control over the environment setup process. See the [cli-post-script-e2e](../../../../../examples/e2e/cli-post-script-e2e/README.md) project for a more real life example.
+
+### Inspect the environment setup with the Verdaccio registry server running
+
+If you want to inspect the environment setup with the server running, you can use the `keepServerRunning` option.
+
+```json
+{
+  "name": "my-project",
+  "targets": {
+    "env-setup": {
+      "options": {
+        "keepServerRunning": true
+      }
+    },
+    "e2e": {
+      // ...
+    }
+  }
+}
+```
+
+Executing the above configuration will keep the Verdaccio server running after the environment setup is finished.
+The URL under which the Verdaccio server is running will be printed to the console and is also available in the `verdaccio.regirsty.json` file in the projects environment folder.
+
