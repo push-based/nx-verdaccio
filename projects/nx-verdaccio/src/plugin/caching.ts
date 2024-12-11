@@ -10,7 +10,7 @@ export function getCacheRecord<T>(
   targetsCache: Record<string, T>,
   prefix: string,
   hashData: Record<string, unknown>
-) {
+): T {
   const targetCacheKey = cacheKey(prefix, hashData);
 
   if (targetsCache[targetCacheKey]) {
@@ -24,7 +24,7 @@ export function setCacheRecord<T>(
   prefix: string,
   hashData: Record<string, unknown>,
   cacheData: T
-) {
+): T {
   const targetCacheKey = cacheKey(prefix, hashData);
 
   return (targetsCache[targetCacheKey] = cacheData);
