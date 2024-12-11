@@ -1,7 +1,10 @@
 import type { ProjectConfiguration, TargetConfiguration } from '@nx/devkit';
 import type { NormalizedCreateNodeOptions } from '../normalize-create-nodes-options';
 import { join } from 'node:path';
-import { TARGET_PACKAGE_INSTALL } from './package.targets';
+import {
+  TARGET_PACKAGE_INSTALL,
+  TARGET_PACKAGE_PUBLISH,
+} from './package.targets';
 import type { NxVerdaccioEnvironmentsOptions } from '../schema';
 import type { StartVerdaccioOptions } from '../../executors/env-bootstrap/verdaccio-registry';
 import { uniquePort } from '../../executors/env-bootstrap/unique-port';
@@ -17,6 +20,7 @@ import { EXECUTOR_ENVIRONMENT_TEARDOWN } from '../../executors/env-teardown/cons
 
 export const TARGET_ENVIRONMENT_BOOTSTRAP = 'nxv-env-bootstrap';
 export const TARGET_ENVIRONMENT_INSTALL = 'nxv-env-install';
+export const TARGET_ENVIRONMENT_PUBLISH_ONLY = 'nxv-env-publish-only';
 export const TARGET_ENVIRONMENT_SETUP = 'nxv-env-setup';
 export const TARGET_ENVIRONMENT_TEARDOWN = 'nxv-env-teardown';
 export const TARGET_ENVIRONMENT_E2E = 'nxv-e2e';
@@ -124,6 +128,19 @@ export function getEnvTargets(
       options: { environmentRoot },
       // This is here to make it appear in the graph in older nx versions (otherwise it is filtered out)
       command: `echo "dependencies installed for ${environmentRoot}"`,
+    },
+    // intermediate task just here to execute dependent pkg-publish tasks with the correct environmentProject
+    [TARGET_ENVIRONMENT_PUBLISH_ONLY]: {
+      dependsOn: [
+        {
+          projects: 'dependencies',
+          target: TARGET_PACKAGE_PUBLISH,
+          params: 'forward',
+        },
+      ],
+      options: { environmentRoot },
+      // This is here to make it appear in the graph in older nx versions (otherwise it is filtered out)
+      command: `echo "dependencies published for ${environmentRoot}"`,
     },
     // runs env-bootstrap-env, install-env and stop-verdaccio
     [TARGET_ENVIRONMENT_SETUP]: {

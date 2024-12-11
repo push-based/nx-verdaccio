@@ -7,15 +7,21 @@ import {
   stopVerdaccioServer,
   type VerdaccioProcessResult,
 } from '../env-bootstrap/verdaccio-registry';
+import { formatError, formatInfo } from '../../internal/logging';
+
 import type { SetupEnvironmentExecutorOptions } from './schema';
 import { VERDACCIO_REGISTRY_JSON } from '../env-bootstrap/constants';
 import {
   TARGET_ENVIRONMENT_BOOTSTRAP,
   TARGET_ENVIRONMENT_INSTALL,
+  TARGET_ENVIRONMENT_PUBLISH_ONLY,
+  TARGET_ENVIRONMENT_SETUP,
 } from '../../plugin/targets/environment.targets';
 import { runSingleExecutor } from '../../internal/run-executor';
 import { getEnvironmentRoot } from '../../internal/environment-root';
-import {cleanupEnv} from "../internal/cleanup-env";
+import { cleanupEnv } from '../internal/cleanup-env';
+
+import { setupNpmWorkspace } from './npm';
 
 export type ExecutorOutput = {
   success: boolean;
@@ -23,12 +29,15 @@ export type ExecutorOutput = {
   error?: Error;
 };
 
+const INFO_TOKEN = 'ENV SETUP';
+
 export default async function runSetupEnvironmentExecutor(
   terminalAndExecutorOptions: SetupEnvironmentExecutorOptions,
   context: ExecutorContext
 ) {
   const { configurationName: configuration, projectName } = context;
-  const { verbose, keepServerRunning } = terminalAndExecutorOptions;
+  const { verbose, keepServerRunning, skipInstall, postScript } =
+    terminalAndExecutorOptions;
   const environmentRoot = getEnvironmentRoot(
     context,
     terminalAndExecutorOptions
@@ -57,16 +66,48 @@ export default async function runSetupEnvironmentExecutor(
   }
 
   try {
-    await executeProcess({
-      command: 'npx',
-      args: objectToCliArgs({
-        _: ['nx', TARGET_ENVIRONMENT_INSTALL, projectName],
-        environmentRoot,
+    if (skipInstall) {
+      logger.info(
+        formatInfo(`Run target: ${TARGET_ENVIRONMENT_PUBLISH_ONLY}`, INFO_TOKEN)
+      );
+      await executeProcess({
+        command: 'npx',
+        args: objectToCliArgs({
+          _: ['nx', TARGET_ENVIRONMENT_PUBLISH_ONLY, projectName],
+          environmentRoot,
+          ...(verbose ? { verbose } : {}),
+        }),
+        cwd: process.cwd(),
         ...(verbose ? { verbose } : {}),
-      }),
-      cwd: process.cwd(),
-      ...(verbose ? { verbose } : {}),
-    });
+      });
+    } else {
+      logger.info(
+        formatInfo(`Run target: ${TARGET_ENVIRONMENT_INSTALL}`, INFO_TOKEN)
+      );
+      await setupNpmWorkspace(environmentRoot, verbose);
+      await executeProcess({
+        command: 'npx',
+        args: objectToCliArgs({
+          _: ['nx', TARGET_ENVIRONMENT_INSTALL, projectName],
+          environmentRoot,
+          ...(verbose ? { verbose } : {}),
+        }),
+        cwd: process.cwd(),
+        ...(verbose ? { verbose } : {}),
+      });
+    }
+    if (postScript) {
+      const [command, ...args] = postScript.split(' ');
+      logger.info(
+        formatInfo(`Run postScript: ${command} ${args.join(' ')}`, INFO_TOKEN)
+      );
+      await executeProcess({
+        command,
+        args,
+        cwd: process.cwd(),
+        ...(verbose ? { verbose } : {}),
+      });
+    }
   } catch (error) {
     logger.error(error.message);
     await stopVerdaccioServer({
@@ -93,7 +134,7 @@ export default async function runSetupEnvironmentExecutor(
         environmentRoot,
       });
       // delete storage, .npmrc
-      await cleanupEnv(environmentRoot)
+      await cleanupEnv(environmentRoot);
     } else {
       const { url } = await readFile(
         join(environmentRoot, VERDACCIO_REGISTRY_JSON),
