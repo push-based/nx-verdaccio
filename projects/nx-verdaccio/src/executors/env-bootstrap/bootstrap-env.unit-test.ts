@@ -36,9 +36,6 @@ describe('bootstrapEnvironment', () => {
       },
       stop: vi.fn(),
     });
-  const setupNpmWorkspaceSpy = vi
-    .spyOn(npmModule, 'setupNpmWorkspace')
-    .mockImplementation(vi.fn());
   const configureRegistrySpy = vi
     .spyOn(npmModule, 'configureRegistry')
     .mockImplementation(vi.fn());
@@ -72,12 +69,6 @@ describe('bootstrapEnvironment', () => {
       readyWhen: 'Environment ready under',
       verbose: undefined,
     });
-
-    expect(setupNpmWorkspaceSpy).toHaveBeenCalledTimes(1);
-    expect(setupNpmWorkspaceSpy).toHaveBeenCalledWith(
-      expect.toMatchPath('tmp/environments/my-lib-e2e'),
-      undefined
-    );
 
     expect(configureRegistrySpy).toHaveBeenCalledTimes(1);
     expect(configureRegistrySpy).toHaveBeenCalledWith(
