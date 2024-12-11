@@ -7,7 +7,12 @@ import {
 } from '@push-based/test-utils';
 import { dirname, join } from 'node:path';
 import { copyFile, mkdir } from 'node:fs/promises';
-import { logger, NxJsonConfiguration } from '@nx/devkit';
+import {
+  logger,
+  NxJsonConfiguration,
+  PluginConfiguration,
+  TargetConfiguration,
+} from '@nx/devkit';
 import { PackageJson } from 'nx/src/utils/package-json';
 
 export async function setup({
@@ -36,6 +41,39 @@ export async function setup({
     cwd: dirname(envRoot),
   });
 
+  logger.info(`Add project & target`);
+  await executeProcess({
+    command: 'nx',
+    args: objectToCliArgs({
+      _: ['generate', '@nx/js:library', 'pkg'],
+      directory: 'packages/pkg',
+      bundler: 'tsc',
+      unitTestRunner: 'none',
+      linter: 'none',
+      interactive: false,
+    }),
+    verbose: true,
+    cwd: envRoot,
+  });
+  await updateJson<PackageJson>(
+    join(envRoot, 'packages', 'pkg', 'package.json'),
+    (json) => ({
+      ...json,
+      nx: {
+        ...json?.nx,
+        targets: {
+          ...json?.nx?.targets,
+          build: {
+            options: {
+              outputPath: ['dist/pkg'],
+            },
+            command: 'echo "lib"',
+          },
+        },
+      },
+    })
+  );
+
   logger.info(`Add e2e project & target`);
   await executeProcess({
     command: 'nx',
@@ -50,21 +88,15 @@ export async function setup({
     verbose: true,
     cwd: envRoot,
   });
-
   await updateJson<PackageJson>(
     join(envRoot, 'packages', 'pkg-e2e', 'package.json'),
-    (json) => ({
-      ...json,
-      nx: {
-        ...json?.nx,
-        targets: {
-          ...json?.nx?.targets,
-          e2e: {
-            command: 'echo "e2e"',
-          },
+    (json) =>
+      updatePackageJsonNxTargets(json, {
+        ...json?.nx?.targets,
+        e2e: {
+          command: 'echo "e2e"',
         },
-      },
-    })
+      })
   );
 
   logger.info(`Install @push-based/nx-verdaccio`);
@@ -89,20 +121,44 @@ export async function setup({
     cwd: envRoot,
     verbose: true,
   });
+}
 
+export async function registerNxVerdaccioPlugin(envRoot: string) {
   logger.info(`register nx-verdaccio plugin`);
-  await updateJson<NxJsonConfiguration>(join(envRoot, 'nx.json'), (json) => ({
-    ...json,
-    plugins: [
-      ...(json?.plugins ?? {}),
-      {
-        plugin: '@push-based/nx-verdaccio',
-        options: {
-          environments: {
-            targetNames: ['e2e'],
-          },
+  await updateJson<NxJsonConfiguration>(join(envRoot, 'nx.json'), (json) =>
+    registerPluginInNxJson(json, {
+      plugin: '@push-based/nx-verdaccio',
+      options: {
+        environments: {
+          targetNames: ['e2e'],
         },
       },
-    ],
-  }));
+    })
+  );
+}
+
+function registerPluginInNxJson(
+  nxJson: NxJsonConfiguration,
+  pluginConfig: PluginConfiguration
+) {
+  return {
+    ...nxJson,
+    plugins: [...(nxJson?.plugins ?? []), pluginConfig],
+  };
+}
+
+function updatePackageJsonNxTargets(
+  pkgJson: PackageJson,
+  targets: Record<string, TargetConfiguration>
+) {
+  return {
+    ...pkgJson,
+    nx: {
+      ...pkgJson?.nx,
+      targets: {
+        ...pkgJson?.nx?.targets,
+        ...targets,
+      },
+    },
+  };
 }

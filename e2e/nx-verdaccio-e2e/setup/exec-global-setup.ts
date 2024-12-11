@@ -1,5 +1,5 @@
 import { setup } from './setup.ts';
-import { REPO_NAME } from './config.ts';
+import { REPO_NAME } from '../fixtures/basic-nx-workspace';
 import { join } from 'node:path';
 import {
   DEFAULT_TEST_FIXTURE_DIST,

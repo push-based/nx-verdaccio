@@ -7,6 +7,11 @@
   "implicitDependencies": ["nx-verdaccio"],
   "targets": {
     "lint": {},
+    "nxv-env-setup": {
+      "options": {
+        "postScript": "NX_TASK_TARGET_PROJECT={projectName} npx tsx --tsconfig e2e/nx-verdaccio-e2e/tsconfig.spec.json e2e/nx-verdaccio-e2e/setup/exec-global-setup.ts"
+      }
+    },
     "e2e": {
       "executor": "@nx/vite:test",
       "inputs": ["default", "^production"],

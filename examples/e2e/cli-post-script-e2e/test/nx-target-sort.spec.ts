@@ -14,7 +14,7 @@ describe('Nx target - sort', () => {
   const envRoot = getTestEnvironmentRoot(projectName);
   const repoRoot = join(envRoot, DEFAULT_TEST_FIXTURE_DIST, REPO_NAME);
 
-  it('should execute Nx target in nx@v19 setup', async () => {
+  it('should execute Nx target in nx setup created with postScript', async () => {
     const { code, stdout } = await executeProcess({
       command: 'npx',
       args: objectToCliArgs({
