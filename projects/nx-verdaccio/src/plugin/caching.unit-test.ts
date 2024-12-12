@@ -1,96 +1,90 @@
-import { afterEach, beforeEach, describe, expect, MockInstance } from 'vitest';
-import * as moduleUnderTest from './caching';
-import * as cachingUtils from './utils/caching.utils';
+import { afterEach, beforeEach, describe, expect, type MockInstance } from 'vitest';
 import * as nodeFs from 'node:fs';
 import * as nxDevKit from '@nx/devkit';
-import { readTargetsCache, setCacheRecord } from './caching';
-import { cacheKey } from './utils/caching.utils';
-import { ProjectConfiguration } from '@nx/devkit';
-import { JsonReadOptions } from 'nx/src/utils/fileutils';
+import { type ProjectConfiguration } from '@nx/devkit';
+import { type JsonReadOptions } from 'nx/src/utils/fileutils';
+import { getCacheRecord, readTargetsCache, setCacheRecord } from './caching';
+import * as cachingUtils from './utils/caching.utils';
 import { MOCK_PROJECT_CONFIGURATION } from './constants.unit-test';
-import { PathLike } from 'fs';
 
 describe('caching', (): void => {
-  const prefix = 'warcraft';
-  const hashData = { race: 'orc' };
-  let cacheKeySpy: ReturnType<typeof vi.spyOn>;
-  const cacheItem = { thunderfury: 'Blessed Blade of the Windseeker' };
-  const targetsCache = { ragnaros: cacheItem };
+  describe('cacheRecord', (): void => {
+    let cacheKeySpy: MockInstance<
+      [prefix: string, hashData: Record<string, unknown>],
+      string
+    >;
 
-  beforeEach((): void => {
-    cacheKeySpy = vi.spyOn(cachingUtils, 'cacheKey');
-  });
-  afterEach((): void => {
-    cacheKeySpy.mockRestore();
-  });
+    const prefix = 'warcraft';
+    const cacheKey = 'ragnaros';
+    const hashData = { race: 'orc' };
+    const cacheItem = { thunderfury: 'Blessed Blade of the Windseeker' };
+    const targetsCache = { ragnaros: cacheItem };
 
-  describe('getCacheRecord', () => {
-    it('should call cacheKey with the correct arguments', () => {
-      cacheKeySpy.mockReturnValue('ragnaros');
-      moduleUnderTest.getCacheRecord(targetsCache, prefix, hashData);
-
-      expect(cacheKeySpy).toHaveBeenCalledWith(prefix, hashData);
-      expect(cacheKeySpy).toHaveBeenCalledTimes(1);
+    beforeEach((): void => {
+      cacheKeySpy = vi.spyOn(cachingUtils, 'cacheKey').mockReturnValue(cacheKey);
+    });
+    afterEach((): void => {
+      cacheKeySpy.mockRestore();
     });
 
-    it('should return the correct record if cacheKey matches', () => {
-      cacheKeySpy.mockReturnValue('ragnaros');
+    describe('getCacheRecord', (): void => {
+      it('should call cacheKey once and, with correct arguments', (): void => {
+        getCacheRecord(targetsCache, prefix, hashData);
 
-      const result = moduleUnderTest.getCacheRecord(
-        targetsCache,
-        prefix,
-        hashData
-      );
+        expect(cacheKeySpy).toHaveBeenCalledTimes(1);
+        expect(cacheKeySpy).toHaveBeenCalledWith(prefix, hashData);
+      });
 
-      expect(result).toEqual(cacheItem);
+      it('should return correct record if match', (): void => {
+        const result = getCacheRecord(
+          targetsCache,
+          prefix,
+          hashData
+        );
+        expect(result).toEqual(cacheItem);
+      });
+
+      it('should return undefined if no match', (): void => {
+        cacheKeySpy.mockReturnValue('non-existent-key');
+
+        const result = getCacheRecord(
+          targetsCache,
+          prefix,
+          hashData
+        );
+        expect(result).toBeUndefined();
+      });
     });
 
-    it('should return undefined if no matching key exists in the cache', () => {
-      cacheKeySpy.mockReturnValue('non-existent-key');
+    describe('setCacheRecord', (): void => {
+      const cacheData = { thunderfury: 'Blood of Sylvanas' };
 
-      const result = moduleUnderTest.getCacheRecord(
-        targetsCache,
-        prefix,
-        hashData
-      );
+      it('should call cacheKey once, and with correct arguments', (): void => {
+        setCacheRecord(targetsCache, prefix, hashData, cacheData);
 
-      expect(result).toBeUndefined();
+        expect(cacheKeySpy).toHaveBeenCalledTimes(1);
+        expect(cacheKeySpy).toHaveBeenCalledWith(prefix, hashData);
+      });
+
+      it('should set the cache record, and return it', (): void => {
+        const result = setCacheRecord(targetsCache, prefix, hashData, cacheData);
+
+        expect(result).toBe(cacheData);
+        expect(targetsCache).toHaveProperty(cacheKey, cacheData);
+      });
+
+      it('should update existing cache data, and return it', (): void => {
+        const recordToUpdate = { thunderfury: 'Soul of Sylvanas' };
+
+        setCacheRecord(targetsCache, prefix, hashData, cacheData);
+        const updatedRecord = setCacheRecord(targetsCache, prefix, hashData, recordToUpdate);
+
+        expect(updatedRecord).toBe(recordToUpdate);
+        expect(targetsCache).toHaveProperty(cacheKey, recordToUpdate);
+      });
     });
-  });
+  })
 
-  describe('setCacheRecord', (): void => {
-    const cacheData = { thunderfury: 'Blood of Sylvanas' };
-    it('should call cacheKey with the correct arguments', (): void => {
-      cacheKeySpy.mockReturnValue('ragnaros');
-      setCacheRecord(targetsCache, prefix, hashData, cacheData);
-
-      expect(cacheKeySpy).toHaveBeenCalledWith(prefix, hashData);
-      expect(cacheKeySpy).toHaveBeenCalledTimes(1);
-    });
-
-    it('should set a cache record and return the cached data', () => {
-      const result = setCacheRecord(targetsCache, prefix, hashData, cacheData);
-
-      const expectedKey = cacheKey(prefix, hashData);
-      expect(targetsCache).toHaveProperty(expectedKey, cacheData);
-      expect(result).toBe(cacheData);
-    });
-
-    it('should overwrite existing cache data with the same key', () => {
-      const updated = { thunderfury: 'Soul of Sylvanas' };
-
-      cacheKeySpy.mockReturnValue('ragnaros');
-
-      setCacheRecord(targetsCache, prefix, hashData, cacheData);
-      const result = setCacheRecord(targetsCache, prefix, hashData, updated);
-
-      const expectedKey = cacheKey(prefix, hashData);
-      expect(targetsCache).toHaveProperty(expectedKey, updated);
-      expect(result).toBe(updated);
-    });
-  });
-
-  // I'M PROUD OF THIS ONE, NOW IT'S TIME FOR REMAINING :)
   describe('readTargetsCache', (): void => {
     const cachePath = 'azeroth';
     let existsSyncSpy: MockInstance<[path: nodeFs.PathLike], boolean>;
@@ -115,21 +109,21 @@ describe('caching', (): void => {
       delete process.env.NX_CACHE_PROJECT_GRAPH;
     });
 
-    it('should call existSync once and with correct argument', (): void => {
+    it('should call existSync once, and with correct argument', (): void => {
       readTargetsCache(cachePath);
       expect(existsSyncSpy).toHaveBeenCalledWith(cachePath);
       expect(existsSyncSpy).toHaveBeenCalledTimes(1);
     });
 
-    it('should call readJsonFile once and with correct argument', (): void => {
+    it('should call readJsonFile once, and with correct argument', (): void => {
       readTargetsCache(cachePath);
       expect(readJsonFileSpy).toHaveBeenCalledWith(cachePath);
       expect(readJsonFileSpy).toHaveBeenCalledTimes(1);
     });
 
-    it('should return target cache if existsSync returns true and NX_CACHE_PROJECT_GRAPH = true', (): void => {
+    it('should return target cache if existsSync returns true, and NX_CACHE_PROJECT_GRAPH = true', (): void => {
       const targetsCacheResult = readTargetsCache(cachePath);
-      expect(targetsCacheResult).toStrictEqual({
+      expect(targetsCacheResult).toEqual({
         mockKey: MOCK_PROJECT_CONFIGURATION,
       });
     });
@@ -137,20 +131,20 @@ describe('caching', (): void => {
     it('should return empty object if NX_CACHE_PROJECT_GRAPH = false', (): void => {
       process.env.NX_CACHE_PROJECT_GRAPH = 'false';
       const targetsCacheResult = readTargetsCache(cachePath);
-      expect(targetsCacheResult).toStrictEqual({});
+      expect(targetsCacheResult).toEqual({});
     });
 
     it('should return empty object if existsSync returns false', (): void => {
       existsSyncSpy.mockImplementation((): boolean => false);
       const targetsCacheResult = readTargetsCache(cachePath);
-      expect(targetsCacheResult).toStrictEqual({});
+      expect(targetsCacheResult).toEqual({});
     });
 
-    it('should return empty object if existsSync returns false and NX_CACHE_PROJECT_GRAPH = false', (): void => {
+    it('should return empty object if existsSync returns false, and NX_CACHE_PROJECT_GRAPH = false', (): void => {
       existsSyncSpy.mockImplementation((): boolean => false);
       process.env.NX_CACHE_PROJECT_GRAPH = 'false';
       const targetsCacheResult = readTargetsCache(cachePath);
-      expect(targetsCacheResult).toStrictEqual({});
+      expect(targetsCacheResult).toEqual({});
     });
   });
 });
