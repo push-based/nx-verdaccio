@@ -1,22 +1,23 @@
-import { afterEach, beforeEach, describe, expect } from 'vitest';
+import { afterEach, beforeEach, describe, expect, MockInstance } from 'vitest';
 import * as moduleUnderTest from './caching';
 import * as cachingUtils from './utils/caching.utils';
-import * as nodeFs  from 'node:fs';
-import * as nxDevKit  from '@nx/devkit';
+import * as nodeFs from 'node:fs';
+import * as nxDevKit from '@nx/devkit';
 import { readTargetsCache, setCacheRecord } from './caching';
 import { cacheKey } from './utils/caching.utils';
 import { ProjectConfiguration } from '@nx/devkit';
+import { JsonReadOptions } from 'nx/src/utils/fileutils';
+import { MOCK_PROJECT_CONFIGURATION } from './constants.unit-test';
 
 describe('caching', () => {
   const prefix = 'warcraft';
   const hashData = { race: 'orc' };
   let cacheKeySpy: ReturnType<typeof vi.spyOn>;
   const cacheItem = { thunderfury: 'Blessed Blade of the Windseeker' };
-  const targetsCache = { 'ragnaros': cacheItem };
+  const targetsCache = { ragnaros: cacheItem };
 
   beforeEach((): void => {
     cacheKeySpy = vi.spyOn(cachingUtils, 'cacheKey');
-
   });
   afterEach((): void => {
     cacheKeySpy.mockRestore();
@@ -24,7 +25,6 @@ describe('caching', () => {
 
   describe('getCacheRecord', () => {
     it('should call cacheKey with the correct arguments', () => {
-
       cacheKeySpy.mockReturnValue('ragnaros');
       moduleUnderTest.getCacheRecord(targetsCache, prefix, hashData);
 
@@ -35,7 +35,11 @@ describe('caching', () => {
     it('should return the correct record if cacheKey matches', () => {
       cacheKeySpy.mockReturnValue('ragnaros');
 
-      const result = moduleUnderTest.getCacheRecord(targetsCache, prefix, hashData);
+      const result = moduleUnderTest.getCacheRecord(
+        targetsCache,
+        prefix,
+        hashData
+      );
 
       expect(result).toEqual(cacheItem);
     });
@@ -43,7 +47,11 @@ describe('caching', () => {
     it('should return undefined if no matching key exists in the cache', () => {
       cacheKeySpy.mockReturnValue('non-existent-key');
 
-      const result = moduleUnderTest.getCacheRecord(targetsCache, prefix, hashData);
+      const result = moduleUnderTest.getCacheRecord(
+        targetsCache,
+        prefix,
+        hashData
+      );
 
       expect(result).toBeUndefined();
     });
@@ -81,89 +89,30 @@ describe('caching', () => {
     });
   });
 
-  //export function readTargetsCache(
-  //   cachePath: string
-  // ): Record<string, Partial<ProjectConfiguration>> {
-  //   return process.env.NX_CACHE_PROJECT_GRAPH !== 'false' && existsSync(cachePath)
-  //     ? readJsonFile(cachePath)
-  //     : {};
-  // }
   describe('readTargetsCache', (): void => {
-    afterEach(() => {
-      existsSyncSpy.mockRestore();
-      delete process.env.NX_CACHE_PROJECT_GRAPH;
-    });
-    const existsSyncSpy = vi
-      .spyOn(nodeFs, 'existsSync')
-      .mockImplementation((): boolean => true);
-
-    const readJsonFileSpy = vi
-      .spyOn(nxDevKit, 'readJsonFile')
-      .mockImplementation((): Record<string, Partial<ProjectConfiguration>> =>  {
-        return {'mockKey': mockProjectConfiguration}
-      });
-
-
-    const mockProjectConfiguration: ProjectConfiguration = {
-      name: 'mock-project',
-      root: 'apps/mock-project',
-      sourceRoot: 'apps/mock-project/src',
-      projectType: 'application',
-      tags: ['e2e', 'unit-test'],
-      implicitDependencies: ['shared-library'],
-      targets: {
-        build: {
-          executor: '@nx/web:build',
-          options: {
-            outputPath: 'dist/apps/mock-project',
-            index: 'apps/mock-project/src/index.html',
-            main: 'apps/mock-project/src/main.ts',
-            tsConfig: 'apps/mock-project/tsconfig.app.json',
-          },
-          configurations: {
-            production: {
-              fileReplacements: [
-                {
-                  replace: 'apps/mock-project/src/environments/environment.ts',
-                  with: 'apps/mock-project/src/environments/environment.prod.ts',
-                },
-              ],
-              optimization: true,
-              sourceMap: false,
-            },
-          },
-        },
-      },
-      generators: {
-        '@nx/react': {
-          library: {
-            style: 'scss',
-          },
-        },
-      },
-      namedInputs: {
-        default: ['{projectRoot}/**/*', '!{projectRoot}/**/*.spec.ts'],
-        production: ['default', '!{projectRoot}/**/*.test.ts'],
-      },
-      release: {
-        version: {
-          generator: '@nx/version',
-          generatorOptions: {
-            increment: 'minor',
-          },
-        },
-      },
-      metadata: {
-        description: 'This is a mock project for testing.',
-      },
-    };
-
+    let existsSyncSpy: MockInstance<[path: nodeFs.PathLike], boolean>;
+    let readJsonFileSpy: MockInstance<
+      [path: string, options?: JsonReadOptions],
+      object
+    >;
 
     beforeEach((): void => {
+      existsSyncSpy = vi.spyOn(nodeFs, 'existsSync');
+      readJsonFileSpy = vi.spyOn(nxDevKit, 'readJsonFile');
       process.env.NX_CACHE_PROJECT_GRAPH = 'true';
     });
 
+    afterEach((): void => {
+      existsSyncSpy.mockRestore();
+      readJsonFileSpy.mockRestore();
+      delete process.env.NX_CACHE_PROJECT_GRAPH;
+    });
+
     it('should call exist sync with the correct arguments', (): void => {
+      existsSyncSpy.mockImplementation((): boolean => true);
+      readJsonFileSpy.mockImplementation((): Record<string, Partial<ProjectConfiguration>> =>  {
+        return {'mockKey': MOCK_PROJECT_CONFIGURATION}
+      });
       process.env.NX_CACHE_PROJECT_GRAPH = 'true';
       readTargetsCache('test');
       expect(existsSyncSpy).toHaveBeenCalledWith('test');
@@ -172,9 +121,36 @@ describe('caching', () => {
     });
 
     it('should return target cache from json file', (): void => {
+      existsSyncSpy.mockImplementation((): boolean => true);
+      readJsonFileSpy.mockImplementation((): Record<string, Partial<ProjectConfiguration>> =>  {
+        return {'mockKey': MOCK_PROJECT_CONFIGURATION}
+      });
       process.env.NX_CACHE_PROJECT_GRAPH = 'true';
-      const targetsCacheResult  = readTargetsCache('test');
-      expect(targetsCacheResult).toStrictEqual({'mockKey': mockProjectConfiguration});
+      const targetsCacheResult = readTargetsCache('test');
+      expect(targetsCacheResult).toStrictEqual({
+        mockKey: MOCK_PROJECT_CONFIGURATION,
+      });
+    });
+
+    it('should return empty object if NX_CACHE_PROJECT_GRAPH = false', (): void => {
+      existsSyncSpy.mockImplementation((): boolean => true);
+      process.env.NX_CACHE_PROJECT_GRAPH = 'false';
+      const targetsCacheResult = readTargetsCache('test');
+      expect(targetsCacheResult).toStrictEqual({});
+    });
+
+    it('should return empty object if existsSync returns false', (): void => {
+      existsSyncSpy.mockImplementation((): boolean => true);
+      process.env.NX_CACHE_PROJECT_GRAPH = 'false';
+      const targetsCacheResult = readTargetsCache('test');
+      expect(targetsCacheResult).toStrictEqual({});
+    });
+
+    it('should return empty object if existsSync returns false and NX_CACHE_PROJECT_GRAPH = false', (): void => {
+      existsSyncSpy.mockImplementation((): boolean => false);
+      process.env.NX_CACHE_PROJECT_GRAPH = 'false';
+      const targetsCacheResult = readTargetsCache('test');
+      expect(targetsCacheResult).toStrictEqual({});
     });
   });
-})
+});
