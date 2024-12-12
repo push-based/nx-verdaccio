@@ -159,20 +159,21 @@ describe('caching', () => {
     };
 
 
-    // beforeEach((): void => {
-    //   existsSyncSpy = vi.spyOn(cachingUtils, 'cacheKey');
-    // });
-
-    afterEach((): void => {
-      existsSyncSpy.mockRestore();
+    beforeEach((): void => {
+      process.env.NX_CACHE_PROJECT_GRAPH = 'true';
     });
 
-    it('should call cacheKey with the correct arguments and return from json file', (): void => {
+    it('should call exist sync with the correct arguments', (): void => {
       process.env.NX_CACHE_PROJECT_GRAPH = 'true';
-      const targetsCacheResult = readTargetsCache('test');
+      readTargetsCache('test');
       expect(existsSyncSpy).toHaveBeenCalledWith('test');
       expect(existsSyncSpy).toHaveBeenCalledTimes(1);
       expect(readJsonFileSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return target cache from json file', (): void => {
+      process.env.NX_CACHE_PROJECT_GRAPH = 'true';
+      const targetsCacheResult  = readTargetsCache('test');
       expect(targetsCacheResult).toStrictEqual({'mockKey': mockProjectConfiguration});
     });
   });
