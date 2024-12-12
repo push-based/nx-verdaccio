@@ -1,15 +1,23 @@
-import { afterEach,beforeEach, describe, expect, type MockInstance } from 'vitest';
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  type MockInstance,
+} from 'vitest';
 import * as fileHasher from 'nx/src/hasher/file-hasher';
 import { cacheKey } from './caching.utils';
 
 describe('cacheKey', (): void => {
   const prefix = 'warcraft';
   const hashData = { race: 'orc' };
-  const hashObjectReturnValue = '123456789'
+  const hashObjectReturnValue = '123456789';
   let hashObjectSpy: MockInstance<[obj: object], string>;
 
   beforeEach((): void => {
-    hashObjectSpy = vi.spyOn(fileHasher, 'hashObject').mockReturnValue(hashObjectReturnValue)
+    hashObjectSpy = vi
+      .spyOn(fileHasher, 'hashObject')
+      .mockReturnValue(hashObjectReturnValue);
   });
   afterEach((): void => {
     hashObjectSpy.mockRestore();
@@ -40,9 +48,9 @@ describe('cacheKey', (): void => {
     });
 
     it('should return cache key, when hashData is NOT empty', (): void => {
-      expect(cacheKey(prefix, hashData)).toBe(`${prefix}-${hashObjectReturnValue}`);
+      expect(cacheKey(prefix, hashData)).toBe(
+        `${prefix}-${hashObjectReturnValue}`
+      );
     });
   });
 });
-
-

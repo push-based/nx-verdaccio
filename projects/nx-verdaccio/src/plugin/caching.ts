@@ -34,7 +34,7 @@ export function readTargetsCache(
   cachePath: string
 ): Record<string, Partial<ProjectConfiguration>> {
   return process.env.NX_CACHE_PROJECT_GRAPH !== 'false' && existsSync(cachePath)
-    ?  readJsonFile(cachePath)
+    ? readJsonFile(cachePath)
     : {};
 }
 

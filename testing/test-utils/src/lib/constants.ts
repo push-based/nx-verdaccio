@@ -56,6 +56,9 @@ const MOCK_PROJECT_CONFIGURATION: ProjectConfiguration = {
   },
 };
 
-export const MOCK_TARGETS_CACHE: Record<string, Partial<ProjectConfiguration>> = {
-  mockKey: MOCK_PROJECT_CONFIGURATION
-}
+export const MOCK_TARGETS_CACHE: Record<
+  string,
+  Partial<ProjectConfiguration>
+> = {
+  mockKey: MOCK_PROJECT_CONFIGURATION,
+};

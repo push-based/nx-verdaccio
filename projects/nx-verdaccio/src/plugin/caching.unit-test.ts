@@ -49,7 +49,9 @@ describe('caching', (): void => {
       });
 
       it('should return correct record if match', (): void => {
-        expect(getCacheRecord(targetsCache, prefix, hashData)).toEqual(cacheItem);
+        expect(getCacheRecord(targetsCache, prefix, hashData)).toEqual(
+          cacheItem
+        );
       });
 
       it('should return undefined if no match', (): void => {
@@ -68,9 +70,9 @@ describe('caching', (): void => {
       });
 
       it('should set the cache record, and return it', (): void => {
-        expect(
-          setCacheRecord(targetsCache, prefix, hashData, cacheData)
-        ).toBe(cacheData);
+        expect(setCacheRecord(targetsCache, prefix, hashData, cacheData)).toBe(
+          cacheData
+        );
         expect(targetsCache).toHaveProperty(cacheKey, cacheData);
       });
 
@@ -148,7 +150,8 @@ describe('caching', (): void => {
   });
 
   describe('writeTargetsToCache', (): void => {
-    const writeJsonFile = vi.spyOn(nxDevKit, 'writeJsonFile')
+    const writeJsonFile = vi
+      .spyOn(nxDevKit, 'writeJsonFile')
       .mockImplementation((): string => 'dont write to file :D');
     const path = 'azeroth';
 
