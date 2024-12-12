@@ -2,8 +2,10 @@ import { afterEach, beforeEach, describe, expect } from 'vitest';
 import * as moduleUnderTest from './caching';
 import * as cachingUtils from './utils/caching.utils';
 import * as nodeFs  from 'node:fs';
+import * as nxDevKit  from '@nx/devkit';
 import { readTargetsCache, setCacheRecord } from './caching';
 import { cacheKey } from './utils/caching.utils';
+import { ProjectConfiguration } from '@nx/devkit';
 
 describe('caching', () => {
   const prefix = 'warcraft';
@@ -87,9 +89,75 @@ describe('caching', () => {
   //     : {};
   // }
   describe('readTargetsCache', (): void => {
+    afterEach(() => {
+      existsSyncSpy.mockRestore();
+      delete process.env.NX_CACHE_PROJECT_GRAPH;
+    });
     const existsSyncSpy = vi
       .spyOn(nodeFs, 'existsSync')
       .mockImplementation((): boolean => true);
+
+    const readJsonFileSpy = vi
+      .spyOn(nxDevKit, 'readJsonFile')
+      .mockImplementation((): Record<string, Partial<ProjectConfiguration>> =>  {
+        return {'mockKey': mockProjectConfiguration}
+      });
+
+
+    const mockProjectConfiguration: ProjectConfiguration = {
+      name: 'mock-project',
+      root: 'apps/mock-project',
+      sourceRoot: 'apps/mock-project/src',
+      projectType: 'application',
+      tags: ['e2e', 'unit-test'],
+      implicitDependencies: ['shared-library'],
+      targets: {
+        build: {
+          executor: '@nx/web:build',
+          options: {
+            outputPath: 'dist/apps/mock-project',
+            index: 'apps/mock-project/src/index.html',
+            main: 'apps/mock-project/src/main.ts',
+            tsConfig: 'apps/mock-project/tsconfig.app.json',
+          },
+          configurations: {
+            production: {
+              fileReplacements: [
+                {
+                  replace: 'apps/mock-project/src/environments/environment.ts',
+                  with: 'apps/mock-project/src/environments/environment.prod.ts',
+                },
+              ],
+              optimization: true,
+              sourceMap: false,
+            },
+          },
+        },
+      },
+      generators: {
+        '@nx/react': {
+          library: {
+            style: 'scss',
+          },
+        },
+      },
+      namedInputs: {
+        default: ['{projectRoot}/**/*', '!{projectRoot}/**/*.spec.ts'],
+        production: ['default', '!{projectRoot}/**/*.test.ts'],
+      },
+      release: {
+        version: {
+          generator: '@nx/version',
+          generatorOptions: {
+            increment: 'minor',
+          },
+        },
+      },
+      metadata: {
+        description: 'This is a mock project for testing.',
+      },
+    };
+
 
     // beforeEach((): void => {
     //   existsSyncSpy = vi.spyOn(cachingUtils, 'cacheKey');
@@ -99,11 +167,13 @@ describe('caching', () => {
       existsSyncSpy.mockRestore();
     });
 
-    it('should call cacheKey with the correct arguments', (): void => {
-      readTargetsCache('test');
-
+    it('should call cacheKey with the correct arguments and return from json file', (): void => {
+      process.env.NX_CACHE_PROJECT_GRAPH = 'true';
+      const targetsCacheResult = readTargetsCache('test');
       expect(existsSyncSpy).toHaveBeenCalledWith('test');
       expect(existsSyncSpy).toHaveBeenCalledTimes(1);
+      expect(readJsonFileSpy).toHaveBeenCalledTimes(1);
+      expect(targetsCacheResult).toStrictEqual({'mockKey': mockProjectConfiguration});
     });
   });
 })
