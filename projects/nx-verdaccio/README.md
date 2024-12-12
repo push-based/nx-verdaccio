@@ -22,16 +22,16 @@ This executor helps to initiate an [environment folder](../../../../../README.md
     "env-setup": {
       "executor": "@code-pushup/nx-verdaccio:env-setup",
       "options": {
-        "keepServerRunning": false
+        "skipInstall": true
+        "keepServerRunning": true
         "envRoot": "/tmp/test-npm-workspace"
-        "verbose": true,
       }
     }
   }
 }
 ```
 
-Read more under [setup executor docs](./projects/nx-verdaccio/src/executors/setup/README.md).
+Read more under [setup executor docs](./projects/nx-verdaccio/src/executors/env-setup/README.md).
 
 ### Bootstrap Environment Executor
 
@@ -54,12 +54,11 @@ This executor helps to initiate [environment](../../../../../README.md#-environm
 }
 ```
 
-Read more under [bootstrap executor docs](./projects/nx-verdaccio/src/executors/bootstrap/README.md).
+Read more under [bootstrap executor docs](./projects/nx-verdaccio/src/executors/env-bootstrap/README.md).
 
 ### Kill Process Executor
 
 This executor helps to kill processes by `ProcessID` or a JSON file containing a property `pid` as number.
-
 
 ```jsonc
 // project.json
@@ -102,7 +101,7 @@ This executor helps to install a [`pubishable`](../../../../../README.md#fine-gr
 }
 ```
 
-Read more under [pkg install executor docs](./projects/nx-verdaccio/src/executors/npm-install/README.md).
+Read more under [pkg install executor docs](./projects/nx-verdaccio/src/executors/pkg-install/README.md).
 
 ### NPM Publish Executor
 
@@ -126,7 +125,7 @@ This executor helps to publish a [`pubishable`](../../../../../README.md#fine-gr
 }
 ```
 
-Read more under [pkg publish executor docs](./projects/nx-verdaccio/src/executors/npm-publish/README.md).
+Read more under [pkg publish executor docs](./projects/nx-verdaccio/src/executors/pkg-publish/README.md).
 
 ## Debugging e2e environments
 

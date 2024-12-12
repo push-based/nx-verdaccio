@@ -1,3 +1,17 @@
+## 0.0.0-alpha.27 (2024-12-11)
+
+
+### 🚀 Features
+
+- cleanup git status in folders that are checked in ([5e2c9b5](https://github.com/push-based/nx-verdaccio/commit/5e2c9b5))
+- add skip install ([b1628ef](https://github.com/push-based/nx-verdaccio/commit/b1628ef))
+- **nx-verdaccio:** add skipInstall and post script ([f2c0c86](https://github.com/push-based/nx-verdaccio/commit/f2c0c86))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+- Michael Hladky @BioPhoton
+
 ## 0.0.0-alpha.26 (2024-10-23)
 
 

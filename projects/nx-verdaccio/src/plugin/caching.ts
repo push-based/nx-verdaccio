@@ -46,5 +46,6 @@ export function writeTargetsToCache(
   cachePath: string,
   results: Record<string, Partial<ProjectConfiguration>>
 ) {
-  writeJsonFile(cachePath, results);
+  process.env.NX_CACHE_PROJECT_GRAPH !== 'false' &&
+    writeJsonFile(cachePath, results);
 }
