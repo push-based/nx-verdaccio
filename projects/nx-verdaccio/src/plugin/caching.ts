@@ -33,6 +33,8 @@ export function setCacheRecord<T>(
 export function readTargetsCache(
   cachePath: string
 ): Record<string, Partial<ProjectConfiguration>> {
+  // that part is ready
+  const mockedExistsSync = existsSync(cachePath);
   return process.env.NX_CACHE_PROJECT_GRAPH !== 'false' && existsSync(cachePath)
     ? readJsonFile(cachePath)
     : {};

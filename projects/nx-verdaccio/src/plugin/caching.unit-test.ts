@@ -1,7 +1,8 @@
 import { afterEach, beforeEach, describe, expect } from 'vitest';
 import * as moduleUnderTest from './caching';
 import * as cachingUtils from './utils/caching.utils';
-import { setCacheRecord } from './caching';
+import * as nodeFs  from 'node:fs';
+import { readTargetsCache, setCacheRecord } from './caching';
 import { cacheKey } from './utils/caching.utils';
 
 describe('caching', () => {
@@ -78,7 +79,31 @@ describe('caching', () => {
     });
   });
 
+  //export function readTargetsCache(
+  //   cachePath: string
+  // ): Record<string, Partial<ProjectConfiguration>> {
+  //   return process.env.NX_CACHE_PROJECT_GRAPH !== 'false' && existsSync(cachePath)
+  //     ? readJsonFile(cachePath)
+  //     : {};
+  // }
+  describe('readTargetsCache', (): void => {
+    const existsSyncSpy = vi
+      .spyOn(nodeFs, 'existsSync')
+      .mockImplementation((): boolean => true);
+
+    // beforeEach((): void => {
+    //   existsSyncSpy = vi.spyOn(cachingUtils, 'cacheKey');
+    // });
+
+    afterEach((): void => {
+      existsSyncSpy.mockRestore();
+    });
+
+    it('should call cacheKey with the correct arguments', (): void => {
+      readTargetsCache('test');
+
+      expect(existsSyncSpy).toHaveBeenCalledWith('test');
+      expect(existsSyncSpy).toHaveBeenCalledTimes(1);
+    });
+  });
 })
-
-
-
