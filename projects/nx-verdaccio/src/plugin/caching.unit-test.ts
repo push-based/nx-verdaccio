@@ -8,8 +8,9 @@ import { cacheKey } from './utils/caching.utils';
 import { ProjectConfiguration } from '@nx/devkit';
 import { JsonReadOptions } from 'nx/src/utils/fileutils';
 import { MOCK_PROJECT_CONFIGURATION } from './constants.unit-test';
+import { PathLike } from 'fs';
 
-describe('caching', () => {
+describe('caching', (): void => {
   const prefix = 'warcraft';
   const hashData = { race: 'orc' };
   let cacheKeySpy: ReturnType<typeof vi.spyOn>;
@@ -89,7 +90,9 @@ describe('caching', () => {
     });
   });
 
+  // I'M PROUD OF THIS ONE, NOW IT'S TIME FOR REMAINING :)
   describe('readTargetsCache', (): void => {
+    const cachePath = 'azeroth';
     let existsSyncSpy: MockInstance<[path: nodeFs.PathLike], boolean>;
     let readJsonFileSpy: MockInstance<
       [path: string, options?: JsonReadOptions],
@@ -97,8 +100,12 @@ describe('caching', () => {
     >;
 
     beforeEach((): void => {
-      existsSyncSpy = vi.spyOn(nodeFs, 'existsSync');
-      readJsonFileSpy = vi.spyOn(nxDevKit, 'readJsonFile');
+      existsSyncSpy = vi.spyOn(nodeFs, 'existsSync')
+        .mockImplementation((): boolean => true);
+      readJsonFileSpy = vi.spyOn(nxDevKit, 'readJsonFile')
+        .mockImplementation((): Record<string, Partial<ProjectConfiguration>> => {
+          return { mockKey: MOCK_PROJECT_CONFIGURATION }
+      });
       process.env.NX_CACHE_PROJECT_GRAPH = 'true';
     });
 
@@ -108,48 +115,41 @@ describe('caching', () => {
       delete process.env.NX_CACHE_PROJECT_GRAPH;
     });
 
-    it('should call exist sync with the correct arguments', (): void => {
-      existsSyncSpy.mockImplementation((): boolean => true);
-      readJsonFileSpy.mockImplementation((): Record<string, Partial<ProjectConfiguration>> =>  {
-        return {'mockKey': MOCK_PROJECT_CONFIGURATION}
-      });
-      process.env.NX_CACHE_PROJECT_GRAPH = 'true';
-      readTargetsCache('test');
-      expect(existsSyncSpy).toHaveBeenCalledWith('test');
+    it('should call existSync once and with correct argument', (): void => {
+      readTargetsCache(cachePath);
+      expect(existsSyncSpy).toHaveBeenCalledWith(cachePath);
       expect(existsSyncSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call readJsonFile once and with correct argument', (): void => {
+      readTargetsCache(cachePath);
+      expect(readJsonFileSpy).toHaveBeenCalledWith(cachePath);
       expect(readJsonFileSpy).toHaveBeenCalledTimes(1);
     });
 
-    it('should return target cache from json file', (): void => {
-      existsSyncSpy.mockImplementation((): boolean => true);
-      readJsonFileSpy.mockImplementation((): Record<string, Partial<ProjectConfiguration>> =>  {
-        return {'mockKey': MOCK_PROJECT_CONFIGURATION}
-      });
-      process.env.NX_CACHE_PROJECT_GRAPH = 'true';
-      const targetsCacheResult = readTargetsCache('test');
+    it('should return target cache if existsSync returns true and NX_CACHE_PROJECT_GRAPH = true', (): void => {
+      const targetsCacheResult = readTargetsCache(cachePath);
       expect(targetsCacheResult).toStrictEqual({
         mockKey: MOCK_PROJECT_CONFIGURATION,
       });
     });
 
     it('should return empty object if NX_CACHE_PROJECT_GRAPH = false', (): void => {
-      existsSyncSpy.mockImplementation((): boolean => true);
       process.env.NX_CACHE_PROJECT_GRAPH = 'false';
-      const targetsCacheResult = readTargetsCache('test');
+      const targetsCacheResult = readTargetsCache(cachePath);
       expect(targetsCacheResult).toStrictEqual({});
     });
 
     it('should return empty object if existsSync returns false', (): void => {
-      existsSyncSpy.mockImplementation((): boolean => true);
-      process.env.NX_CACHE_PROJECT_GRAPH = 'false';
-      const targetsCacheResult = readTargetsCache('test');
+      existsSyncSpy.mockImplementation((): boolean => false);
+      const targetsCacheResult = readTargetsCache(cachePath);
       expect(targetsCacheResult).toStrictEqual({});
     });
 
     it('should return empty object if existsSync returns false and NX_CACHE_PROJECT_GRAPH = false', (): void => {
       existsSyncSpy.mockImplementation((): boolean => false);
       process.env.NX_CACHE_PROJECT_GRAPH = 'false';
-      const targetsCacheResult = readTargetsCache('test');
+      const targetsCacheResult = readTargetsCache(cachePath);
       expect(targetsCacheResult).toStrictEqual({});
     });
   });
