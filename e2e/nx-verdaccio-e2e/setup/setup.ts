@@ -5,24 +5,29 @@ import {
   objectToCliArgs,
   updateJson,
 } from '@push-based/test-utils';
-import {copyFile, lstat, mkdir, readdir} from 'fs/promises';
-import {join} from 'path';
-import {dirname, join} from 'node:path';
-import {copyFile, mkdir, symlink, readlink} from 'node:fs/promises';
-import {logger, NxJsonConfiguration, PluginConfiguration, TargetConfiguration,} from '@nx/devkit';
-import {PackageJson} from 'nx/src/utils/package-json';
+import { copyFile, lstat, mkdir, readdir } from 'fs/promises';
+import { join } from 'path';
+import { dirname, join } from 'node:path';
+import { copyFile, mkdir, symlink, readlink } from 'node:fs/promises';
+import {
+  logger,
+  NxJsonConfiguration,
+  PluginConfiguration,
+  TargetConfiguration,
+} from '@nx/devkit';
+import { PackageJson } from 'nx/src/utils/package-json';
 
 export async function setup({
-                              envRoot,
-                              projectName,
-                              repoName,
-                            }: {
+  envRoot,
+  projectName,
+  repoName,
+}: {
   envRoot: string;
   repoName: string;
   projectName: string;
 }) {
   // dedupe packages because symlink copy problems
-  await mkdir(envRoot, {recursive: true});
+  await mkdir(envRoot, { recursive: true });
   // setup nx environment for e2e tests
   logger.info(`Created nx workspace under ${envRoot}`);
   await executeProcess({
@@ -113,7 +118,7 @@ export async function setup({
       DEFAULT_TEST_FIXTURE_DIST,
       repoName
     ),
-    {recursive: true}
+    { recursive: true }
   );
   await copyFile(
     join(getTestEnvironmentRoot(projectName), '.npmrc'),
@@ -123,16 +128,17 @@ export async function setup({
   await executeProcess({
     command: 'npm',
     args: objectToCliArgs({
-      _: ['dedupe']
+      _: ['dedupe'],
     }),
     verbose: true,
     cwd: dirname(envRoot),
   });
-
-
 }
 
-export async function registerNxVerdaccioPlugin(envRoot: string, options?: PluginConfiguration) {
+export async function registerNxVerdaccioPlugin(
+  envRoot: string,
+  options?: PluginConfiguration
+) {
   logger.info(`register nx-verdaccio plugin`);
   await updateJson<NxJsonConfiguration>(join(envRoot, 'nx.json'), (json) =>
     registerPluginInNxJson(json, {
@@ -142,7 +148,7 @@ export async function registerNxVerdaccioPlugin(envRoot: string, options?: Plugi
           targetNames: ['e2e'],
         },
       },
-      ...options
+      ...options,
     })
   );
 }
@@ -173,17 +179,20 @@ function updatePackageJsonNxTargets(
   };
 }
 
-
 /**
  * This function avoids issues with symlinks and other edge cases.
  *
  */
-export async function copyDirectory(src: string, dest: string, exclude: string[] = []) {
+export async function copyDirectory(
+  src: string,
+  dest: string,
+  exclude: string[] = []
+) {
   // Ensure the destination directory exists
-  await mkdir(dest, {recursive: true});
+  await mkdir(dest, { recursive: true });
 
   // Read the contents of the source directory
-  const entries = await readdir(src, {withFileTypes: true});
+  const entries = await readdir(src, { withFileTypes: true });
 
   for (const entry of entries) {
     const srcPath = join(src, entry.name);

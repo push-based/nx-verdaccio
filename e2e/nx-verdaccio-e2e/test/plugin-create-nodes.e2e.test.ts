@@ -1,39 +1,41 @@
-import type {Tree} from '@nx/devkit';
-import {join} from 'node:path';
-import {afterEach, beforeAll, expect} from 'vitest';
-import {nxShowProjectJson,} from '@push-based/test-nx-utils';
-import {copyDirectory, registerNxVerdaccioPlugin} from '../setup/setup';
-import {mkdir} from 'node:fs/promises';
-import {TARGET_PACKAGE_INSTALL, TARGET_PACKAGE_PUBLISH,} from '@push-based/nx-verdaccio';
-import {DEFAULT_TEST_FIXTURE_DIST, getTestEnvironmentRoot} from '@push-based/test-utils';
+import type { Tree } from '@nx/devkit';
+import { join } from 'node:path';
+import { afterEach, beforeAll, expect } from 'vitest';
+import { nxShowProjectJson } from '@push-based/test-nx-utils';
+import { copyDirectory, registerNxVerdaccioPlugin } from '../setup/setup';
+import { mkdir } from 'node:fs/promises';
+import {
+  TARGET_PACKAGE_INSTALL,
+  TARGET_PACKAGE_PUBLISH,
+} from '@push-based/nx-verdaccio';
+import {
+  DEFAULT_TEST_FIXTURE_DIST,
+  getTestEnvironmentRoot,
+} from '@push-based/test-utils';
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import {REPO_NAME} from "../fixtures/basic-nx-workspace";
+import { REPO_NAME } from '../fixtures/basic-nx-workspace';
 
 describe('in a fresh Nx workspace', () => {
-
-
   const projectName = process.env['NX_TASK_TARGET_PROJECT'];
   const envRoot = getTestEnvironmentRoot(projectName);
   const basicNxReopPath = join(envRoot, DEFAULT_TEST_FIXTURE_DIST, REPO_NAME);
   const baseDir = join(envRoot, DEFAULT_TEST_FIXTURE_DIST, 'create-nodes-v2');
 
   beforeAll(async () => {
-    await mkdir(baseDir, {recursive: true});
+    await mkdir(baseDir, { recursive: true });
     await copyDirectory(basicNxReopPath, baseDir, []);
-  })
+  });
 
   afterEach(async () => {
     // await teardownTestFolder(baseDir);
   });
   describe('with nx-verdaccio plugin installed', () => {
-
     beforeAll(async () => {
       await registerNxVerdaccioPlugin(baseDir);
-    })
+    });
 
     it('should add package targets to library project', async () => {
-
-      const {code, projectJson} = await nxShowProjectJson(baseDir, 'pkg');
+      const { code, projectJson } = await nxShowProjectJson(baseDir, 'pkg');
       expect(code).toBe(0);
 
       expect(projectJson.targets).toStrictEqual({
@@ -69,7 +71,7 @@ describe('in a fresh Nx workspace', () => {
 
       expect(projectJson.targets).toMatchSnapshot();
     });
-/*
+    /*
     it('should NOT add package targets to application project', async () => {
       const cwd = join(baseDir, 'no-pkg-targets');
       registerPluginInWorkspace(tree, {
@@ -276,7 +278,5 @@ describe('in a fresh Nx workspace', () => {
       );
     });
     */
-
   });
-
 });

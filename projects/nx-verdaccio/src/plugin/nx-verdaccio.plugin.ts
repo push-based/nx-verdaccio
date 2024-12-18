@@ -7,15 +7,27 @@ import {
   type ProjectConfiguration,
   readJsonFile,
 } from '@nx/devkit';
-import {dirname, join} from 'node:path';
-import type {NxVerdaccioCreateNodeOptions} from './schema';
-import {normalizeCreateNodesOptions, type NormalizedCreateNodeOptions,} from './normalize-create-nodes-options';
-import {hashObject} from 'nx/src/hasher/file-hasher';
-import {workspaceDataDirectory} from 'nx/src/utils/cache-directory';
-import {PLUGIN_NAME} from './constants';
-import {getCacheRecord, readTargetsCache, setCacheRecord, writeTargetsToCache,} from './caching';
-import {createProjectConfiguration} from './targets/create-targets';
-import {getPackageJsonNxConfig, getProjectConfig, getProjectJsonNxConfig} from "./project-config";
+import { dirname, join } from 'node:path';
+import type { NxVerdaccioCreateNodeOptions } from './schema';
+import {
+  normalizeCreateNodesOptions,
+  type NormalizedCreateNodeOptions,
+} from './normalize-create-nodes-options';
+import { hashObject } from 'nx/src/hasher/file-hasher';
+import { workspaceDataDirectory } from 'nx/src/utils/cache-directory';
+import { PLUGIN_NAME } from './constants';
+import {
+  getCacheRecord,
+  readTargetsCache,
+  setCacheRecord,
+  writeTargetsToCache,
+} from './caching';
+import { createProjectConfiguration } from './targets/create-targets';
+import {
+  getPackageJsonNxConfig,
+  getProjectConfig,
+  getProjectJsonNxConfig,
+} from './project-config';
 
 const PROJECT_JSON_FILE_GLOB = '**/project.json';
 const PACKAGE_JSON_FILE_GLOB = '**/package.json';
@@ -24,7 +36,7 @@ const FILE_GLOB = `**/{project,package}.json`;
 export const createNodesV2: CreateNodesV2<NxVerdaccioCreateNodeOptions> = [
   FILE_GLOB,
   async (configFiles, options, context) => {
-    const optionsHash = hashObject({options: options ?? {}});
+    const optionsHash = hashObject({ options: options ?? {} });
     const nxVerdaccioEnvPluginCachePath = join(
       workspaceDataDirectory,
       `push-based--${PLUGIN_NAME}-${optionsHash}.hash`
@@ -34,12 +46,19 @@ export const createNodesV2: CreateNodesV2<NxVerdaccioCreateNodeOptions> = [
       return await createNodesFromFiles(
         async (projectConfigurationFile, internalOptions) => {
           const isPkgJson = projectConfigurationFile.endsWith('package.json');
-          if(isPkgJson) {
-            throw new Error('!!!!!!!!!!!!!!!!!!')
+          if (isPkgJson) {
+            throw new Error('!!!!!!!!!!!!!!!!!!');
           }
 
-          const [primaryConfig, fallback] = isPkgJson ? [getPackageJsonNxConfig, getProjectJsonNxConfig] : [getProjectJsonNxConfig, getPackageJsonNxConfig];
-          const projectConfiguration: ProjectConfiguration = await getProjectConfig(projectConfigurationFile, primaryConfig, fallback);
+          const [primaryConfig, fallback] = isPkgJson
+            ? [getPackageJsonNxConfig, getProjectJsonNxConfig]
+            : [getProjectJsonNxConfig, getPackageJsonNxConfig];
+          const projectConfiguration: ProjectConfiguration =
+            await getProjectConfig(
+              projectConfigurationFile,
+              primaryConfig,
+              fallback
+            );
           if (
             !('name' in projectConfiguration) ||
             typeof projectConfiguration.name !== 'string'
@@ -71,7 +90,7 @@ export const createNodesV2: CreateNodesV2<NxVerdaccioCreateNodeOptions> = [
               );
             }
           }
-          const {targets, namedInputs = {}} = cachedProjectConfiguration;
+          const { targets, namedInputs = {} } = cachedProjectConfiguration;
           return {
             projects: {
               [projectRoot]: {

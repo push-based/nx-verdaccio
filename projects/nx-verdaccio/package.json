@@ -21,11 +21,15 @@
     "sourceRoot": "packages/pkg/src",
     "projectType": "library",
     "name": "nx-verdaccio",
-    "tags": ["publishable"],
+    "tags": [
+      "publishable"
+    ],
     "targets": {
       "build": {
         "executor": "@nx/js:tsc",
-        "outputs": ["{options.outputPath}"],
+        "outputs": [
+          "{options.outputPath}"
+        ],
         "options": {
           "outputPath": "dist/nx-verdaccio",
           "main": "src/index.ts",
