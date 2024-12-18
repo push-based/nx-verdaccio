@@ -4,10 +4,17 @@
   "sourceRoot": "projects/nx-verdaccio-e2e/test",
   "projectType": "application",
   "tags": ["type:e2e", "type:e2e-vi", "npm-env"],
-  "implicitDependencies": ["nx-verdaccio"],
+  "implicitDependencies": ["@push-based/nx-verdaccio"],
   "targets": {
     "lint": {},
-    "e2e": {
+    "nxv-env-setup": {
+      "cache": false,
+      "options": {
+        "skipInstall": true,
+        "postScript": "npx tsx --tsconfig e2e/nx-verdaccio-e2e/tsconfig.spec.json e2e/nx-verdaccio-e2e/setup/exec-global-setup.ts"
+      }
+    },
+    "_e2e": {
       "executor": "@nx/vite:test",
       "inputs": ["default", "^production"],
       "outputs": ["{options.reportsDirectory}"],

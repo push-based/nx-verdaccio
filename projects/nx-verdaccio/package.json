@@ -16,5 +16,61 @@
   "type": "commonjs",
   "main": "./src/index.js",
   "typings": "./src/index.d.ts",
-  "executors": "./executors.json"
+  "executors": "./executors.json",
+  "nx": {
+    "sourceRoot": "packages/pkg/src",
+    "projectType": "library",
+    "name": "nx-verdaccio",
+    "tags": ["publishable"],
+    "targets": {
+      "build": {
+        "executor": "@nx/js:tsc",
+        "outputs": ["{options.outputPath}"],
+        "options": {
+          "outputPath": "dist/nx-verdaccio",
+          "main": "src/index.ts",
+          "tsConfig": "tsconfig.lib.json",
+          "assets": [
+            "src/*.md",
+            {
+              "input": "./src",
+              "glob": "**/!(*.ts)",
+              "output": "./src"
+            },
+            {
+              "input": "./src",
+              "glob": "**/*.d.ts",
+              "output": "./src"
+            },
+            {
+              "input": ".",
+              "glob": "executors.json",
+              "output": "."
+            }
+          ]
+        }
+      },
+      "lint": {
+        "options": {
+          "lintFilePatterns": [
+            "{projectRoot}/**/*.ts",
+            "{projectRoot}/package.json",
+            "{projectRoot}/generators.json"
+          ]
+        }
+      },
+      "unit-test": {
+        "executor": "@nx/vite:test",
+        "options": {
+          "configFile": "vite.config.ts"
+        }
+      },
+      "integration-test": {
+        "executor": "@nx/vite:test",
+        "options": {
+          "configFile": "vite.integration.config.ts"
+        }
+      }
+    }
+  }
 }
