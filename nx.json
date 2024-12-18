@@ -88,14 +88,14 @@
   },
   "plugins": [
     {
-      "plugin": "@push-based/nx-verdaccio",
-      "exclude": ["examples/e2e/cli-e2e-original/**"],
+      "plugin": "./projects/nx-verdaccio/src/plugin/nx-verdaccio.plugin.ts",
+      "include": ["e2e/nx-verdaccio-e2e/**"],
       "options": {
         "packages": {
           "filterByTags": ["publishable"]
         },
         "environments": {
-          "targetNames": ["e2e", "e2e-static"]
+          "targetNames": ["_e2e", "_e2e-static"]
         }
       }
     },

@@ -1,5 +1,83 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`in a fresh Nx workspace > nx-verdaccio plugin create-nodes-v2 > should add package targets to library project 1`] = `
+{
+  "nxv-pkg-install": {
+    "configurations": {},
+    "dependsOn": [
+      {
+        "params": "forward",
+        "target": "nxv-pkg-publish",
+      },
+      {
+        "params": "forward",
+        "projects": "dependencies",
+        "target": "nxv-pkg-install",
+      },
+    ],
+    "executor": "@push-based/nx-verdaccio:pkg-install",
+    "options": {},
+    "parallelism": true,
+  },
+  "nxv-pkg-publish": {
+    "configurations": {},
+    "dependsOn": [
+      {
+        "params": "forward",
+        "target": "build",
+      },
+      {
+        "params": "forward",
+        "projects": "dependencies",
+        "target": "nxv-pkg-publish",
+      },
+    ],
+    "executor": "@push-based/nx-verdaccio:pkg-publish",
+    "options": {},
+    "parallelism": true,
+  },
+}
+`;
+
+exports[`in a fresh Nx workspace > with nx-verdaccio plugin installed > should add package targets to library project 1`] = `
+{
+  "nxv-pkg-install": {
+    "configurations": {},
+    "dependsOn": [
+      {
+        "params": "forward",
+        "target": "nxv-pkg-publish",
+      },
+      {
+        "params": "forward",
+        "projects": "dependencies",
+        "target": "nxv-pkg-install",
+      },
+    ],
+    "executor": "@push-based/nx-verdaccio:pkg-install",
+    "options": {},
+    "parallelism": true,
+  },
+  "nxv-pkg-publish": {
+    "configurations": {},
+    "dependsOn": [
+      {
+        "params": "forward",
+        "target": "build",
+      },
+      {
+        "params": "forward",
+        "projects": "dependencies",
+        "target": "nxv-pkg-publish",
+      },
+    ],
+    "executor": "@push-based/nx-verdaccio:pkg-publish",
+    "options": {},
+    "parallelism": true,
+  },
+}
+`;
+
 exports[`nx-verdaccio plugin create-nodes-v2 > should add package targets to library project 1`] = `
 {
   "nxv-pkg-install": {

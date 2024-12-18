@@ -5,8 +5,10 @@ import {
   objectToCliArgs,
   updateJson,
 } from '@push-based/test-utils';
+import { copyFile, lstat, mkdir, readdir } from 'fs/promises';
+import { join } from 'path';
 import { dirname, join } from 'node:path';
-import { copyFile, mkdir } from 'node:fs/promises';
+import { copyFile, mkdir, symlink, readlink } from 'node:fs/promises';
 import {
   logger,
   NxJsonConfiguration,
@@ -24,6 +26,7 @@ export async function setup({
   repoName: string;
   projectName: string;
 }) {
+  // dedupe packages because symlink copy problems
   await mkdir(envRoot, { recursive: true });
   // setup nx environment for e2e tests
   logger.info(`Created nx workspace under ${envRoot}`);
@@ -100,6 +103,15 @@ export async function setup({
   );
 
   logger.info(`Install @push-based/nx-verdaccio`);
+  await executeProcess({
+    command: 'npm',
+    args: objectToCliArgs({
+      _: ['install', '@push-based/nx-verdaccio'],
+      save: true,
+    }),
+    cwd: envRoot,
+    verbose: true,
+  });
   await mkdir(
     join(
       getTestEnvironmentRoot(projectName),
@@ -112,18 +124,21 @@ export async function setup({
     join(getTestEnvironmentRoot(projectName), '.npmrc'),
     join(envRoot, '.npmrc')
   );
+
   await executeProcess({
     command: 'npm',
     args: objectToCliArgs({
-      _: ['install', '@push-based/nx-verdaccio'],
-      save: true,
+      _: ['dedupe'],
     }),
-    cwd: envRoot,
     verbose: true,
+    cwd: dirname(envRoot),
   });
 }
 
-export async function registerNxVerdaccioPlugin(envRoot: string) {
+export async function registerNxVerdaccioPlugin(
+  envRoot: string,
+  options?: PluginConfiguration
+) {
   logger.info(`register nx-verdaccio plugin`);
   await updateJson<NxJsonConfiguration>(join(envRoot, 'nx.json'), (json) =>
     registerPluginInNxJson(json, {
@@ -133,11 +148,12 @@ export async function registerNxVerdaccioPlugin(envRoot: string) {
           targetNames: ['e2e'],
         },
       },
+      ...options,
     })
   );
 }
 
-function registerPluginInNxJson(
+export function registerPluginInNxJson(
   nxJson: NxJsonConfiguration,
   pluginConfig: PluginConfiguration
 ) {
@@ -161,4 +177,42 @@ function updatePackageJsonNxTargets(
       },
     },
   };
+}
+
+/**
+ * This function avoids issues with symlinks and other edge cases.
+ *
+ */
+export async function copyDirectory(
+  src: string,
+  dest: string,
+  exclude: string[] = []
+) {
+  // Ensure the destination directory exists
+  await mkdir(dest, { recursive: true });
+
+  // Read the contents of the source directory
+  const entries = await readdir(src, { withFileTypes: true });
+
+  for (const entry of entries) {
+    const srcPath = join(src, entry.name);
+    const destPath = join(dest, entry.name);
+
+    // Skip excluded directories or files
+    if (exclude.includes(entry.name)) continue;
+
+    const stats = await lstat(srcPath);
+
+    if (stats.isSymbolicLink()) {
+      // Handle symbolic links if necessary (copy the link itself or resolve it)
+      const linkTarget = await readlink(srcPath);
+      await symlink(linkTarget, destPath);
+    } else if (stats.isDirectory()) {
+      // Recursively copy directories
+      await copyDirectory(srcPath, destPath, exclude);
+    } else if (stats.isFile()) {
+      // Copy files
+      await copyFile(srcPath, destPath);
+    }
+  }
 }
