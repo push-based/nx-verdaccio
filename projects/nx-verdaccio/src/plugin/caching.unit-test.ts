@@ -42,19 +42,19 @@ describe('caching', (): void => {
     });
 
     describe('getCacheRecord', (): void => {
-      it('should call cacheKey once and, with correct arguments', (): void => {
+      it('should call cacheKey once with correct arguments', (): void => {
         getCacheRecord(targetsCache, prefix, hashData);
         expect(cacheKeySpy).toHaveBeenCalledTimes(1);
         expect(cacheKeySpy).toHaveBeenCalledWith(prefix, hashData);
       });
 
-      it('should return correct record if match', (): void => {
+      it('should return the correct cache record if there is a cache hit', (): void => {
         expect(getCacheRecord(targetsCache, prefix, hashData)).toEqual(
           cacheItem
         );
       });
 
-      it('should return undefined if no match', (): void => {
+      it('should return undefined if there is no cache hit', (): void => {
         cacheKeySpy.mockReturnValue('non-existent-key');
         expect(getCacheRecord(targetsCache, prefix, hashData)).toBeUndefined();
       });
@@ -63,7 +63,7 @@ describe('caching', (): void => {
     describe('setCacheRecord', (): void => {
       const cacheData = { thunderfury: 'Blood of Sylvanas' };
 
-      it('should call cacheKey once, and with correct arguments', (): void => {
+      it('should call cacheKey once with correct arguments', (): void => {
         setCacheRecord(targetsCache, prefix, hashData, cacheData);
         expect(cacheKeySpy).toHaveBeenCalledTimes(1);
         expect(cacheKeySpy).toHaveBeenCalledWith(prefix, hashData);
@@ -116,13 +116,13 @@ describe('caching', (): void => {
       delete process.env.NX_CACHE_PROJECT_GRAPH;
     });
 
-    it('should call existSync once, and with correct argument', (): void => {
+    it('should call existSync once with correct argument', (): void => {
       readTargetsCache(path);
       expect(existsSyncSpy).toHaveBeenCalledWith(path);
       expect(existsSyncSpy).toHaveBeenCalledTimes(1);
     });
 
-    it('should call readJsonFile once, and with correct argument', (): void => {
+    it('should call readJsonFile once with correct argument', (): void => {
       readTargetsCache(path);
       expect(readJsonFileSpy).toHaveBeenCalledWith(path);
       expect(readJsonFileSpy).toHaveBeenCalledTimes(1);
@@ -160,7 +160,7 @@ describe('caching', (): void => {
       delete process.env.NX_CACHE_PROJECT_GRAPH;
     });
 
-    it('should call writeJsonFile once, with correct arguments if process.env.NX_CACHE_PROJECT_GRAPH !== false', (): void => {
+    it('should call writeJsonFile once with correct arguments if process.env.NX_CACHE_PROJECT_GRAPH !== false', (): void => {
       process.env.NX_CACHE_PROJECT_GRAPH = 'true';
       writeTargetsToCache(path, MOCK_TARGETS_CACHE);
       expect(writeJsonFile).toHaveBeenCalledWith(path, MOCK_TARGETS_CACHE);
