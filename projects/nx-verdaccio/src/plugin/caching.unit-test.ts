@@ -100,13 +100,13 @@ describe('readTargetsCache', (): void => {
       .mockImplementation((): Record<string, Partial<ProjectConfiguration>> => {
         return MOCK_TARGETS_CACHE;
       });
-    process.env.NX_CACHE_PROJECT_GRAPH = 'true';
+    vi.stubEnv("NX_CACHE_PROJECT_GRAPH", 'true')
   });
 
   afterEach((): void => {
     existsSyncSpy.mockRestore();
     readJsonFileSpy.mockRestore();
-    delete process.env.NX_CACHE_PROJECT_GRAPH;
+    vi.clearAllMocks();
   });
 
   it('should call existSync once with correct argument', (): void => {
