@@ -9,7 +9,6 @@ import * as nodeFs from 'node:fs';
 import * as nxDevKit from '@nx/devkit';
 import { type ProjectConfiguration } from '@nx/devkit';
 import { type JsonReadOptions } from 'nx/src/utils/fileutils';
-import { MOCK_TARGETS_CACHE } from '@push-based/test-utils';
 import {
   getCacheRecord,
   readTargetsCache,
@@ -17,6 +16,7 @@ import {
   writeTargetsToCache,
 } from './caching';
 import * as cachingUtils from './utils/caching.utils';
+import { MOCK_TARGETS_CACHE } from '../fixtures/project-configuration.fixture';
 
 describe('cacheRecord', (): void => {
   let cacheKeySpy: MockInstance<
