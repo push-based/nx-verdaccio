@@ -88,6 +88,18 @@
   },
   "plugins": [
     {
+      "plugin": "@nx/js/typescript",
+      "options": {
+        "typecheck": {
+          "targetName": "typecheck"
+        },
+        "build": {
+          "targetName": "build",
+          "configName": "tsconfig.lib.json"
+        }
+      }
+    },
+    {
       "plugin": "./projects/nx-verdaccio/src/plugin/nx-verdaccio.plugin.ts",
       "include": ["e2e/nx-verdaccio-e2e/**"],
       "options": {
@@ -95,7 +107,7 @@
           "filterByTags": ["publishable"]
         },
         "environments": {
-          "targetNames": ["_e2e", "_e2e-static"]
+          "targetNames": ["e2e", "_e2e-static"]
         }
       }
     },

@@ -1,0 +1,19 @@
+{
+  "name": "pkg-pkg",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/pkg/pkg/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/pkg/pkg",
+        "main": "packages/pkg/pkg/src/index.ts",
+        "tsConfig": "packages/pkg/pkg/tsconfig.lib.json",
+        "assets": ["packages/pkg/pkg/*.md"]
+      }
+    }
+  },
+  "tags": []
+}

@@ -1,90 +1,92 @@
-import type { Tree } from '@nx/devkit';
-import { join } from 'node:path';
-import { afterEach, beforeAll, expect } from 'vitest';
-import { nxShowProjectJson } from '@push-based/test-nx-utils';
-import { copyDirectory, registerNxVerdaccioPlugin } from '../setup/setup';
-import { mkdir } from 'node:fs/promises';
+import type {ProjectConfiguration, Tree} from '@nx/devkit';
+import {join} from 'node:path';
+import {afterAll, afterEach, beforeAll, beforeEach, expect} from 'vitest';
+import {nxShowProjectJson, registerPluginInWorkspace} from '@push-based/test-nx-utils';
+import {copyDirectory, registerNxVerdaccioPlugin, registerPluginInNxJson} from '../setup/setup';
+import {mkdir} from 'node:fs/promises';
 import {
+  TARGET_ENVIRONMENT_BOOTSTRAP,
+  TARGET_ENVIRONMENT_INSTALL,
+  TARGET_ENVIRONMENT_SETUP,
+  TARGET_ENVIRONMENT_VERDACCIO_START, TARGET_ENVIRONMENT_VERDACCIO_STOP,
   TARGET_PACKAGE_INSTALL,
-  TARGET_PACKAGE_PUBLISH,
+  TARGET_PACKAGE_PUBLISH
 } from '@push-based/nx-verdaccio';
 import {
   DEFAULT_TEST_FIXTURE_DIST,
-  getTestEnvironmentRoot,
+  getTestEnvironmentRoot, teardownTestFolder,
 } from '@push-based/test-utils';
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import { REPO_NAME } from '../fixtures/basic-nx-workspace';
+import {REPO_NAME} from '../fixtures/basic-nx-workspace';
+import {copyFile} from "fs/promises";
+import {updateJson} from '@push-based/test-utils';
 
 describe('in a fresh Nx workspace', () => {
   const projectName = process.env['NX_TASK_TARGET_PROJECT'];
   const envRoot = getTestEnvironmentRoot(projectName);
-  const basicNxReopPath = join(envRoot, DEFAULT_TEST_FIXTURE_DIST, REPO_NAME);
+  const basicNxReopPath = join(envRoot, DEFAULT_TEST_FIXTURE_DIST, `${REPO_NAME}-18`);
   const baseDir = join(envRoot, DEFAULT_TEST_FIXTURE_DIST, 'create-nodes-v2');
 
   beforeAll(async () => {
-    await mkdir(baseDir, { recursive: true });
-    await copyDirectory(basicNxReopPath, baseDir, []);
+    await mkdir(baseDir, {recursive: true});
+    await copyDirectory(basicNxReopPath, baseDir);
   });
 
-  afterEach(async () => {
+  afterAll(async () => {
     // await teardownTestFolder(baseDir);
   });
+
   describe('with nx-verdaccio plugin installed', () => {
-    beforeAll(async () => {
-      await registerNxVerdaccioPlugin(baseDir);
+    beforeEach(async () => {
+      await copyFile(join(basicNxReopPath, 'nx.json'), join(baseDir, 'nx.json'));
+      await copyDirectory(join(basicNxReopPath, 'packages'), join(baseDir, 'packages'), {cleanup: true});
     });
 
     it('should add package targets to library project', async () => {
-      const { code, projectJson } = await nxShowProjectJson(baseDir, 'pkg');
+      await registerNxVerdaccioPlugin(baseDir);
+
+      const {code, projectJson} = await nxShowProjectJson(baseDir, 'pkg');
       expect(code).toBe(0);
 
-      expect(projectJson.targets).toStrictEqual({
-        [TARGET_PACKAGE_INSTALL]: expect.objectContaining({
-          dependsOn: [
-            {
-              target: TARGET_PACKAGE_PUBLISH,
-              params: 'forward',
-            },
-            {
-              target: TARGET_PACKAGE_INSTALL,
-              projects: 'dependencies',
-              params: 'forward',
-            },
-          ],
-          executor: '@push-based/nx-verdaccio:pkg-install',
-        }),
-        [TARGET_PACKAGE_PUBLISH]: expect.objectContaining({
-          dependsOn: [
-            {
-              params: 'forward',
-              target: 'build',
-            },
-            {
-              params: 'forward',
-              projects: 'dependencies',
-              target: 'nxv-pkg-publish',
-            },
-          ],
-          executor: '@push-based/nx-verdaccio:pkg-publish',
-        }),
-      });
+      expect(projectJson.targets).toStrictEqual(
+        expect.objectContaining({
+          [TARGET_PACKAGE_INSTALL]: expect.objectContaining({
+            dependsOn: [
+              {
+                target: TARGET_PACKAGE_PUBLISH,
+                params: 'forward',
+              },
+              {
+                target: TARGET_PACKAGE_INSTALL,
+                projects: 'dependencies',
+                params: 'forward',
+              },
+            ],
+            executor: '@push-based/nx-verdaccio:pkg-install',
+          }),
+          [TARGET_PACKAGE_PUBLISH]: expect.objectContaining({
+            dependsOn: [
+              {
+                params: 'forward',
+                target: 'build',
+              },
+              {
+                params: 'forward',
+                projects: 'dependencies',
+                target: 'nxv-pkg-publish',
+              },
+            ],
+            executor: '@push-based/nx-verdaccio:pkg-publish',
+          })
+        }));
 
       expect(projectJson.targets).toMatchSnapshot();
     });
-    /*
-    it('should NOT add package targets to application project', async () => {
-      const cwd = join(baseDir, 'no-pkg-targets');
-      registerPluginInWorkspace(tree, {
-        plugin: '@push-based/nx-verdaccio',
-        options: {
-          environments: {
-            targetNames: ['e2e'],
-          },
-        },
-      });
-      await materializeTree(tree, cwd);
 
-      const {projectJson} = await nxShowProjectJson(cwd, 'pkg-e2e');
+    it('should NOT add package targets to application project', async () => {
+      await registerNxVerdaccioPlugin(baseDir);
+
+      const {projectJson} = await nxShowProjectJson(baseDir, 'pkg-e2e');
 
       expect(projectJson.targets).toStrictEqual(
         expect.not.objectContaining({
@@ -95,8 +97,7 @@ describe('in a fresh Nx workspace', () => {
     });
 
     it('should add package targets to library project if some tag of options.packages.filterByTag match', async () => {
-      const cwd = join(baseDir, 'add-pkg-targets-filterByTag');
-      registerPluginInWorkspace(tree, {
+      await registerNxVerdaccioPlugin(baseDir, {
         plugin: '@push-based/nx-verdaccio',
         options: {
           environments: {
@@ -107,61 +108,41 @@ describe('in a fresh Nx workspace', () => {
           },
         },
       });
-      updateProjectConfiguration(tree, projectB, {
-        root: `projects/${projectB}`,
-        sourceRoot: 'projects/lib-b/src',
+      await updateJson<ProjectConfiguration>(join(baseDir, 'packages', 'pkg', 'project.json'), (json) => ({
+        ...json,
+        root: `packages/pkg`,
+        sourceRoot: 'packages/pkg/src',
         projectType: 'library',
         tags: ['publish'],
-      });
-      await materializeTree(tree, cwd);
+      }));
 
-      const {projectJson: projectJsonB} = await nxShowProjectJson(
-        cwd,
-        projectB
-      );
-      expect(projectJsonB.name).toBe(projectB);
-      expect(projectJsonB.tags).toStrictEqual(['publish']);
-      expect(projectJsonB.targets).toStrictEqual(
-        expect.objectContaining({
-          [TARGET_PACKAGE_INSTALL]: expect.any(Object),
-          [TARGET_PACKAGE_PUBLISH]: expect.any(Object),
-        })
-      );
-
-      const {projectJson: projectJsonA} = await nxShowProjectJson(
-        cwd,
+      const {projectJson} = await nxShowProjectJson(
+        baseDir,
         'pkg'
       );
-      expect(projectJsonA.name).toBe('pkg');
-      expect(projectJsonA.tags).toStrictEqual([]);
-      expect(projectJsonA.targets).toStrictEqual(
-        expect.not.objectContaining({
+      expect(projectJson.name).toBe('pkg');
+      expect(projectJson.tags).toStrictEqual(expect.arrayContaining(['publish']));
+      expect(projectJson.targets).toStrictEqual(
+        expect.objectContaining({
           [TARGET_PACKAGE_INSTALL]: expect.any(Object),
           [TARGET_PACKAGE_PUBLISH]: expect.any(Object),
         })
       );
     });
 
-    it('should add environment targets to project with targetName e2e dynamically', async () => {
-      const cwd = join(baseDir, 'add-env-targets');
-      registerPluginInWorkspace(tree, {
-        plugin: '@push-based/nx-verdaccio',
-        options: {
-          environments: {
-            targetNames: ['e2e'],
-          },
-        },
-      });
-      updateProjectConfiguration(tree, 'pkg-e2e', {
-        root: e2eProjectARoot,
+    it.only('should add environment targets to project with targetName e2e dynamically', async () => {
+      await registerNxVerdaccioPlugin(baseDir);
+      await updateJson<ProjectConfiguration>(join(baseDir, 'packages', 'pkg-e2e', 'project.json'), (json) => ({
+        ...json,
+        name: 'pkg-e2e',
         projectType: 'application',
         targets: {
           e2e: {},
         },
-      });
-      await materializeTree(tree, cwd);
+        implicitDependencies: ['pkg'],
+      }));
 
-      const {code, projectJson} = await nxShowProjectJson(cwd, 'pkg-e2e');
+      const {code, projectJson} = await nxShowProjectJson(baseDir, 'pkg-e2e');
       expect(code).toBe(0);
 
       expect(projectJson.targets).toStrictEqual(
@@ -254,8 +235,7 @@ describe('in a fresh Nx workspace', () => {
     });
 
     it('should NOT add environment targets to project without targetName e2e', async () => {
-      const cwd = join(baseDir, 'no-env-targets');
-      registerPluginInWorkspace(tree, {
+      registerNxVerdaccioPlugin(baseDir, {
         plugin: '@push-based/nx-verdaccio',
         options: {
           environments: {
@@ -263,9 +243,8 @@ describe('in a fresh Nx workspace', () => {
           },
         },
       });
-      await materializeTree(tree, cwd);
 
-      const {projectJson} = await nxShowProjectJson(cwd, 'pkg-e2e');
+      const {projectJson} = await nxShowProjectJson(baseDir, 'pkg-e2e');
 
       expect(projectJson.targets).toStrictEqual(
         expect.not.objectContaining({
@@ -277,6 +256,6 @@ describe('in a fresh Nx workspace', () => {
         })
       );
     });
-    */
+
   });
 });

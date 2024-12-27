@@ -10,11 +10,10 @@
     "nxv-env-setup": {
       "cache": false,
       "options": {
-        "skipInstall": true,
-        "postScript": "npx tsx --tsconfig e2e/nx-verdaccio-e2e/tsconfig.spec.json e2e/nx-verdaccio-e2e/setup/exec-global-setup.ts"
+        "skipInstall": true
       }
     },
-    "_e2e": {
+    "e2e": {
       "executor": "@nx/vite:test",
       "inputs": ["default", "^production"],
       "outputs": ["{options.reportsDirectory}"],

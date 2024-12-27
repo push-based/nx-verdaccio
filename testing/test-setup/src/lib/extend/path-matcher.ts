@@ -1,10 +1,10 @@
 import { expect } from 'vitest';
-import path from 'path';
+import {normalize} from 'node:path';
 
 expect.extend({
   toMatchPath(received, expected) {
-    const normalizedReceived = path.normalize(received);
-    const normalizedExpected = path.normalize(expected);
+    const normalizedReceived = normalize(received);
+    const normalizedExpected = normalize(expected);
 
     const pass = normalizedReceived.includes(normalizedExpected);
     if (pass) {
@@ -20,8 +20,8 @@ expect.extend({
     }
   },
   pathToMatch(received, expected) {
-    const normalizedReceived = path.normalize(received);
-    const normalizedExpected = path.normalize(expected);
+    const normalizedReceived = normalize(received);
+    const normalizedExpected = normalize(expected);
 
     const pass = normalizedReceived.includes(normalizedExpected);
     if (pass) {

@@ -5,36 +5,45 @@ import {
   objectToCliArgs,
   updateJson,
 } from '@push-based/test-utils';
-import { copyFile, lstat, mkdir, readdir } from 'fs/promises';
-import { join } from 'path';
-import { dirname, join } from 'node:path';
-import { copyFile, mkdir, symlink, readlink } from 'node:fs/promises';
+import {copyFile, lstat, mkdir, rm, readdir} from 'fs/promises';
+import {join} from 'path';
+import {dirname, join} from 'node:path';
+import {copyFile, writeFile, mkdir, symlink, readlink} from 'node:fs/promises';
 import {
   logger,
   NxJsonConfiguration,
-  PluginConfiguration,
+  PluginConfiguration, ProjectConfiguration,
   TargetConfiguration,
 } from '@nx/devkit';
-import { PackageJson } from 'nx/src/utils/package-json';
+import {PackageJson} from 'nx/src/utils/package-json';
+import {writeFileDefaults} from "memfs/lib/node/options";
+import {readFile} from "@nx/plugin/testing";
+import {REPO_NAME} from "../fixtures/basic-nx-workspace";
 
 export async function setup({
-  envRoot,
-  projectName,
-  repoName,
-}: {
+                              envRoot,
+                              projectName,
+                              repoName,
+                            }: {
   envRoot: string;
   repoName: string;
   projectName: string;
 }) {
   // dedupe packages because symlink copy problems
-  await mkdir(envRoot, { recursive: true });
+  await mkdir(envRoot, {recursive: true});
+
+  await copyFile(
+    join(getTestEnvironmentRoot(projectName), '.npmrc'),
+    join(envRoot, '.npmrc')
+  );
+
   // setup nx environment for e2e tests
   logger.info(`Created nx workspace under ${envRoot}`);
   await executeProcess({
     command: 'npx',
     args: objectToCliArgs({
-      _: ['--yes', '--quiet', 'create-nx-workspace'],
-      name: repoName,
+      _: ['--yes', '--quiet', 'create-nx-workspace@18'],
+      name: `${repoName}-18`,
       preset: 'ts',
       ci: 'skip',
       e2eTestRunner: 'none',
@@ -44,65 +53,56 @@ export async function setup({
     cwd: dirname(envRoot),
   });
 
-  logger.info(`Add project & target`);
-  await executeProcess({
-    command: 'nx',
-    args: objectToCliArgs({
-      _: ['generate', '@nx/js:library', 'pkg'],
-      directory: 'packages/pkg',
-      bundler: 'tsc',
-      unitTestRunner: 'none',
-      linter: 'none',
-      interactive: false,
-    }),
-    verbose: true,
-    cwd: envRoot,
-  });
-  await updateJson<PackageJson>(
-    join(envRoot, 'packages', 'pkg', 'package.json'),
-    (json) => ({
-      ...json,
-      nx: {
-        ...json?.nx,
+    logger.info(`Add project & target`);
+    await executeProcess({
+      command: 'nx',
+      args: objectToCliArgs({
+        _: ['generate', '@nx/js:library', 'pkg'],
+        name: `pkg`,
+        directory: 'packages/pkg',
+        bundler: 'tsc',
+        unitTestRunner: 'none',
+        linter: 'none',
+        interactive: false,
+      }),
+      verbose: true,
+      cwd: envRoot,
+    });
+
+    logger.info(`Add e2e project & target`);
+    await executeProcess({
+      command: 'nx',
+      args: objectToCliArgs({
+        _: ['generate', '@nx/js:library', 'pkg-e2e'],
+        name: `pkg-e2e`,
+        directory: 'packages/pkg-e2e',
+        bundler: 'tsc',
+        unitTestRunner: 'none',
+        linter: 'none',
+        interactive: false,
+      }),
+      verbose: true,
+      cwd: envRoot,
+    });
+  /*
+    await updateJson<ProjectConfiguration>(
+      join(envRoot, 'packages', 'pkg-e2e', 'project.json'),
+      (json) => ({
+        ...json,
+        name: 'pkg-e2e',
+        root: join(envRoot, 'packages', 'pkg-e2e'),
+        projectType: 'application',
         targets: {
-          ...json?.nx?.targets,
-          build: {
-            options: {
-              outputPath: ['dist/pkg'],
-            },
-            command: 'echo "lib"',
+          ...json?.targets,
+          e2e: {
+            command: 'echo "e2e"',
           },
-        },
-      },
-    })
-  );
-
-  logger.info(`Add e2e project & target`);
-  await executeProcess({
-    command: 'nx',
-    args: objectToCliArgs({
-      _: ['generate', '@nx/js:library', 'pkg-e2e'],
-      directory: 'packages/pkg-e2e',
-      bundler: 'tsc',
-      unitTestRunner: 'none',
-      linter: 'none',
-      interactive: false,
-    }),
-    verbose: true,
-    cwd: envRoot,
-  });
-  await updateJson<PackageJson>(
-    join(envRoot, 'packages', 'pkg-e2e', 'package.json'),
-    (json) =>
-      updatePackageJsonNxTargets(json, {
-        ...json?.nx?.targets,
-        e2e: {
-          command: 'echo "e2e"',
-        },
+        }
       })
-  );
-
+    );
+  */
   logger.info(`Install @push-based/nx-verdaccio`);
+
   await executeProcess({
     command: 'npm',
     args: objectToCliArgs({
@@ -118,12 +118,9 @@ export async function setup({
       DEFAULT_TEST_FIXTURE_DIST,
       repoName
     ),
-    { recursive: true }
+    {recursive: true}
   );
-  await copyFile(
-    join(getTestEnvironmentRoot(projectName), '.npmrc'),
-    join(envRoot, '.npmrc')
-  );
+
 
   await executeProcess({
     command: 'npm',
@@ -152,6 +149,29 @@ export async function registerNxVerdaccioPlugin(
     })
   );
 }
+
+
+async function updatePackageJsonTargets(
+  targetFile: string,
+  projectConfig: ProjectConfiguration
+) {
+  let json = undefined;
+  try {
+    const j = await readFile(targetFile);
+    json = JSON.parse(j.toString());
+  } catch (e) {
+    json = {}
+  }
+  await writeFile(targetFile, JSON.stringify({
+    ...json,
+    ...projectConfig,
+    targets: {
+      ...json?.targets,
+      ...projectConfig.targets,
+    },
+  }, null, 2));
+}
+
 
 export function registerPluginInNxJson(
   nxJson: NxJsonConfiguration,
@@ -186,13 +206,16 @@ function updatePackageJsonNxTargets(
 export async function copyDirectory(
   src: string,
   dest: string,
-  exclude: string[] = []
+  {exclude = [], cleanup}?: { exclude?: string[], cleanup?: boolean } = {exclude: []}
 ) {
+  if (cleanup) {
+    await rm(dest, {recursive: true});
+  }
   // Ensure the destination directory exists
-  await mkdir(dest, { recursive: true });
+  await mkdir(dest, {recursive: true});
 
   // Read the contents of the source directory
-  const entries = await readdir(src, { withFileTypes: true });
+  const entries = await readdir(src, {withFileTypes: true});
 
   for (const entry of entries) {
     const srcPath = join(src, entry.name);
@@ -209,7 +232,7 @@ export async function copyDirectory(
       await symlink(linkTarget, destPath);
     } else if (stats.isDirectory()) {
       // Recursively copy directories
-      await copyDirectory(srcPath, destPath, exclude);
+      await copyDirectory(srcPath, destPath, {exclude});
     } else if (stats.isFile()) {
       // Copy files
       await copyFile(srcPath, destPath);

@@ -1,46 +1,18 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`in a fresh Nx workspace > nx-verdaccio plugin create-nodes-v2 > should add package targets to library project 1`] = `
-{
-  "nxv-pkg-install": {
-    "configurations": {},
-    "dependsOn": [
-      {
-        "params": "forward",
-        "target": "nxv-pkg-publish",
-      },
-      {
-        "params": "forward",
-        "projects": "dependencies",
-        "target": "nxv-pkg-install",
-      },
-    ],
-    "executor": "@push-based/nx-verdaccio:pkg-install",
-    "options": {},
-    "parallelism": true,
-  },
-  "nxv-pkg-publish": {
-    "configurations": {},
-    "dependsOn": [
-      {
-        "params": "forward",
-        "target": "build",
-      },
-      {
-        "params": "forward",
-        "projects": "dependencies",
-        "target": "nxv-pkg-publish",
-      },
-    ],
-    "executor": "@push-based/nx-verdaccio:pkg-publish",
-    "options": {},
-    "parallelism": true,
-  },
-}
-`;
-
 exports[`in a fresh Nx workspace > with nx-verdaccio plugin installed > should add package targets to library project 1`] = `
 {
+  "build": {
+    "configurations": {},
+    "executor": "nx:run-commands",
+    "options": {
+      "command": "echo "lib"",
+      "outputPath": [
+        "dist/pkg",
+      ],
+    },
+    "parallelism": true,
+  },
   "nxv-pkg-install": {
     "configurations": {},
     "dependsOn": [
@@ -75,44 +47,50 @@ exports[`in a fresh Nx workspace > with nx-verdaccio plugin installed > should a
     "options": {},
     "parallelism": true,
   },
-}
-`;
-
-exports[`nx-verdaccio plugin create-nodes-v2 > should add package targets to library project 1`] = `
-{
-  "nxv-pkg-install": {
+  "typecheck": {
+    "cache": true,
     "configurations": {},
     "dependsOn": [
+      "^typecheck",
+    ],
+    "executor": "nx:run-commands",
+    "inputs": [
+      "{workspaceRoot}/tsconfig.base.json",
+      "{projectRoot}/tsconfig.json",
+      "{projectRoot}/tsconfig.lib.json",
+      "{projectRoot}/src/**/*.ts",
+      "^production",
       {
-        "params": "forward",
-        "target": "nxv-pkg-publish",
-      },
-      {
-        "params": "forward",
-        "projects": "dependencies",
-        "target": "nxv-pkg-install",
+        "externalDependencies": [
+          "typescript",
+        ],
       },
     ],
-    "executor": "@push-based/nx-verdaccio:pkg-install",
-    "options": {},
-    "parallelism": true,
-  },
-  "nxv-pkg-publish": {
-    "configurations": {},
-    "dependsOn": [
-      {
-        "params": "forward",
-        "target": "build",
+    "metadata": {
+      "description": "Runs type-checking for the project.",
+      "help": {
+        "command": "npx tsc --build --help",
+        "example": {
+          "args": [
+            "--force",
+          ],
+        },
       },
-      {
-        "params": "forward",
-        "projects": "dependencies",
-        "target": "nxv-pkg-publish",
-      },
+      "technologies": [
+        "typescript",
+      ],
+    },
+    "options": {
+      "command": "tsc --build --emitDeclarationOnly --pretty --verbose",
+      "cwd": "packages/pkg",
+    },
+    "outputs": [
+      "{projectRoot}/dist",
     ],
-    "executor": "@push-based/nx-verdaccio:pkg-publish",
-    "options": {},
     "parallelism": true,
+    "syncGenerators": [
+      "@nx/js:typescript-sync",
+    ],
   },
 }
 `;
