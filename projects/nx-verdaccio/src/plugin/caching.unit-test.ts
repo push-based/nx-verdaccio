@@ -105,14 +105,14 @@ describe('readTargetsCache', (): void => {
 
   it('should call existSync once with correct argument', (): void => {
     readTargetsCache(path);
-    expect(existsSyncSpy).toHaveBeenCalledWith(path);
     expect(existsSyncSpy).toHaveBeenCalledTimes(1);
+    expect(existsSyncSpy).toHaveBeenCalledWith(path);
   });
 
   it('should call readJsonFile once with correct argument', (): void => {
     readTargetsCache(path);
-    expect(readJsonFileSpy).toHaveBeenCalledWith(path);
     expect(readJsonFileSpy).toHaveBeenCalledTimes(1);
+    expect(readJsonFileSpy).toHaveBeenCalledWith(path);
   });
 
   it('should return target cache if existsSync returns true, and NX_CACHE_PROJECT_GRAPH = true', (): void => {
@@ -150,8 +150,8 @@ describe('writeTargetsToCache', (): void => {
   it('should call writeJsonFile once with correct arguments if process.env.NX_CACHE_PROJECT_GRAPH !== false', (): void => {
     process.env.NX_CACHE_PROJECT_GRAPH = 'true';
     writeTargetsToCache(path, MOCK_TARGETS_CACHE);
-    expect(writeJsonFile).toHaveBeenCalledWith(path, MOCK_TARGETS_CACHE);
     expect(writeJsonFile).toHaveBeenCalledTimes(1);
+    expect(writeJsonFile).toHaveBeenCalledWith(path, MOCK_TARGETS_CACHE);
   });
 
   it('should not call writeJsonFile if process.env.NX_CACHE_PROJECT_GRAPH == false', (): void => {
