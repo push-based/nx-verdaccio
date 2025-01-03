@@ -7,7 +7,6 @@ import {
 } from 'vitest';
 import * as nodeFs from 'node:fs';
 import * as nxDevKit from '@nx/devkit';
-import { type ProjectConfiguration } from '@nx/devkit';
 import { type JsonReadOptions } from 'nx/src/utils/fileutils';
 import {
   getCacheRecord,
@@ -16,7 +15,6 @@ import {
   writeTargetsToCache,
 } from './caching';
 import * as cachingUtils from './utils/caching.utils';
-import { MOCK_TARGETS_CACHE } from '../fixtures/project-configuration.fixture';
 
 describe('cacheRecord', (): void => {
   let cacheKeySpy: MockInstance<
@@ -79,6 +77,7 @@ describe('cacheRecord', (): void => {
 
 describe('readTargetsCache', (): void => {
   const path = 'azeroth';
+  const mockTargetCache =  {prop: { name: 'mock' }};
   let existsSyncSpy: MockInstance<[path: nodeFs.PathLike], boolean>;
   let readJsonFileSpy: MockInstance<
     [path: string, options?: JsonReadOptions],
@@ -91,8 +90,8 @@ describe('readTargetsCache', (): void => {
       .mockImplementation((): boolean => true);
     readJsonFileSpy = vi
       .spyOn(nxDevKit, 'readJsonFile')
-      .mockImplementation((): Record<string, Partial<ProjectConfiguration>> => {
-        return MOCK_TARGETS_CACHE;
+      .mockImplementation(() => {
+        return mockTargetCache;
       });
     vi.stubEnv('NX_CACHE_PROJECT_GRAPH', 'true');
   });
@@ -116,7 +115,7 @@ describe('readTargetsCache', (): void => {
   });
 
   it('should return target cache if existsSync returns true, and NX_CACHE_PROJECT_GRAPH = true', (): void => {
-    expect(readTargetsCache(path)).toEqual(MOCK_TARGETS_CACHE);
+    expect(readTargetsCache(path)).toEqual(mockTargetCache);
   });
 
   it('should return empty object if NX_CACHE_PROJECT_GRAPH = false', (): void => {
@@ -141,6 +140,8 @@ describe('writeTargetsToCache', (): void => {
     .spyOn(nxDevKit, 'writeJsonFile')
     .mockImplementation((): string => 'dont write to file :D');
   const path = 'azeroth';
+  const mockTargetCache =  {prop: { name: 'mock' }};
+
 
   afterEach((): void => {
     writeJsonFile.mockRestore();
@@ -149,14 +150,14 @@ describe('writeTargetsToCache', (): void => {
 
   it('should call writeJsonFile once with correct arguments if process.env.NX_CACHE_PROJECT_GRAPH !== false', (): void => {
     vi.stubEnv('NX_CACHE_PROJECT_GRAPH', 'true');
-    writeTargetsToCache(path, MOCK_TARGETS_CACHE);
+    writeTargetsToCache(path, {prop: { name: 'mock' }});
     expect(writeJsonFile).toHaveBeenCalledTimes(1);
-    expect(writeJsonFile).toHaveBeenCalledWith(path, MOCK_TARGETS_CACHE);
+    expect(writeJsonFile).toHaveBeenCalledWith(path, mockTargetCache);
   });
 
   it('should not call writeJsonFile if process.env.NX_CACHE_PROJECT_GRAPH == false', (): void => {
     vi.stubEnv('NX_CACHE_PROJECT_GRAPH', 'false');
-    writeTargetsToCache(path, MOCK_TARGETS_CACHE);
+    writeTargetsToCache(path, mockTargetCache);
     expect(writeJsonFile).toHaveBeenCalledTimes(0);
   });
 });
