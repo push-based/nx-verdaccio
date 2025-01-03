@@ -38,48 +38,42 @@ describe('cacheRecord', (): void => {
     cacheKeySpy.mockRestore();
   });
 
-  describe('getCacheRecord', (): void => {
-    it('should call cacheKey once with correct arguments', (): void => {
-      getCacheRecord(targetsCache, prefix, hashData);
-      expect(cacheKeySpy).toHaveBeenCalledTimes(1);
-      expect(cacheKeySpy).toHaveBeenCalledWith(prefix, hashData);
-    });
-
-    it('should return the correct cache record if there is a cache hit', (): void => {
-      expect(getCacheRecord(targetsCache, prefix, hashData)).toEqual(cacheItem);
-    });
-
-    it('should return undefined if there is no cache hit', (): void => {
-      cacheKeySpy.mockReturnValue('non-existent-key');
-      expect(getCacheRecord(targetsCache, prefix, hashData)).toBeUndefined();
-    });
+  it('should call cacheKey once with correct arguments', (): void => {
+    getCacheRecord(targetsCache, prefix, hashData);
+    expect(cacheKeySpy).toHaveBeenCalledTimes(1);
+    expect(cacheKeySpy).toHaveBeenCalledWith(prefix, hashData);
   });
 
-  describe('setCacheRecord', (): void => {
-    const cacheData = { thunderfury: 'Blood of Sylvanas' };
+  it('should return the correct cache record if there is a cache hit', (): void => {
+    expect(getCacheRecord(targetsCache, prefix, hashData)).toEqual(cacheItem);
+  });
 
-    it('should call cacheKey once with correct arguments', (): void => {
-      setCacheRecord(targetsCache, prefix, hashData, cacheData);
-      expect(cacheKeySpy).toHaveBeenCalledTimes(1);
-      expect(cacheKeySpy).toHaveBeenCalledWith(prefix, hashData);
-    });
+  it('should return undefined if there is no cache hit', (): void => {
+    cacheKeySpy.mockReturnValue('non-existent-key');
+    expect(getCacheRecord(targetsCache, prefix, hashData)).toBeUndefined();
+  });
 
-    it('should set the cache record, and return it', (): void => {
-      expect(setCacheRecord(targetsCache, prefix, hashData, cacheData)).toBe(
-        cacheData
-      );
-      expect(targetsCache).toHaveProperty(cacheKey, cacheData);
-    });
+  it('should call cacheKey once with correct arguments', (): void => {
+    setCacheRecord(targetsCache, prefix, hashData, cacheItem);
+    expect(cacheKeySpy).toHaveBeenCalledTimes(1);
+    expect(cacheKeySpy).toHaveBeenCalledWith(prefix, hashData);
+  });
 
-    it('should update existing cache data, and return it', (): void => {
-      const recordToUpdate = { thunderfury: 'Soul of Sylvanas' };
-      setCacheRecord(targetsCache, prefix, hashData, cacheData);
+  it('should set the cache record, and return it', (): void => {
+    expect(setCacheRecord(targetsCache, prefix, hashData, cacheItem)).toBe(
+      cacheItem
+    );
+    expect(targetsCache).toHaveProperty(cacheKey, cacheItem);
+  });
 
-      expect(
-        setCacheRecord(targetsCache, prefix, hashData, recordToUpdate)
-      ).toBe(recordToUpdate);
-      expect(targetsCache).toHaveProperty(cacheKey, recordToUpdate);
-    });
+  it('should update existing cache data, and return it', (): void => {
+    const recordToUpdate = { thunderfury: 'Soul of Sylvanas' };
+    setCacheRecord(targetsCache, prefix, hashData, cacheItem);
+
+    expect(setCacheRecord(targetsCache, prefix, hashData, recordToUpdate)).toBe(
+      recordToUpdate
+    );
+    expect(targetsCache).toHaveProperty(cacheKey, recordToUpdate);
   });
 });
 
@@ -100,7 +94,7 @@ describe('readTargetsCache', (): void => {
       .mockImplementation((): Record<string, Partial<ProjectConfiguration>> => {
         return MOCK_TARGETS_CACHE;
       });
-    vi.stubEnv("NX_CACHE_PROJECT_GRAPH", 'true')
+    vi.stubEnv('NX_CACHE_PROJECT_GRAPH', 'true');
   });
 
   afterEach((): void => {
