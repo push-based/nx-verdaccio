@@ -148,14 +148,14 @@ describe('writeTargetsToCache', (): void => {
   });
 
   it('should call writeJsonFile once with correct arguments if process.env.NX_CACHE_PROJECT_GRAPH !== false', (): void => {
-    process.env.NX_CACHE_PROJECT_GRAPH = 'true';
+    vi.stubEnv('NX_CACHE_PROJECT_GRAPH', 'true');
     writeTargetsToCache(path, MOCK_TARGETS_CACHE);
     expect(writeJsonFile).toHaveBeenCalledTimes(1);
     expect(writeJsonFile).toHaveBeenCalledWith(path, MOCK_TARGETS_CACHE);
   });
 
   it('should not call writeJsonFile if process.env.NX_CACHE_PROJECT_GRAPH == false', (): void => {
-    process.env.NX_CACHE_PROJECT_GRAPH = 'false';
+    vi.stubEnv('NX_CACHE_PROJECT_GRAPH', 'false');
     writeTargetsToCache(path, MOCK_TARGETS_CACHE);
     expect(writeJsonFile).toHaveBeenCalledTimes(0);
   });
