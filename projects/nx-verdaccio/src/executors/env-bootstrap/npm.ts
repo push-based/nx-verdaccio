@@ -1,8 +1,6 @@
-import { exec, execFile } from 'node:child_process';
-import { join } from 'node:path';
+import { exec } from 'node:child_process';
 import { promisify } from 'node:util';
-import { ensureDirectoryExists } from '../../internal/file-system';
-import { formatError, formatInfo } from '../../internal/logging';
+import { formatInfo } from '../../internal/logging';
 import { logger } from '@nx/devkit';
 import type { VercaddioServerResult } from './verdaccio-registry';
 import { objectToCliArgs } from '../../internal/terminal';
@@ -16,36 +14,6 @@ We should definitely find a better solution that mocks it directly and avoids th
 */
 export function chdir(path: string): void {
   process.chdir(path);
-}
-
-export async function setupNpmWorkspace(
-  environmentRoot: string,
-  verbose?: boolean
-): Promise<void> {
-  if (verbose) {
-    logger.info(
-      formatInfo(
-        `Execute: npm init in directory ${environmentRoot}`,
-        NPM_ENV_TOKEN
-      )
-    );
-  }
-  const cwd = process.cwd();
-  await ensureDirectoryExists(environmentRoot);
-  try {
-    await promisify(execFile)('npm', ['init', '--force'], {
-      shell: true,
-      windowsHide: true,
-      cwd: join(cwd, environmentRoot),
-    });
-  } catch (error) {
-    logger.error(
-      formatError(
-        `Error creating NPM workspace: ${(error as Error).message}`,
-        NPM_ENV_TOKEN
-      )
-    );
-  }
 }
 
 export const VERDACCIO_ENV_TOKEN = 'Verdaccio Env: ';
