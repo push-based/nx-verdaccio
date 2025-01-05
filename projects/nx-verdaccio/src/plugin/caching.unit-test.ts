@@ -33,7 +33,6 @@ describe('cacheRecord', (): void => {
   beforeEach((): void => {
     cacheKeySpy = vi.spyOn(cachingUtils, 'cacheKey').mockReturnValue(cacheKey);
   });
-
   afterEach((): void => {
     cacheKeySpy.mockRestore();
   });
@@ -68,8 +67,8 @@ describe('cacheRecord', (): void => {
 
   it('should update existing cache data, and return it', (): void => {
     const recordToUpdate = { name: 'Soul of Sylvanas' };
-    setCacheRecord(MOCK_TARGET_CACHE, prefix, MOCK_CACHE_ITEM, MOCK_CACHE_ITEM);
 
+    setCacheRecord(MOCK_TARGET_CACHE, prefix, MOCK_CACHE_ITEM, MOCK_CACHE_ITEM);
     expect(setCacheRecord(MOCK_TARGET_CACHE, prefix, MOCK_CACHE_ITEM, recordToUpdate)).toBe(
       recordToUpdate
     );
@@ -87,15 +86,12 @@ describe('readTargetsCache', (): void => {
   beforeEach((): void => {
     existsSyncSpy = vi
       .spyOn(nodeFs, 'existsSync')
-      .mockImplementation((): boolean => true);
+      .mockReturnValue(true);
     readJsonFileSpy = vi
       .spyOn(nxDevKit, 'readJsonFile')
-      .mockImplementation(() => {
-        return MOCK_TARGET_CACHE;
-      });
+      .mockReturnValue(MOCK_TARGET_CACHE);
     vi.stubEnv('NX_CACHE_PROJECT_GRAPH', 'true');
   });
-
   afterEach((): void => {
     existsSyncSpy.mockRestore();
     readJsonFileSpy.mockRestore();
@@ -124,12 +120,12 @@ describe('readTargetsCache', (): void => {
   });
 
   it('should return empty object if existsSync returns false', (): void => {
-    existsSyncSpy.mockImplementation((): boolean => false);
+    existsSyncSpy.mockReturnValue(false);
     expect(readTargetsCache(PATH)).toEqual({});
   });
 
   it('should return empty object if existsSync returns false, and NX_CACHE_PROJECT_GRAPH = false', (): void => {
-    existsSyncSpy.mockImplementation((): boolean => false);
+    existsSyncSpy.mockReturnValue(false);
     vi.stubEnv('NX_CACHE_PROJECT_GRAPH', 'false');
     expect(readTargetsCache(PATH)).toEqual({});
   });
@@ -144,9 +140,8 @@ describe('writeTargetsToCache', (): void => {
   beforeEach((): void => {
     writeJsonFileSpy = vi
       .spyOn(nxDevKit, 'writeJsonFile')
-      .mockImplementation((): string => 'preventing writing to file by mocking impl');
+      .mockImplementation((): string => 'preventing writing to file by mocking imp');
   });
-
   afterEach((): void => {
     writeJsonFileSpy.mockRestore();
     vi.clearAllMocks();
