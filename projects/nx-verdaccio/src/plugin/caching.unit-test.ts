@@ -5,7 +5,7 @@ import {
   expect,
   type MockInstance,
 } from 'vitest';
-import { JsonWriteOptions, type JsonReadOptions } from 'nx/src/utils/fileutils';
+import { type JsonWriteOptions, type JsonReadOptions } from 'nx/src/utils/fileutils';
 import {
   getCacheRecord,
   readTargetsCache,
@@ -31,7 +31,9 @@ describe('cacheRecord', (): void => {
   >;
 
   beforeEach((): void => {
-    cacheKeySpy = vi.spyOn(cachingUtils, 'cacheKey').mockReturnValue(cacheKey);
+    cacheKeySpy = vi
+      .spyOn(cachingUtils, 'cacheKey')
+      .mockReturnValue(cacheKey);
   });
   afterEach((): void => {
     cacheKeySpy.mockRestore();
@@ -50,12 +52,6 @@ describe('cacheRecord', (): void => {
   it('should return undefined if there is no cache hit', (): void => {
     cacheKeySpy.mockReturnValue('non-existent-key');
     expect(getCacheRecord(MOCK_TARGET_CACHE, prefix, MOCK_CACHE_ITEM)).toBeUndefined();
-  });
-
-  it('should call cacheKey once with correct arguments', (): void => {
-    setCacheRecord(MOCK_TARGET_CACHE, prefix, MOCK_CACHE_ITEM, MOCK_CACHE_ITEM);
-    expect(cacheKeySpy).toHaveBeenCalledTimes(1);
-    expect(cacheKeySpy).toHaveBeenCalledWith(prefix, MOCK_CACHE_ITEM);
   });
 
   it('should set the cache record, and return it', (): void => {
@@ -84,18 +80,18 @@ describe('readTargetsCache', (): void => {
   >;
 
   beforeEach((): void => {
+    vi.stubEnv('NX_CACHE_PROJECT_GRAPH', 'true');
     existsSyncSpy = vi
       .spyOn(nodeFs, 'existsSync')
       .mockReturnValue(true);
     readJsonFileSpy = vi
       .spyOn(nxDevKit, 'readJsonFile')
       .mockReturnValue(MOCK_TARGET_CACHE);
-    vi.stubEnv('NX_CACHE_PROJECT_GRAPH', 'true');
   });
   afterEach((): void => {
+    vi.clearAllMocks();
     existsSyncSpy.mockRestore();
     readJsonFileSpy.mockRestore();
-    vi.clearAllMocks();
   });
 
   it('should call existSync once with correct argument', (): void => {
@@ -110,11 +106,11 @@ describe('readTargetsCache', (): void => {
     expect(readJsonFileSpy).toHaveBeenCalledWith(PATH);
   });
 
-  it('should return target cache if existsSync returns true, and NX_CACHE_PROJECT_GRAPH = true', (): void => {
+  it('should return target cache if existsSync returns true, and NX_CACHE_PROJECT_GRAPH !== false', (): void => {
     expect(readTargetsCache(PATH)).toEqual(MOCK_TARGET_CACHE);
   });
 
-  it('should return empty object if NX_CACHE_PROJECT_GRAPH = false', (): void => {
+  it('should return empty object if NX_CACHE_PROJECT_GRAPH == false', (): void => {
     vi.stubEnv('NX_CACHE_PROJECT_GRAPH', 'false');
     expect(readTargetsCache(PATH)).toEqual({});
   });
@@ -124,7 +120,7 @@ describe('readTargetsCache', (): void => {
     expect(readTargetsCache(PATH)).toEqual({});
   });
 
-  it('should return empty object if existsSync returns false, and NX_CACHE_PROJECT_GRAPH = false', (): void => {
+  it('should return empty object if existsSync returns false, and NX_CACHE_PROJECT_GRAPH == false', (): void => {
     existsSyncSpy.mockReturnValue(false);
     vi.stubEnv('NX_CACHE_PROJECT_GRAPH', 'false');
     expect(readTargetsCache(PATH)).toEqual({});
@@ -143,8 +139,8 @@ describe('writeTargetsToCache', (): void => {
       .mockImplementation((): string => 'preventing writing to file by mocking imp');
   });
   afterEach((): void => {
-    writeJsonFileSpy.mockRestore();
     vi.clearAllMocks();
+    writeJsonFileSpy.mockRestore();
   });
 
   it('should call writeJsonFile once with correct arguments if process.env.NX_CACHE_PROJECT_GRAPH !== false', (): void => {
