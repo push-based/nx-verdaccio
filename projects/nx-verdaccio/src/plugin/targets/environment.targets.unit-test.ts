@@ -7,116 +7,67 @@ describe('isEnvProject', () => {
   const projectConfig: ProjectConfiguration = {
     root: '',
     tags: ['env:production', 'type:library'],
-    targets: {}
+    targets: {
+      build: {},
+      test: {},
+    }
   };
-  const normalizedCreateNodeOptions: NormalizedCreateNodeOptions['environments'] = {
+  const normalizedOptions: NormalizedCreateNodeOptions['environments'] = {
     environmentsDir: '',
-    targetNames: null,
+    targetNames: ['cola', 'mock', 'build'],
     filterByTags: ['env:production']
   };
 
-  it('should return false if existingTargetNames are not present', () => {
-    const options = {...normalizedCreateNodeOptions, targetNames: ['mockTarget']}
-    const config = {...projectConfig, targets: null}
-    const result = isEnvProject(config, options);
+  it('should returns false if targets missing', () => {
+    const config = { ...projectConfig, targets: null };
+    const result = isEnvProject(config, normalizedOptions);
     expect(result).toBe(false);
   });
 
-  it('should return false if environmentTargetNames are not present', () => {
-    const config = {
-      ...projectConfig,
-      targets: {
-        build: {},
-        test: {},
-      }
-    }
-    const result = isEnvProject(config, normalizedCreateNodeOptions);
+  it('should returns false if targetNames missing', () => {
+    const options = {...normalizedOptions, targetNames: null}
+    const result = isEnvProject(projectConfig, options);
     expect(result).toBe(false);
   });
 
-  it('should return false if existingTargetNames, and existingTargetNames are not present ', () => {
-    const result = isEnvProject(projectConfig, normalizedCreateNodeOptions);
+  it('should returns false if targetNames and targets missing', () => {
+    const config = { ...projectConfig, targets: null };
+    const result = isEnvProject(config, normalizedOptions);
     expect(result).toBe(false);
   });
 
-
-  it('should return false if none of the existingTargetNames match any of the environmentTargetNames', () => {
-    const config = {
-      ...projectConfig,
-      targets: {
-        build: {},
-        test: {},
-      }
-    }
-    const options = {...normalizedCreateNodeOptions, targetNames: ['mockTarget']}
-    const result = isEnvProject(config, options);
+  it('should returns false if targetNames don’t match environmentTargetNames', () => {
+    const options = { ...normalizedOptions, targetNames: ['mockTarget'] };
+    const result = isEnvProject(projectConfig, options);
     expect(result).toBe(false);
   });
 
-  it('should return true if  any existingTargetNames match environmentTargetNames and no tags', () => {
-    // i have to set tags to null
-    const config = {
-      ...projectConfig,
-      tags: null,
-      targets: {
-        build: {},
-        test: {},
-      }
-    }
-    const options = {...normalizedCreateNodeOptions, targetNames: ['cola', 'mock', 'build']}
-    const result = isEnvProject(config, options);
+  it('should returns true if targetNames match and no tags', () => {
+    const config = { ...projectConfig, tags: null };
+    const result = isEnvProject(config, normalizedOptions);
     expect(result).toBe(true);
   });
 
-  it('should return true if any existingTargetNames match environmentTargetNames and no filterByTags', () => {
-    // i have to set filter by tags to null
-    const config = {
-      ...projectConfig,
-      targets: {
-        build: {},
-        test: {},
-      }
-    }
+  it('should returns true if targetNames match and no filterByTags', () => {
     const options = {
-      ...normalizedCreateNodeOptions,
-      targetNames: ['cola', 'mock', 'build'],
+      ...normalizedOptions,
       filterByTags: null
-    }
-    const result = isEnvProject(config, options);
+    };
+    const result = isEnvProject(projectConfig, options);
     expect(result).toBe(true);
   });
 
-  it('should return true if any existingTargetNames match environmentTargetNames and existingTags are present with environmentsTagFilters, and any existingTags match any environmentsTagFilters', () => {
-    const config = {
-      ...projectConfig,
-      targets: {
-        build: {},
-        test: {},
-      }
-    }
-    const options = {
-      ...normalizedCreateNodeOptions,
-      targetNames: ['cola', 'mock', 'build'],
-    }
-    const result = isEnvProject(config, options);
+  it('should returns true if targetNames match and tags match filterByTags', () => {
+    const result = isEnvProject(projectConfig, normalizedOptions);
     expect(result).toBe(true);
   });
 
-  it('should return false if any existingTargetNames match environmentTargetNames and existingTags are present with environmentsTagFilters, and NONE existingTags match any environmentsTagFilters', () => {
-    const config = {
-      ...projectConfig,
-      targets: {
-        build: {},
-        test: {},
-      }
-    }
+  it('should returns false if targetNames match but tags don’t match filterByTags', () => {
     const options = {
-      ...normalizedCreateNodeOptions,
-      targetNames: ['cola', 'mock', 'build'],
+      ...normalizedOptions,
       filterByTags: ['mock-tag-no-match']
-    }
-    const result = isEnvProject(config, options);
+    };
+    const result = isEnvProject(projectConfig, options);
     expect(result).toBe(false);
   });
-
-})
+});
