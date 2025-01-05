@@ -5,8 +5,9 @@ import {
   expect,
   type MockInstance,
 } from 'vitest';
-import * as fileHasher from 'nx/src/hasher/file-hasher';
 import { cacheKey } from './caching.utils';
+
+import * as fileHasher from 'nx/src/hasher/file-hasher';
 
 describe('cacheKey', (): void => {
   const prefix = 'warcraft';
