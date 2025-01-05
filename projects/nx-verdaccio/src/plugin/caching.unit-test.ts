@@ -119,7 +119,7 @@ describe('readTargetsCache', (): void => {
   });
 
   it('should return empty object if NX_CACHE_PROJECT_GRAPH = false', (): void => {
-    process.env.NX_CACHE_PROJECT_GRAPH = 'false';
+    vi.stubEnv('NX_CACHE_PROJECT_GRAPH', 'false');
     expect(readTargetsCache(path)).toEqual({});
   });
 
@@ -130,7 +130,7 @@ describe('readTargetsCache', (): void => {
 
   it('should return empty object if existsSync returns false, and NX_CACHE_PROJECT_GRAPH = false', (): void => {
     existsSyncSpy.mockImplementation((): boolean => false);
-    process.env.NX_CACHE_PROJECT_GRAPH = 'false';
+    vi.stubEnv('NX_CACHE_PROJECT_GRAPH', 'false');
     expect(readTargetsCache(path)).toEqual({});
   });
 });
@@ -145,7 +145,7 @@ describe('writeTargetsToCache', (): void => {
 
   afterEach((): void => {
     writeJsonFile.mockRestore();
-    delete process.env.NX_CACHE_PROJECT_GRAPH;
+    vi.clearAllMocks();
   });
 
   it('should call writeJsonFile once with correct arguments if process.env.NX_CACHE_PROJECT_GRAPH !== false', (): void => {
