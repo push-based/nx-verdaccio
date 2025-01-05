@@ -12,8 +12,9 @@ describe('cacheKey', (): void => {
   const prefix = 'warcraft';
   const hashData = { race: 'orc' };
   const hashObjectReturnValue = '123456789';
-  let hashObjectSpy: MockInstance<[obj: object], string>;
   const regex = /^[a-zA-Z]+-\d+$/;
+
+  let hashObjectSpy: MockInstance<[obj: object], string>;
 
   beforeEach((): void => {
     hashObjectSpy = vi

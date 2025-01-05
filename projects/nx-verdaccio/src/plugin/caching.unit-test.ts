@@ -5,28 +5,30 @@ import {
   expect,
   type MockInstance,
 } from 'vitest';
-import * as nodeFs from 'node:fs';
-import * as nxDevKit from '@nx/devkit';
-import { type JsonReadOptions } from 'nx/src/utils/fileutils';
+import { JsonWriteOptions, type JsonReadOptions } from 'nx/src/utils/fileutils';
 import {
   getCacheRecord,
   readTargetsCache,
   setCacheRecord,
   writeTargetsToCache,
 } from './caching';
+
+import * as nodeFs from 'node:fs';
+import * as nxDevKit from '@nx/devkit';
 import * as cachingUtils from './utils/caching.utils';
 
-describe('cacheRecord', (): void => {
-  let cacheKeySpy: MockInstance<
-    [prefix: string, hashData: Record<string, unknown>],
-    string
-  >;
+const PATH = 'azeroth';
+const MOCK_CACHE_ITEM = { name: 'mocked-name' };
+const MOCK_TARGET_CACHE = { ragnaros: MOCK_CACHE_ITEM };
 
+describe('cacheRecord', (): void => {
   const prefix = 'warcraft';
   const cacheKey = 'ragnaros';
-  const hashData = { race: 'orc' };
-  const cacheItem = { thunderfury: 'Blessed Blade of the Windseeker' };
-  const targetsCache = { ragnaros: cacheItem };
+
+  let cacheKeySpy: MockInstance<
+    [prefix: string, MOCK_CACHE_ITEM: Record<string, unknown>],
+    string
+  >;
 
   beforeEach((): void => {
     cacheKeySpy = vi.spyOn(cachingUtils, 'cacheKey').mockReturnValue(cacheKey);
@@ -37,50 +39,48 @@ describe('cacheRecord', (): void => {
   });
 
   it('should call cacheKey once with correct arguments', (): void => {
-    getCacheRecord(targetsCache, prefix, hashData);
+    getCacheRecord(MOCK_TARGET_CACHE, prefix, MOCK_CACHE_ITEM);
     expect(cacheKeySpy).toHaveBeenCalledTimes(1);
-    expect(cacheKeySpy).toHaveBeenCalledWith(prefix, hashData);
+    expect(cacheKeySpy).toHaveBeenCalledWith(prefix, MOCK_CACHE_ITEM);
   });
 
   it('should return the correct cache record if there is a cache hit', (): void => {
-    expect(getCacheRecord(targetsCache, prefix, hashData)).toEqual(cacheItem);
+    expect(getCacheRecord(MOCK_TARGET_CACHE, prefix, MOCK_CACHE_ITEM)).toEqual(MOCK_CACHE_ITEM);
   });
 
   it('should return undefined if there is no cache hit', (): void => {
     cacheKeySpy.mockReturnValue('non-existent-key');
-    expect(getCacheRecord(targetsCache, prefix, hashData)).toBeUndefined();
+    expect(getCacheRecord(MOCK_TARGET_CACHE, prefix, MOCK_CACHE_ITEM)).toBeUndefined();
   });
 
   it('should call cacheKey once with correct arguments', (): void => {
-    setCacheRecord(targetsCache, prefix, hashData, cacheItem);
+    setCacheRecord(MOCK_TARGET_CACHE, prefix, MOCK_CACHE_ITEM, MOCK_CACHE_ITEM);
     expect(cacheKeySpy).toHaveBeenCalledTimes(1);
-    expect(cacheKeySpy).toHaveBeenCalledWith(prefix, hashData);
+    expect(cacheKeySpy).toHaveBeenCalledWith(prefix, MOCK_CACHE_ITEM);
   });
 
   it('should set the cache record, and return it', (): void => {
-    expect(setCacheRecord(targetsCache, prefix, hashData, cacheItem)).toBe(
-      cacheItem
+    expect(setCacheRecord(MOCK_TARGET_CACHE, prefix, MOCK_CACHE_ITEM, MOCK_CACHE_ITEM)).toBe(
+      MOCK_CACHE_ITEM
     );
-    expect(targetsCache).toHaveProperty(cacheKey, cacheItem);
+    expect(MOCK_TARGET_CACHE).toHaveProperty(cacheKey, MOCK_CACHE_ITEM);
   });
 
   it('should update existing cache data, and return it', (): void => {
-    const recordToUpdate = { thunderfury: 'Soul of Sylvanas' };
-    setCacheRecord(targetsCache, prefix, hashData, cacheItem);
+    const recordToUpdate = { name: 'Soul of Sylvanas' };
+    setCacheRecord(MOCK_TARGET_CACHE, prefix, MOCK_CACHE_ITEM, MOCK_CACHE_ITEM);
 
-    expect(setCacheRecord(targetsCache, prefix, hashData, recordToUpdate)).toBe(
+    expect(setCacheRecord(MOCK_TARGET_CACHE, prefix, MOCK_CACHE_ITEM, recordToUpdate)).toBe(
       recordToUpdate
     );
-    expect(targetsCache).toHaveProperty(cacheKey, recordToUpdate);
+    expect(MOCK_TARGET_CACHE).toHaveProperty(cacheKey, recordToUpdate);
   });
 });
 
 describe('readTargetsCache', (): void => {
-  const path = 'azeroth';
-  const mockTargetCache =  {prop: { name: 'mock' }};
-  let existsSyncSpy: MockInstance<[path: nodeFs.PathLike], boolean>;
+  let existsSyncSpy: MockInstance<[PATH: nodeFs.PathLike], boolean>;
   let readJsonFileSpy: MockInstance<
-    [path: string, options?: JsonReadOptions],
+    [PATH: string, options?: JsonReadOptions],
     object
   >;
 
@@ -91,7 +91,7 @@ describe('readTargetsCache', (): void => {
     readJsonFileSpy = vi
       .spyOn(nxDevKit, 'readJsonFile')
       .mockImplementation(() => {
-        return mockTargetCache;
+        return MOCK_TARGET_CACHE;
       });
     vi.stubEnv('NX_CACHE_PROJECT_GRAPH', 'true');
   });
@@ -103,61 +103,65 @@ describe('readTargetsCache', (): void => {
   });
 
   it('should call existSync once with correct argument', (): void => {
-    readTargetsCache(path);
+    readTargetsCache(PATH);
     expect(existsSyncSpy).toHaveBeenCalledTimes(1);
-    expect(existsSyncSpy).toHaveBeenCalledWith(path);
+    expect(existsSyncSpy).toHaveBeenCalledWith(PATH);
   });
 
   it('should call readJsonFile once with correct argument', (): void => {
-    readTargetsCache(path);
+    readTargetsCache(PATH);
     expect(readJsonFileSpy).toHaveBeenCalledTimes(1);
-    expect(readJsonFileSpy).toHaveBeenCalledWith(path);
+    expect(readJsonFileSpy).toHaveBeenCalledWith(PATH);
   });
 
   it('should return target cache if existsSync returns true, and NX_CACHE_PROJECT_GRAPH = true', (): void => {
-    expect(readTargetsCache(path)).toEqual(mockTargetCache);
+    expect(readTargetsCache(PATH)).toEqual(MOCK_TARGET_CACHE);
   });
 
   it('should return empty object if NX_CACHE_PROJECT_GRAPH = false', (): void => {
     vi.stubEnv('NX_CACHE_PROJECT_GRAPH', 'false');
-    expect(readTargetsCache(path)).toEqual({});
+    expect(readTargetsCache(PATH)).toEqual({});
   });
 
   it('should return empty object if existsSync returns false', (): void => {
     existsSyncSpy.mockImplementation((): boolean => false);
-    expect(readTargetsCache(path)).toEqual({});
+    expect(readTargetsCache(PATH)).toEqual({});
   });
 
   it('should return empty object if existsSync returns false, and NX_CACHE_PROJECT_GRAPH = false', (): void => {
     existsSyncSpy.mockImplementation((): boolean => false);
     vi.stubEnv('NX_CACHE_PROJECT_GRAPH', 'false');
-    expect(readTargetsCache(path)).toEqual({});
+    expect(readTargetsCache(PATH)).toEqual({});
   });
 });
 
 describe('writeTargetsToCache', (): void => {
-  const writeJsonFile = vi
-    .spyOn(nxDevKit, 'writeJsonFile')
-    .mockImplementation((): string => 'dont write to file :D');
-  const path = 'azeroth';
-  const mockTargetCache =  {prop: { name: 'mock' }};
+  let writeJsonFileSpy: MockInstance<
+    [PATH: string, data: object, options?: JsonWriteOptions],
+    void
+  >;
 
+  beforeEach((): void => {
+    writeJsonFileSpy = vi
+      .spyOn(nxDevKit, 'writeJsonFile')
+      .mockImplementation((): string => 'preventing writing to file by mocking impl');
+  });
 
   afterEach((): void => {
-    writeJsonFile.mockRestore();
+    writeJsonFileSpy.mockRestore();
     vi.clearAllMocks();
   });
 
   it('should call writeJsonFile once with correct arguments if process.env.NX_CACHE_PROJECT_GRAPH !== false', (): void => {
     vi.stubEnv('NX_CACHE_PROJECT_GRAPH', 'true');
-    writeTargetsToCache(path, {prop: { name: 'mock' }});
-    expect(writeJsonFile).toHaveBeenCalledTimes(1);
-    expect(writeJsonFile).toHaveBeenCalledWith(path, mockTargetCache);
+    writeTargetsToCache(PATH, MOCK_TARGET_CACHE);
+    expect(writeJsonFileSpy).toHaveBeenCalledTimes(1);
+    expect(writeJsonFileSpy).toHaveBeenCalledWith(PATH, MOCK_TARGET_CACHE);
   });
 
   it('should not call writeJsonFile if process.env.NX_CACHE_PROJECT_GRAPH == false', (): void => {
     vi.stubEnv('NX_CACHE_PROJECT_GRAPH', 'false');
-    writeTargetsToCache(path, mockTargetCache);
-    expect(writeJsonFile).toHaveBeenCalledTimes(0);
+    writeTargetsToCache(PATH, MOCK_TARGET_CACHE);
+    expect(writeJsonFileSpy).toHaveBeenCalledTimes(0);
   });
 });
