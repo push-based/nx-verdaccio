@@ -1,29 +1,32 @@
 ## 0.0.0-alpha.27 (2024-12-11)
 
+
 ### 🚀 Features
 
 - cleanup git status in folders that are checked in ([5e2c9b5](https://github.com/push-based/nx-verdaccio/commit/5e2c9b5))
 - add skip install ([b1628ef](https://github.com/push-based/nx-verdaccio/commit/b1628ef))
 - **nx-verdaccio:** add skipInstall and post script ([f2c0c86](https://github.com/push-based/nx-verdaccio/commit/f2c0c86))
 
-### ❤️ Thank You
+### ❤️  Thank You
 
 - Michael @rx-angular
 - Michael Hladky @BioPhoton
 
 ## 0.0.0-alpha.26 (2024-10-23)
 
+
 ### 🩹 Fixes
 
 - add skipTeardown to env-teardown executor ([ff52749](https://github.com/push-based/nx-verdaccio/commit/ff52749))
 - add skipTeardown to env-teardown executor ([664c6bd](https://github.com/push-based/nx-verdaccio/commit/664c6bd))
 
-### ❤️ Thank You
+### ❤️  Thank You
 
 - Michael @rx-angular
 - Michael Hladky @BioPhoton
 
 ## 0.0.0-alpha.25 (2024-10-22)
+
 
 ### 🩹 Fixes
 
@@ -31,176 +34,193 @@
 - npmWorkspace tests unit tests ([7485fe4](https://github.com/push-based/nx-verdaccio/commit/7485fe4))
 - e2e ([10a7c76](https://github.com/push-based/nx-verdaccio/commit/10a7c76))
 
-### ❤️ Thank You
+### ❤️  Thank You
 
 - Michael @rx-angular
 
 ## 0.0.0-alpha.24 (2024-10-20)
 
+
 ### 🩹 Fixes
 
 - install optional deps with package ([abf41db](https://github.com/push-based/nx-verdaccio/commit/abf41db))
 
-### ❤️ Thank You
+### ❤️  Thank You
 
 - Michael @rx-angular
 
 ## 0.0.0-alpha.23 (2024-10-19)
 
+
 ### 🩹 Fixes
 
 - detach if not windows ([5f0e94e](https://github.com/push-based/nx-verdaccio/commit/5f0e94e))
 
-### ❤️ Thank You
+### ❤️  Thank You
 
 - Michael @rx-angular
 
 ## 0.0.0-alpha.22 (2024-10-18)
+
 
 ### 🩹 Fixes
 
 - envRoot derivation in executor ([ae6b9aa](https://github.com/push-based/nx-verdaccio/commit/ae6b9aa))
 - **nx-verdaccio:** move envRoot into executors ([3818fba](https://github.com/push-based/nx-verdaccio/commit/3818fba))
 
-### ❤️ Thank You
+### ❤️  Thank You
 
 - Michael @rx-angular
 - Michael Hladky @BioPhoton
 
 ## 0.0.0-alpha.21 (2024-10-15)
 
+
 ### 🩹 Fixes
 
 - remove detached ([558a25e](https://github.com/push-based/nx-verdaccio/commit/558a25e))
 
-### ❤️ Thank You
+### ❤️  Thank You
 
 - Michael @rx-angular
 
 ## 0.0.0-alpha.20 (2024-10-15)
 
+
 ### 🩹 Fixes
 
 - docs ([4921af8](https://github.com/push-based/nx-verdaccio/commit/4921af8))
 
-### ❤️ Thank You
+### ❤️  Thank You
 
 - Michael @rx-angular
 
 ## 0.0.0-alpha.19 (2024-10-15)
 
+
 ### 🩹 Fixes
 
 - deps ([daec92d](https://github.com/push-based/nx-verdaccio/commit/daec92d))
 
-### ❤️ Thank You
+### ❤️  Thank You
 
 - Michael @rx-angular
 
 ## 0.0.0-alpha.18 (2024-10-15)
 
+
 ### 🩹 Fixes
 
 - use info to log ([fce0cab](https://github.com/push-based/nx-verdaccio/commit/fce0cab))
 
-### ❤️ Thank You
+### ❤️  Thank You
 
 - Michael @rx-angular
 
 ## 0.0.0-alpha.17 (2024-10-15)
 
+
 ### 🩹 Fixes
 
 - forward params of nxv-e2e target ([8348d94](https://github.com/push-based/nx-verdaccio/commit/8348d94))
 
-### ❤️ Thank You
+### ❤️  Thank You
 
 - Michael @rx-angular
 
 ## 0.0.0-alpha.16 (2024-10-15)
 
+
 ### 🩹 Fixes
 
 - mark package ([8a0630b](https://github.com/push-based/nx-verdaccio/commit/8a0630b))
 
-### ❤️ Thank You
+### ❤️  Thank You
 
 - Michael @rx-angular
 
 ## 0.0.0-alpha.15 (2024-10-15)
 
+
 ### 🩹 Fixes
 
 - nx17 fix ([ebbfe6b](https://github.com/push-based/nx-verdaccio/commit/ebbfe6b))
 
-### ❤️ Thank You
+### ❤️  Thank You
 
 - Michael @rx-angular
 
 ## 0.0.0-alpha.14 (2024-10-15)
+
 
 ### 🩹 Fixes
 
 - version ([55a8bb1](https://github.com/push-based/nx-verdaccio/commit/55a8bb1))
 - version 1 ([9cfa53e](https://github.com/push-based/nx-verdaccio/commit/9cfa53e))
 
-### ❤️ Thank You
+### ❤️  Thank You
 
 - Michael @rx-angular
 
 ## 0.0.0-alpha.13 (2024-10-15)
+
 
 ### 🩹 Fixes
 
 - add command to make it work in older nx versions ([8cca3b7](https://github.com/push-based/nx-verdaccio/commit/8cca3b7))
 - add description ([9af5dd2](https://github.com/push-based/nx-verdaccio/commit/9af5dd2))
 
-### ❤️ Thank You
+### ❤️  Thank You
 
 - Michael @rx-angular
 
 ## 0.0.0-alpha.12 (2024-10-14)
 
+
 ### 🩹 Fixes
 
 - readme 3 ([7b2422b](https://github.com/push-based/nx-verdaccio/commit/7b2422b))
 
-### ❤️ Thank You
+### ❤️  Thank You
 
 - Michael @rx-angular
 
 ## 0.0.0-alpha.11 (2024-10-14)
 
+
 ### 🩹 Fixes
 
 - readme 2 ([2540ebd](https://github.com/push-based/nx-verdaccio/commit/2540ebd))
 
-### ❤️ Thank You
+### ❤️  Thank You
 
 - Michael @rx-angular
 
 ## 0.0.0-alpha.10 (2024-10-14)
 
+
 ### 🩹 Fixes
 
 - readme ([26f1b13](https://github.com/push-based/nx-verdaccio/commit/26f1b13))
 
-### ❤️ Thank You
+### ❤️  Thank You
 
 - Michael @rx-angular
 
 ## 0.0.0-alpha.9 (2024-10-14)
+
 
 ### 🩹 Fixes
 
 - deps ([ceeb41b](https://github.com/push-based/nx-verdaccio/commit/ceeb41b))
 - deps ([4f5303e](https://github.com/push-based/nx-verdaccio/commit/4f5303e))
 
-### ❤️ Thank You
+### ❤️  Thank You
 
 - Michael @rx-angular
 
 ## 0.0.0-alpha.8 (2024-10-14)
+
 
 ### 🚀 Features
 
@@ -214,11 +234,12 @@
 - set default values for cacheSizeTasks and options in plugin ([b782914](https://github.com/push-based/nx-verdaccio/commit/b782914))
 - mock exec implementation to handle callbacks in unit tests ([88ebbd4](https://github.com/push-based/nx-verdaccio/commit/88ebbd4))
 
-### ❤️ Thank You
+### ❤️  Thank You
 
 - getlarge
 
 ## 0.0.0-alpha.7 (2024-10-13)
+
 
 ### 🚀 Features
 
@@ -234,29 +255,31 @@
 - refactor testing API usage ([f3e4c29](https://github.com/push-based/nx-verdaccio/commit/f3e4c29))
 - refactor testing ([7425758](https://github.com/push-based/nx-verdaccio/commit/7425758))
 
-### ❤️ Thank You
+### ❤️  Thank You
 
 - Michael @rx-angular
 - Michael Hladky @BioPhoton
 
 ## 0.0.0-alpha.6 (2024-09-29)
 
+
 ### 🩹 Fixes
 
 - make package public ([046a788](https://github.com/push-based/-nx-verdaccio-e2e-setup/commit/046a788))
 - change JS esm module type to CommonJS ([9d9d60d](https://github.com/push-based/-nx-verdaccio-e2e-setup/commit/9d9d60d))
 
-### ❤️ Thank You
+### ❤️  Thank You
 
 - Michael @rx-angular
 
 ## 0.0.0-alpha.5 (2024-09-29)
 
+
 ### 🩹 Fixes
 
 - fix typo ([8830e1a](https://github.com/push-based/-nx-verdaccio-e2e-setup/commit/8830e1a))
 
-### ❤️ Thank You
+### ❤️  Thank You
 
 - Michael @rx-angular
 
