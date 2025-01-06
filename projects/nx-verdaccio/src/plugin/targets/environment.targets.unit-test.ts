@@ -1,16 +1,19 @@
 import { afterEach, describe, expect } from 'vitest';
 import { ProjectConfiguration } from '@nx/devkit';
-import { isEnvProject, verdaccioTargets } from './environment.targets';
+import {
+  TARGET_ENVIRONMENT_VERDACCIO_START,
+  TARGET_ENVIRONMENT_VERDACCIO_STOP,
+  VERDACCIO_STORAGE_DIR,
+  isEnvProject,
+  verdaccioTargets
+} from './environment.targets';
 import { NormalizedCreateNodeOptions } from '../normalize-create-nodes-options';
 import { PACKAGE_NAME } from '../constants';
 import { EXECUTOR_ENVIRONMENT_KILL_PROCESS } from '../../executors/kill-process/constant';
-
-import * as nodePathModule from 'node:path';
 import { VERDACCIO_REGISTRY_JSON } from '../../executors/env-bootstrap/constants';
 import { uniquePort } from '../../executors/env-bootstrap/unique-port';
 
-export const TARGET_ENVIRONMENT_VERDACCIO_START = 'nxv-verdaccio-start';
-export const TARGET_ENVIRONMENT_VERDACCIO_STOP = 'nxv-verdaccio-stop';
+import * as nodePathModule from 'node:path';
 
 describe('isEnvProject', () => {
 const projectConfig: ProjectConfiguration = {
@@ -82,6 +85,16 @@ it('should returns false if targetNames match but tags don’t match filterByTag
 });
 
 describe('verdaccioTargets', () => {
+  const environmentsDir = 'environments'
+  const projectName = 'test-project';
+  const mockProjectConfig = { name: projectName, root: 'test' };
+  const customOption = 'custom-value';
+  const mockOptions = {
+    environmentsDir,
+    customOption,
+  };
+  const joinResult = 'mocked-join'
+
   vi.mock('node:path', async () => {
     const actualPath = await vi.importActual('node:path');
     return {
@@ -99,12 +112,6 @@ describe('verdaccioTargets', () => {
   });
 
   it('should generate object with correct start&end targets', (): void => {
-    const mockProjectConfig = { name: 'test-project', root: 'test' };
-    const mockOptions = {
-      environmentsDir: 'environments',
-      customOption: 'custom-value',
-    };
-    const VERDACCIO_STORAGE_DIR = 'storage';
     const result = verdaccioTargets(mockProjectConfig, mockOptions);
 
     expect(result).toEqual({
@@ -114,46 +121,35 @@ describe('verdaccioTargets', () => {
         options: {
           config: '.verdaccio/config.yml',
           port: 1337,
-          storage: `mocked-join`,
+          storage: joinResult,
           clear: true,
-          environmentDir: `mocked-join`,
-          projectName: 'test-project',
-          customOption: 'custom-value',
+          environmentDir: joinResult,
+          projectName: projectName,
+          customOption: customOption,
         },
       },
       [TARGET_ENVIRONMENT_VERDACCIO_STOP]: {
         executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_KILL_PROCESS}`,
         options: {
-          filePath: 'mocked-join',
-          customOption: 'custom-value',
+          filePath: joinResult,
+          customOption: customOption,
         },
       },
     });
   });
 
   it('should call join 3 times with correct arguments', (): void => {
-    const projectConfig = { name: 'test-project', root: '' };
-    const options = {
-      environmentsDir: 'environments',
-      customOption: 'custom-value',
-    };
-
-    verdaccioTargets(projectConfig, options);
+    verdaccioTargets(mockProjectConfig, mockOptions);
 
     expect(nodePathModule.join).toHaveBeenCalledTimes(3);
-    expect(nodePathModule.join).toHaveBeenNthCalledWith(1, 'environments', 'test-project');
-    expect(nodePathModule.join).toHaveBeenNthCalledWith(2, 'mocked-join', 'storage');
-    expect(nodePathModule.join).toHaveBeenNthCalledWith(3, 'environments', VERDACCIO_REGISTRY_JSON);
+    expect(nodePathModule.join).toHaveBeenNthCalledWith(1, environmentsDir, projectName);
+    expect(nodePathModule.join).toHaveBeenNthCalledWith(2, joinResult, VERDACCIO_STORAGE_DIR);
+    expect(nodePathModule.join).toHaveBeenNthCalledWith(3, environmentsDir, VERDACCIO_REGISTRY_JSON);
   });
 
   it('should call uniquePort once', (): void => {
-    const projectConfig = { name: 'test-project', root: '' };
-    const options = {
-      environmentsDir: 'environments',
-      customOption: 'custom-value',
-    };
+    verdaccioTargets(mockProjectConfig, mockOptions);
 
-    verdaccioTargets(projectConfig, options);
     expect(uniquePort).toHaveBeenCalledTimes(1);
   });
 });

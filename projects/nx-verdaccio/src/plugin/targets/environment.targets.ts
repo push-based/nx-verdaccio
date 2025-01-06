@@ -26,8 +26,7 @@ export const TARGET_ENVIRONMENT_TEARDOWN = 'nxv-env-teardown';
 export const TARGET_ENVIRONMENT_E2E = 'nxv-e2e';
 export const TARGET_ENVIRONMENT_VERDACCIO_START = 'nxv-verdaccio-start';
 export const TARGET_ENVIRONMENT_VERDACCIO_STOP = 'nxv-verdaccio-stop';
-
-const VERDACCIO_STORAGE_DIR = 'storage';
+export const VERDACCIO_STORAGE_DIR = 'storage';
 
 export function isEnvProject(
   projectConfig: ProjectConfiguration,
@@ -75,6 +74,8 @@ export function verdaccioTargets(
     [TARGET_ENVIRONMENT_VERDACCIO_START]: {
       // @TODO: consider using the executor function directly to reduce the number of targets
       // https://github.com/nrwl/nx/blob/b73f1e0e0002c55fc0bacaa1557140adb9eec8de/packages/js/src/executors/verdaccio/verdaccio.impl.ts#L22
+
+      // @Michael That is looking very suspicious - missing $ before {options.environmentRoot}
       outputs: [`{options.environmentRoot}/${VERDACCIO_STORAGE_DIR}`],
       executor: '@nx/js:verdaccio',
       options: {
