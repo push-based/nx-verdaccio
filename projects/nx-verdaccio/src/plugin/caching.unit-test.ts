@@ -69,6 +69,12 @@ describe('setCacheRecord', (): void => {
     cacheKeySpy.mockRestore();
   });
 
+  it('should call cacheKey once with correct arguments', (): void => {
+    setCacheRecord(MOCK_TARGET_CACHE, PREFIX, MOCK_CACHE_ITEM, MOCK_CACHE_ITEM)
+    expect(cacheKeySpy).toHaveBeenCalledTimes(1);
+    expect(cacheKeySpy).toHaveBeenCalledWith(PREFIX, MOCK_CACHE_ITEM);
+  });
+
   it('should set the cache record, and return it', (): void => {
     expect(
       setCacheRecord(MOCK_TARGET_CACHE, PREFIX, MOCK_CACHE_ITEM, MOCK_CACHE_ITEM)
