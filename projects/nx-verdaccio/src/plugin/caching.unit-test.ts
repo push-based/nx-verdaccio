@@ -5,7 +5,10 @@ import {
   expect,
   type MockInstance,
 } from 'vitest';
-import { type JsonWriteOptions, type JsonReadOptions } from 'nx/src/utils/fileutils';
+import {
+  type JsonWriteOptions,
+  type JsonReadOptions,
+} from 'nx/src/utils/fileutils';
 import {
   getCacheRecord,
   setCacheRecord,
@@ -30,9 +33,7 @@ describe('getCacheRecord', (): void => {
   >;
 
   beforeEach((): void => {
-    cacheKeySpy = vi
-      .spyOn(cachingUtils, 'cacheKey')
-      .mockReturnValue(CACHE_KEY);
+    cacheKeySpy = vi.spyOn(cachingUtils, 'cacheKey').mockReturnValue(CACHE_KEY);
   });
   afterEach((): void => {
     cacheKeySpy.mockRestore();
@@ -45,12 +46,16 @@ describe('getCacheRecord', (): void => {
   });
 
   it('should return the correct cache record if there is a cache hit', (): void => {
-    expect(getCacheRecord(MOCK_TARGET_CACHE, PREFIX, MOCK_CACHE_ITEM)).toEqual(MOCK_CACHE_ITEM);
+    expect(getCacheRecord(MOCK_TARGET_CACHE, PREFIX, MOCK_CACHE_ITEM)).toEqual(
+      MOCK_CACHE_ITEM
+    );
   });
 
   it('should return undefined if there is no cache hit', (): void => {
     cacheKeySpy.mockReturnValue('non-existent-key');
-    expect(getCacheRecord(MOCK_TARGET_CACHE, PREFIX, MOCK_CACHE_ITEM)).toBeUndefined();
+    expect(
+      getCacheRecord(MOCK_TARGET_CACHE, PREFIX, MOCK_CACHE_ITEM)
+    ).toBeUndefined();
   });
 });
 
@@ -61,23 +66,26 @@ describe('setCacheRecord', (): void => {
   >;
 
   beforeEach((): void => {
-    cacheKeySpy = vi
-      .spyOn(cachingUtils, 'cacheKey')
-      .mockReturnValue(CACHE_KEY);
+    cacheKeySpy = vi.spyOn(cachingUtils, 'cacheKey').mockReturnValue(CACHE_KEY);
   });
   afterEach((): void => {
     cacheKeySpy.mockRestore();
   });
 
   it('should call cacheKey once with correct arguments', (): void => {
-    setCacheRecord(MOCK_TARGET_CACHE, PREFIX, MOCK_CACHE_ITEM, MOCK_CACHE_ITEM)
+    setCacheRecord(MOCK_TARGET_CACHE, PREFIX, MOCK_CACHE_ITEM, MOCK_CACHE_ITEM);
     expect(cacheKeySpy).toHaveBeenCalledTimes(1);
     expect(cacheKeySpy).toHaveBeenCalledWith(PREFIX, MOCK_CACHE_ITEM);
   });
 
   it('should set the cache record, and return it', (): void => {
     expect(
-      setCacheRecord(MOCK_TARGET_CACHE, PREFIX, MOCK_CACHE_ITEM, MOCK_CACHE_ITEM)
+      setCacheRecord(
+        MOCK_TARGET_CACHE,
+        PREFIX,
+        MOCK_CACHE_ITEM,
+        MOCK_CACHE_ITEM
+      )
     ).toBe(MOCK_CACHE_ITEM);
     expect(MOCK_TARGET_CACHE).toHaveProperty(CACHE_KEY, MOCK_CACHE_ITEM);
   });
@@ -102,9 +110,7 @@ describe('readTargetsCache', (): void => {
 
   beforeEach((): void => {
     vi.stubEnv('NX_CACHE_PROJECT_GRAPH', 'true');
-    existsSyncSpy = vi
-      .spyOn(nodeFs, 'existsSync')
-      .mockReturnValue(true);
+    existsSyncSpy = vi.spyOn(nodeFs, 'existsSync').mockReturnValue(true);
     readJsonFileSpy = vi
       .spyOn(nxDevKit, 'readJsonFile')
       .mockReturnValue(MOCK_TARGET_CACHE);
@@ -157,7 +163,9 @@ describe('writeTargetsToCache', (): void => {
   beforeEach((): void => {
     writeJsonFileSpy = vi
       .spyOn(nxDevKit, 'writeJsonFile')
-      .mockImplementation((): string => 'preventing writing to file by mocking imp');
+      .mockImplementation(
+        (): string => 'preventing writing to file by mocking imp'
+      );
   });
   afterEach((): void => {
     vi.clearAllMocks();
