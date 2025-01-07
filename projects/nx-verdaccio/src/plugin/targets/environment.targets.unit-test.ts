@@ -187,6 +187,13 @@ describe('verdaccioTargets', () => {
 });
 
 describe('getEnvTargets', () => {
+  const projectConfig = { name: 'test-project', root: '' };
+  const options = {
+    environmentsDir: '/environments',
+    targetNames: ['build', 'deploy'],
+  };
+  const joinResult = 'mocked-join';
+
   vi.mock('node:path', (): { join: Mock } => {
     return {
       join: vi.fn().mockReturnValue('mocked-join'),
@@ -198,12 +205,6 @@ describe('getEnvTargets', () => {
   });
 
   it('should generate env targets with correct structure', () => {
-    const projectConfig = { name: 'test-project', root: '' };
-    const options = {
-      environmentsDir: '/environments',
-      targetNames: ['build', 'deploy'],
-    };
-
     const targets = getEnvTargets(projectConfig, options);
 
     expect(targets).toMatchObject({
@@ -217,12 +218,6 @@ describe('getEnvTargets', () => {
   });
 
   it('should generate TARGET_ENVIRONMENT_BOOTSTRAP with correct structure, and data', () => {
-    const projectConfig = { name: 'test-project', root: '' };
-    const options = {
-      environmentsDir: '/environments',
-      targetNames: ['build', 'deploy'],
-    };
-
     const targets = getEnvTargets(projectConfig, options);
 
     expect(targets[TARGET_ENVIRONMENT_BOOTSTRAP]).toMatchObject({
@@ -231,12 +226,6 @@ describe('getEnvTargets', () => {
   });
 
   it('should generate TARGET_ENVIRONMENT_INSTALL with correct structure, and data', () => {
-    const projectConfig = { name: 'test-project', root: '' };
-    const options = {
-      environmentsDir: '/environments',
-      targetNames: ['build', 'deploy'],
-    };
-
     const targets = getEnvTargets(projectConfig, options);
 
     expect(targets[TARGET_ENVIRONMENT_INSTALL]).toMatchObject({
@@ -247,18 +236,12 @@ describe('getEnvTargets', () => {
           params: 'forward',
         },
       ],
-      options: { environmentRoot: 'mocked-join' },
-      command: `echo "dependencies installed for mocked-join"`,
+      options: { environmentRoot: joinResult },
+      command: `echo "dependencies installed for ${joinResult}"`,
     });
   });
 
   it('should generate TARGET_ENVIRONMENT_PUBLISH_ONLY with correct structure, and data', () => {
-    const projectConfig = { name: 'test-project', root: '' };
-    const options = {
-      environmentsDir: '/environments',
-      targetNames: ['build', 'deploy'],
-    };
-
     const targets = getEnvTargets(projectConfig, options);
 
     expect(targets[TARGET_ENVIRONMENT_PUBLISH_ONLY]).toMatchObject({
@@ -269,18 +252,12 @@ describe('getEnvTargets', () => {
           params: 'forward',
         },
       ],
-      options: { environmentRoot: 'mocked-join' },
-      command: `echo "dependencies published for mocked-join"`,
+      options: { environmentRoot: joinResult },
+      command: `echo "dependencies published for ${joinResult}"`,
     });
   });
 
   it('should generate TARGET_ENVIRONMENT_SETUP with correct structure, and data', () => {
-    const projectConfig = { name: 'test-project', root: '' };
-    const options = {
-      environmentsDir: '/environments',
-      targetNames: ['build', 'deploy'],
-    };
-
     const targets = getEnvTargets(projectConfig, options);
 
     expect(targets[TARGET_ENVIRONMENT_SETUP]).toMatchObject({
@@ -303,12 +280,6 @@ describe('getEnvTargets', () => {
   });
 
   it('should generate TARGET_ENVIRONMENT_E2E with correct structure, and data', () => {
-    const projectConfig = { name: 'test-project', root: '' };
-    const options = {
-      environmentsDir: '/environments',
-      targetNames: ['build', 'deploy'],
-    };
-
     const targets = getEnvTargets(projectConfig, options);
 
     expect(targets[TARGET_ENVIRONMENT_INSTALL]).toMatchObject({
@@ -319,18 +290,12 @@ describe('getEnvTargets', () => {
           params: 'forward',
         },
       ],
-      options: { environmentRoot: 'mocked-join' },
-      command: `echo "dependencies installed for mocked-join"`,
+      options: { environmentRoot: joinResult },
+      command: `echo "dependencies installed for ${joinResult}"`,
     });
   });
 
   it('should generate TARGET_ENVIRONMENT_TEARDOWN with correct structure, and data', () => {
-    const projectConfig = { name: 'test-project', root: '' };
-    const options = {
-      environmentsDir: '/environments',
-      targetNames: ['build', 'deploy'],
-    };
-
     const targets = getEnvTargets(projectConfig, options);
 
     expect(targets[TARGET_ENVIRONMENT_TEARDOWN]).toMatchObject({
