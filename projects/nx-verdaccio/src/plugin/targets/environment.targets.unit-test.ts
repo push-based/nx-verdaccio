@@ -13,14 +13,21 @@ import {
   VERDACCIO_STORAGE_DIR,
   isEnvProject,
   verdaccioTargets,
+  getEnvTargets,
+  TARGET_ENVIRONMENT_BOOTSTRAP,
+  TARGET_ENVIRONMENT_INSTALL,
+  TARGET_ENVIRONMENT_PUBLISH_ONLY, TARGET_ENVIRONMENT_SETUP, TARGET_ENVIRONMENT_TEARDOWN, TARGET_ENVIRONMENT_E2E
 } from './environment.targets';
 import { NormalizedCreateNodeOptions } from '../normalize-create-nodes-options';
 import { PACKAGE_NAME } from '../constants';
 import { EXECUTOR_ENVIRONMENT_KILL_PROCESS } from '../../executors/kill-process/constant';
-import { VERDACCIO_REGISTRY_JSON } from '../../executors/env-bootstrap/constants';
+import { EXECUTOR_ENVIRONMENT_BOOTSTRAP, VERDACCIO_REGISTRY_JSON } from '../../executors/env-bootstrap/constants';
 
 import * as nodePathModule from 'node:path';
 import * as uniquePortModule from '../../executors/env-bootstrap/unique-port';
+import { EXECUTOR_ENVIRONMENT_TEARDOWN } from '../../executors/env-teardown/constants';
+import { TARGET_PACKAGE_INSTALL, TARGET_PACKAGE_PUBLISH } from './package.targets';
+import { EXECUTOR_ENVIRONMENT_SETUP } from '../../executors/env-setup/constants';
 
 describe('isEnvProject', () => {
   const projectConfig: ProjectConfiguration = {
@@ -176,5 +183,158 @@ describe('verdaccioTargets', () => {
     verdaccioTargets(projectConfig, options);
 
     expect(uniquePortSpy).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('getEnvTargets', () => {
+  vi.mock('node:path', (): { join: Mock } => {
+    return {
+      join: vi.fn().mockReturnValue('mocked-join'),
+    };
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('should generate env targets with correct structure', () => {
+    const projectConfig = { name: 'test-project', root: '' };
+    const options = {
+      environmentsDir: '/environments',
+      targetNames: ['build', 'deploy'],
+    };
+
+    const targets = getEnvTargets(projectConfig, options);
+
+    expect(targets).toMatchObject({
+      [TARGET_ENVIRONMENT_BOOTSTRAP]: expect.any(Object),
+      [TARGET_ENVIRONMENT_INSTALL]: expect.any(Object),
+      [TARGET_ENVIRONMENT_PUBLISH_ONLY]: expect.any(Object),
+      [TARGET_ENVIRONMENT_SETUP]: expect.any(Object),
+      [TARGET_ENVIRONMENT_TEARDOWN]: expect.any(Object),
+      [TARGET_ENVIRONMENT_E2E]: expect.any(Object),
+    });
+  });
+
+  it('should generate TARGET_ENVIRONMENT_BOOTSTRAP with correct structure, and data', () => {
+    const projectConfig = { name: 'test-project', root: '' };
+    const options = {
+      environmentsDir: '/environments',
+      targetNames: ['build', 'deploy'],
+    };
+
+    const targets = getEnvTargets(projectConfig, options);
+
+    expect(targets[TARGET_ENVIRONMENT_BOOTSTRAP]).toMatchObject({
+      executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_BOOTSTRAP}`,
+    });
+  });
+
+  it('should generate TARGET_ENVIRONMENT_INSTALL with correct structure, and data', () => {
+    const projectConfig = { name: 'test-project', root: '' };
+    const options = {
+      environmentsDir: '/environments',
+      targetNames: ['build', 'deploy'],
+    };
+
+    const targets = getEnvTargets(projectConfig, options);
+
+    expect(targets[TARGET_ENVIRONMENT_INSTALL]).toMatchObject({
+      dependsOn: [
+        {
+          projects: 'dependencies',
+          target: TARGET_PACKAGE_INSTALL,
+          params: 'forward',
+        },
+      ],
+      options: { environmentRoot: 'mocked-join' },
+      command: `echo "dependencies installed for mocked-join"`,
+    });
+  });
+
+  it('should generate TARGET_ENVIRONMENT_PUBLISH_ONLY with correct structure, and data', () => {
+    const projectConfig = { name: 'test-project', root: '' };
+    const options = {
+      environmentsDir: '/environments',
+      targetNames: ['build', 'deploy'],
+    };
+
+    const targets = getEnvTargets(projectConfig, options);
+
+    expect(targets[TARGET_ENVIRONMENT_PUBLISH_ONLY]).toMatchObject({
+      dependsOn: [
+        {
+          projects: 'dependencies',
+          target: TARGET_PACKAGE_PUBLISH,
+          params: 'forward',
+        },
+      ],
+      options: { environmentRoot: 'mocked-join' },
+      command: `echo "dependencies published for mocked-join"`,
+    });
+  });
+
+  it('should generate TARGET_ENVIRONMENT_SETUP with correct structure, and data', () => {
+    const projectConfig = { name: 'test-project', root: '' };
+    const options = {
+      environmentsDir: '/environments',
+      targetNames: ['build', 'deploy'],
+    };
+
+    const targets = getEnvTargets(projectConfig, options);
+
+    expect(targets[TARGET_ENVIRONMENT_SETUP]).toMatchObject({
+      inputs: [
+        '{projectRoot}/project.json',
+        { runtime: 'node --version' },
+        { runtime: 'npm --version' },
+        { externalDependencies: ['verdaccio'] },
+        '^production',
+      ],
+      outputs: [
+        '{options.environmentRoot}/.npmrc',
+        '{options.environmentRoot}/package.json',
+        '{options.environmentRoot}/package-lock.json',
+        '{options.environmentRoot}/node_modules',
+      ],
+      cache: true,
+      executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_SETUP}`,
+    });
+  });
+
+  it('should generate TARGET_ENVIRONMENT_E2E with correct structure, and data', () => {
+    const projectConfig = { name: 'test-project', root: '' };
+    const options = {
+      environmentsDir: '/environments',
+      targetNames: ['build', 'deploy'],
+    };
+
+    const targets = getEnvTargets(projectConfig, options);
+
+    expect(targets[TARGET_ENVIRONMENT_INSTALL]).toMatchObject({
+      dependsOn: [
+        {
+          projects: 'dependencies',
+          target: TARGET_PACKAGE_INSTALL,
+          params: 'forward',
+        },
+      ],
+      options: { environmentRoot: 'mocked-join' },
+      command: `echo "dependencies installed for mocked-join"`,
+    });
+  });
+
+  it('should generate TARGET_ENVIRONMENT_TEARDOWN with correct structure, and data', () => {
+    const projectConfig = { name: 'test-project', root: '' };
+    const options = {
+      environmentsDir: '/environments',
+      targetNames: ['build', 'deploy'],
+    };
+
+    const targets = getEnvTargets(projectConfig, options);
+
+    expect(targets[TARGET_ENVIRONMENT_TEARDOWN]).toMatchObject({
+      executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_TEARDOWN}`,
+    });
   });
 });
