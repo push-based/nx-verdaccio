@@ -186,7 +186,7 @@ describe('verdaccioTargets', () => {
   });
 });
 
-describe('getEnvTargets', () => {
+describe('getEnvTargets', (): void => {
   const projectConfig = { name: 'test-project', root: '' };
   const options = {
     environmentsDir: '/environments',
@@ -200,11 +200,11 @@ describe('getEnvTargets', () => {
     };
   });
 
-  afterEach(() => {
+  afterEach((): void => {
     vi.clearAllMocks();
   });
 
-  it('should generate env targets with correct structure', () => {
+  it('should generate env targets with correct structure', (): void => {
     const targets = getEnvTargets(projectConfig, options);
 
     expect(targets).toMatchObject({
@@ -217,7 +217,7 @@ describe('getEnvTargets', () => {
     });
   });
 
-  it('should generate TARGET_ENVIRONMENT_BOOTSTRAP with correct structure, and data', () => {
+  it('should generate env targets TARGET_ENVIRONMENT_BOOTSTRAP nested object with correct structure, and data', (): void => {
     const targets = getEnvTargets(projectConfig, options);
 
     expect(targets[TARGET_ENVIRONMENT_BOOTSTRAP]).toMatchObject({
@@ -225,7 +225,7 @@ describe('getEnvTargets', () => {
     });
   });
 
-  it('should generate TARGET_ENVIRONMENT_INSTALL with correct structure, and data', () => {
+  it('should generate env targets TARGET_ENVIRONMENT_INSTALL nested object with correct structure, and data', (): void => {
     const targets = getEnvTargets(projectConfig, options);
 
     expect(targets[TARGET_ENVIRONMENT_INSTALL]).toMatchObject({
@@ -241,7 +241,7 @@ describe('getEnvTargets', () => {
     });
   });
 
-  it('should generate TARGET_ENVIRONMENT_PUBLISH_ONLY with correct structure, and data', () => {
+  it('should generate env targets TARGET_ENVIRONMENT_PUBLISH_ONLY nested object with correct structure, and data', (): void => {
     const targets = getEnvTargets(projectConfig, options);
 
     expect(targets[TARGET_ENVIRONMENT_PUBLISH_ONLY]).toMatchObject({
@@ -257,7 +257,7 @@ describe('getEnvTargets', () => {
     });
   });
 
-  it('should generate TARGET_ENVIRONMENT_SETUP with correct structure, and data', () => {
+  it('should generate env targets TARGET_ENVIRONMENT_SETUP  nested object with correct structure, and data', (): void => {
     const targets = getEnvTargets(projectConfig, options);
 
     expect(targets[TARGET_ENVIRONMENT_SETUP]).toMatchObject({
@@ -279,7 +279,7 @@ describe('getEnvTargets', () => {
     });
   });
 
-  it('should generate TARGET_ENVIRONMENT_E2E with correct structure, and data', () => {
+  it('should generate env targets TARGET_ENVIRONMENT_E2E nested object with correct structure, and data', (): void => {
     const targets = getEnvTargets(projectConfig, options);
 
     expect(targets[TARGET_ENVIRONMENT_INSTALL]).toMatchObject({
@@ -295,7 +295,7 @@ describe('getEnvTargets', () => {
     });
   });
 
-  it('should generate TARGET_ENVIRONMENT_TEARDOWN with correct structure, and data', () => {
+  it('should generate env targets TARGET_ENVIRONMENT_TEARDOWN nested object with correct structure, and data', (): void => {
     const targets = getEnvTargets(projectConfig, options);
 
     expect(targets[TARGET_ENVIRONMENT_TEARDOWN]).toMatchObject({
