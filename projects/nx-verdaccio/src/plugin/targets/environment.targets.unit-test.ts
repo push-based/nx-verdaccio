@@ -16,17 +16,26 @@ import {
   getEnvTargets,
   TARGET_ENVIRONMENT_BOOTSTRAP,
   TARGET_ENVIRONMENT_INSTALL,
-  TARGET_ENVIRONMENT_PUBLISH_ONLY, TARGET_ENVIRONMENT_SETUP, TARGET_ENVIRONMENT_TEARDOWN, TARGET_ENVIRONMENT_E2E
+  TARGET_ENVIRONMENT_PUBLISH_ONLY,
+  TARGET_ENVIRONMENT_SETUP,
+  TARGET_ENVIRONMENT_TEARDOWN,
+  TARGET_ENVIRONMENT_E2E,
 } from './environment.targets';
 import { NormalizedCreateNodeOptions } from '../normalize-create-nodes-options';
 import { PACKAGE_NAME } from '../constants';
 import { EXECUTOR_ENVIRONMENT_KILL_PROCESS } from '../../executors/kill-process/constant';
-import { EXECUTOR_ENVIRONMENT_BOOTSTRAP, VERDACCIO_REGISTRY_JSON } from '../../executors/env-bootstrap/constants';
+import {
+  EXECUTOR_ENVIRONMENT_BOOTSTRAP,
+  VERDACCIO_REGISTRY_JSON,
+} from '../../executors/env-bootstrap/constants';
 
 import * as nodePathModule from 'node:path';
 import * as uniquePortModule from '../../executors/env-bootstrap/unique-port';
 import { EXECUTOR_ENVIRONMENT_TEARDOWN } from '../../executors/env-teardown/constants';
-import { TARGET_PACKAGE_INSTALL, TARGET_PACKAGE_PUBLISH } from './package.targets';
+import {
+  TARGET_PACKAGE_INSTALL,
+  TARGET_PACKAGE_PUBLISH,
+} from './package.targets';
 import { EXECUTOR_ENVIRONMENT_SETUP } from '../../executors/env-setup/constants';
 
 describe('isEnvProject', () => {
@@ -193,6 +202,8 @@ describe('getEnvTargets', (): void => {
     targetNames: ['build', 'deploy'],
   };
   const joinResult = 'mocked-join';
+  const environmentsDir = '/environments';
+  const projectName = 'test-project';
 
   vi.mock('node:path', (): { join: Mock } => {
     return {
@@ -301,5 +312,12 @@ describe('getEnvTargets', (): void => {
     expect(targets[TARGET_ENVIRONMENT_TEARDOWN]).toMatchObject({
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_TEARDOWN}`,
     });
+  });
+
+  it('should call join once, with environmentsDir and envProject', (): void => {
+    getEnvTargets(projectConfig, options);
+
+    expect(nodePathModule.join).toHaveBeenCalledTimes(1);
+    expect(nodePathModule.join).toBeCalledWith(environmentsDir, projectName);
   });
 });
