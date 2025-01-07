@@ -3,56 +3,62 @@ import {
   beforeEach,
   describe,
   expect,
-  Mock,
-  MockInstance,
+  type Mock,
+  type MockInstance,
 } from 'vitest';
-import { ProjectConfiguration, TargetConfiguration } from '@nx/devkit';
 import {
-  TARGET_ENVIRONMENT_VERDACCIO_START,
-  TARGET_ENVIRONMENT_VERDACCIO_STOP,
-  VERDACCIO_STORAGE_DIR,
+  type ProjectConfiguration,
+  type TargetConfiguration,
+} from '@nx/devkit';
+
+import {
   isEnvProject,
   verdaccioTargets,
   getEnvTargets,
+  updateEnvTargetNames,
+  VERDACCIO_STORAGE_DIR,
+  TARGET_ENVIRONMENT_VERDACCIO_START,
+  TARGET_ENVIRONMENT_VERDACCIO_STOP,
   TARGET_ENVIRONMENT_BOOTSTRAP,
   TARGET_ENVIRONMENT_INSTALL,
   TARGET_ENVIRONMENT_PUBLISH_ONLY,
   TARGET_ENVIRONMENT_SETUP,
   TARGET_ENVIRONMENT_TEARDOWN,
   TARGET_ENVIRONMENT_E2E,
-  updateEnvTargetNames,
 } from './environment.targets';
-import { NormalizedCreateNodeOptions } from '../normalize-create-nodes-options';
+import {
+  TARGET_PACKAGE_INSTALL,
+  TARGET_PACKAGE_PUBLISH,
+} from './package.targets';
+
 import { PACKAGE_NAME } from '../constants';
+import { type NormalizedCreateNodeOptions } from '../normalize-create-nodes-options';
+
 import { EXECUTOR_ENVIRONMENT_KILL_PROCESS } from '../../executors/kill-process/constant';
 import {
   EXECUTOR_ENVIRONMENT_BOOTSTRAP,
   VERDACCIO_REGISTRY_JSON,
 } from '../../executors/env-bootstrap/constants';
+import { EXECUTOR_ENVIRONMENT_TEARDOWN } from '../../executors/env-teardown/constants';
+import { EXECUTOR_ENVIRONMENT_SETUP } from '../../executors/env-setup/constants';
 
 import * as nodePathModule from 'node:path';
 import * as uniquePortModule from '../../executors/env-bootstrap/unique-port';
-import { EXECUTOR_ENVIRONMENT_TEARDOWN } from '../../executors/env-teardown/constants';
-import {
-  TARGET_PACKAGE_INSTALL,
-  TARGET_PACKAGE_PUBLISH,
-} from './package.targets';
-import { EXECUTOR_ENVIRONMENT_SETUP } from '../../executors/env-setup/constants';
 
 const JOIN_RESULT = 'mocked-join';
 const PROJECT_NAME = 'unit-test-project';
+const ENVIRONMENTS_DIRECTORY = '/environments';
 const TARGET_NAMES = ['e2e'];
 const TAGS = ['env:production'];
-const TARGETS = {
+const TARGETS: { [targetName: string]: TargetConfiguration } = {
   e2e: { executor: 'nx:test', options: {} },
   build: { executor: 'nx:build', options: {} },
 };
-const ENVIRONMENTS_DIRECTORY = '/environments'
 const PROJECT_CONFIG: ProjectConfiguration = {
   root: 'mock-root',
   name: PROJECT_NAME,
   targets: TARGETS,
-  tags: [...TAGS, 'type:library']
+  tags: [...TAGS, 'type:library'],
 };
 const OPTIONS: NormalizedCreateNodeOptions['environments'] = {
   environmentsDir: ENVIRONMENTS_DIRECTORY,
@@ -138,7 +144,7 @@ describe('verdaccioTargets', (): void => {
 
   it('should generate object with correct start&end targets', (): void => {
     const customOption = 'custom-value';
-    const options = {...OPTIONS, customOption};
+    const options = { ...OPTIONS, customOption };
 
     const result: Record<string, TargetConfiguration> = verdaccioTargets(
       PROJECT_CONFIG,
@@ -158,7 +164,7 @@ describe('verdaccioTargets', (): void => {
           projectName: PROJECT_NAME,
           customOption: customOption,
           filterByTags: TAGS,
-          targetNames:  TARGET_NAMES,
+          targetNames: TARGET_NAMES,
         },
       },
       [TARGET_ENVIRONMENT_VERDACCIO_STOP]: {
@@ -167,7 +173,7 @@ describe('verdaccioTargets', (): void => {
           filePath: JOIN_RESULT,
           customOption: customOption,
           filterByTags: TAGS,
-          targetNames:  TARGET_NAMES,
+          targetNames: TARGET_NAMES,
         },
       },
     });
@@ -315,16 +321,16 @@ describe('getEnvTargets', (): void => {
     getEnvTargets(PROJECT_CONFIG, OPTIONS);
 
     expect(nodePathModule.join).toHaveBeenCalledTimes(1);
-    expect(nodePathModule.join).toBeCalledWith(ENVIRONMENTS_DIRECTORY, PROJECT_NAME);
+    expect(nodePathModule.join).toBeCalledWith(
+      ENVIRONMENTS_DIRECTORY,
+      PROJECT_NAME
+    );
   });
 });
 
 describe('updateEnvTargetNames', (): void => {
   it('should generate updated targets with target names as keys', (): void => {
-    const updatedTargets = updateEnvTargetNames(
-      PROJECT_CONFIG,
-      OPTIONS
-    );
+    const updatedTargets = updateEnvTargetNames(PROJECT_CONFIG, OPTIONS);
 
     expect(updatedTargets).toMatchObject({
       build: expect.any(Object),
@@ -363,10 +369,7 @@ describe('updateEnvTargetNames', (): void => {
   });
 
   it('should add dependsOn if match with targetNames options', (): void => {
-    const updatedTargets = updateEnvTargetNames(
-      PROJECT_CONFIG,
-      OPTIONS
-    );
+    const updatedTargets = updateEnvTargetNames(PROJECT_CONFIG, OPTIONS);
     expect(updatedTargets).toMatchObject({
       ...TARGETS,
       e2e: {
