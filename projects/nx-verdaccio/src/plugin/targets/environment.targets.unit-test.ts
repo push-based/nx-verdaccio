@@ -19,7 +19,8 @@ import {
   TARGET_ENVIRONMENT_PUBLISH_ONLY,
   TARGET_ENVIRONMENT_SETUP,
   TARGET_ENVIRONMENT_TEARDOWN,
-  TARGET_ENVIRONMENT_E2E, updateEnvTargetNames
+  TARGET_ENVIRONMENT_E2E,
+  updateEnvTargetNames,
 } from './environment.targets';
 import { NormalizedCreateNodeOptions } from '../normalize-create-nodes-options';
 import { PACKAGE_NAME } from '../constants';
@@ -329,14 +330,17 @@ describe('updateEnvTargetNames', (): void => {
   };
   const defaultProjectConfig = {
     targets,
-    root: 'test'
+    root: 'test',
   };
   const defaultOptions = {
     targetNames: ['e2e'],
   };
 
   it('should generate updated targets with target names as keys', (): void => {
-    const updatedTargets = updateEnvTargetNames(defaultProjectConfig, defaultOptions);
+    const updatedTargets = updateEnvTargetNames(
+      defaultProjectConfig,
+      defaultOptions
+    );
 
     expect(updatedTargets).toMatchObject({
       build: expect.any(Object),
@@ -346,7 +350,13 @@ describe('updateEnvTargetNames', (): void => {
 
   it('should not add any additional target name from options to object structure', (): void => {
     const options = {
-      targetNames: ['additional-target-0', 'e2e', 'build', 'additional-target', 'additional-target-2'],
+      targetNames: [
+        'additional-target-0',
+        'e2e',
+        'build',
+        'additional-target',
+        'additional-target-2',
+      ],
     };
 
     const updatedTargets = updateEnvTargetNames(defaultProjectConfig, options);
@@ -360,7 +370,7 @@ describe('updateEnvTargetNames', (): void => {
   it('should return empty object if is not targets in config', (): void => {
     const config = {
       ...defaultProjectConfig,
-      targets: {}
+      targets: {},
     };
 
     const updatedTargets = updateEnvTargetNames(config, defaultOptions);
@@ -369,18 +379,17 @@ describe('updateEnvTargetNames', (): void => {
   });
 
   it('should add dependsOn if match with targetNames options', (): void => {
-    const updatedTargets = updateEnvTargetNames(defaultProjectConfig, defaultOptions);
-    expect(updatedTargets).toMatchObject(
-      {
-        ...targets,
-        e2e: {
-          ...targets.e2e,
-          dependsOn: [
-            { target: TARGET_ENVIRONMENT_SETUP, params: 'forward' },
-          ],
-        }
-      }
+    const updatedTargets = updateEnvTargetNames(
+      defaultProjectConfig,
+      defaultOptions
     );
+    expect(updatedTargets).toMatchObject({
+      ...targets,
+      e2e: {
+        ...targets.e2e,
+        dependsOn: [{ target: TARGET_ENVIRONMENT_SETUP, params: 'forward' }],
+      },
+    });
   });
 
   it('should add dependsOn to every matching target', (): void => {
@@ -389,19 +398,15 @@ describe('updateEnvTargetNames', (): void => {
     };
     const updatedTargets = updateEnvTargetNames(defaultProjectConfig, options);
 
-    expect(updatedTargets).toMatchObject( {
+    expect(updatedTargets).toMatchObject({
       e2e: {
         ...targets.e2e,
-        dependsOn: [
-          { target: TARGET_ENVIRONMENT_SETUP, params: 'forward' },
-        ],
+        dependsOn: [{ target: TARGET_ENVIRONMENT_SETUP, params: 'forward' }],
       },
       build: {
         ...targets.build,
-        dependsOn: [
-          { target: TARGET_ENVIRONMENT_SETUP, params: 'forward' },
-        ],
-      }
+        dependsOn: [{ target: TARGET_ENVIRONMENT_SETUP, params: 'forward' }],
+      },
     });
   });
 
@@ -413,8 +418,9 @@ describe('updateEnvTargetNames', (): void => {
         e2e: {
           ...defaultProjectConfig.targets.e2e,
           dependsOn: [{ target: 'existing-target' }],
-        }
-      }}
+        },
+      },
+    };
 
     const updatedTargets = updateEnvTargetNames(config, defaultOptions);
 
@@ -432,8 +438,8 @@ describe('updateEnvTargetNames', (): void => {
 
   it('should not update projectConfig targets if options targetNames are empty', (): void => {
     const options = {
-      targetNames: []
-    }
+      targetNames: [],
+    };
     const updatedTargets = updateEnvTargetNames(defaultProjectConfig, options);
 
     expect(updatedTargets).toEqual(defaultProjectConfig.targets);
