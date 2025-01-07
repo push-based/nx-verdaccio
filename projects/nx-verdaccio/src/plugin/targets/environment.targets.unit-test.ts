@@ -19,7 +19,7 @@ import {
   TARGET_ENVIRONMENT_PUBLISH_ONLY,
   TARGET_ENVIRONMENT_SETUP,
   TARGET_ENVIRONMENT_TEARDOWN,
-  TARGET_ENVIRONMENT_E2E,
+  TARGET_ENVIRONMENT_E2E, updateEnvTargetNames
 } from './environment.targets';
 import { NormalizedCreateNodeOptions } from '../normalize-create-nodes-options';
 import { PACKAGE_NAME } from '../constants';
@@ -319,5 +319,203 @@ describe('getEnvTargets', (): void => {
 
     expect(nodePathModule.join).toHaveBeenCalledTimes(1);
     expect(nodePathModule.join).toBeCalledWith(environmentsDir, projectName);
+  });
+});
+
+describe('updateEnvTargetNames', (): void => {
+  // ready
+  it('should not update projectConfig targets if options targetNames are empty', (): void => {
+    const projectConfig = {
+      targets: {
+        e2e: { executor: 'nx:test', options: {} },
+        build: { executor: 'nx:build', options: {} },
+      },
+      root: 'test'
+    };
+    const options = {
+      targetNames: [],
+    };
+
+    const updatedTargets = updateEnvTargetNames(projectConfig, options);
+
+    expect(updatedTargets).toEqual(projectConfig.targets);
+  });
+
+  // ready
+  it('should not update projectConfig targets if none options targetNames match', (): void => {
+    const projectConfig = {
+      targets: {
+        e2e: { executor: 'nx:test', options: {} },
+        build: { executor: 'nx:build', options: {} },
+      },
+      root: 'test'
+    };
+    const options = {
+      targetNames: ['no-matching-target'],
+    };
+
+    const updatedTargets = updateEnvTargetNames(projectConfig, options);
+
+    expect(updatedTargets).toEqual(projectConfig.targets);
+  });
+
+  // ready
+  it('should add dependsOn to projectsConfig target if match with targetNames options', (): void => {
+    const projectConfig = {
+      targets: {
+        e2e: { executor: 'nx:test', options: {} },
+        build: { executor: 'nx:build', options: {} },
+      },
+      root: 'test'
+    };
+
+    const options = {
+      targetNames: ['e2e'],
+    };
+
+    const updatedTargets = updateEnvTargetNames(projectConfig, options);
+
+    expect(updatedTargets).toMatchObject({
+      e2e: {
+        executor: 'nx:test',
+        options: {},
+        dependsOn: [
+          { target: TARGET_ENVIRONMENT_SETUP, params: 'forward' },
+        ],
+      },
+      build: {
+        executor: 'nx:build',
+        options: {},
+      },
+    });
+  });
+
+  // ready
+  it('should add dependsOn to every matching target', (): void => {
+    const projectConfig = {
+      targets: {
+        e2e: { executor: 'nx:test', options: {} },
+        build: { executor: 'nx:build', options: {} },
+      },
+      root: 'test'
+    };
+
+    const options = {
+      targetNames: ['e2e', 'build'],
+    };
+
+    const updatedTargets = updateEnvTargetNames(projectConfig, options);
+
+    expect(updatedTargets).toMatchObject({
+      e2e: {
+        executor: 'nx:test',
+        options: {},
+        dependsOn: [
+          { target: TARGET_ENVIRONMENT_SETUP, params: 'forward' },
+        ],
+      },
+      build: {
+        executor: 'nx:build',
+        options: {},
+        dependsOn: [
+          { target: TARGET_ENVIRONMENT_SETUP, params: 'forward' },
+        ],
+      },
+    });
+  });
+
+  // ready
+  it('should keep existing dependsOn properties and add a new one', (): void => {
+    const projectConfig = {
+      targets: {
+        e2e: {
+          executor: 'nx:test',
+          options: {},
+          dependsOn: [{ target: 'existing-target' }],
+        },
+      },
+      root: 'test'
+    };
+
+    const options = {
+      targetNames: ['e2e'],
+    };
+
+    const updatedTargets = updateEnvTargetNames(projectConfig, options);
+
+    expect(updatedTargets).toMatchObject({
+      e2e: {
+        executor: 'nx:test',
+        options: {},
+        dependsOn: [
+          { target: TARGET_ENVIRONMENT_SETUP, params: 'forward' },
+          { target: 'existing-target' },
+        ],
+      },
+    });
+  });
+
+  // ready
+  it('should generate updated targets with target names as keys', (): void => {
+    const projectConfig = {
+      targets: {
+        build: { executor: 'nx:build', options: {} },
+        e2e: { executor: 'nx:build', options: {} },
+        test: { executor: 'nx:build', options: {} },
+      },
+      root: 'test'
+    };
+
+    const options = {
+      targetNames: ['e2e'],
+    };
+
+    const updatedTargets = updateEnvTargetNames(projectConfig, options);
+
+    expect(updatedTargets).toMatchObject({
+      build: expect.any(Object),
+      e2e: expect.any(Object),
+      test: expect.any(Object),
+    });
+  });
+
+  // ready
+  it('should not add additional target name from options to object structure', (): void => {
+    const projectConfig = {
+      targets: {
+        build: { executor: 'nx:build', options: {} },
+        e2e: { executor: 'nx:build', options: {} },
+        test: { executor: 'nx:build', options: {} },
+      },
+      root: 'test'
+    };
+
+    const options = {
+      targetNames: ['e2e', 'build', 'test', 'additional-target'],
+    };
+
+    const updatedTargets = updateEnvTargetNames(projectConfig, options);
+
+    expect(updatedTargets).toMatchObject({
+      build: expect.any(Object),
+      e2e: expect.any(Object),
+      test: expect.any(Object),
+    });
+  });
+
+  // ready
+  it('should return empty object if not targets present in config', (): void => {
+    const projectConfig = {
+      targets: {},
+      root: 'test'
+    };
+
+    const options = {
+      targetNames: ['e2e'],
+    };
+
+    const updatedTargets = updateEnvTargetNames(projectConfig, options);
+
+    expect(updatedTargets).toEqual({});
   });
 });
