@@ -67,37 +67,37 @@ const OPTIONS: NormalizedCreateNodeOptions['environments'] = {
 };
 
 describe('isEnvProject', (): void => {
-  it('should returns false if targets missing', () => {
+  it('should returns false if targets missing', (): void => {
     const config = { ...PROJECT_CONFIG, targets: null };
     const result = isEnvProject(config, OPTIONS);
     expect(result).toBe(false);
   });
 
-  it('should returns false if targetNames missing', () => {
+  it('should returns false if targetNames missing', (): void => {
     const options = { ...OPTIONS, targetNames: null };
     const result = isEnvProject(PROJECT_CONFIG, options);
     expect(result).toBe(false);
   });
 
-  it('should returns false if targetNames and targets missing', () => {
+  it('should returns false if targetNames and targets missing', (): void => {
     const config = { ...PROJECT_CONFIG, targets: null };
     const result = isEnvProject(config, OPTIONS);
     expect(result).toBe(false);
   });
 
-  it('should returns false if targetNames don’t match environmentTargetNames', () => {
+  it('should returns false if targetNames don’t match environmentTargetNames', (): void => {
     const options = { ...OPTIONS, targetNames: ['mockTarget'] };
     const result = isEnvProject(PROJECT_CONFIG, options);
     expect(result).toBe(false);
   });
 
-  it('should returns true if targetNames match and no tags', () => {
+  it('should returns true if targetNames match and no tags', (): void => {
     const config = { ...PROJECT_CONFIG, tags: null };
     const result = isEnvProject(config, OPTIONS);
     expect(result).toBe(true);
   });
 
-  it('should returns true if targetNames match and no filterByTags', () => {
+  it('should returns true if targetNames match and no filterByTags', (): void => {
     const options = {
       ...OPTIONS,
       filterByTags: null,
@@ -106,12 +106,12 @@ describe('isEnvProject', (): void => {
     expect(result).toBe(true);
   });
 
-  it('should returns true if targetNames match and tags match filterByTags', () => {
+  it('should returns true if targetNames match and tags match filterByTags', (): void => {
     const result = isEnvProject(PROJECT_CONFIG, OPTIONS);
     expect(result).toBe(true);
   });
 
-  it('should returns false if targetNames match but tags don’t match filterByTags', () => {
+  it('should returns false if targetNames match but tags don’t match filterByTags', (): void => {
     const options = {
       ...OPTIONS,
       filterByTags: ['mock-tag-no-match'],
