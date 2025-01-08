@@ -28,6 +28,16 @@ export const TARGET_ENVIRONMENT_VERDACCIO_START = 'nxv-verdaccio-start';
 export const TARGET_ENVIRONMENT_VERDACCIO_STOP = 'nxv-verdaccio-stop';
 export const VERDACCIO_STORAGE_DIR = 'storage';
 
+/**
+ * Determines if a given project is an environment project
+ *
+ * An environment project is identified if it matches any of the specified
+ * target names and has one or more tags that meet the tag filter criteria.
+ *
+ * @param projectConfig
+ * @param options
+ * @returns boolean
+ */
 export function isEnvProject(
   projectConfig: ProjectConfiguration,
   options: NormalizedCreateNodeOptions['environments']
@@ -59,6 +69,14 @@ export function isEnvProject(
   return false;
 }
 
+/**
+ * Creates target configurations for a given project
+ * with unique port and storage directory.
+ *
+ * @param projectConfig
+ * @param options
+ * @returns A record containing target configurations for starting and stopping
+ */
 export function verdaccioTargets(
   projectConfig: ProjectConfiguration,
   options: Pick<
