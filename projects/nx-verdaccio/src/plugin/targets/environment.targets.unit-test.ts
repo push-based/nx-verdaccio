@@ -58,7 +58,7 @@ const PROJECT_CONFIG: ProjectConfiguration = {
   root: 'mock-root',
   name: PROJECT_NAME,
   targets: TARGETS,
-  tags: [...TAGS, 'type:library'],
+  tags: [...TAGS],
 };
 const OPTIONS: NormalizedCreateNodeOptions['environments'] = {
   environmentsDir: ENVIRONMENTS_DIRECTORY,
@@ -67,37 +67,38 @@ const OPTIONS: NormalizedCreateNodeOptions['environments'] = {
 };
 
 describe('isEnvProject', (): void => {
-  it('should returns false if targets missing', (): void => {
+  it('should return false if targets are missing', (): void => {
     const config = { ...PROJECT_CONFIG, targets: null };
     const result = isEnvProject(config, OPTIONS);
     expect(result).toBe(false);
   });
 
-  it('should returns false if targetNames missing', (): void => {
+  it('should return false if targetNames are missing', (): void => {
     const options = { ...OPTIONS, targetNames: null };
     const result = isEnvProject(PROJECT_CONFIG, options);
     expect(result).toBe(false);
   });
 
-  it('should returns false if targetNames and targets missing', (): void => {
+  it('should return false if targetNames and targets are missing', (): void => {
     const config = { ...PROJECT_CONFIG, targets: null };
-    const result = isEnvProject(config, OPTIONS);
+    const options = { ...OPTIONS, targetNames: null };
+    const result = isEnvProject(config, options);
     expect(result).toBe(false);
   });
 
-  it('should returns false if targetNames don’t match environmentTargetNames', (): void => {
+  it('should return false if targetNames don’t match environmentTargetNames', (): void => {
     const options = { ...OPTIONS, targetNames: ['mockTarget'] };
     const result = isEnvProject(PROJECT_CONFIG, options);
     expect(result).toBe(false);
   });
 
-  it('should returns true if targetNames match and no tags', (): void => {
+  it('should return true if targetNames match and tags are not present', (): void => {
     const config = { ...PROJECT_CONFIG, tags: null };
     const result = isEnvProject(config, OPTIONS);
     expect(result).toBe(true);
   });
 
-  it('should returns true if targetNames match and no filterByTags', (): void => {
+  it('should return true if targetNames match and filterByTags are not present', (): void => {
     const options = {
       ...OPTIONS,
       filterByTags: null,
@@ -106,12 +107,12 @@ describe('isEnvProject', (): void => {
     expect(result).toBe(true);
   });
 
-  it('should returns true if targetNames match and tags match filterByTags', (): void => {
+  it('should return true if targetNames match and tags match filterByTags', (): void => {
     const result = isEnvProject(PROJECT_CONFIG, OPTIONS);
     expect(result).toBe(true);
   });
 
-  it('should returns false if targetNames match but tags don’t match filterByTags', (): void => {
+  it('should return false if targetNames match but tags don’t match filterByTags', (): void => {
     const options = {
       ...OPTIONS,
       filterByTags: ['mock-tag-no-match'],
@@ -123,6 +124,8 @@ describe('isEnvProject', (): void => {
 
 describe('verdaccioTargets', (): void => {
   const port = 1337;
+  const customOption = 'custom-value';
+  const options = { ...OPTIONS, customOption }
 
   let uniquePortSpy: MockInstance<[], number>;
 
@@ -142,32 +145,48 @@ describe('verdaccioTargets', (): void => {
     uniquePortSpy.mockRestore();
   });
 
-  it('should generate object with correct start&end targets', (): void => {
-    const customOption = 'custom-value';
-    const options = { ...OPTIONS, customOption };
-
+  it('should generate verdaccio targets with correct structure', (): void => {
     const result: Record<string, TargetConfiguration> = verdaccioTargets(
       PROJECT_CONFIG,
       options
     );
 
-    expect(result).toEqual({
-      [TARGET_ENVIRONMENT_VERDACCIO_START]: {
-        outputs: [`{options.environmentRoot}/${VERDACCIO_STORAGE_DIR}`],
-        executor: '@nx/js:verdaccio',
-        options: {
-          config: '.verdaccio/config.yml',
-          port: port,
-          storage: JOIN_RESULT,
-          clear: true,
-          environmentDir: JOIN_RESULT,
-          projectName: PROJECT_NAME,
-          customOption: customOption,
-          filterByTags: TAGS,
-          targetNames: TARGET_NAMES,
-        },
+    expect(result).toMatchObject({
+      [TARGET_ENVIRONMENT_VERDACCIO_START]: expect.any(Object),
+      [TARGET_ENVIRONMENT_VERDACCIO_STOP]: expect.any(Object),
+    });
+  });
+
+  it('should generate verdaccio targets TARGET_ENVIRONMENT_VERDACCIO_START nested object with correct data ', (): void => {
+    const result: Record<string, TargetConfiguration> = verdaccioTargets(
+      PROJECT_CONFIG,
+      options
+    );
+
+    expect(result[TARGET_ENVIRONMENT_VERDACCIO_START]).toEqual({
+      outputs: [`{options.environmentRoot}/${VERDACCIO_STORAGE_DIR}`],
+      executor: '@nx/js:verdaccio',
+      options: {
+        config: '.verdaccio/config.yml',
+        port: port,
+        storage: JOIN_RESULT,
+        clear: true,
+        environmentDir: JOIN_RESULT,
+        projectName: PROJECT_NAME,
+        customOption: customOption,
+        filterByTags: TAGS,
+        targetNames: TARGET_NAMES,
       },
-      [TARGET_ENVIRONMENT_VERDACCIO_STOP]: {
+    });
+  })
+
+  it('should generate verdaccio targets TARGET_ENVIRONMENT_VERDACCIO_START nested object with correct data ', (): void => {
+    const result: Record<string, TargetConfiguration> = verdaccioTargets(
+      PROJECT_CONFIG,
+      options
+    );
+
+    expect(result[TARGET_ENVIRONMENT_VERDACCIO_STOP]).toEqual({
         executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_KILL_PROCESS}`,
         options: {
           filePath: JOIN_RESULT,
@@ -175,11 +194,10 @@ describe('verdaccioTargets', (): void => {
           filterByTags: TAGS,
           targetNames: TARGET_NAMES,
         },
-      },
     });
   });
 
-  it('should call join 3 times with correct arguments', (): void => {
+  it('should call join 3 times in correct order with correct arguments', (): void => {
     verdaccioTargets(PROJECT_CONFIG, OPTIONS);
 
     expect(nodePathModule.join).toHaveBeenCalledTimes(3);
@@ -231,7 +249,7 @@ describe('getEnvTargets', (): void => {
     });
   });
 
-  it('should generate env targets TARGET_ENVIRONMENT_BOOTSTRAP nested object with correct structure, and data', (): void => {
+  it('should generate env targets TARGET_ENVIRONMENT_BOOTSTRAP nested object with correct structure and data', (): void => {
     const targets = getEnvTargets(PROJECT_CONFIG, OPTIONS);
 
     expect(targets[TARGET_ENVIRONMENT_BOOTSTRAP]).toMatchObject({
@@ -239,7 +257,7 @@ describe('getEnvTargets', (): void => {
     });
   });
 
-  it('should generate env targets TARGET_ENVIRONMENT_INSTALL nested object with correct structure, and data', (): void => {
+  it('should generate env targets TARGET_ENVIRONMENT_INSTALL nested object with correct structure and data', (): void => {
     const targets = getEnvTargets(PROJECT_CONFIG, OPTIONS);
 
     expect(targets[TARGET_ENVIRONMENT_INSTALL]).toMatchObject({
@@ -255,7 +273,7 @@ describe('getEnvTargets', (): void => {
     });
   });
 
-  it('should generate env targets TARGET_ENVIRONMENT_PUBLISH_ONLY nested object with correct structure, and data', (): void => {
+  it('should generate env targets TARGET_ENVIRONMENT_PUBLISH_ONLY nested object with correct structure and data', (): void => {
     const targets = getEnvTargets(PROJECT_CONFIG, OPTIONS);
 
     expect(targets[TARGET_ENVIRONMENT_PUBLISH_ONLY]).toMatchObject({
@@ -271,7 +289,7 @@ describe('getEnvTargets', (): void => {
     });
   });
 
-  it('should generate env targets TARGET_ENVIRONMENT_SETUP  nested object with correct structure, and data', (): void => {
+  it('should generate env targets TARGET_ENVIRONMENT_SETUP  nested object with correct structure and data', (): void => {
     const targets = getEnvTargets(PROJECT_CONFIG, OPTIONS);
 
     expect(targets[TARGET_ENVIRONMENT_SETUP]).toMatchObject({
@@ -293,7 +311,7 @@ describe('getEnvTargets', (): void => {
     });
   });
 
-  it('should generate env targets TARGET_ENVIRONMENT_E2E nested object with correct structure, and data', (): void => {
+  it('should generate env targets TARGET_ENVIRONMENT_E2E nested object with correct structure and data', (): void => {
     const targets = getEnvTargets(PROJECT_CONFIG, OPTIONS);
 
     expect(targets[TARGET_ENVIRONMENT_INSTALL]).toMatchObject({
@@ -309,7 +327,7 @@ describe('getEnvTargets', (): void => {
     });
   });
 
-  it('should generate env targets TARGET_ENVIRONMENT_TEARDOWN nested object with correct structure, and data', (): void => {
+  it('should generate env targets TARGET_ENVIRONMENT_TEARDOWN nested object with correct structure and data', (): void => {
     const targets = getEnvTargets(PROJECT_CONFIG, OPTIONS);
 
     expect(targets[TARGET_ENVIRONMENT_TEARDOWN]).toMatchObject({
@@ -327,6 +345,8 @@ describe('getEnvTargets', (): void => {
     );
   });
 });
+
+
 
 describe('updateEnvTargetNames', (): void => {
   it('should generate updated targets with target names as keys', (): void => {
@@ -357,7 +377,7 @@ describe('updateEnvTargetNames', (): void => {
     });
   });
 
-  it('should return empty object if is not targets in config', (): void => {
+  it('should return empty object if there is no targets in config', (): void => {
     const config = {
       ...PROJECT_CONFIG,
       targets: {},
@@ -368,7 +388,7 @@ describe('updateEnvTargetNames', (): void => {
     expect(updatedTargets).toEqual({});
   });
 
-  it('should add dependsOn if match with targetNames options', (): void => {
+  it('should add dependsOn if there is a match with targetNames options', (): void => {
     const updatedTargets = updateEnvTargetNames(PROJECT_CONFIG, OPTIONS);
     expect(updatedTargets).toMatchObject({
       ...TARGETS,
@@ -432,7 +452,7 @@ describe('updateEnvTargetNames', (): void => {
     expect(updatedTargets).toEqual(PROJECT_CONFIG.targets);
   });
 
-  it('should not update projectConfig targets if none options targetNames match', (): void => {
+  it('should not update projectConfig targets if none of options targetNames have a match', (): void => {
     const options = {
       targetNames: ['no-matching-target'],
     };
