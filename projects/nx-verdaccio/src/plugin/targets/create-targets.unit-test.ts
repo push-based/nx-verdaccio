@@ -7,11 +7,12 @@ import { NormalizedCreateNodeOptions } from '../normalize-create-nodes-options';
 import {
   NxVerdaccioCreateNodeOptions,
   NxVerdaccioEnvironmentsOptions,
+  NxVerdaccioPackagesOptions,
 } from '../schema';
 
 import * as normalizeCreateNodesModule from './../normalize-create-nodes-options';
-import * as isEnvProjectModule from './environment.targets';
-import { isEnvProject } from './environment.targets';
+import * as environmentTargetsModule from './environment.targets';
+import * as packageTargetsModule from './package.targets';
 
 describe('createProjectConfiguration', (): void => {
   const config: ProjectConfiguration = {
@@ -45,7 +46,15 @@ describe('createProjectConfiguration', (): void => {
   >;
 
   let isEnvProjectSpy: MockInstance<
-    [projectConfig: ProjectConfiguration, options: NormalizedCreateNodeOptions['environments']],
+    [
+      projectConfig: ProjectConfiguration,
+      options: NormalizedCreateNodeOptions['environments']
+    ],
+    boolean
+  >;
+
+  let isPkgSpy: MockInstance<
+    [projectConfig: ProjectConfiguration, options: NxVerdaccioPackagesOptions],
     boolean
   >;
 
@@ -54,7 +63,10 @@ describe('createProjectConfiguration', (): void => {
       .spyOn(normalizeCreateNodesModule, 'normalizeCreateNodesOptions')
       .mockReturnValue(normalizedOptions);
     isEnvProjectSpy = vi
-      .spyOn(isEnvProjectModule, 'isEnvProject')
+      .spyOn(environmentTargetsModule, 'isEnvProject')
+      .mockReturnValue(true);
+    isPkgSpy = vi
+      .spyOn(packageTargetsModule, 'isPkgProject')
       .mockReturnValue(true);
   });
 
@@ -72,18 +84,23 @@ describe('createProjectConfiguration', (): void => {
     ).toHaveBeenCalledWith(options);
   });
 
-  //  const isE2eProject = isEnvProject(projectConfiguration, environments);
   it('should call isEnvProject ones with projectConfiguration and environments', (): void => {
     createProjectConfiguration(config, options);
-    expect(isEnvProjectModule.isEnvProject).toHaveBeenCalledOnce();
-    expect(isEnvProjectModule.isEnvProject).toHaveBeenCalledWith(
+    expect(environmentTargetsModule.isEnvProject).toHaveBeenCalledOnce();
+    expect(environmentTargetsModule.isEnvProject).toHaveBeenCalledWith(
       config,
       normalizedOptions['environments']
     );
   });
 
-  //  const isPublishableProject = isPkgProject(projectConfiguration, packages);
-  it('should call isPublishableProject ones with projectConfiguration and packages', (): void => {});
+  it('should call isPublishableProject ones with projectConfiguration and packages', (): void => {
+    createProjectConfiguration(config, options);
+    expect(packageTargetsModule.isPkgProject).toHaveBeenCalledOnce();
+    expect(packageTargetsModule.isPkgProject).toHaveBeenCalledWith(
+      config,
+      normalizedOptions['packages']
+    );
+  });
 
   //  if (!isE2eProject && !isPublishableProject) {
   //     return {};
