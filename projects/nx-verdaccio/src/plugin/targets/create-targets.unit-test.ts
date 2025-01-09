@@ -16,6 +16,7 @@ import * as packageTargetsModule from './package.targets';
 
 import * as nxDevkitModule from '@nx/devkit';
 import {
+  getEnvTargets,
   TARGET_ENVIRONMENT_BOOTSTRAP,
   TARGET_ENVIRONMENT_E2E,
   TARGET_ENVIRONMENT_INSTALL,
@@ -24,7 +25,7 @@ import {
   TARGET_ENVIRONMENT_TEARDOWN,
   TARGET_ENVIRONMENT_VERDACCIO_START,
   TARGET_ENVIRONMENT_VERDACCIO_STOP,
-  verdaccioTargets,
+  verdaccioTargets
 } from './environment.targets';
 import { StartVerdaccioOptions } from '../../executors/env-bootstrap/verdaccio-registry';
 
@@ -32,6 +33,15 @@ describe('createProjectConfiguration', (): void => {
   const verdaccioTargetsMock = {
     [TARGET_ENVIRONMENT_VERDACCIO_START]: {},
     [TARGET_ENVIRONMENT_VERDACCIO_STOP]: {},
+  };
+
+  const envTargetsMock = {
+    [TARGET_ENVIRONMENT_BOOTSTRAP]: {},
+    [TARGET_ENVIRONMENT_INSTALL]: {},
+    [TARGET_ENVIRONMENT_PUBLISH_ONLY]: {},
+    [TARGET_ENVIRONMENT_SETUP]: {},
+    [TARGET_ENVIRONMENT_TEARDOWN]: {},
+    [TARGET_ENVIRONMENT_E2E]: {},
   };
 
   const config: ProjectConfiguration = {
@@ -97,6 +107,8 @@ describe('createProjectConfiguration', (): void => {
     Record<string, TargetConfiguration>
   >;
 
+  let getEnvTargetsSpy;
+
   beforeEach((): void => {
     normalizeCreateNodesOptionsSpy = vi
       .spyOn(normalizeCreateNodesModule, 'normalizeCreateNodesOptions')
@@ -110,6 +122,8 @@ describe('createProjectConfiguration', (): void => {
     verdaccioTargetsSpy = vi
       .spyOn(environmentTargetsModule, 'verdaccioTargets')
       .mockReturnValue(verdaccioTargetsMock);
+    getEnvTargetsSpy = vi.spyOn(environmentTargetsModule, 'getEnvTargets')
+      .mockReturnValue(envTargetsMock)
   });
 
   afterEach((): void => {
@@ -229,8 +243,14 @@ describe('createProjectConfiguration', (): void => {
     );
   });
 
-  // ...getEnvTargets(projectConfiguration, environments)
-  it('should call verdaccioTargets ones with correct arguments', (): void => {});
+  it('should call getEnvTargets ones with correct arguments', (): void => {
+    createProjectConfiguration(config, options);
+    expect(environmentTargetsModule.getEnvTargets).toHaveBeenCalledOnce();
+    expect(environmentTargetsModule.getEnvTargets).toHaveBeenCalledWith(
+      config,
+      normalizedOptions.environments
+    );
+  });
 
   // ...updateEnvTargetNames(projectConfiguration
   it('should call updateEnvTargetNames ones with correct arguments', (): void => {});
