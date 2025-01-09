@@ -1,11 +1,12 @@
 import { beforeEach, describe, expect, MockInstance } from 'vitest';
-import { ProjectConfiguration } from '@nx/devkit';
+import { ProjectConfiguration, type TargetConfiguration } from '@nx/devkit';
 
 import { createProjectConfiguration } from './create-targets';
 
 import { NormalizedCreateNodeOptions } from '../normalize-create-nodes-options';
 import {
   NxVerdaccioCreateNodeOptions,
+  NxVerdaccioEnvironmentsOptions,
   NxVerdaccioPackagesOptions,
 } from '../schema';
 
@@ -15,20 +16,23 @@ import * as packageTargetsModule from './package.targets';
 
 import * as nxDevkitModule from '@nx/devkit';
 import {
-  TARGET_ENVIRONMENT_BOOTSTRAP, TARGET_ENVIRONMENT_E2E,
+  TARGET_ENVIRONMENT_BOOTSTRAP,
+  TARGET_ENVIRONMENT_E2E,
   TARGET_ENVIRONMENT_INSTALL,
   TARGET_ENVIRONMENT_PUBLISH_ONLY,
   TARGET_ENVIRONMENT_SETUP,
   TARGET_ENVIRONMENT_TEARDOWN,
   TARGET_ENVIRONMENT_VERDACCIO_START,
-  TARGET_ENVIRONMENT_VERDACCIO_STOP, verdaccioTargets
+  TARGET_ENVIRONMENT_VERDACCIO_STOP,
+  verdaccioTargets,
 } from './environment.targets';
+import { StartVerdaccioOptions } from '../../executors/env-bootstrap/verdaccio-registry';
 
 describe('createProjectConfiguration', (): void => {
   const verdaccioTargetsMock = {
     [TARGET_ENVIRONMENT_VERDACCIO_START]: {},
-    [TARGET_ENVIRONMENT_VERDACCIO_STOP]: {}
-  }
+    [TARGET_ENVIRONMENT_VERDACCIO_STOP]: {},
+  };
 
   const config: ProjectConfiguration = {
     root: 'mock-root',
@@ -55,13 +59,13 @@ describe('createProjectConfiguration', (): void => {
     },
   };
 
-  vi.mock('@nx/devkit', ()   => {
+  vi.mock('@nx/devkit', () => {
     return {
       logger: {
-        warn: vi.fn()
-      }
-    }
-  })
+        warn: vi.fn(),
+      },
+    };
+  });
 
   let normalizeCreateNodesOptionsSpy: MockInstance<
     [options: NxVerdaccioCreateNodeOptions],
@@ -81,7 +85,17 @@ describe('createProjectConfiguration', (): void => {
     boolean
   >;
 
-  let verdaccioTargetsSpy;
+  let verdaccioTargetsSpy: MockInstance<
+    [
+      projectConfig: ProjectConfiguration,
+      options: Pick<
+        NormalizedCreateNodeOptions['environments'],
+        'environmentsDir'
+      > &
+        Omit<StartVerdaccioOptions, 'projectName'>
+    ],
+    Record<string, TargetConfiguration>
+  >;
 
   beforeEach((): void => {
     normalizeCreateNodesOptionsSpy = vi
@@ -95,7 +109,7 @@ describe('createProjectConfiguration', (): void => {
       .mockReturnValue(true);
     verdaccioTargetsSpy = vi
       .spyOn(environmentTargetsModule, 'verdaccioTargets')
-      .mockReturnValue(verdaccioTargetsMock)
+      .mockReturnValue(verdaccioTargetsMock);
   });
 
   afterEach((): void => {
@@ -137,9 +151,8 @@ describe('createProjectConfiguration', (): void => {
     isEnvProjectSpy.mockReturnValue(false);
     isPkgSpy.mockReturnValue(false);
     const projectConfiguration = createProjectConfiguration(config, options);
-    expect(projectConfiguration).toStrictEqual({})
+    expect(projectConfiguration).toStrictEqual({});
   });
-
 
   it('should log warn if isE2eProject and !projectConfiguration.implicitDependencies?.length', (): void => {
     createProjectConfiguration(config, options);
@@ -147,14 +160,20 @@ describe('createProjectConfiguration', (): void => {
   });
 
   it('should not log warn if isE2eProject and projectConfiguration.implicitDependencies?.length', (): void => {
-    const configWithImplicitDependencies = {...config, implicitDependencies: ['mock-implicit-dep']}
+    const configWithImplicitDependencies = {
+      ...config,
+      implicitDependencies: ['mock-implicit-dep'],
+    };
     createProjectConfiguration(configWithImplicitDependencies, options);
     expect(nxDevkitModule.logger.warn).toHaveBeenCalledTimes(0);
   });
 
   it('should not log warn if !isE2eProject and projectConfiguration.implicitDependencies?.length', (): void => {
     isEnvProjectSpy.mockReturnValue(false);
-    const configWithImplicitDependencies = {...config, implicitDependencies: ['mock-implicit-dep']}
+    const configWithImplicitDependencies = {
+      ...config,
+      implicitDependencies: ['mock-implicit-dep'],
+    };
     createProjectConfiguration(configWithImplicitDependencies, options);
     expect(nxDevkitModule.logger.warn).toHaveBeenCalledTimes(0);
   });
@@ -201,13 +220,12 @@ describe('createProjectConfiguration', (): void => {
   //   });
   // });
 
-
   it('should call verdaccioTargets ones with correct arguments', (): void => {
     createProjectConfiguration(config, options);
     expect(environmentTargetsModule.verdaccioTargets).toHaveBeenCalledOnce();
     expect(environmentTargetsModule.verdaccioTargets).toHaveBeenCalledWith(
       config,
-      {environmentsDir: normalizedOptions.environments.environmentsDir}
+      { environmentsDir: normalizedOptions.environments.environmentsDir }
     );
   });
 
