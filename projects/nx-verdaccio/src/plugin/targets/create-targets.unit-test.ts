@@ -21,10 +21,15 @@ import {
   TARGET_ENVIRONMENT_SETUP,
   TARGET_ENVIRONMENT_TEARDOWN,
   TARGET_ENVIRONMENT_VERDACCIO_START,
-  TARGET_ENVIRONMENT_VERDACCIO_STOP
+  TARGET_ENVIRONMENT_VERDACCIO_STOP, verdaccioTargets
 } from './environment.targets';
 
 describe('createProjectConfiguration', (): void => {
+  const verdaccioTargetsMock = {
+    [TARGET_ENVIRONMENT_VERDACCIO_START]: {},
+    [TARGET_ENVIRONMENT_VERDACCIO_STOP]: {}
+  }
+
   const config: ProjectConfiguration = {
     root: 'mock-root',
     name: 'unit-test-project',
@@ -76,6 +81,8 @@ describe('createProjectConfiguration', (): void => {
     boolean
   >;
 
+  let verdaccioTargetsSpy;
+
   beforeEach((): void => {
     normalizeCreateNodesOptionsSpy = vi
       .spyOn(normalizeCreateNodesModule, 'normalizeCreateNodesOptions')
@@ -86,12 +93,16 @@ describe('createProjectConfiguration', (): void => {
     isPkgSpy = vi
       .spyOn(packageTargetsModule, 'isPkgProject')
       .mockReturnValue(true);
+    verdaccioTargetsSpy = vi
+      .spyOn(environmentTargetsModule, 'verdaccioTargets')
+      .mockReturnValue(verdaccioTargetsMock)
   });
 
   afterEach((): void => {
     normalizeCreateNodesOptionsSpy.mockRestore();
     isEnvProjectSpy.mockRestore();
     isPkgSpy.mockRestore();
+    verdaccioTargetsSpy.mockRestore();
   });
 
   it('should call normalizeCreateNodesOptions ones with config and options', (): void => {
@@ -190,11 +201,15 @@ describe('createProjectConfiguration', (): void => {
   //   });
   // });
 
-  // spies
-  //   ...verdaccioTargets(projectConfiguration, {
-  //           environmentsDir: environments.environmentsDir,
-  //         }
-  it('should call verdaccioTargets ones with correct arguments', (): void => {});
+
+  it('should call verdaccioTargets ones with correct arguments', (): void => {
+    createProjectConfiguration(config, options);
+    expect(environmentTargetsModule.verdaccioTargets).toHaveBeenCalledOnce();
+    expect(environmentTargetsModule.verdaccioTargets).toHaveBeenCalledWith(
+      config,
+      {environmentsDir: normalizedOptions.environments.environmentsDir}
+    );
+  });
 
   // ...getEnvTargets(projectConfiguration, environments)
   it('should call verdaccioTargets ones with correct arguments', (): void => {});
