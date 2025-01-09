@@ -1,4 +1,4 @@
-import { beforeEach, describe, MockInstance } from 'vitest';
+import { beforeEach, describe, expect, MockInstance } from 'vitest';
 import { ProjectConfiguration } from '@nx/devkit';
 
 import { createProjectConfiguration } from './create-targets';
@@ -72,6 +72,8 @@ describe('createProjectConfiguration', (): void => {
 
   afterEach((): void => {
     normalizeCreateNodesOptionsSpy.mockRestore();
+    isEnvProjectSpy.mockRestore();
+    isPkgSpy.mockRestore();
   });
 
   it('should call normalizeCreateNodesOptions ones with config and options', (): void => {
@@ -102,10 +104,12 @@ describe('createProjectConfiguration', (): void => {
     );
   });
 
-  //  if (!isE2eProject && !isPublishableProject) {
-  //     return {};
-  //   }
-  it('should return empty object if !isE2eProject and !isPublishableProject', (): void => {});
+  it('should return empty object if !isE2eProject and !isPublishableProject', (): void => {
+    isEnvProjectSpy.mockReturnValue(false);
+    isPkgSpy.mockReturnValue(false);
+    const projectConfiguration = createProjectConfiguration(config, options);
+    expect(projectConfiguration).toStrictEqual({})
+  });
 
   //  if (isE2eProject && !projectConfiguration.implicitDependencies?.length) {
   //     logger.warn(
