@@ -24,7 +24,7 @@ import {
   TARGET_ENVIRONMENT_SETUP,
   TARGET_ENVIRONMENT_TEARDOWN,
   TARGET_ENVIRONMENT_VERDACCIO_START,
-  TARGET_ENVIRONMENT_VERDACCIO_STOP,
+  TARGET_ENVIRONMENT_VERDACCIO_STOP, updateEnvTargetNames,
   verdaccioTargets
 } from './environment.targets';
 import { StartVerdaccioOptions } from '../../executors/env-bootstrap/verdaccio-registry';
@@ -125,6 +125,8 @@ describe('createProjectConfiguration', (): void => {
     Record<string, TargetConfiguration<any>>
   >;
 
+  let updateEnvTargetNamesSpy;
+
   beforeEach((): void => {
     normalizeCreateNodesOptionsSpy = vi
       .spyOn(normalizeCreateNodesModule, 'normalizeCreateNodesOptions')
@@ -137,9 +139,8 @@ describe('createProjectConfiguration', (): void => {
       .mockReturnValue(true);
     verdaccioTargetsSpy = vi
       .spyOn(environmentTargetsModule, 'verdaccioTargets')
-      .mockReturnValue(verdaccioTargetsMock);
     getEnvTargetsSpy = vi.spyOn(environmentTargetsModule, 'getEnvTargets')
-      .mockReturnValue(envTargetsMock)
+    updateEnvTargetNamesSpy = vi.spyOn(environmentTargetsModule, 'updateEnvTargetNames')
   });
 
   afterEach((): void => {
@@ -148,6 +149,7 @@ describe('createProjectConfiguration', (): void => {
     isPkgSpy.mockRestore();
     verdaccioTargetsSpy.mockRestore();
     getEnvTargetsSpy.mockRestore();
+    updateEnvTargetNamesSpy.mockRestore();
   });
 
   it('should call normalizeCreateNodesOptions ones with config and options', (): void => {
@@ -277,6 +279,12 @@ describe('createProjectConfiguration', (): void => {
     );
   });
 
-  // ...updateEnvTargetNames(projectConfiguration
-  it('should call updateEnvTargetNames ones with correct arguments', (): void => {});
+  it('should call updateEnvTargetNames ones with correct arguments', (): void => {
+    createProjectConfiguration(config, options);
+    expect(environmentTargetsModule.updateEnvTargetNames).toHaveBeenCalledOnce();
+    expect(environmentTargetsModule.updateEnvTargetNames).toHaveBeenCalledWith(
+      config,
+      normalizedOptions.environments
+    );
+  });
 });
