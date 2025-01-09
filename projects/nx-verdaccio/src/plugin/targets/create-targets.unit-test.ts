@@ -28,6 +28,7 @@ import {
   verdaccioTargets
 } from './environment.targets';
 import { StartVerdaccioOptions } from '../../executors/env-bootstrap/verdaccio-registry';
+import { TARGET_PACKAGE_INSTALL, TARGET_PACKAGE_PUBLISH } from './package.targets';
 
 describe('createProjectConfiguration', (): void => {
   const verdaccioTargetsMock = {
@@ -107,7 +108,22 @@ describe('createProjectConfiguration', (): void => {
     Record<string, TargetConfiguration>
   >;
 
-  let getEnvTargetsSpy;
+  let getEnvTargetsSpy: MockInstance<
+    [
+      projectConfig: ProjectConfiguration,
+      options: Omit<
+        NxVerdaccioEnvironmentsOptions,
+        'targetNames' | 'environmentsDir'
+      > &
+        Required<
+          Pick<
+            NxVerdaccioEnvironmentsOptions,
+            'targetNames' | 'environmentsDir'
+          >
+        >
+    ],
+    Record<string, TargetConfiguration<any>>
+  >;
 
   beforeEach((): void => {
     normalizeCreateNodesOptionsSpy = vi
@@ -131,6 +147,7 @@ describe('createProjectConfiguration', (): void => {
     isEnvProjectSpy.mockRestore();
     isPkgSpy.mockRestore();
     verdaccioTargetsSpy.mockRestore();
+    getEnvTargetsSpy.mockRestore();
   });
 
   it('should call normalizeCreateNodesOptions ones with config and options', (): void => {
@@ -206,13 +223,6 @@ describe('createProjectConfiguration', (): void => {
     });
   });
 
-  it('should generate project configuration with namedInputs if isE2eProject and !isPublishableProject', (): void => {
-    const result = createProjectConfiguration(config, options);
-    expect(result).toMatchObject({
-      namedInputs: expect.any(Object),
-    });
-  });
-
   it('should generate project configuration with targets if !isE2eProject and isPublishableProject', (): void => {
     const result = createProjectConfiguration(config, options);
     expect(result).toMatchObject({
@@ -220,19 +230,34 @@ describe('createProjectConfiguration', (): void => {
     });
   });
 
-  // it('should generate nameInputs with correct structure and data', (): void => {
-  //   const result = createProjectConfiguration(config, options);
-  //   expect(result['namedInputs']).toMatchObject({
-  //     [TARGET_ENVIRONMENT_VERDACCIO_START]: expect.any(Object),
-  //     [TARGET_ENVIRONMENT_VERDACCIO_STOP]: expect.any(Object),
-  //     [TARGET_ENVIRONMENT_BOOTSTRAP]: expect.any(Object),
-  //     [TARGET_ENVIRONMENT_INSTALL]: expect.any(Object),
-  //     [TARGET_ENVIRONMENT_PUBLISH_ONLY]: expect.any(Object),
-  //     [TARGET_ENVIRONMENT_SETUP]: expect.any(Object),
-  //     [TARGET_ENVIRONMENT_TEARDOWN]: expect.any(Object),
-  //     [TARGET_ENVIRONMENT_E2E]: expect.any(Object),
-  //   });
-  // });
+  it('should generate targets with correct structure if isE2eProject and !isPublishableProject', (): void => {
+    isPkgSpy.mockReturnValue(false);
+    const result = createProjectConfiguration(config, options);
+    expect(result['targets']).toMatchObject(
+      {build: expect.any(Object),
+      [TARGET_ENVIRONMENT_VERDACCIO_START]: expect.any(Object),
+      [TARGET_ENVIRONMENT_VERDACCIO_STOP]: expect.any(Object),
+      [TARGET_ENVIRONMENT_BOOTSTRAP]: expect.any(Object),
+      [TARGET_ENVIRONMENT_INSTALL]: expect.any(Object),
+      [TARGET_ENVIRONMENT_PUBLISH_ONLY]: expect.any(Object),
+      [TARGET_ENVIRONMENT_SETUP]: expect.any(Object),
+      [TARGET_ENVIRONMENT_TEARDOWN]: expect.any(Object),
+      [TARGET_ENVIRONMENT_E2E]: expect.any(Object),
+          }
+    );
+  });
+
+  it('should generate nameInputs with correct structure and data', (): void => {
+    const result = createProjectConfiguration(config, options);
+    expect(result).toMatchObject({
+      namedInputs: expect.any(Object),
+      targets:
+        {
+          [TARGET_PACKAGE_PUBLISH]: expect.any(Object),
+          [TARGET_PACKAGE_INSTALL]: expect.any(Object),
+        }
+    });
+  });
 
   it('should call verdaccioTargets ones with correct arguments', (): void => {
     createProjectConfiguration(config, options);
@@ -254,6 +279,4 @@ describe('createProjectConfiguration', (): void => {
 
   // ...updateEnvTargetNames(projectConfiguration
   it('should call updateEnvTargetNames ones with correct arguments', (): void => {});
-
-  //getPkgTargets() not sure if this should be a spy
 });
