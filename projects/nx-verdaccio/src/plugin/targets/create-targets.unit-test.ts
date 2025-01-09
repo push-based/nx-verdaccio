@@ -1,57 +1,43 @@
-import { beforeEach, describe, expect, MockInstance } from 'vitest';
-import { ProjectConfiguration, type TargetConfiguration } from '@nx/devkit';
+import { beforeEach, describe, expect, type MockInstance } from 'vitest';
+import { type ProjectConfiguration } from '@nx/devkit';
+
+import * as nxDevkitMockModule from '@nx/devkit';
 
 import { createProjectConfiguration } from './create-targets';
-
-import { NormalizedCreateNodeOptions } from '../normalize-create-nodes-options';
 import {
-  NxVerdaccioCreateNodeOptions,
-  NxVerdaccioEnvironmentsOptions,
-  NxVerdaccioPackagesOptions,
-} from '../schema';
-
-import * as normalizeCreateNodesModule from './../normalize-create-nodes-options';
-import * as environmentTargetsModule from './environment.targets';
-import * as packageTargetsModule from './package.targets';
-
-import * as nxDevkitModule from '@nx/devkit';
+  TARGET_PACKAGE_INSTALL,
+  TARGET_PACKAGE_PUBLISH,
+} from './package.targets';
 import {
-  getEnvTargets,
-  TARGET_ENVIRONMENT_BOOTSTRAP,
   TARGET_ENVIRONMENT_E2E,
-  TARGET_ENVIRONMENT_INSTALL,
-  TARGET_ENVIRONMENT_PUBLISH_ONLY,
   TARGET_ENVIRONMENT_SETUP,
+  TARGET_ENVIRONMENT_INSTALL,
   TARGET_ENVIRONMENT_TEARDOWN,
+  TARGET_ENVIRONMENT_BOOTSTRAP,
+  TARGET_ENVIRONMENT_PUBLISH_ONLY,
+  TARGET_ENVIRONMENT_VERDACCIO_STOP,
   TARGET_ENVIRONMENT_VERDACCIO_START,
-  TARGET_ENVIRONMENT_VERDACCIO_STOP, updateEnvTargetNames,
-  verdaccioTargets
 } from './environment.targets';
-import { StartVerdaccioOptions } from '../../executors/env-bootstrap/verdaccio-registry';
-import { TARGET_PACKAGE_INSTALL, TARGET_PACKAGE_PUBLISH } from './package.targets';
+
+import { type NxVerdaccioCreateNodeOptions } from '../schema';
+import { type NormalizedCreateNodeOptions } from '../normalize-create-nodes-options';
+
+import * as packageTargetsSpyModule from './package.targets';
+import * as environmentTargetsModule from './environment.targets';
+import * as normalizeCreateNodesSpyModule from './../normalize-create-nodes-options';
 
 describe('createProjectConfiguration', (): void => {
-  const verdaccioTargetsMock = {
-    [TARGET_ENVIRONMENT_VERDACCIO_START]: {},
-    [TARGET_ENVIRONMENT_VERDACCIO_STOP]: {},
-  };
-
-  const envTargetsMock = {
-    [TARGET_ENVIRONMENT_BOOTSTRAP]: {},
-    [TARGET_ENVIRONMENT_INSTALL]: {},
-    [TARGET_ENVIRONMENT_PUBLISH_ONLY]: {},
-    [TARGET_ENVIRONMENT_SETUP]: {},
-    [TARGET_ENVIRONMENT_TEARDOWN]: {},
-    [TARGET_ENVIRONMENT_E2E]: {},
-  };
-
-  const config: ProjectConfiguration = {
+  const implicitDependencies = ['mock-implicit-dep'];
+  const projectConfiguration: ProjectConfiguration = {
     root: 'mock-root',
     name: 'unit-test-project',
-    targets: { build: { executor: 'nx:build', options: {} } },
-    tags: ['env:production'],
+    targets: { build: {} },
   };
-
+  const options: NxVerdaccioCreateNodeOptions = {
+    environments: {
+      targetNames: ['build'],
+    },
+  };
   const normalizedOptions: NormalizedCreateNodeOptions = {
     environments: {
       targetNames: ['build'],
@@ -60,13 +46,6 @@ describe('createProjectConfiguration', (): void => {
     packages: {
       targetNames: ['test', 'lint'],
       environmentsDir: './packages',
-      filterByTags: ['env:production', 'utility'],
-    },
-  };
-
-  const options: NxVerdaccioCreateNodeOptions = {
-    environments: {
-      targetNames: ['build'], // Minimal required to pass validation
     },
   };
 
@@ -78,69 +57,32 @@ describe('createProjectConfiguration', (): void => {
     };
   });
 
-  let normalizeCreateNodesOptionsSpy: MockInstance<
-    [options: NxVerdaccioCreateNodeOptions],
-    NormalizedCreateNodeOptions
-  >;
-
-  let isEnvProjectSpy: MockInstance<
-    [
-      projectConfig: ProjectConfiguration,
-      options: NormalizedCreateNodeOptions['environments']
-    ],
-    boolean
-  >;
-
-  let isPkgSpy: MockInstance<
-    [projectConfig: ProjectConfiguration, options: NxVerdaccioPackagesOptions],
-    boolean
-  >;
-
-  let verdaccioTargetsSpy: MockInstance<
-    [
-      projectConfig: ProjectConfiguration,
-      options: Pick<
-        NormalizedCreateNodeOptions['environments'],
-        'environmentsDir'
-      > &
-        Omit<StartVerdaccioOptions, 'projectName'>
-    ],
-    Record<string, TargetConfiguration>
-  >;
-
-  let getEnvTargetsSpy: MockInstance<
-    [
-      projectConfig: ProjectConfiguration,
-      options: Omit<
-        NxVerdaccioEnvironmentsOptions,
-        'targetNames' | 'environmentsDir'
-      > &
-        Required<
-          Pick<
-            NxVerdaccioEnvironmentsOptions,
-            'targetNames' | 'environmentsDir'
-          >
-        >
-    ],
-    Record<string, TargetConfiguration<any>>
-  >;
-
-  let updateEnvTargetNamesSpy;
+  let normalizeCreateNodesOptionsSpy: MockInstance;
+  let isEnvProjectSpy: MockInstance;
+  let isPkgSpy: MockInstance;
+  let verdaccioTargetsSpy: MockInstance;
+  let getEnvTargetsSpy: MockInstance;
+  let updateEnvTargetNamesSpy: MockInstance;
 
   beforeEach((): void => {
     normalizeCreateNodesOptionsSpy = vi
-      .spyOn(normalizeCreateNodesModule, 'normalizeCreateNodesOptions')
+      .spyOn(normalizeCreateNodesSpyModule, 'normalizeCreateNodesOptions')
       .mockReturnValue(normalizedOptions);
     isEnvProjectSpy = vi
       .spyOn(environmentTargetsModule, 'isEnvProject')
       .mockReturnValue(true);
     isPkgSpy = vi
-      .spyOn(packageTargetsModule, 'isPkgProject')
+      .spyOn(packageTargetsSpyModule, 'isPkgProject')
       .mockReturnValue(true);
-    verdaccioTargetsSpy = vi
-      .spyOn(environmentTargetsModule, 'verdaccioTargets')
-    getEnvTargetsSpy = vi.spyOn(environmentTargetsModule, 'getEnvTargets')
-    updateEnvTargetNamesSpy = vi.spyOn(environmentTargetsModule, 'updateEnvTargetNames')
+    verdaccioTargetsSpy = vi.spyOn(
+      environmentTargetsModule,
+      'verdaccioTargets'
+    );
+    getEnvTargetsSpy = vi.spyOn(environmentTargetsModule, 'getEnvTargets');
+    updateEnvTargetNamesSpy = vi.spyOn(
+      environmentTargetsModule,
+      'updateEnvTargetNames'
+    );
   });
 
   afterEach((): void => {
@@ -152,30 +94,30 @@ describe('createProjectConfiguration', (): void => {
     updateEnvTargetNamesSpy.mockRestore();
   });
 
-  it('should call normalizeCreateNodesOptions ones with config and options', (): void => {
-    createProjectConfiguration(config, options);
+  it('should call normalizeCreateNodesOptions ones with projectConfiguration and options', (): void => {
+    createProjectConfiguration(projectConfiguration, options);
     expect(
-      normalizeCreateNodesModule.normalizeCreateNodesOptions
+      normalizeCreateNodesSpyModule.normalizeCreateNodesOptions
     ).toHaveBeenCalledOnce();
     expect(
-      normalizeCreateNodesModule.normalizeCreateNodesOptions
+      normalizeCreateNodesSpyModule.normalizeCreateNodesOptions
     ).toHaveBeenCalledWith(options);
   });
 
   it('should call isEnvProject ones with projectConfiguration and environments', (): void => {
-    createProjectConfiguration(config, options);
+    createProjectConfiguration(projectConfiguration, options);
     expect(environmentTargetsModule.isEnvProject).toHaveBeenCalledOnce();
     expect(environmentTargetsModule.isEnvProject).toHaveBeenCalledWith(
-      config,
+      projectConfiguration,
       normalizedOptions['environments']
     );
   });
 
   it('should call isPublishableProject ones with projectConfiguration and packages', (): void => {
-    createProjectConfiguration(config, options);
-    expect(packageTargetsModule.isPkgProject).toHaveBeenCalledOnce();
-    expect(packageTargetsModule.isPkgProject).toHaveBeenCalledWith(
-      config,
+    createProjectConfiguration(projectConfiguration, options);
+    expect(packageTargetsSpyModule.isPkgProject).toHaveBeenCalledOnce();
+    expect(packageTargetsSpyModule.isPkgProject).toHaveBeenCalledWith(
+      projectConfiguration,
       normalizedOptions['packages']
     );
   });
@@ -183,42 +125,42 @@ describe('createProjectConfiguration', (): void => {
   it('should return empty object if !isE2eProject and !isPublishableProject', (): void => {
     isEnvProjectSpy.mockReturnValue(false);
     isPkgSpy.mockReturnValue(false);
-    const projectConfiguration = createProjectConfiguration(config, options);
-    expect(projectConfiguration).toStrictEqual({});
+    const result = createProjectConfiguration(projectConfiguration, options);
+    expect(result).toStrictEqual({});
   });
 
   it('should log warn if isE2eProject and !projectConfiguration.implicitDependencies?.length', (): void => {
-    createProjectConfiguration(config, options);
-    expect(nxDevkitModule.logger.warn).toHaveBeenCalledOnce();
+    createProjectConfiguration(projectConfiguration, options);
+    expect(nxDevkitMockModule.logger.warn).toHaveBeenCalledOnce();
   });
 
   it('should not log warn if isE2eProject and projectConfiguration.implicitDependencies?.length', (): void => {
     const configWithImplicitDependencies = {
-      ...config,
-      implicitDependencies: ['mock-implicit-dep'],
+      ...projectConfiguration,
+      implicitDependencies,
     };
     createProjectConfiguration(configWithImplicitDependencies, options);
-    expect(nxDevkitModule.logger.warn).toHaveBeenCalledTimes(0);
+    expect(nxDevkitMockModule.logger.warn).toHaveBeenCalledTimes(0);
   });
 
   it('should not log warn if !isE2eProject and projectConfiguration.implicitDependencies?.length', (): void => {
     isEnvProjectSpy.mockReturnValue(false);
     const configWithImplicitDependencies = {
-      ...config,
-      implicitDependencies: ['mock-implicit-dep'],
+      ...projectConfiguration,
+      implicitDependencies,
     };
     createProjectConfiguration(configWithImplicitDependencies, options);
-    expect(nxDevkitModule.logger.warn).toHaveBeenCalledTimes(0);
+    expect(nxDevkitMockModule.logger.warn).toHaveBeenCalledTimes(0);
   });
 
   it('should not log warn if !isE2eProject and !projectConfiguration.implicitDependencies?.length', (): void => {
     isEnvProjectSpy.mockReturnValue(false);
-    createProjectConfiguration(config, options);
-    expect(nxDevkitModule.logger.warn).toHaveBeenCalledTimes(0);
+    createProjectConfiguration(projectConfiguration, options);
+    expect(nxDevkitMockModule.logger.warn).toHaveBeenCalledTimes(0);
   });
 
   it('should generate project configuration with namedInputs and targets if isE2eProject and isPublishableProject', (): void => {
-    const result = createProjectConfiguration(config, options);
+    const result = createProjectConfiguration(projectConfiguration, options);
     expect(result).toMatchObject({
       namedInputs: expect.any(Object),
       targets: expect.any(Object),
@@ -226,7 +168,7 @@ describe('createProjectConfiguration', (): void => {
   });
 
   it('should generate project configuration with targets if !isE2eProject and isPublishableProject', (): void => {
-    const result = createProjectConfiguration(config, options);
+    const result = createProjectConfiguration(projectConfiguration, options);
     expect(result).toMatchObject({
       targets: expect.any(Object),
     });
@@ -234,9 +176,9 @@ describe('createProjectConfiguration', (): void => {
 
   it('should generate targets with correct structure if isE2eProject and !isPublishableProject', (): void => {
     isPkgSpy.mockReturnValue(false);
-    const result = createProjectConfiguration(config, options);
-    expect(result['targets']).toMatchObject(
-      {build: expect.any(Object),
+    const result = createProjectConfiguration(projectConfiguration, options);
+    expect(result['targets']).toMatchObject({
+      build: expect.any(Object),
       [TARGET_ENVIRONMENT_VERDACCIO_START]: expect.any(Object),
       [TARGET_ENVIRONMENT_VERDACCIO_STOP]: expect.any(Object),
       [TARGET_ENVIRONMENT_BOOTSTRAP]: expect.any(Object),
@@ -245,45 +187,45 @@ describe('createProjectConfiguration', (): void => {
       [TARGET_ENVIRONMENT_SETUP]: expect.any(Object),
       [TARGET_ENVIRONMENT_TEARDOWN]: expect.any(Object),
       [TARGET_ENVIRONMENT_E2E]: expect.any(Object),
-          }
-    );
+    });
   });
 
   it('should generate nameInputs with correct structure and data', (): void => {
-    const result = createProjectConfiguration(config, options);
+    const result = createProjectConfiguration(projectConfiguration, options);
     expect(result).toMatchObject({
       namedInputs: expect.any(Object),
-      targets:
-        {
-          [TARGET_PACKAGE_PUBLISH]: expect.any(Object),
-          [TARGET_PACKAGE_INSTALL]: expect.any(Object),
-        }
+      targets: {
+        [TARGET_PACKAGE_PUBLISH]: expect.any(Object),
+        [TARGET_PACKAGE_INSTALL]: expect.any(Object),
+      },
     });
   });
 
   it('should call verdaccioTargets ones with correct arguments', (): void => {
-    createProjectConfiguration(config, options);
+    createProjectConfiguration(projectConfiguration, options);
     expect(environmentTargetsModule.verdaccioTargets).toHaveBeenCalledOnce();
     expect(environmentTargetsModule.verdaccioTargets).toHaveBeenCalledWith(
-      config,
+      projectConfiguration,
       { environmentsDir: normalizedOptions.environments.environmentsDir }
     );
   });
 
   it('should call getEnvTargets ones with correct arguments', (): void => {
-    createProjectConfiguration(config, options);
+    createProjectConfiguration(projectConfiguration, options);
     expect(environmentTargetsModule.getEnvTargets).toHaveBeenCalledOnce();
     expect(environmentTargetsModule.getEnvTargets).toHaveBeenCalledWith(
-      config,
+      projectConfiguration,
       normalizedOptions.environments
     );
   });
 
   it('should call updateEnvTargetNames ones with correct arguments', (): void => {
-    createProjectConfiguration(config, options);
-    expect(environmentTargetsModule.updateEnvTargetNames).toHaveBeenCalledOnce();
+    createProjectConfiguration(projectConfiguration, options);
+    expect(
+      environmentTargetsModule.updateEnvTargetNames
+    ).toHaveBeenCalledOnce();
     expect(environmentTargetsModule.updateEnvTargetNames).toHaveBeenCalledWith(
-      config,
+      projectConfiguration,
       normalizedOptions.environments
     );
   });
