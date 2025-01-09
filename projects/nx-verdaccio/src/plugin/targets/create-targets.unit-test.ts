@@ -14,6 +14,15 @@ import * as environmentTargetsModule from './environment.targets';
 import * as packageTargetsModule from './package.targets';
 
 import * as nxDevkitModule from '@nx/devkit';
+import {
+  TARGET_ENVIRONMENT_BOOTSTRAP, TARGET_ENVIRONMENT_E2E,
+  TARGET_ENVIRONMENT_INSTALL,
+  TARGET_ENVIRONMENT_PUBLISH_ONLY,
+  TARGET_ENVIRONMENT_SETUP,
+  TARGET_ENVIRONMENT_TEARDOWN,
+  TARGET_ENVIRONMENT_VERDACCIO_START,
+  TARGET_ENVIRONMENT_VERDACCIO_STOP
+} from './environment.targets';
 
 describe('createProjectConfiguration', (): void => {
   const config: ProjectConfiguration = {
@@ -145,10 +154,41 @@ describe('createProjectConfiguration', (): void => {
     expect(nxDevkitModule.logger.warn).toHaveBeenCalledTimes(0);
   });
 
+  it('should generate project configuration with namedInputs and targets if isE2eProject and isPublishableProject', (): void => {
+    const result = createProjectConfiguration(config, options);
+    expect(result).toMatchObject({
+      namedInputs: expect.any(Object),
+      targets: expect.any(Object),
+    });
+  });
 
+  it('should generate project configuration with namedInputs if isE2eProject and !isPublishableProject', (): void => {
+    const result = createProjectConfiguration(config, options);
+    expect(result).toMatchObject({
+      namedInputs: expect.any(Object),
+    });
+  });
 
-  // i should check for ENVIRONMENT TARGETS structure and PACKAGE TARGETS
-  it('should generate project configuration with correct structure', (): void => {});
+  it('should generate project configuration with targets if !isE2eProject and isPublishableProject', (): void => {
+    const result = createProjectConfiguration(config, options);
+    expect(result).toMatchObject({
+      targets: expect.any(Object),
+    });
+  });
+
+  // it('should generate nameInputs with correct structure and data', (): void => {
+  //   const result = createProjectConfiguration(config, options);
+  //   expect(result['namedInputs']).toMatchObject({
+  //     [TARGET_ENVIRONMENT_VERDACCIO_START]: expect.any(Object),
+  //     [TARGET_ENVIRONMENT_VERDACCIO_STOP]: expect.any(Object),
+  //     [TARGET_ENVIRONMENT_BOOTSTRAP]: expect.any(Object),
+  //     [TARGET_ENVIRONMENT_INSTALL]: expect.any(Object),
+  //     [TARGET_ENVIRONMENT_PUBLISH_ONLY]: expect.any(Object),
+  //     [TARGET_ENVIRONMENT_SETUP]: expect.any(Object),
+  //     [TARGET_ENVIRONMENT_TEARDOWN]: expect.any(Object),
+  //     [TARGET_ENVIRONMENT_E2E]: expect.any(Object),
+  //   });
+  // });
 
   // spies
   //   ...verdaccioTargets(projectConfiguration, {
