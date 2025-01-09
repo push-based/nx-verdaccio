@@ -6,13 +6,14 @@ import { createProjectConfiguration } from './create-targets';
 import { NormalizedCreateNodeOptions } from '../normalize-create-nodes-options';
 import {
   NxVerdaccioCreateNodeOptions,
-  NxVerdaccioEnvironmentsOptions,
   NxVerdaccioPackagesOptions,
 } from '../schema';
 
 import * as normalizeCreateNodesModule from './../normalize-create-nodes-options';
 import * as environmentTargetsModule from './environment.targets';
 import * as packageTargetsModule from './package.targets';
+
+import * as nxDevkitModule from '@nx/devkit';
 
 describe('createProjectConfiguration', (): void => {
   const config: ProjectConfiguration = {
@@ -39,6 +40,14 @@ describe('createProjectConfiguration', (): void => {
       targetNames: ['build'], // Minimal required to pass validation
     },
   };
+
+  vi.mock('@nx/devkit', ()   => {
+    return {
+      logger: {
+        warn: vi.fn()
+      }
+    }
+  })
 
   let normalizeCreateNodesOptionsSpy: MockInstance<
     [options: NxVerdaccioCreateNodeOptions],
@@ -111,13 +120,32 @@ describe('createProjectConfiguration', (): void => {
     expect(projectConfiguration).toStrictEqual({})
   });
 
-  //  if (isE2eProject && !projectConfiguration.implicitDependencies?.length) {
-  //     logger.warn(
-  //       `Project ${projectConfiguration.name} is an environment project but has no implicit dependencies.`
-  //     );
-  //   }
-  // i need a spy or mock for warn? idk
-  it('should log warn if isE2eProject and !projectConfiguration.implicitDependencies?.length', (): void => {});
+
+  it('should log warn if isE2eProject and !projectConfiguration.implicitDependencies?.length', (): void => {
+    createProjectConfiguration(config, options);
+    expect(nxDevkitModule.logger.warn).toHaveBeenCalledOnce();
+  });
+
+  it('should not log warn if isE2eProject and projectConfiguration.implicitDependencies?.length', (): void => {
+    const configWithImplicitDependencies = {...config, implicitDependencies: ['mock-implicit-dep']}
+    createProjectConfiguration(configWithImplicitDependencies, options);
+    expect(nxDevkitModule.logger.warn).toHaveBeenCalledTimes(0);
+  });
+
+  it('should not log warn if !isE2eProject and projectConfiguration.implicitDependencies?.length', (): void => {
+    isEnvProjectSpy.mockReturnValue(false);
+    const configWithImplicitDependencies = {...config, implicitDependencies: ['mock-implicit-dep']}
+    createProjectConfiguration(configWithImplicitDependencies, options);
+    expect(nxDevkitModule.logger.warn).toHaveBeenCalledTimes(0);
+  });
+
+  it('should not log warn if !isE2eProject and !projectConfiguration.implicitDependencies?.length', (): void => {
+    isEnvProjectSpy.mockReturnValue(false);
+    createProjectConfiguration(config, options);
+    expect(nxDevkitModule.logger.warn).toHaveBeenCalledTimes(0);
+  });
+
+
 
   // i should check for ENVIRONMENT TARGETS structure and PACKAGE TARGETS
   it('should generate project configuration with correct structure', (): void => {});
