@@ -39,6 +39,13 @@ export function isPkgProject(
   return true;
 }
 
+/**
+ * Creates package-related targets for build pipelines.
+ * Includes `TARGET_PACKAGE_PUBLISH` and `TARGET_PACKAGE_INSTALL` targets,
+ * each with targets they depend on.
+ *
+ * @returns A record of package targets with their configurations.
+ */
 export function getPkgTargets(): Record<string, TargetConfiguration> {
   return {
     [TARGET_PACKAGE_PUBLISH]: {
