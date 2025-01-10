@@ -7,6 +7,16 @@ import { EXECUTOR_PACKAGE_NPM_INSTALL } from '../../executors/pkg-install/consta
 export const TARGET_PACKAGE_INSTALL = 'nxv-pkg-install';
 export const TARGET_PACKAGE_PUBLISH = 'nxv-pkg-publish';
 
+
+/**
+ * Determines if the given project is a publishable project.
+ * A project qualifies as a publishable if it's of type 'library' (early return if it's not)
+ * and, when options tag filters are provided, and they have match with any config tag.
+ *
+ * @param projectConfig
+ * @param options
+ * @returns `true` if the project is a publishable; otherwise, `false`.
+ */
 export function isPkgProject(
   projectConfig: ProjectConfiguration,
   options: NormalizedCreateNodeOptions['packages']
