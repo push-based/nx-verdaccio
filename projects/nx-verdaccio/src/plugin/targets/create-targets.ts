@@ -47,8 +47,10 @@ export function createProjectConfiguration(
 
   /**
    * Unfortunately namedInputs are not picked up by tasks graph: Error: Input 'build-artifacts' is not defined
-   * When you pass your own namedInputs (like you would in a project.json file) via the inferred tasks plugin, the tasks pipeline ignores them and throws this error.
-   * Some Nx plugins use the default namedInput, probably for that reason, but I'm concerned that if developers change those inputs, it might lead to undesired behavior.
+   * When you pass your own namedInputs (like you would in a project.json file) via the inferred tasks plugin,
+   * the tasks pipeline ignores them and throws this error.
+   * Some Nx plugins use the default namedInput, probably for that reason,
+   * but I'm concerned that if developers change those inputs, it might lead to undesired behavior.
    * @todo investigate if there is a way to pass namedInputs to the tasks graph
    */
   const namedInputs: ProjectConfiguration['namedInputs'] = {
