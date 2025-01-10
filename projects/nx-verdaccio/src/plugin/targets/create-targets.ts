@@ -9,6 +9,24 @@ import {
 } from './environment.targets';
 import { getPkgTargets, isPkgProject } from './package.targets';
 
+/**
+ * Generates a project configuration with targets and namedInputs.
+ *
+ * If the project is an environment project - `isEnvProject`(),
+ * wraps the results of `verdaccioTargets()`, `getEnvTargets()`,
+ *`updateEnvTargetNames()`, and namedInputs
+ *
+ * If the project is a publishable project - `isPkgProject()`,
+ * wraps the results of `getPkgTargets()`, and namedInputs
+ *
+ * Otherwise, returns and empty object (early return)
+ *
+ * Logs warnings for missing implicit dependencies in environment projects.
+ *
+ * @param projectConfiguration
+ * @param options
+ * @returns A partial project configuration with targets and namedInputs.
+ */
 export function createProjectConfiguration(
   projectConfiguration: ProjectConfiguration,
   options: NxVerdaccioCreateNodeOptions
