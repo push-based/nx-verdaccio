@@ -81,7 +81,7 @@ describe('getPkgTargets', (): void => {
     const result = getPkgTargets();
     expect(result[TARGET_PACKAGE_PUBLISH]).toMatchObject({
       dependsOn: expect.any(Array),
-      executor: expect.stringContaining(EXECUTOR_PACKAGE_NPM_PUBLISH),
+      executor: expect.stringMatching(new RegExp(`.+:${EXECUTOR_PACKAGE_NPM_PUBLISH}`)),
       options: expect.any(Object),
     });
   });
@@ -90,7 +90,7 @@ describe('getPkgTargets', (): void => {
     const result = getPkgTargets();
     expect(result[TARGET_PACKAGE_INSTALL]).toMatchObject({
       dependsOn: expect.any(Array),
-      executor: expect.stringContaining(EXECUTOR_PACKAGE_NPM_INSTALL),
+      executor: expect.stringMatching(new RegExp(`.+:${EXECUTOR_PACKAGE_NPM_INSTALL}`)),
       options: expect.any(Object),
     });
   });
