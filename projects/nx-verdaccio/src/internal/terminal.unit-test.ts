@@ -66,6 +66,10 @@ describe('objectToCliArgs', () => {
     expect(objectToCliArgs(params)).toStrictEqual([]);
   });
 
+  it('should early return an empty array if params are not present', () => {
+    expect(objectToCliArgs(undefined)).toStrictEqual([]);
+  });
+
   it('should throw error for unsupported type', () => {
     const params = { unsupported: Symbol('symbol') };
     expect(() => objectToCliArgs(params)).toThrow('Unsupported type');
