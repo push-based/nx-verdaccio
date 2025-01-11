@@ -24,12 +24,21 @@ import {
   writeTargetsToCache,
 } from './caching';
 import { createProjectConfiguration } from './targets/create-targets';
+import { combineGlobPatterns } from 'nx/src/utils/globs';
+import { getProjectConfig } from './project-config';
 
 const PROJECT_JSON_FILE_GLOB = '**/project.json';
+const PACKAGE_JSON_FILE_GLOB = '**/package.json';
+const GLOB_PATTERN = combineGlobPatterns(
+  PROJECT_JSON_FILE_GLOB,
+  PACKAGE_JSON_FILE_GLOB
+);
 
 export const createNodesV2: CreateNodesV2<NxVerdaccioCreateNodeOptions> = [
-  PROJECT_JSON_FILE_GLOB,
+  GLOB_PATTERN,
   async (configFiles, options, context) => {
+    const isVisited = new Map<string, boolean>();
+
     const optionsHash = hashObject({ options: options ?? {} });
     const nxVerdaccioEnvPluginCachePath = join(
       workspaceDataDirectory,
@@ -38,11 +47,22 @@ export const createNodesV2: CreateNodesV2<NxVerdaccioCreateNodeOptions> = [
     const targetsCache = readTargetsCache(nxVerdaccioEnvPluginCachePath);
     try {
       return await createNodesFromFiles(
-        async (projectConfigurationFile, internalOptions) => {
+        async (globMatchingFile, internalOptions) => {
+          if (isVisited.has(dirname(globMatchingFile))) {
+            return {};
+          }
+          
+          // Project lib-a-e2e is an environment project but has no implicit dependencies.
           const projectConfiguration: ProjectConfiguration = await readFile(
-            join(process.cwd(), projectConfigurationFile),
+            join(process.cwd(), globMatchingFile),
             'utf8'
           ).then(JSON.parse);
+          console.log(
+            'getProjectConfig',
+            await getProjectConfig(globMatchingFile)
+          );
+          console.log('projectConfiguration', projectConfiguration);
+          isVisited.set(dirname(globMatchingFile), true);
           if (
             !('name' in projectConfiguration) ||
             typeof projectConfiguration.name !== 'string'
@@ -51,7 +71,7 @@ export const createNodesV2: CreateNodesV2<NxVerdaccioCreateNodeOptions> = [
           }
 
           const normalizedOptions = normalizeCreateNodesOptions(options);
-          const projectRoot = dirname(projectConfigurationFile);
+          const projectRoot = dirname(globMatchingFile);
           const hashData = {
             projectRoot,
             internalOptions,
@@ -119,3 +139,17 @@ export const createNodes: CreateNodes = [
     };
   },
 ];
+
+function isValidProjectConfig(
+  projectConfiguration: ProjectConfiguration
+): projectConfiguration is Omit<ProjectConfiguration, 'name'> & {
+  name: string;
+} {
+  if (
+    !('name' in projectConfiguration) ||
+    typeof projectConfiguration.name !== 'string'
+  ) {
+    throw new Error('Project name is required');
+  }
+  return true;
+}
