@@ -1,7 +1,18 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`nx-verdaccio plugin create-nodes-v2 > should add package targets to library project 1`] = `
+exports[`in a fresh Nx workspace > with nx-verdaccio plugin installed > should add package targets to library project 1`] = `
 {
+  "build": {
+    "configurations": {},
+    "executor": "nx:run-commands",
+    "options": {
+      "command": "echo "lib"",
+      "outputPath": [
+        "dist/pkg",
+      ],
+    },
+    "parallelism": true,
+  },
   "nxv-pkg-install": {
     "configurations": {},
     "dependsOn": [
@@ -35,6 +46,51 @@ exports[`nx-verdaccio plugin create-nodes-v2 > should add package targets to lib
     "executor": "@push-based/nx-verdaccio:pkg-publish",
     "options": {},
     "parallelism": true,
+  },
+  "typecheck": {
+    "cache": true,
+    "configurations": {},
+    "dependsOn": [
+      "^typecheck",
+    ],
+    "executor": "nx:run-commands",
+    "inputs": [
+      "{workspaceRoot}/tsconfig.base.json",
+      "{projectRoot}/tsconfig.json",
+      "{projectRoot}/tsconfig.lib.json",
+      "{projectRoot}/src/**/*.ts",
+      "^production",
+      {
+        "externalDependencies": [
+          "typescript",
+        ],
+      },
+    ],
+    "metadata": {
+      "description": "Runs type-checking for the project.",
+      "help": {
+        "command": "npx tsc --build --help",
+        "example": {
+          "args": [
+            "--force",
+          ],
+        },
+      },
+      "technologies": [
+        "typescript",
+      ],
+    },
+    "options": {
+      "command": "tsc --build --emitDeclarationOnly --pretty --verbose",
+      "cwd": "packages/pkg",
+    },
+    "outputs": [
+      "{projectRoot}/dist",
+    ],
+    "parallelism": true,
+    "syncGenerators": [
+      "@nx/js:typescript-sync",
+    ],
   },
 }
 `;

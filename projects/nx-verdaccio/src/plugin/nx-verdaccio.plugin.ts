@@ -1,13 +1,12 @@
 import {
   type CreateNodes,
-  type CreateNodesContext,
+  type CreateNodesContext, CreateNodesContextV2,
   createNodesFromFiles,
   type CreateNodesV2,
   logger,
   type ProjectConfiguration,
   readJsonFile,
 } from '@nx/devkit';
-import { readFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import type { NxVerdaccioCreateNodeOptions } from './schema';
 import {
@@ -24,12 +23,20 @@ import {
   writeTargetsToCache,
 } from './caching';
 import { createProjectConfiguration } from './targets/create-targets';
+import {
+  getPackageJsonNxConfig,
+  getProjectConfig,
+  getProjectJsonNxConfig,
+} from './project-config';
+import {combineGlobPatterns} from "nx/src/utils/globs";
 
 const PROJECT_JSON_FILE_GLOB = '**/project.json';
+const PACKAGE_JSON_FILE_GLOB = '**/package.json';
+const FILE_GLOB = combineGlobPatterns(PROJECT_JSON_FILE_GLOB, PACKAGE_JSON_FILE_GLOB);
 
 export const createNodesV2: CreateNodesV2<NxVerdaccioCreateNodeOptions> = [
-  PROJECT_JSON_FILE_GLOB,
-  async (configFiles, options, context) => {
+  FILE_GLOB,
+  async (configFiles, options, context: CreateNodesContextV2) => {
     const optionsHash = hashObject({ options: options ?? {} });
     const nxVerdaccioEnvPluginCachePath = join(
       workspaceDataDirectory,
@@ -39,10 +46,17 @@ export const createNodesV2: CreateNodesV2<NxVerdaccioCreateNodeOptions> = [
     try {
       return await createNodesFromFiles(
         async (projectConfigurationFile, internalOptions) => {
-          const projectConfiguration: ProjectConfiguration = await readFile(
-            join(process.cwd(), projectConfigurationFile),
-            'utf8'
-          ).then(JSON.parse);
+          const isPkgJson = projectConfigurationFile.endsWith('package.json');
+          const [primaryConfig, fallback] = isPkgJson
+            ? [getPackageJsonNxConfig, getProjectJsonNxConfig]
+            : [getProjectJsonNxConfig, getPackageJsonNxConfig];
+
+          const projectConfiguration: ProjectConfiguration =
+            await getProjectConfig(
+              projectConfigurationFile,
+              primaryConfig,
+              fallback
+            );
           if (
             !('name' in projectConfiguration) ||
             typeof projectConfiguration.name !== 'string'
@@ -112,8 +126,7 @@ export const createNodes: CreateNodes = [
     return {
       projects: {
         [projectRoot]: {
-          targets: createProjectConfiguration(projectConfiguration, options)
-            .targets,
+          targets: createProjectConfiguration(projectConfiguration, options).targets,
         },
       },
     };

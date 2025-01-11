@@ -22,7 +22,7 @@ export function createProjectConfiguration(
     return {};
   }
   if (isE2eProject && !projectConfiguration.implicitDependencies?.length) {
-    logger.warn(
+    logger.info(
       `Project ${projectConfiguration.name} is an environment project but has no implicit dependencies.`
     );
   }
