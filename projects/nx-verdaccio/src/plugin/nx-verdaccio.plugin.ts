@@ -51,7 +51,7 @@ export const createNodesV2: CreateNodesV2<NxVerdaccioCreateNodeOptions> = [
           if (isVisited.has(dirname(globMatchingFile))) {
             return {};
           }
-          
+          // Unexpected token 'g', "getProject"... is not valid JSON
           // Project lib-a-e2e is an environment project but has no implicit dependencies.
           const projectConfiguration: ProjectConfiguration = await readFile(
             join(process.cwd(), globMatchingFile),
