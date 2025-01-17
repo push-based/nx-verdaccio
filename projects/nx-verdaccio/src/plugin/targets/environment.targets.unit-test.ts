@@ -68,64 +68,63 @@ const OPTIONS: NormalizedCreateNodeOptions['environments'] = {
 
 describe('isEnvProject', (): void => {
   it('should return false if targets are missing', (): void => {
-    const config = { ...PROJECT_CONFIG, targets: null };
-    const result = isEnvProject(config, OPTIONS);
-    expect(result).toBe(false);
+    expect(isEnvProject({ ...PROJECT_CONFIG, targets: null }, OPTIONS)).toBe(
+      false
+    );
   });
 
   it('should return false if targetNames are missing', (): void => {
-    const options = { ...OPTIONS, targetNames: null };
-    const result = isEnvProject(PROJECT_CONFIG, options);
-    expect(result).toBe(false);
+    expect(
+      isEnvProject(PROJECT_CONFIG, { ...OPTIONS, targetNames: null })
+    ).toBe(false);
   });
 
   it('should return false if targetNames and targets are missing', (): void => {
-    const config = { ...PROJECT_CONFIG, targets: null };
-    const options = { ...OPTIONS, targetNames: null };
-    const result = isEnvProject(config, options);
-    expect(result).toBe(false);
+    expect(
+      isEnvProject(
+        { ...PROJECT_CONFIG, targets: null },
+        { ...OPTIONS, targetNames: null }
+      )
+    ).toBe(false);
   });
 
   it('should return false if targetNames don’t match environmentTargetNames', (): void => {
-    const options = { ...OPTIONS, targetNames: ['mockTarget'] };
-    const result = isEnvProject(PROJECT_CONFIG, options);
-    expect(result).toBe(false);
+    expect(
+      isEnvProject(PROJECT_CONFIG, { ...OPTIONS, targetNames: ['mockTarget'] })
+    ).toBe(false);
   });
 
   it('should return true if targetNames match and tags are not present', (): void => {
-    const config = { ...PROJECT_CONFIG, tags: null };
-    const result = isEnvProject(config, OPTIONS);
-    expect(result).toBe(true);
+    expect(isEnvProject({ ...PROJECT_CONFIG, tags: null }, OPTIONS)).toBe(true);
   });
 
   it('should return true if targetNames match and filterByTags are not present', (): void => {
-    const options = {
-      ...OPTIONS,
-      filterByTags: null,
-    };
-    const result = isEnvProject(PROJECT_CONFIG, options);
-    expect(result).toBe(true);
+    expect(
+      isEnvProject(PROJECT_CONFIG, {
+        ...OPTIONS,
+        filterByTags: null,
+      })
+    ).toBe(true);
   });
 
   it('should return true if targetNames match and tags match filterByTags', (): void => {
-    const result = isEnvProject(PROJECT_CONFIG, OPTIONS);
-    expect(result).toBe(true);
+    expect(isEnvProject(PROJECT_CONFIG, OPTIONS)).toBe(true);
   });
 
   it('should return false if targetNames match but tags don’t match filterByTags', (): void => {
-    const options = {
-      ...OPTIONS,
-      filterByTags: ['mock-tag-no-match'],
-    };
-    const result = isEnvProject(PROJECT_CONFIG, options);
-    expect(result).toBe(false);
+    expect(
+      isEnvProject(PROJECT_CONFIG, {
+        ...OPTIONS,
+        filterByTags: ['mock-tag-no-match'],
+      })
+    ).toBe(false);
   });
 });
 
 describe('verdaccioTargets', (): void => {
   const port = 1337;
   const customOption = 'custom-value';
-  const options = { ...OPTIONS, customOption }
+  const options = { ...OPTIONS, customOption };
 
   let uniquePortSpy: MockInstance<[], number>;
 
@@ -178,7 +177,7 @@ describe('verdaccioTargets', (): void => {
         targetNames: TARGET_NAMES,
       },
     });
-  })
+  });
 
   it('should generate verdaccio targets TARGET_ENVIRONMENT_VERDACCIO_START nested object with correct data ', (): void => {
     const result: Record<string, TargetConfiguration> = verdaccioTargets(
@@ -187,13 +186,13 @@ describe('verdaccioTargets', (): void => {
     );
 
     expect(result[TARGET_ENVIRONMENT_VERDACCIO_STOP]).toEqual({
-        executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_KILL_PROCESS}`,
-        options: {
-          filePath: JOIN_RESULT,
-          customOption: customOption,
-          filterByTags: TAGS,
-          targetNames: TARGET_NAMES,
-        },
+      executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_KILL_PROCESS}`,
+      options: {
+        filePath: JOIN_RESULT,
+        customOption: customOption,
+        filterByTags: TAGS,
+        targetNames: TARGET_NAMES,
+      },
     });
   });
 
@@ -345,8 +344,6 @@ describe('getEnvTargets', (): void => {
     );
   });
 });
-
-
 
 describe('updateEnvTargetNames', (): void => {
   it('should generate updated targets with target names as keys', (): void => {
