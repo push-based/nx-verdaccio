@@ -145,24 +145,20 @@ describe('verdaccioTargets', (): void => {
   });
 
   it('should generate verdaccio targets with correct structure', (): void => {
-    const result: Record<string, TargetConfiguration> = verdaccioTargets(
+    expect(verdaccioTargets(
       PROJECT_CONFIG,
       options
-    );
-
-    expect(result).toMatchObject({
+    )).toMatchObject({
       [TARGET_ENVIRONMENT_VERDACCIO_START]: expect.any(Object),
       [TARGET_ENVIRONMENT_VERDACCIO_STOP]: expect.any(Object),
     });
   });
 
   it('should generate verdaccio targets TARGET_ENVIRONMENT_VERDACCIO_START nested object with correct data ', (): void => {
-    const result: Record<string, TargetConfiguration> = verdaccioTargets(
+    expect(verdaccioTargets(
       PROJECT_CONFIG,
       options
-    );
-
-    expect(result[TARGET_ENVIRONMENT_VERDACCIO_START]).toEqual({
+    )[TARGET_ENVIRONMENT_VERDACCIO_START]).toEqual({
       outputs: [`{options.environmentRoot}/${VERDACCIO_STORAGE_DIR}`],
       executor: '@nx/js:verdaccio',
       options: {
@@ -180,12 +176,10 @@ describe('verdaccioTargets', (): void => {
   });
 
   it('should generate verdaccio targets TARGET_ENVIRONMENT_VERDACCIO_START nested object with correct data ', (): void => {
-    const result: Record<string, TargetConfiguration> = verdaccioTargets(
+    expect(verdaccioTargets(
       PROJECT_CONFIG,
       options
-    );
-
-    expect(result[TARGET_ENVIRONMENT_VERDACCIO_STOP]).toEqual({
+    )[TARGET_ENVIRONMENT_VERDACCIO_STOP]).toEqual({
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_KILL_PROCESS}`,
       options: {
         filePath: JOIN_RESULT,
