@@ -230,9 +230,7 @@ describe('getEnvTargets', (): void => {
   });
 
   it('should generate env targets with correct structure', (): void => {
-    const targets = getEnvTargets(PROJECT_CONFIG, OPTIONS);
-
-    expect(targets).toMatchObject({
+    expect(getEnvTargets(PROJECT_CONFIG, OPTIONS)).toMatchObject({
       [TARGET_ENVIRONMENT_BOOTSTRAP]: expect.any(Object),
       [TARGET_ENVIRONMENT_INSTALL]: expect.any(Object),
       [TARGET_ENVIRONMENT_PUBLISH_ONLY]: expect.any(Object),
@@ -243,17 +241,13 @@ describe('getEnvTargets', (): void => {
   });
 
   it('should generate env targets TARGET_ENVIRONMENT_BOOTSTRAP nested object with correct structure and data', (): void => {
-    const targets = getEnvTargets(PROJECT_CONFIG, OPTIONS);
-
-    expect(targets[TARGET_ENVIRONMENT_BOOTSTRAP]).toMatchObject({
+    expect(getEnvTargets(PROJECT_CONFIG, OPTIONS)[TARGET_ENVIRONMENT_BOOTSTRAP]).toMatchObject({
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_BOOTSTRAP}`,
     });
   });
 
   it('should generate env targets TARGET_ENVIRONMENT_INSTALL nested object with correct structure and data', (): void => {
-    const targets = getEnvTargets(PROJECT_CONFIG, OPTIONS);
-
-    expect(targets[TARGET_ENVIRONMENT_INSTALL]).toMatchObject({
+    expect(getEnvTargets(PROJECT_CONFIG, OPTIONS)[TARGET_ENVIRONMENT_INSTALL]).toMatchObject({
       dependsOn: [
         {
           projects: 'dependencies',
@@ -267,9 +261,7 @@ describe('getEnvTargets', (): void => {
   });
 
   it('should generate env targets TARGET_ENVIRONMENT_PUBLISH_ONLY nested object with correct structure and data', (): void => {
-    const targets = getEnvTargets(PROJECT_CONFIG, OPTIONS);
-
-    expect(targets[TARGET_ENVIRONMENT_PUBLISH_ONLY]).toMatchObject({
+    expect(getEnvTargets(PROJECT_CONFIG, OPTIONS)[TARGET_ENVIRONMENT_PUBLISH_ONLY]).toMatchObject({
       dependsOn: [
         {
           projects: 'dependencies',
@@ -283,9 +275,7 @@ describe('getEnvTargets', (): void => {
   });
 
   it('should generate env targets TARGET_ENVIRONMENT_SETUP  nested object with correct structure and data', (): void => {
-    const targets = getEnvTargets(PROJECT_CONFIG, OPTIONS);
-
-    expect(targets[TARGET_ENVIRONMENT_SETUP]).toMatchObject({
+    expect(getEnvTargets(PROJECT_CONFIG, OPTIONS)[TARGET_ENVIRONMENT_SETUP]).toMatchObject({
       inputs: [
         '{projectRoot}/project.json',
         { runtime: 'node --version' },
@@ -305,9 +295,7 @@ describe('getEnvTargets', (): void => {
   });
 
   it('should generate env targets TARGET_ENVIRONMENT_E2E nested object with correct structure and data', (): void => {
-    const targets = getEnvTargets(PROJECT_CONFIG, OPTIONS);
-
-    expect(targets[TARGET_ENVIRONMENT_INSTALL]).toMatchObject({
+    expect(getEnvTargets(PROJECT_CONFIG, OPTIONS)[TARGET_ENVIRONMENT_INSTALL]).toMatchObject({
       dependsOn: [
         {
           projects: 'dependencies',
@@ -321,9 +309,7 @@ describe('getEnvTargets', (): void => {
   });
 
   it('should generate env targets TARGET_ENVIRONMENT_TEARDOWN nested object with correct structure and data', (): void => {
-    const targets = getEnvTargets(PROJECT_CONFIG, OPTIONS);
-
-    expect(targets[TARGET_ENVIRONMENT_TEARDOWN]).toMatchObject({
+    expect(getEnvTargets(PROJECT_CONFIG, OPTIONS)[TARGET_ENVIRONMENT_TEARDOWN]).toMatchObject({
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_TEARDOWN}`,
     });
   });
