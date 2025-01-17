@@ -145,20 +145,18 @@ describe('verdaccioTargets', (): void => {
   });
 
   it('should generate verdaccio targets with correct structure', (): void => {
-    expect(verdaccioTargets(
-      PROJECT_CONFIG,
-      options
-    )).toMatchObject({
+    expect(verdaccioTargets(PROJECT_CONFIG, options)).toMatchObject({
       [TARGET_ENVIRONMENT_VERDACCIO_START]: expect.any(Object),
       [TARGET_ENVIRONMENT_VERDACCIO_STOP]: expect.any(Object),
     });
   });
 
   it('should generate verdaccio targets TARGET_ENVIRONMENT_VERDACCIO_START nested object with correct data ', (): void => {
-    expect(verdaccioTargets(
-      PROJECT_CONFIG,
-      options
-    )[TARGET_ENVIRONMENT_VERDACCIO_START]).toEqual({
+    expect(
+      verdaccioTargets(PROJECT_CONFIG, options)[
+        TARGET_ENVIRONMENT_VERDACCIO_START
+      ]
+    ).toEqual({
       outputs: [`{options.environmentRoot}/${VERDACCIO_STORAGE_DIR}`],
       executor: '@nx/js:verdaccio',
       options: {
@@ -176,10 +174,11 @@ describe('verdaccioTargets', (): void => {
   });
 
   it('should generate verdaccio targets TARGET_ENVIRONMENT_VERDACCIO_START nested object with correct data ', (): void => {
-    expect(verdaccioTargets(
-      PROJECT_CONFIG,
-      options
-    )[TARGET_ENVIRONMENT_VERDACCIO_STOP]).toEqual({
+    expect(
+      verdaccioTargets(PROJECT_CONFIG, options)[
+        TARGET_ENVIRONMENT_VERDACCIO_STOP
+      ]
+    ).toEqual({
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_KILL_PROCESS}`,
       options: {
         filePath: JOIN_RESULT,
@@ -241,13 +240,17 @@ describe('getEnvTargets', (): void => {
   });
 
   it('should generate env targets TARGET_ENVIRONMENT_BOOTSTRAP nested object with correct structure and data', (): void => {
-    expect(getEnvTargets(PROJECT_CONFIG, OPTIONS)[TARGET_ENVIRONMENT_BOOTSTRAP]).toMatchObject({
+    expect(
+      getEnvTargets(PROJECT_CONFIG, OPTIONS)[TARGET_ENVIRONMENT_BOOTSTRAP]
+    ).toMatchObject({
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_BOOTSTRAP}`,
     });
   });
 
   it('should generate env targets TARGET_ENVIRONMENT_INSTALL nested object with correct structure and data', (): void => {
-    expect(getEnvTargets(PROJECT_CONFIG, OPTIONS)[TARGET_ENVIRONMENT_INSTALL]).toMatchObject({
+    expect(
+      getEnvTargets(PROJECT_CONFIG, OPTIONS)[TARGET_ENVIRONMENT_INSTALL]
+    ).toMatchObject({
       dependsOn: [
         {
           projects: 'dependencies',
@@ -261,7 +264,9 @@ describe('getEnvTargets', (): void => {
   });
 
   it('should generate env targets TARGET_ENVIRONMENT_PUBLISH_ONLY nested object with correct structure and data', (): void => {
-    expect(getEnvTargets(PROJECT_CONFIG, OPTIONS)[TARGET_ENVIRONMENT_PUBLISH_ONLY]).toMatchObject({
+    expect(
+      getEnvTargets(PROJECT_CONFIG, OPTIONS)[TARGET_ENVIRONMENT_PUBLISH_ONLY]
+    ).toMatchObject({
       dependsOn: [
         {
           projects: 'dependencies',
@@ -275,7 +280,9 @@ describe('getEnvTargets', (): void => {
   });
 
   it('should generate env targets TARGET_ENVIRONMENT_SETUP  nested object with correct structure and data', (): void => {
-    expect(getEnvTargets(PROJECT_CONFIG, OPTIONS)[TARGET_ENVIRONMENT_SETUP]).toMatchObject({
+    expect(
+      getEnvTargets(PROJECT_CONFIG, OPTIONS)[TARGET_ENVIRONMENT_SETUP]
+    ).toMatchObject({
       inputs: [
         '{projectRoot}/project.json',
         { runtime: 'node --version' },
@@ -295,7 +302,9 @@ describe('getEnvTargets', (): void => {
   });
 
   it('should generate env targets TARGET_ENVIRONMENT_E2E nested object with correct structure and data', (): void => {
-    expect(getEnvTargets(PROJECT_CONFIG, OPTIONS)[TARGET_ENVIRONMENT_INSTALL]).toMatchObject({
+    expect(
+      getEnvTargets(PROJECT_CONFIG, OPTIONS)[TARGET_ENVIRONMENT_INSTALL]
+    ).toMatchObject({
       dependsOn: [
         {
           projects: 'dependencies',
@@ -309,7 +318,9 @@ describe('getEnvTargets', (): void => {
   });
 
   it('should generate env targets TARGET_ENVIRONMENT_TEARDOWN nested object with correct structure and data', (): void => {
-    expect(getEnvTargets(PROJECT_CONFIG, OPTIONS)[TARGET_ENVIRONMENT_TEARDOWN]).toMatchObject({
+    expect(
+      getEnvTargets(PROJECT_CONFIG, OPTIONS)[TARGET_ENVIRONMENT_TEARDOWN]
+    ).toMatchObject({
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_TEARDOWN}`,
     });
   });
@@ -327,47 +338,43 @@ describe('getEnvTargets', (): void => {
 
 describe('updateEnvTargetNames', (): void => {
   it('should generate updated targets with target names as keys', (): void => {
-    const updatedTargets = updateEnvTargetNames(PROJECT_CONFIG, OPTIONS);
-
-    expect(updatedTargets).toMatchObject({
+    expect(updateEnvTargetNames(PROJECT_CONFIG, OPTIONS)).toMatchObject({
       build: expect.any(Object),
       e2e: expect.any(Object),
     });
   });
 
   it('should not add any additional target name from options to object structure', (): void => {
-    const options = {
-      targetNames: [
-        'additional-target-0',
-        'e2e',
-        'build',
-        'additional-target',
-        'additional-target-2',
-      ],
-    };
-
-    const updatedTargets = updateEnvTargetNames(PROJECT_CONFIG, options);
-
-    expect(updatedTargets).toMatchObject({
+    expect(
+      updateEnvTargetNames(PROJECT_CONFIG, {
+        targetNames: [
+          'additional-target-0',
+          'e2e',
+          'build',
+          'additional-target',
+          'additional-target-2',
+        ],
+      })
+    ).toMatchObject({
       build: expect.any(Object),
       e2e: expect.any(Object),
     });
   });
 
   it('should return empty object if there is no targets in config', (): void => {
-    const config = {
-      ...PROJECT_CONFIG,
-      targets: {},
-    };
-
-    const updatedTargets = updateEnvTargetNames(config, OPTIONS);
-
-    expect(updatedTargets).toEqual({});
+    expect(
+      updateEnvTargetNames(
+        {
+          ...PROJECT_CONFIG,
+          targets: {},
+        },
+        OPTIONS
+      )
+    ).toEqual({});
   });
 
   it('should add dependsOn if there is a match with targetNames options', (): void => {
-    const updatedTargets = updateEnvTargetNames(PROJECT_CONFIG, OPTIONS);
-    expect(updatedTargets).toMatchObject({
+    expect(updateEnvTargetNames(PROJECT_CONFIG, OPTIONS)).toMatchObject({
       ...TARGETS,
       e2e: {
         ...TARGETS.e2e,
@@ -377,12 +384,11 @@ describe('updateEnvTargetNames', (): void => {
   });
 
   it('should add dependsOn to every matching target', (): void => {
-    const options = {
-      targetNames: ['e2e', 'build'],
-    };
-    const updatedTargets = updateEnvTargetNames(PROJECT_CONFIG, options);
-
-    expect(updatedTargets).toMatchObject({
+    expect(
+      updateEnvTargetNames(PROJECT_CONFIG, {
+        targetNames: ['e2e', 'build'],
+      })
+    ).toMatchObject({
       e2e: {
         ...TARGETS.e2e,
         dependsOn: [{ target: TARGET_ENVIRONMENT_SETUP, params: 'forward' }],
@@ -395,20 +401,21 @@ describe('updateEnvTargetNames', (): void => {
   });
 
   it('should keep existing dependsOn properties and add a new one', (): void => {
-    const config = {
-      ...PROJECT_CONFIG,
-      targets: {
-        ...PROJECT_CONFIG.targets,
-        e2e: {
-          ...PROJECT_CONFIG.targets.e2e,
-          dependsOn: [{ target: 'existing-target' }],
+    expect(
+      updateEnvTargetNames(
+        {
+          ...PROJECT_CONFIG,
+          targets: {
+            ...PROJECT_CONFIG.targets,
+            e2e: {
+              ...PROJECT_CONFIG.targets.e2e,
+              dependsOn: [{ target: 'existing-target' }],
+            },
+          },
         },
-      },
-    };
-
-    const updatedTargets = updateEnvTargetNames(config, OPTIONS);
-
-    expect(updatedTargets).toMatchObject({
+        OPTIONS
+      )
+    ).toMatchObject({
       ...TARGETS,
       e2e: {
         ...TARGETS.e2e,
@@ -421,20 +428,18 @@ describe('updateEnvTargetNames', (): void => {
   });
 
   it('should not update projectConfig targets if options targetNames are empty', (): void => {
-    const options = {
-      targetNames: [],
-    };
-    const updatedTargets = updateEnvTargetNames(PROJECT_CONFIG, options);
-
-    expect(updatedTargets).toEqual(PROJECT_CONFIG.targets);
+    expect(
+      updateEnvTargetNames(PROJECT_CONFIG, {
+        targetNames: [],
+      })
+    ).toEqual(PROJECT_CONFIG.targets);
   });
 
   it('should not update projectConfig targets if none of options targetNames have a match', (): void => {
-    const options = {
-      targetNames: ['no-matching-target'],
-    };
-    const updatedTargets = updateEnvTargetNames(PROJECT_CONFIG, options);
-
-    expect(updatedTargets).toEqual(PROJECT_CONFIG.targets);
+    expect(
+      updateEnvTargetNames(PROJECT_CONFIG, {
+        targetNames: ['no-matching-target'],
+      })
+    ).toEqual(PROJECT_CONFIG.targets);
   });
 });
