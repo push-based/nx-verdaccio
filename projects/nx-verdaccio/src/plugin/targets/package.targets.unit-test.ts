@@ -69,14 +69,14 @@ describe('isPkgProject', () => {
 });
 
 describe('getPkgTargets', (): void => {
-  it('should generate PkgTargets with correct structure', (): void => {
+  it('should generate PkgTargets', (): void => {
     expect(getPkgTargets()).toMatchObject({
       [TARGET_PACKAGE_PUBLISH]: expect.any(Object),
       [TARGET_PACKAGE_INSTALL]: expect.any(Object),
     });
   });
 
-  it('should generate TARGET_PACKAGE_PUBLISH with correct structure', (): void => {
+  it('should generate TARGET_PACKAGE_PUBLISH', (): void => {
     expect(getPkgTargets()[TARGET_PACKAGE_PUBLISH]).toMatchObject({
       dependsOn: expect.any(Array),
       executor: expect.stringMatching(new RegExp(`.+:${EXECUTOR_PACKAGE_NPM_PUBLISH}`)),
@@ -95,7 +95,7 @@ describe('getPkgTargets', (): void => {
     ]);
   });
 
-  it('should generate TARGET_PACKAGE_INSTALL with correct structure', (): void => {
+  it('should generate TARGET_PACKAGE_INSTALL', (): void => {
     expect(getPkgTargets()[TARGET_PACKAGE_INSTALL]).toMatchObject({
       dependsOn: expect.any(Array),
       executor: expect.stringMatching(new RegExp(`.+:${EXECUTOR_PACKAGE_NPM_INSTALL}`)),
