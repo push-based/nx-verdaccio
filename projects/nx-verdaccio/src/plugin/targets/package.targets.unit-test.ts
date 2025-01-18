@@ -125,7 +125,7 @@ describe('getPkgTargets', (): void => {
   });
 
   it('should generate TARGET_PACKAGE_INSTALL executor', (): void => {
-    expect(getPkgTargets()[TARGET_PACKAGE_PUBLISH].executor).matches(
+    expect(getPkgTargets()[TARGET_PACKAGE_INSTALL].executor).matches(
       new RegExp(`.+:${EXECUTOR_PACKAGE_NPM_INSTALL}`)
     );
   });
