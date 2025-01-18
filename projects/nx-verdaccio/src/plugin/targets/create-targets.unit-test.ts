@@ -134,7 +134,7 @@ describe('createProjectConfiguration', (): void => {
     expect(nxDevkitMockModule.logger.warn).toHaveBeenCalledOnce();
   });
 
-  it('should not log warn if isE2eProject is true and implicitDependencies are not empty', (): void => {
+  it('should not log warn if isE2eProject is true and implicitDependencies are given', (): void => {
     const configWithImplicitDependencies = {
       ...projectConfiguration,
       implicitDependencies,
@@ -143,7 +143,7 @@ describe('createProjectConfiguration', (): void => {
     expect(nxDevkitMockModule.logger.warn).toHaveBeenCalledTimes(0);
   });
 
-  it('should not log warn if isE2eProject is false and implicitDependencies are not empty', (): void => {
+  it('should not log warn if isE2eProject is false and implicitDependencies are given', (): void => {
     isEnvProjectSpy.mockReturnValue(false);
     const configWithImplicitDependencies = {
       ...projectConfiguration,
@@ -153,7 +153,7 @@ describe('createProjectConfiguration', (): void => {
     expect(nxDevkitMockModule.logger.warn).toHaveBeenCalledTimes(0);
   });
 
-  it('should not log warn if isE2eProject is false and implicitDependencies are empty', (): void => {
+  it('should not log warn if isE2eProject is false and implicitDependencies are not given', (): void => {
     isEnvProjectSpy.mockReturnValue(false);
     createProjectConfiguration(projectConfiguration, options);
     expect(nxDevkitMockModule.logger.warn).toHaveBeenCalledTimes(0);
