@@ -69,6 +69,7 @@ describe('isPkgProject', () => {
 });
 
 describe('getPkgTargets', (): void => {
+
   it('should generate PkgTargets', (): void => {
     expect(getPkgTargets()).toMatchObject({
       [TARGET_PACKAGE_PUBLISH]: expect.any(Object),
@@ -84,45 +85,48 @@ describe('getPkgTargets', (): void => {
     });
   });
 
-  it('should generate TARGET_PACKAGE_PUBLISH executor', (): void => {
-    expect(getPkgTargets()[TARGET_PACKAGE_PUBLISH].executor).matches(new RegExp(`.+:${EXECUTOR_PACKAGE_NPM_PUBLISH}`))
+  it('should generate TARGET_PACKAGE_PUBLISH dependsOn', (): void => {
+    expect(getPkgTargets()[TARGET_PACKAGE_PUBLISH].dependsOn).toEqual([
+      { target: 'build', params: 'forward' },
+      {
+        projects: 'dependencies',
+        target: TARGET_PACKAGE_PUBLISH,
+        params: 'forward',
+      },
+    ]);
   });
 
-    it('should generate TARGET_PACKAGE_PUBLISH dependsOn', (): void => {
-      expect(getPkgTargets()[TARGET_PACKAGE_PUBLISH].dependsOn).toEqual([
-        { target: 'build', params: 'forward' },
-        {
-          projects: 'dependencies',
-          target: TARGET_PACKAGE_PUBLISH,
-          params: 'forward',
-        },
-      ]);
-    });
+  it('should generate TARGET_PACKAGE_PUBLISH executor', (): void => {
+    expect(getPkgTargets()[TARGET_PACKAGE_PUBLISH].executor).matches(
+      new RegExp(`.+:${EXECUTOR_PACKAGE_NPM_PUBLISH}`)
+    );
+  });
 
-    it('should generate TARGET_PACKAGE_INSTALL', (): void => {
-      expect(getPkgTargets()[TARGET_PACKAGE_INSTALL]).toMatchObject({
-        dependsOn: expect.any(Array),
-        executor: expect.any(String),
-        options: {},
-      });
+  it('should generate TARGET_PACKAGE_INSTALL', (): void => {
+    expect(getPkgTargets()[TARGET_PACKAGE_INSTALL]).toMatchObject({
+      dependsOn: expect.any(Array),
+      executor: expect.any(String),
+      options: {},
     });
+  });
+
+  it('should generate TARGET_PACKAGE_INSTALL dependsOn', (): void => {
+    expect(getPkgTargets()[TARGET_PACKAGE_INSTALL].dependsOn).toEqual([
+      {
+        target: TARGET_PACKAGE_PUBLISH,
+        params: 'forward',
+      },
+      {
+        projects: 'dependencies',
+        target: TARGET_PACKAGE_INSTALL,
+        params: 'forward',
+      },
+    ]);
+  });
 
   it('should generate TARGET_PACKAGE_INSTALL executor', (): void => {
-    expect(getPkgTargets()[TARGET_PACKAGE_PUBLISH].executor).matches(new RegExp(`.+:${EXECUTOR_PACKAGE_NPM_INSTALL}`))
+    expect(getPkgTargets()[TARGET_PACKAGE_PUBLISH].executor).matches(
+      new RegExp(`.+:${EXECUTOR_PACKAGE_NPM_INSTALL}`)
+    );
   });
-
-    it('should generate TARGET_PACKAGE_INSTALL dependsOn', (): void => {
-      expect(getPkgTargets()[TARGET_PACKAGE_INSTALL].dependsOn).toEqual([
-        {
-          target: TARGET_PACKAGE_PUBLISH,
-          params: 'forward',
-        },
-        {
-          projects: 'dependencies',
-          target: TARGET_PACKAGE_INSTALL,
-          params: 'forward',
-        },
-      ]);
-    });
-  });
-
+});

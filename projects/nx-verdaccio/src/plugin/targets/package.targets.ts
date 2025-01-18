@@ -7,7 +7,6 @@ import { EXECUTOR_PACKAGE_NPM_INSTALL } from '../../executors/pkg-install/consta
 export const TARGET_PACKAGE_INSTALL = 'nxv-pkg-install';
 export const TARGET_PACKAGE_PUBLISH = 'nxv-pkg-publish';
 
-
 /**
  * Determines if the given project is a `publishable` package.
  * A project qualifies as a `publishable` if it's of type 'library'.
