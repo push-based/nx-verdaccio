@@ -9,9 +9,9 @@ export const TARGET_PACKAGE_PUBLISH = 'nxv-pkg-publish';
 
 
 /**
- * Determines if the given project is a publishable project.
- * A project qualifies as a publishable if it's of type 'library' (early return if it's not)
- * and, when options tag filters are provided, and they have match with any config tag.
+ * Determines if the given project is a `publishable` package.
+ * A project qualifies as a `publishable` if it's of type 'library'.
+ * If tag filters are provided only projects passing the filter will return true.
  *
  * @param projectConfig
  * @param options
@@ -41,8 +41,7 @@ export function isPkgProject(
 
 /**
  * Creates package-related targets for build pipelines.
- * Includes `TARGET_PACKAGE_PUBLISH` and `TARGET_PACKAGE_INSTALL` targets,
- * each with targets they depend on.
+ * Includes `TARGET_PACKAGE_PUBLISH` and `TARGET_PACKAGE_INSTALL` target configurations.
  *
  * @returns A record of package targets with their configurations.
  */
