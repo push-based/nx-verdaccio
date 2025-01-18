@@ -129,12 +129,12 @@ describe('createProjectConfiguration', (): void => {
     expect(result).toStrictEqual({});
   });
 
-  it('should log warn if isE2eProject and implicitDependencies are empty', (): void => {
+  it('should log warn if isE2eProject is true and implicitDependencies are empty', (): void => {
     createProjectConfiguration(projectConfiguration, options);
     expect(nxDevkitMockModule.logger.warn).toHaveBeenCalledOnce();
   });
 
-  it('should not log warn if isE2eProject and implicitDependencies are not empty', (): void => {
+  it('should not log warn if isE2eProject is true and implicitDependencies are not empty', (): void => {
     const configWithImplicitDependencies = {
       ...projectConfiguration,
       implicitDependencies,
@@ -159,7 +159,7 @@ describe('createProjectConfiguration', (): void => {
     expect(nxDevkitMockModule.logger.warn).toHaveBeenCalledTimes(0);
   });
 
-  it('should generate project configuration with namedInputs and targets if isE2eProject and isPublishableProject', (): void => {
+  it('should generate project configuration with namedInputs and targets if isE2eProject and isPublishableProject are true', (): void => {
     const result = createProjectConfiguration(projectConfiguration, options);
     expect(result).toMatchObject({
       namedInputs: expect.any(Object),
@@ -174,7 +174,7 @@ describe('createProjectConfiguration', (): void => {
     });
   });
 
-  it('should generate configuration with correct structure if isE2eProject is false and isPublishableProject', (): void => {
+  it('should generate configuration with correct structure if isE2eProject is false and isPublishableProject is true', (): void => {
     const result = createProjectConfiguration(projectConfiguration, options);
     expect(result).toMatchObject({
       namedInputs: expect.any(Object),
@@ -182,7 +182,7 @@ describe('createProjectConfiguration', (): void => {
     });
   });
 
-  it('should generate configuration with correct structure if isE2eProject and isPublishableProject is false', (): void => {
+  it('should generate configuration with correct structure if isE2eProject is true and isPublishableProject is false', (): void => {
     isPkgSpy.mockReturnValue(false);
     const result = createProjectConfiguration(projectConfiguration, options);
     expect(result).toMatchObject({
@@ -191,7 +191,7 @@ describe('createProjectConfiguration', (): void => {
     });
   });
 
-  it('should generate targets with correct structure if isE2eProject and isPublishableProject is false', (): void => {
+  it('should generate targets with correct structure if isE2eProject is true and isPublishableProject is false', (): void => {
     isPkgSpy.mockReturnValue(false);
     const result = createProjectConfiguration(projectConfiguration, options);
     expect(result['targets']).toMatchObject({
@@ -207,7 +207,7 @@ describe('createProjectConfiguration', (): void => {
     });
   });
 
-  it('should generate targets with correct structure if isE2eProject is false and isPublishableProject', (): void => {
+  it('should generate targets with correct structure if isE2eProject is false and isPublishableProject is true', (): void => {
     const result = createProjectConfiguration(projectConfiguration, options);
     expect(result['targets']).toMatchObject({
       [TARGET_PACKAGE_PUBLISH]: expect.any(Object),
