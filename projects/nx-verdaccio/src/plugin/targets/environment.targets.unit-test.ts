@@ -67,6 +67,23 @@ const OPTIONS: NormalizedCreateNodeOptions['environments'] = {
 };
 
 describe('isEnvProject', (): void => {
+  it('should return true if targetNames match and filterByTags are not present', (): void => {
+    expect(isEnvProject({ ...PROJECT_CONFIG, tags: null }, OPTIONS)).toBe(true);
+  });
+
+  it('should return true if targetNames match and filterByTags are not present', (): void => {
+    expect(
+      isEnvProject(PROJECT_CONFIG, {
+        ...OPTIONS,
+        filterByTags: null,
+      })
+    ).toBe(true);
+  });
+
+  it('should return true if targetNames match and tags match filterByTags', (): void => {
+    expect(isEnvProject(PROJECT_CONFIG, OPTIONS)).toBe(true);
+  });
+
   it('should return false if targets are missing', (): void => {
     expect(isEnvProject({ ...PROJECT_CONFIG, targets: null }, OPTIONS)).toBe(
       false
@@ -92,23 +109,6 @@ describe('isEnvProject', (): void => {
     expect(
       isEnvProject(PROJECT_CONFIG, { ...OPTIONS, targetNames: ['mockTarget'] })
     ).toBe(false);
-  });
-
-  it('should return true if targetNames match and filterByTags is are not present', (): void => {
-    expect(isEnvProject({ ...PROJECT_CONFIG, tags: null }, OPTIONS)).toBe(true);
-  });
-
-  it('should return true if targetNames match and filterByTags are not present', (): void => {
-    expect(
-      isEnvProject(PROJECT_CONFIG, {
-        ...OPTIONS,
-        filterByTags: null,
-      })
-    ).toBe(true);
-  });
-
-  it('should return true if targetNames match and tags match filterByTags', (): void => {
-    expect(isEnvProject(PROJECT_CONFIG, OPTIONS)).toBe(true);
   });
 
   it('should return false if targetNames match but tags don’t match filterByTags', (): void => {
