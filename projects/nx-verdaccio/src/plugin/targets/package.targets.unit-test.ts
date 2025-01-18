@@ -70,16 +70,14 @@ describe('isPkgProject', () => {
 
 describe('getPkgTargets', (): void => {
   it('should generate PkgTargets with correct structure', (): void => {
-    const result = getPkgTargets();
-    expect(result).toMatchObject({
+    expect(getPkgTargets()).toMatchObject({
       [TARGET_PACKAGE_PUBLISH]: expect.any(Object),
       [TARGET_PACKAGE_INSTALL]: expect.any(Object),
     });
   });
 
   it('should generate TARGET_PACKAGE_PUBLISH with correct structure', (): void => {
-    const result = getPkgTargets();
-    expect(result[TARGET_PACKAGE_PUBLISH]).toMatchObject({
+    expect(getPkgTargets()[TARGET_PACKAGE_PUBLISH]).toMatchObject({
       dependsOn: expect.any(Array),
       executor: expect.stringMatching(new RegExp(`.+:${EXECUTOR_PACKAGE_NPM_PUBLISH}`)),
       options: {},
@@ -87,8 +85,7 @@ describe('getPkgTargets', (): void => {
   });
 
   it('should generate TARGET_PACKAGE_PUBLISH dependsOn', (): void => {
-    const result = getPkgTargets();
-    expect(result[TARGET_PACKAGE_PUBLISH].dependsOn).toEqual([
+    expect(getPkgTargets()[TARGET_PACKAGE_PUBLISH].dependsOn).toEqual([
       { target: 'build', params: 'forward' },
       {
         projects: 'dependencies',
@@ -99,8 +96,7 @@ describe('getPkgTargets', (): void => {
   });
 
   it('should generate TARGET_PACKAGE_INSTALL with correct structure', (): void => {
-    const result = getPkgTargets();
-    expect(result[TARGET_PACKAGE_INSTALL]).toMatchObject({
+    expect(getPkgTargets()[TARGET_PACKAGE_INSTALL]).toMatchObject({
       dependsOn: expect.any(Array),
       executor: expect.stringMatching(new RegExp(`.+:${EXECUTOR_PACKAGE_NPM_INSTALL}`)),
       options: {},
@@ -108,8 +104,7 @@ describe('getPkgTargets', (): void => {
   });
 
   it('should generate TARGET_PACKAGE_INSTALL dependsOn', (): void => {
-    const result = getPkgTargets();
-    expect(result[TARGET_PACKAGE_INSTALL].dependsOn).toEqual([
+    expect(getPkgTargets()[TARGET_PACKAGE_INSTALL].dependsOn).toEqual([
       {
         target: TARGET_PACKAGE_PUBLISH,
         params: 'forward',
