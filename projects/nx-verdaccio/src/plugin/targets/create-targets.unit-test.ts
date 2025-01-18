@@ -94,71 +94,6 @@ describe('createProjectConfiguration', (): void => {
     updateEnvTargetNamesSpy.mockRestore();
   });
 
-  it('should call normalizeCreateNodesOptions ones with projectConfiguration and options', (): void => {
-    createProjectConfiguration(projectConfiguration, options);
-    expect(
-      normalizeCreateNodesSpyModule.normalizeCreateNodesOptions
-    ).toHaveBeenCalledOnce();
-    expect(
-      normalizeCreateNodesSpyModule.normalizeCreateNodesOptions
-    ).toHaveBeenCalledWith(options);
-  });
-
-  it('should call isEnvProject ones with projectConfiguration and environments', (): void => {
-    createProjectConfiguration(projectConfiguration, options);
-    expect(environmentTargetsModule.isEnvProject).toHaveBeenCalledOnce();
-    expect(environmentTargetsModule.isEnvProject).toHaveBeenCalledWith(
-      projectConfiguration,
-      normalizedOptions['environments']
-    );
-  });
-
-  it('should call isPublishableProject ones with projectConfiguration and packages', (): void => {
-    createProjectConfiguration(projectConfiguration, options);
-    expect(packageTargetsSpyModule.isPkgProject).toHaveBeenCalledOnce();
-    expect(packageTargetsSpyModule.isPkgProject).toHaveBeenCalledWith(
-      projectConfiguration,
-      normalizedOptions['packages']
-    );
-  });
-
-  it('should return empty object if isE2eProject and isPublishableProject are false', (): void => {
-    isEnvProjectSpy.mockReturnValue(false);
-    isPkgSpy.mockReturnValue(false);
-    const result = createProjectConfiguration(projectConfiguration, options);
-    expect(result).toStrictEqual({});
-  });
-
-  it('should log warn if isE2eProject is true and implicitDependencies are empty', (): void => {
-    createProjectConfiguration(projectConfiguration, options);
-    expect(nxDevkitMockModule.logger.warn).toHaveBeenCalledOnce();
-  });
-
-  it('should not log warn if isE2eProject is true and implicitDependencies are given', (): void => {
-    const configWithImplicitDependencies = {
-      ...projectConfiguration,
-      implicitDependencies,
-    };
-    createProjectConfiguration(configWithImplicitDependencies, options);
-    expect(nxDevkitMockModule.logger.warn).toHaveBeenCalledTimes(0);
-  });
-
-  it('should not log warn if isE2eProject is false and implicitDependencies are given', (): void => {
-    isEnvProjectSpy.mockReturnValue(false);
-    const configWithImplicitDependencies = {
-      ...projectConfiguration,
-      implicitDependencies,
-    };
-    createProjectConfiguration(configWithImplicitDependencies, options);
-    expect(nxDevkitMockModule.logger.warn).toHaveBeenCalledTimes(0);
-  });
-
-  it('should not log warn if isE2eProject is false and implicitDependencies are not given', (): void => {
-    isEnvProjectSpy.mockReturnValue(false);
-    createProjectConfiguration(projectConfiguration, options);
-    expect(nxDevkitMockModule.logger.warn).toHaveBeenCalledTimes(0);
-  });
-
   it('should generate a config if isE2eProject and isPublishableProject are true', (): void => {
     const result = createProjectConfiguration(projectConfiguration, options);
     expect(result).toMatchObject({
@@ -208,6 +143,41 @@ describe('createProjectConfiguration', (): void => {
     });
   });
 
+  it('should return an empty object if isE2eProject and isPublishableProject are false', (): void => {
+    isEnvProjectSpy.mockReturnValue(false);
+    isPkgSpy.mockReturnValue(false);
+    const result = createProjectConfiguration(projectConfiguration, options);
+    expect(result).toStrictEqual({});
+  });
+
+  it('should call normalizeCreateNodesOptions ones with projectConfiguration and options', (): void => {
+    createProjectConfiguration(projectConfiguration, options);
+    expect(
+      normalizeCreateNodesSpyModule.normalizeCreateNodesOptions
+    ).toHaveBeenCalledOnce();
+    expect(
+      normalizeCreateNodesSpyModule.normalizeCreateNodesOptions
+    ).toHaveBeenCalledWith(options);
+  });
+
+  it('should call isEnvProject ones with projectConfiguration and environments', (): void => {
+    createProjectConfiguration(projectConfiguration, options);
+    expect(environmentTargetsModule.isEnvProject).toHaveBeenCalledOnce();
+    expect(environmentTargetsModule.isEnvProject).toHaveBeenCalledWith(
+      projectConfiguration,
+      normalizedOptions['environments']
+    );
+  });
+
+  it('should call isPublishableProject ones with projectConfiguration and packages', (): void => {
+    createProjectConfiguration(projectConfiguration, options);
+    expect(packageTargetsSpyModule.isPkgProject).toHaveBeenCalledOnce();
+    expect(packageTargetsSpyModule.isPkgProject).toHaveBeenCalledWith(
+      projectConfiguration,
+      normalizedOptions['packages']
+    );
+  });
+
   it('should call verdaccioTargets ones with correct arguments', (): void => {
     createProjectConfiguration(projectConfiguration, options);
     expect(environmentTargetsModule.verdaccioTargets).toHaveBeenCalledOnce();
@@ -235,5 +205,35 @@ describe('createProjectConfiguration', (): void => {
       projectConfiguration,
       normalizedOptions.environments
     );
+  });
+
+  it('should log warn if isE2eProject is true and implicitDependencies are empty', (): void => {
+    createProjectConfiguration(projectConfiguration, options);
+    expect(nxDevkitMockModule.logger.warn).toHaveBeenCalledOnce();
+  });
+
+  it('should not log warn if isE2eProject is true and implicitDependencies are given', (): void => {
+    const configWithImplicitDependencies = {
+      ...projectConfiguration,
+      implicitDependencies,
+    };
+    createProjectConfiguration(configWithImplicitDependencies, options);
+    expect(nxDevkitMockModule.logger.warn).toHaveBeenCalledTimes(0);
+  });
+
+  it('should not log warn if isE2eProject is false and implicitDependencies are given', (): void => {
+    isEnvProjectSpy.mockReturnValue(false);
+    const configWithImplicitDependencies = {
+      ...projectConfiguration,
+      implicitDependencies,
+    };
+    createProjectConfiguration(configWithImplicitDependencies, options);
+    expect(nxDevkitMockModule.logger.warn).toHaveBeenCalledTimes(0);
+  });
+
+  it('should not log warn if isE2eProject is false and implicitDependencies are not given', (): void => {
+    isEnvProjectSpy.mockReturnValue(false);
+    createProjectConfiguration(projectConfiguration, options);
+    expect(nxDevkitMockModule.logger.warn).toHaveBeenCalledTimes(0);
   });
 });
