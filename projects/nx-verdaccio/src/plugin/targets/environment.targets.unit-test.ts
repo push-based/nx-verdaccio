@@ -94,7 +94,7 @@ describe('isEnvProject', (): void => {
     ).toBe(false);
   });
 
-  it('should return true if targetNames match and tags are not present', (): void => {
+  it('should return true if targetNames match and filterByTags is are not present', (): void => {
     expect(isEnvProject({ ...PROJECT_CONFIG, tags: null }, OPTIONS)).toBe(true);
   });
 
@@ -151,7 +151,7 @@ describe('verdaccioTargets', (): void => {
     });
   });
 
-  it('should generate verdaccio targets TARGET_ENVIRONMENT_VERDACCIO_START nested object with correct data ', (): void => {
+  it('should generate the TARGET_ENVIRONMENT_VERDACCIO_START target correctly', (): void => {
     expect(
       verdaccioTargets(PROJECT_CONFIG, options)[
         TARGET_ENVIRONMENT_VERDACCIO_START
@@ -160,20 +160,20 @@ describe('verdaccioTargets', (): void => {
       outputs: [`{options.environmentRoot}/${VERDACCIO_STORAGE_DIR}`],
       executor: '@nx/js:verdaccio',
       options: {
+        port,
+        customOption,
         config: '.verdaccio/config.yml',
-        port: port,
         storage: JOIN_RESULT,
         clear: true,
         environmentDir: JOIN_RESULT,
         projectName: PROJECT_NAME,
-        customOption: customOption,
         filterByTags: TAGS,
         targetNames: TARGET_NAMES,
       },
     });
   });
 
-  it('should generate verdaccio targets TARGET_ENVIRONMENT_VERDACCIO_START nested object with correct data ', (): void => {
+  it('should generate the TARGET_ENVIRONMENT_VERDACCIO_START target correctly', (): void => {
     expect(
       verdaccioTargets(PROJECT_CONFIG, options)[
         TARGET_ENVIRONMENT_VERDACCIO_STOP
@@ -181,8 +181,8 @@ describe('verdaccioTargets', (): void => {
     ).toEqual({
       executor: `${PACKAGE_NAME}:${EXECUTOR_ENVIRONMENT_KILL_PROCESS}`,
       options: {
+        customOption,
         filePath: JOIN_RESULT,
-        customOption: customOption,
         filterByTags: TAGS,
         targetNames: TARGET_NAMES,
       },
@@ -239,7 +239,7 @@ describe('getEnvTargets', (): void => {
     });
   });
 
-  it('should generate env targets TARGET_ENVIRONMENT_BOOTSTRAP nested object with correct structure and data', (): void => {
+  it('should generate the TARGET_ENVIRONMENT_BOOTSTRAP target correctly', (): void => {
     expect(
       getEnvTargets(PROJECT_CONFIG, OPTIONS)[TARGET_ENVIRONMENT_BOOTSTRAP]
     ).toMatchObject({
@@ -247,7 +247,7 @@ describe('getEnvTargets', (): void => {
     });
   });
 
-  it('should generate env targets TARGET_ENVIRONMENT_INSTALL nested object with correct structure and data', (): void => {
+  it('should generate the TARGET_ENVIRONMENT_INSTALL target correctly', (): void => {
     expect(
       getEnvTargets(PROJECT_CONFIG, OPTIONS)[TARGET_ENVIRONMENT_INSTALL]
     ).toMatchObject({
@@ -263,7 +263,7 @@ describe('getEnvTargets', (): void => {
     });
   });
 
-  it('should generate env targets TARGET_ENVIRONMENT_PUBLISH_ONLY nested object with correct structure and data', (): void => {
+  it('should generate the TARGET_ENVIRONMENT_PUBLISH_ONLY target correctly', (): void => {
     expect(
       getEnvTargets(PROJECT_CONFIG, OPTIONS)[TARGET_ENVIRONMENT_PUBLISH_ONLY]
     ).toMatchObject({
@@ -279,7 +279,7 @@ describe('getEnvTargets', (): void => {
     });
   });
 
-  it('should generate env targets TARGET_ENVIRONMENT_SETUP  nested object with correct structure and data', (): void => {
+  it('should generate the TARGET_ENVIRONMENT_SETUP target correctly', (): void => {
     expect(
       getEnvTargets(PROJECT_CONFIG, OPTIONS)[TARGET_ENVIRONMENT_SETUP]
     ).toMatchObject({
@@ -301,7 +301,7 @@ describe('getEnvTargets', (): void => {
     });
   });
 
-  it('should generate env targets TARGET_ENVIRONMENT_E2E nested object with correct structure and data', (): void => {
+  it('should generate the TARGET_ENVIRONMENT_E2E target correctly', (): void => {
     expect(
       getEnvTargets(PROJECT_CONFIG, OPTIONS)[TARGET_ENVIRONMENT_INSTALL]
     ).toMatchObject({
@@ -317,7 +317,7 @@ describe('getEnvTargets', (): void => {
     });
   });
 
-  it('should generate env targets TARGET_ENVIRONMENT_TEARDOWN nested object with correct structure and data', (): void => {
+  it('should generate the TARGET_ENVIRONMENT_TEARDOWN target correctly', (): void => {
     expect(
       getEnvTargets(PROJECT_CONFIG, OPTIONS)[TARGET_ENVIRONMENT_TEARDOWN]
     ).toMatchObject({
