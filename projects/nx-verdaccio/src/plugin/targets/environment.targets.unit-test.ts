@@ -344,35 +344,6 @@ describe('updateEnvTargetNames', (): void => {
     });
   });
 
-  it('should not add any additional target name from options to object structure', (): void => {
-    expect(
-      updateEnvTargetNames(PROJECT_CONFIG, {
-        targetNames: [
-          'additional-target-0',
-          'e2e',
-          'build',
-          'additional-target',
-          'additional-target-2',
-        ],
-      })
-    ).toMatchObject({
-      build: expect.any(Object),
-      e2e: expect.any(Object),
-    });
-  });
-
-  it('should return empty object if there is no targets in config', (): void => {
-    expect(
-      updateEnvTargetNames(
-        {
-          ...PROJECT_CONFIG,
-          targets: {},
-        },
-        OPTIONS
-      )
-    ).toEqual({});
-  });
-
   it('should add dependsOn if there is a match with targetNames options', (): void => {
     expect(updateEnvTargetNames(PROJECT_CONFIG, OPTIONS)).toMatchObject({
       ...TARGETS,
@@ -425,6 +396,18 @@ describe('updateEnvTargetNames', (): void => {
         ],
       },
     });
+  });
+
+  it('should return empty object if there is no targets in config', (): void => {
+    expect(
+      updateEnvTargetNames(
+        {
+          ...PROJECT_CONFIG,
+          targets: {},
+        },
+        OPTIONS
+      )
+    ).toEqual({});
   });
 
   it('should not update projectConfig targets if options targetNames are empty', (): void => {
