@@ -86,6 +86,18 @@ describe('getPkgTargets', (): void => {
     });
   });
 
+  it('should generate TARGET_PACKAGE_PUBLISH dependsOn', (): void => {
+    const result = getPkgTargets();
+    expect(result[TARGET_PACKAGE_PUBLISH].dependsOn).toEqual([
+      { target: 'build', params: 'forward' },
+      {
+        projects: 'dependencies',
+        target: TARGET_PACKAGE_PUBLISH,
+        params: 'forward',
+      },
+    ]);
+  });
+
   it('should generate TARGET_PACKAGE_INSTALL with correct structure', (): void => {
     const result = getPkgTargets();
     expect(result[TARGET_PACKAGE_INSTALL]).toMatchObject({
@@ -93,5 +105,20 @@ describe('getPkgTargets', (): void => {
       executor: expect.stringMatching(new RegExp(`.+:${EXECUTOR_PACKAGE_NPM_INSTALL}`)),
       options: {},
     });
+  });
+
+  it('should generate TARGET_PACKAGE_INSTALL dependsOn', (): void => {
+    const result = getPkgTargets();
+    expect(result[TARGET_PACKAGE_INSTALL].dependsOn).toEqual([
+      {
+        target: TARGET_PACKAGE_PUBLISH,
+        params: 'forward',
+      },
+      {
+        projects: 'dependencies',
+        target: TARGET_PACKAGE_INSTALL,
+        params: 'forward',
+      },
+    ]);
   });
 });
