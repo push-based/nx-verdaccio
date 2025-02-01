@@ -88,7 +88,7 @@ With this plugin, say goodbye to the old days of waiting around for your tests a
 >   "targets": {
 >     "e2e": {
 >       "dependsOn": [
->         // dynamically aded
+>         // dynamically added
 >         { "target": "env-setup", "params": "forward" }
 >       ]
 >       // ...
@@ -98,7 +98,7 @@ With this plugin, say goodbye to the old days of waiting around for your tests a
 > }
 > ```
 
-### Optional: Add the Package Under Test as implicitDependency (OPTIONAL)
+### Optional: Add the Package Under Test as implicitDependencies
 
 Let the plugin detect your implicit dependencies:
 
@@ -106,7 +106,7 @@ Let the plugin detect your implicit dependencies:
 // projects/utils-e2e/project.json
 {
   "name": "utils-e2e",
-  "implicitDependency": ["utils"]
+  "implicitDependencies": ["utils"]
 }
 ```
 
@@ -224,9 +224,9 @@ Tag those projects accordingly:
 
 ## Benchmarks
 
-This is a first draft of how the benchmarks will look. ATM the data set it not big proper.
+This is a first draft of how the benchmarks will look. ATM the data set it not big enough.
 
-> [!warn]
+> ⚠️
 > The data is a first draft of the structure and does not reflect a clean data set.
 > Work on the real benchmark data in progress
 
@@ -241,9 +241,9 @@ This is a first draft of how the benchmarks will look. ATM the data set it not b
 
 ## Next Steps
 
-- [configure cacheable environments](./projects/nx-verdaccio/docs/static-environments.md)
-- [static environments](.)
-- [debugging](.)
+- [Configure cacheable environments](./docs/benefits.md#-task-performance---optimized-execution)
+- [Configure Static environments](./projects/nx-verdaccio/docs/static-environments.md)
+- [Debugging](./projects/nx-verdaccio/README.md#debugging-e2e-environments)
 
 ## Stay Connected! 🔗
 
