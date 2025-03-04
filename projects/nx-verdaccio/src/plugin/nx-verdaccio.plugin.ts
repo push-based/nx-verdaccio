@@ -26,7 +26,6 @@ import {
 import { createProjectConfiguration } from './targets/create-targets';
 
 const PROJECT_JSON_FILE_GLOB = '**/project.json';
-const PACKAGE_JSON_FILE_GLOB = '**/package.json';
 
 export const createNodesV2: CreateNodesV2<NxVerdaccioCreateNodeOptions> = [
   PROJECT_JSON_FILE_GLOB,
