@@ -53,15 +53,8 @@ export const createNodesV2: CreateNodesV2<NxVerdaccioCreateNodeOptions> = [
           }
           // Unexpected token 'g', "getProject"... is not valid JSON
           // Project lib-a-e2e is an environment project but has no implicit dependencies.
-          const projectConfiguration: ProjectConfiguration = await readFile(
-            join(process.cwd(), globMatchingFile),
-            'utf8'
-          ).then(JSON.parse);
-          console.log(
-            'getProjectConfig',
-            await getProjectConfig(globMatchingFile)
-          );
-          console.log('projectConfiguration', projectConfiguration);
+          const projectConfiguration: ProjectConfiguration = await getProjectConfig(globMatchingFile);
+
           isVisited.set(dirname(globMatchingFile), true);
           if (
             !('name' in projectConfiguration) ||
