@@ -1,3 +1,15 @@
+## 0.0.0-alpha.28 (2025-03-04)
+
+
+### 🩹 Fixes
+
+- update docs ([0b87537](https://github.com/push-based/nx-verdaccio/commit/0b87537))
+- **nx-verdaccio:** add package json glob ([a852200](https://github.com/push-based/nx-verdaccio/commit/a852200))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
 ## 0.0.0-alpha.27 (2024-12-11)
 
 
