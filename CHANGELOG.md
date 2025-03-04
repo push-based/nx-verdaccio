@@ -1,3 +1,14 @@
+## 0.0.0-alpha.30 (2025-03-04)
+
+
+### 🩹 Fixes
+
+- **nx-verdaccio:** adjust glob pattern ([a247606](https://github.com/push-based/nx-verdaccio/commit/a247606))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
 ## 0.0.0-alpha.29 (2025-03-04)
 
 
