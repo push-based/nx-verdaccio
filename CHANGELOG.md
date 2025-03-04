@@ -1,3 +1,14 @@
+## 0.0.0-alpha.29 (2025-03-04)
+
+
+### 🩹 Fixes
+
+- **nx-verdaccio:** adjust globs ([3018aa2](https://github.com/push-based/nx-verdaccio/commit/3018aa2))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
 ## 0.0.0-alpha.28 (2025-03-04)
 
 
