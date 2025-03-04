@@ -115,3 +115,9 @@ The following optional folders can be present in a project root;
 - `mocks` - test fixtures and utilities specific for a given project
 - `docs` - documentation files specific for a given project
 - `tooling` - tooling related code specific for a given project
+
+# Release
+
+```sh
+nx release
+```
