@@ -1,3 +1,16 @@
+## 0.0.0-alpha.31 (2025-03-24)
+
+
+### 🩹 Fixes
+
+- **nx-verdaccio:** adjust install ([6aeb5a8](https://github.com/push-based/nx-verdaccio/commit/6aeb5a8))
+- **readme.md:** fixes typos in readme.md ([67eb136](https://github.com/push-based/nx-verdaccio/commit/67eb136))
+
+### ❤️  Thank You
+
+- Alejandro
+- Michael @rx-angular
+
 ## 0.0.0-alpha.30 (2025-03-04)
 
 
