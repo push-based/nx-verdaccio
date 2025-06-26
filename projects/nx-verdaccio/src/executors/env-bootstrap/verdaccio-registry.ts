@@ -1,20 +1,16 @@
-import { bold } from 'ansis';
 import { type ExecutorContext, logger } from '@nx/devkit';
+import { bold } from 'ansis';
 import { join } from 'node:path';
-import { objectToCliArgs } from '../../internal/terminal';
+import { getEnvironmentRoot } from '../../internal/environment-root';
 import { executeProcess } from '../../internal/execute-process';
-import { uniquePort } from './unique-port';
 import { formatError, formatInfo } from '../../internal/logging';
-import {
-  TARGET_ENVIRONMENT_VERDACCIO_START,
-  TARGET_ENVIRONMENT_VERDACCIO_STOP,
-} from '../../plugin/targets/environment.targets';
+import { runSingleExecutor } from '../../internal/run-executor';
+import { objectToCliArgs } from '../../internal/terminal';
 import {
   DEFAULT_VERDACCIO_STORAGE_DIR,
   VERDACCIO_REGISTRY_JSON,
 } from './constants';
-import { runSingleExecutor } from '../../internal/run-executor';
-import { getEnvironmentRoot } from '../../internal/environment-root';
+import { uniquePort } from './unique-port';
 
 const VERDACCIO_TOKEN = 'Verdaccio: ';
 
@@ -67,6 +63,7 @@ export function parseRegistryData(stdout: string): VerdaccioProcessResult {
 
 export type StarVerdaccioOnlyOptions = {
   projectName: string;
+  verdaccioStartTarget: string;
   verbose?: boolean;
 };
 
@@ -84,6 +81,7 @@ export type StartVerdaccioOptions = VerdaccioExecuterOptions &
 
 export async function startVerdaccioServer({
   projectName,
+  verdaccioStartTarget,
   port = String(uniquePort()),
   location = 'none',
   clear = true,
@@ -100,12 +98,7 @@ export async function startVerdaccioServer({
       executeProcess({
         command: 'npx',
         args: objectToCliArgs({
-          _: [
-            'nx',
-            TARGET_ENVIRONMENT_VERDACCIO_START,
-            projectName ?? '',
-            '--',
-          ],
+          _: ['nx', verdaccioStartTarget, projectName, '--'],
           port,
           ...(verbose !== undefined ? { verbose } : {}),
           location,
@@ -185,17 +178,19 @@ export async function startVerdaccioServer({
 
 export function stopVerdaccioServer(options: {
   projectName: string;
+  verdaccioStopTarget: string;
   verbose?: boolean;
   configuration?: string;
   environmentRoot: string;
   context: ExecutorContext;
 }): Promise<void> {
-  const { projectName, verbose, context, configuration } = options;
+  const { projectName, verdaccioStopTarget, verbose, context, configuration } =
+    options;
   const environmentRoot = getEnvironmentRoot(context, options);
   return runSingleExecutor(
     {
       project: projectName,
-      target: TARGET_ENVIRONMENT_VERDACCIO_STOP,
+      target: verdaccioStopTarget,
       configuration,
     },
     {

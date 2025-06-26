@@ -2,25 +2,20 @@ import { type ExecutorContext, logger } from '@nx/devkit';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { executeProcess } from '../../internal/execute-process';
+import { formatInfo } from '../../internal/logging';
 import { objectToCliArgs } from '../../internal/terminal';
 import {
   stopVerdaccioServer,
   type VerdaccioProcessResult,
 } from '../env-bootstrap/verdaccio-registry';
-import { formatError, formatInfo } from '../../internal/logging';
 
-import type { SetupEnvironmentExecutorOptions } from './schema';
-import { VERDACCIO_REGISTRY_JSON } from '../env-bootstrap/constants';
-import {
-  TARGET_ENVIRONMENT_BOOTSTRAP,
-  TARGET_ENVIRONMENT_INSTALL,
-  TARGET_ENVIRONMENT_PUBLISH_ONLY,
-  TARGET_ENVIRONMENT_SETUP,
-} from '../../plugin/targets/environment.targets';
-import { runSingleExecutor } from '../../internal/run-executor';
 import { getEnvironmentRoot } from '../../internal/environment-root';
+import { runSingleExecutor } from '../../internal/run-executor';
+import { VERDACCIO_REGISTRY_JSON } from '../env-bootstrap/constants';
 import { cleanupEnv } from '../internal/cleanup-env';
+import type { SetupEnvironmentExecutorOptions } from './schema';
 
+import { DEFAULT_ENVIRONMENT_TARGETS } from '../../plugin/constants';
 import { setupNpmWorkspace } from './npm';
 
 export type ExecutorOutput = {
@@ -36,8 +31,16 @@ export default async function runSetupEnvironmentExecutor(
   context: ExecutorContext
 ) {
   const { configurationName: configuration, projectName } = context;
-  const { verbose, keepServerRunning, skipInstall, postScript } =
-    terminalAndExecutorOptions;
+  const {
+    verbose,
+    keepServerRunning,
+    skipInstall,
+    postScript,
+    envBootstrapTarget = DEFAULT_ENVIRONMENT_TARGETS.bootstrap,
+    envPublishOnlyTarget = DEFAULT_ENVIRONMENT_TARGETS.publishOnly,
+    envInstallTarget = DEFAULT_ENVIRONMENT_TARGETS.install,
+    verdaccioStopTarget = DEFAULT_ENVIRONMENT_TARGETS.verdaccioStop,
+  } = terminalAndExecutorOptions;
   const environmentRoot = getEnvironmentRoot(
     context,
     terminalAndExecutorOptions
@@ -46,7 +49,7 @@ export default async function runSetupEnvironmentExecutor(
     await runSingleExecutor(
       {
         project: projectName,
-        target: TARGET_ENVIRONMENT_BOOTSTRAP,
+        target: envBootstrapTarget,
         configuration,
       },
       {
@@ -61,19 +64,19 @@ export default async function runSetupEnvironmentExecutor(
     logger.error(error.message);
     return {
       success: false,
-      command: `Failed executing target ${TARGET_ENVIRONMENT_BOOTSTRAP}\n ${error.message}`,
+      command: `Failed executing target ${envBootstrapTarget}\n ${error.message}`,
     };
   }
 
   try {
     if (skipInstall) {
       logger.info(
-        formatInfo(`Run target: ${TARGET_ENVIRONMENT_PUBLISH_ONLY}`, INFO_TOKEN)
+        formatInfo(`Run target: ${envPublishOnlyTarget}`, INFO_TOKEN)
       );
       await executeProcess({
         command: 'npx',
         args: objectToCliArgs({
-          _: ['nx', TARGET_ENVIRONMENT_PUBLISH_ONLY, projectName],
+          _: ['nx', envPublishOnlyTarget, projectName],
           environmentRoot,
           ...(verbose ? { verbose } : {}),
         }),
@@ -81,14 +84,12 @@ export default async function runSetupEnvironmentExecutor(
         ...(verbose ? { verbose } : {}),
       });
     } else {
-      logger.info(
-        formatInfo(`Run target: ${TARGET_ENVIRONMENT_INSTALL}`, INFO_TOKEN)
-      );
+      logger.info(formatInfo(`Run target: ${envInstallTarget}`, INFO_TOKEN));
       await setupNpmWorkspace(environmentRoot, verbose);
       await executeProcess({
         command: 'npx',
         args: objectToCliArgs({
-          _: ['nx', TARGET_ENVIRONMENT_INSTALL, projectName],
+          _: ['nx', envInstallTarget, projectName],
           environmentRoot,
           ...(verbose ? { verbose } : {}),
         }),
@@ -112,6 +113,7 @@ export default async function runSetupEnvironmentExecutor(
     logger.error(error.message);
     await stopVerdaccioServer({
       projectName,
+      verdaccioStopTarget,
       verbose,
       context,
       configuration,
@@ -120,7 +122,7 @@ export default async function runSetupEnvironmentExecutor(
 
     return {
       success: false,
-      command: `Fails executing target ${TARGET_ENVIRONMENT_INSTALL}\n ${error.message}`,
+      command: `Fails executing target ${envInstallTarget}\n ${error.message}`,
     };
   }
 
@@ -128,6 +130,7 @@ export default async function runSetupEnvironmentExecutor(
     if (!keepServerRunning) {
       await stopVerdaccioServer({
         projectName,
+        verdaccioStopTarget,
         verbose,
         context,
         configuration,
@@ -145,6 +148,7 @@ export default async function runSetupEnvironmentExecutor(
   } catch (error) {
     await stopVerdaccioServer({
       projectName,
+      verdaccioStopTarget,
       verbose,
       context,
       configuration,

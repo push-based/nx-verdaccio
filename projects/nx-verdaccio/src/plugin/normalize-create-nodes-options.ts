@@ -1,22 +1,22 @@
-import type {
-  NxVerdaccioEnvironmentsOptions,
-  NxVerdaccioCreateNodeOptions,
-  NxVerdaccioPackagesOptions,
-} from './schema';
 import {
+  DEFAULT_ENVIRONMENT_TARGETS,
   DEFAULT_ENVIRONMENTS_OUTPUT_DIR,
   DEFAULT_OPTION_ENVIRONMENT_TARGET_NAMES,
+  DEFAULT_PACKAGE_TARGETS,
 } from './constants';
+import type {
+  NxVerdaccioCreateNodeOptions,
+  NxVerdaccioEnvironmentsOptions,
+  NxVerdaccioPackagesOptions,
+} from './schema';
+import type { WithRequired } from './utils/type.utils';
 
 export type NormalizedCreateNodeOptions = {
-  environments: Omit<
+  environments: WithRequired<
     NxVerdaccioEnvironmentsOptions,
-    'targetNames' | 'environmentsDir'
-  > &
-    Required<
-      Pick<NxVerdaccioEnvironmentsOptions, 'targetNames' | 'environmentsDir'>
-    >;
-  packages: NxVerdaccioPackagesOptions;
+    'targetNames' | 'environmentsDir' | 'inferredTargets'
+  >;
+  packages: WithRequired<NxVerdaccioPackagesOptions, 'inferredTargets'>;
 };
 
 export function normalizeCreateNodesOptions(
@@ -27,18 +27,26 @@ export function normalizeCreateNodesOptions(
 
   if (targetNames.length === 0) {
     throw new Error(
-      'Option targetNames is required in plugin options under "environments". e.g.: ["e2e"] '
+      'Option targetNames is required in plugin options under "environments". e.g.: ["e2e"]'
     );
   }
 
-  return <NormalizedCreateNodeOptions>{
+  return {
     environments: {
       environmentsDir: DEFAULT_ENVIRONMENTS_OUTPUT_DIR,
-      targetNames: [DEFAULT_OPTION_ENVIRONMENT_TARGET_NAMES],
+      targetNames: DEFAULT_OPTION_ENVIRONMENT_TARGET_NAMES,
       ...environments,
+      inferredTargets: {
+        ...DEFAULT_ENVIRONMENT_TARGETS,
+        ...environments.inferredTargets,
+      },
     },
     packages: {
       ...packages,
+      inferredTargets: {
+        ...DEFAULT_PACKAGE_TARGETS,
+        ...packages.inferredTargets,
+      },
     },
   };
 }
