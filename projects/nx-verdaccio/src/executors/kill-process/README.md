@@ -6,7 +6,7 @@ This executor helps to kill processes by `ProcessID` or a JSON file containing a
 
 ## Usage
 
-// project.json
+In `project.json`:
 
 ```json
 {
@@ -26,11 +26,11 @@ By default, the Nx executor will derive the options from the executor options.
   "name": "my-project",
   "targets": {
     "kill-process": {
-      "executor": "@push-based/nx-verdaccio:kill-process"
+      "executor": "@push-based/nx-verdaccio:kill-process",
       "options": {
-        "pid": "42312"
-        "filePath": "/tmp/test-npm-workspace/process-id.json"
-        "verbose": true,
+        "pid": "42312",
+        "filePath": "/tmp/test-npm-workspace/process-id.json",
+        "verbose": true
       }
     }
   }
@@ -43,8 +43,8 @@ Show what will be executed without actually executing it:
 
 ## Options
 
-| Name         | type     | description                                            |
-| ------------ | -------- | ------------------------------------------------------ |
-| **pid**      | `number` | Process ID to kill                                     |
-| **filePath** | `string` | Path to JSON file contaning a `pid` property as number |
-| **verbose**  | `bolean` | Show more verbose logs                                 |
+| Name         | Type      | Description                                            |
+| ------------ | --------- | ------------------------------------------------------ |
+| **pid**      | `number`  | Process ID to kill                                     |
+| **filePath** | `string`  | Path to JSON file contaning a `pid` property as number |
+| **verbose**  | `boolean` | Show more verbose logs                                 |

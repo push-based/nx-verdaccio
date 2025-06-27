@@ -12,7 +12,7 @@ See [nx-verdaccio plugin docs](./src/plugin/README.md) for details
 
 ### Setup Environment Executor
 
-This executor helps to initiate an [environment folder](../../../../../README.md#-environment-folders-to-isolate-files-during-e2e-tests) and installs it`s dependent projects.
+This executor helps to initiate an [environment folder](../../docs/benefits.md#-environment-folders-to-isolate-files-during-e2e-tests) and installs it's dependent projects.
 
 ```jsonc
 // project.json
@@ -22,8 +22,8 @@ This executor helps to initiate an [environment folder](../../../../../README.md
     "env-setup": {
       "executor": "@code-pushup/nx-verdaccio:env-setup",
       "options": {
-        "skipInstall": true
-        "keepServerRunning": true
+        "skipInstall": true,
+        "keepServerRunning": true,
         "envRoot": "/tmp/test-npm-workspace"
       }
     }
@@ -31,11 +31,11 @@ This executor helps to initiate an [environment folder](../../../../../README.md
 }
 ```
 
-Read more under [setup executor docs](./projects/nx-verdaccio/src/executors/env-setup/README.md).
+Read more under [setup executor docs](./src/executors/env-setup/README.md).
 
 ### Bootstrap Environment Executor
 
-This executor helps to initiate [environment](../../../../../README.md#-environment-folders-to-isolate-files-during-e2e-tests) into a given folder.
+This executor helps to initiate [environment](../../docs/benefits.md#-environment-folders-to-isolate-files-during-e2e-tests) into a given folder.
 
 ```jsonc
 // project.json
@@ -45,16 +45,16 @@ This executor helps to initiate [environment](../../../../../README.md#-environm
     "nx-verdaccio-env-bootstrap": {
       "executor": "@code-pushup/nx-verdaccio:env-bootstrap",
       "options": {
-        "keepServerRunning": false
-        "envRoot": "/tmp/test-npm-workspace"
-        "verbose": true,
+        "keepServerRunning": false,
+        "envRoot": "/tmp/test-npm-workspace",
+        "verbose": true
       }
     }
   }
 }
 ```
 
-Read more under [bootstrap executor docs](./projects/nx-verdaccio/src/executors/env-bootstrap/README.md).
+Read more under [bootstrap executor docs](./src/executors/env-bootstrap/README.md).
 
 ### Kill Process Executor
 
@@ -66,24 +66,24 @@ This executor helps to kill processes by `ProcessID` or a JSON file containing a
   "name": "my-project",
   "targets": {
     "nx-verdaccio-kill-process": {
-      "executor": "@push-based/nx-verdaccio:kill-process"
+      "executor": "@push-based/nx-verdaccio:kill-process",
       "options": {
-        "pid": "42312"
-        "filePath": "/tmp/test-npm-workspace/process-id.json"
-        "verbose": true,
+        "pid": "42312",
+        "filePath": "/tmp/test-npm-workspace/process-id.json",
+        "verbose": true
       }
     }
   }
 }
 ```
 
-Read more under [kill-process executor docs](./projects/nx-verdaccio/src/executors/kill-process/README.md).
+Read more under [kill-process executor docs](./src/executors/kill-process/README.md).
 
 ### NPM Install Executor
 
-This executor helps to install a [`pubishable`](../../../../../README.md#fine-grained-selection-of-publishable-projects) projects into a given [environment folder](../../../../../README.md#-environment-folders-to-isolate-files-during-e2e-tests).
+This executor helps to install a [`publishable`](../../README.md#fine-grained-control-for-publishable-projects-) projects into a given [environment folder](../../docs/benefits.md#-environment-folders-to-isolate-files-during-e2e-tests).
 
-// project.json
+In `project.json`:
 
 ```jsonc
 {
@@ -92,22 +92,22 @@ This executor helps to install a [`pubishable`](../../../../../README.md#fine-gr
     "nx-verdaccio-npm-install": {
       "executor": "@code-pushup/nx-verdaccio:pkg-install",
       "options": {
-        "pkgVersion": "1.2.3"
-        "envRoot": "/tmp/test-npm-workspace"
-        "verbose": true,
+        "pkgVersion": "1.2.3",
+        "envRoot": "/tmp/test-npm-workspace",
+        "verbose": true
       }
     }
   }
 }
 ```
 
-Read more under [pkg install executor docs](./projects/nx-verdaccio/src/executors/pkg-install/README.md).
+Read more under [pkg install executor docs](./src/executors/pkg-install/README.md).
 
 ### NPM Publish Executor
 
-This executor helps to publish a [`pubishable`](../../../../../README.md#fine-grained-selection-of-publishable-projects) projects into a given [environment folder](../../../../../README.md#-environment-folders-to-isolate-files-during-e2e-tests).
+This executor helps to publish a [`publishable`](../../README.md#fine-grained-control-for-publishable-projects-) projects into a given [environment folder](../../docs/benefits.md#-environment-folders-to-isolate-files-during-e2e-tests).
 
-// project.json
+In `project.json`:
 
 ```jsonc
 {
@@ -116,16 +116,16 @@ This executor helps to publish a [`pubishable`](../../../../../README.md#fine-gr
     "nx-verdaccio-npm-publish": {
       "executor": "@code-pushup/nx-verdaccio:pkg-publish",
       "options": {
-        "pkgVersion": "1.2.3"
-        "envRoot": "/tmp/test-npm-workspace"
-        "verbose": true,
+        "pkgVersion": "1.2.3",
+        "envRoot": "/tmp/test-npm-workspace",
+        "verbose": true
       }
     }
   }
 }
 ```
 
-Read more under [pkg publish executor docs](./projects/nx-verdaccio/src/executors/pkg-publish/README.md).
+Read more under [pkg publish executor docs](./src/executors/pkg-publish/README.md).
 
 ## Debugging e2e environments
 

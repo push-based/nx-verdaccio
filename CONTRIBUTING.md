@@ -6,7 +6,7 @@ Prerequisites:
 
 - Node.js installed (LTS version).
 
-Make sure to install dependencies from the `package-jock.json`:
+Make sure to install dependencies from the `package-lock.json`:
 
 ```sh
 npm ci
@@ -38,17 +38,14 @@ npx nx run-many -t unit-test
 # run integration tests for all projects
 npx nx run-many -t integration-test
 
-# run E2E tests for CLI
-npx nx e2e cli-e2e
+# run E2E tests for Nx plugin
+npx nx nxv-e2e nx-verdaccio-e2e
 
-# build CLI along with packages it depends on
-npx nx build cli
+# build Nx plugin along with packages it depends on
+npx nx build nx-verdaccio
 
 # lint projects affected by changes (compared to main branch)
 npx nx affected:lint
-
-# run CLI command on this repository
-npx nx cli -- collect
 ```
 
 ## Testing
@@ -67,7 +64,7 @@ Projects have the following testing targets:
 | `e2e`              | General E2E testing target |
 | `e2e-cy`           | Cypress E2E testing        |
 | `e2e-vi`           | Vitest E2E testing         |
-| `e2e-pl`           | Playwrite E2E testing      |
+| `e2e-pl`           | Playwright E2E testing     |
 
 ## Git
 
@@ -89,20 +86,20 @@ Therefore, PRs are merged via one of two strategies:
 
 Projects are tagged in two different dimensions - scope and type:
 
-| tag                 | description                                                            | allowed dependencies                               |
-| :------------------ | :--------------------------------------------------------------------- | :------------------------------------------------- |
-| `scope:core`        | core features and CLI (agnostic towards specific plugins)              | `scope:core` or `scope:shared`                     |
-| `scope:shared`      | data models, utility functions, etc. (not specific to core or plugins) | `scope:shared`                                     |
-| `scope:tooling`     | supplementary tooling, e.g. code generation                            | `scope:tooling`, `scope:shared`                    |
-| `scope:internal`    | internal project, e.g. example e2e                                     | any                                                |
-| `type:app`          | application, e.g. CLI or example web app                               | `type:feature`, `type:util` or `type:testing-util` |
-| `type:feature`      | library with business logic for a specific feature                     | `type:util` or `type:testing-util`                 |
-| `type:util`         | general purpose utilities and types intended for reuse                 | `type:util` or `type:testing-util`                 |
-| `type:e2e`          | E2E testing                                                            | `type:app`, `type:feature` or `type:testing-util`  |
-| `type:e2e-vi`       | E2E testing with vitest                                                | `type:app`, `type:feature` or `type:testing-util`  |
-| `type:e2e-cy`       | E2E testing with cypress                                               | `type:app`, `type:feature` or `type:testing-util`  |
-| `type:e2e-pr`       | E2E testing with playwrite                                             | `type:app`, `type:feature` or `type:testing-util`  |
-| `type:testing-util` | testing utilities                                                      | `type:util`                                        |
+| tag                 | description                                                          | allowed dependencies                               |
+| :------------------ | :------------------------------------------------------------------- | :------------------------------------------------- |
+| `scope:core`        | core features                                                        | `scope:core` or `scope:shared`                     |
+| `scope:shared`      | data models, utility functions, etc. (not specific to core features) | `scope:shared`                                     |
+| `scope:tooling`     | supplementary tooling, e.g. code generation                          | `scope:tooling`, `scope:shared`                    |
+| `scope:internal`    | internal project, e.g. example e2e                                   | any                                                |
+| `type:app`          | application, e.g. CLI or example web app                             | `type:feature`, `type:util` or `type:testing-util` |
+| `type:feature`      | library with business logic for a specific feature                   | `type:util` or `type:testing-util`                 |
+| `type:util`         | general purpose utilities and types intended for reuse               | `type:util` or `type:testing-util`                 |
+| `type:e2e`          | E2E testing                                                          | `type:app`, `type:feature` or `type:testing-util`  |
+| `type:e2e-vi`       | E2E testing with vitest                                              | `type:app`, `type:feature` or `type:testing-util`  |
+| `type:e2e-cy`       | E2E testing with cypress                                             | `type:app`, `type:feature` or `type:testing-util`  |
+| `type:e2e-pr`       | E2E testing with playwright                                          | `type:app`, `type:feature` or `type:testing-util`  |
+| `type:testing-util` | testing utilities                                                    | `type:util`                                        |
 
 ## Special folders
 
@@ -116,8 +113,8 @@ The following optional folders can be present in a project root;
 - `docs` - documentation files specific for a given project
 - `tooling` - tooling related code specific for a given project
 
-# Release
+## Release
 
 ```sh
-nx release
+npx nx release
 ```
