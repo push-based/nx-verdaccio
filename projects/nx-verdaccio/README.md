@@ -1,5 +1,9 @@
 # @push-based/nx-verdaccio
 
+[![npm](https://img.shields.io/npm/v/%40push-based%2Fnx-verdaccio.svg)](https://www.npmjs.com/package/@push-based/nx-verdaccio)
+[![downloads](https://img.shields.io/npm/dm/%40push-based%2Fnx-verdaccio)](https://npmtrends.com/@push-based/nx-verdaccio)
+[![dependencies](https://img.shields.io/librariesio/release/npm/%40push-based/nx-verdaccio)](https://www.npmjs.com/package/@push-based/nx-verdaccio?activeTab=dependencies)
+
 ## 🔌 Plugins
 
 ### Verdaccio Test Environment Plugin
