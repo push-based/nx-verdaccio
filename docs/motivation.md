@@ -1,16 +1,16 @@
 # Motivation
 
 The following document explains the motivation behind this library and the problem it solves.
-We will discuss [common E2e setup for publishable packages](#Common-E2E-setup-for-publishable-packages) in the wild, what problems they have and why they are pretty limited in their scalability and performance.
+We will discuss [common E2E setup for publishable packages](#common-e2e-setup-for-publishable-packages) in the wild, what problems they have and why they are pretty limited in their scalability and performance.
 
 > [!NOTE]
-> 💡 Learn more about tthe benefits of nx-verdaccio **💡[docs/benefits.md](benefits.md)💡**.
+> 💡 Learn more about the benefits of nx-verdaccio in **💡[docs/benefits.md](./benefits.md)💡**.
 
 #### Project Graph
 
 Here the project graph of the research.
 
-![utils-project-graph-idle.png](docs%2Futils-project-graph-idle.png)
+![utils-project-graph-idle.png](./utils-project-graph-idle.png)
 
 Before we go into more detail let's quickly list the problems here to later on dive into each of them individually:
 
@@ -87,7 +87,7 @@ Viola, you have a working e2e setup for your package. 🎉
 
 Here the project graph of the research.
 
-![utils-project-graph-idle.png](utils-project-graph-idle.png)
+![utils-project-graph-idle.png](./utils-project-graph-idle.png)
 
 ## 🚪 Isolation of the E2E tests
 
@@ -147,7 +147,7 @@ To run 1 E2E test the following chain has to happen:
 - Start Verdaccio server - to be able to publish packages to and install from
 - NPM publish the package to the Verdaccio server
 - NPM install the package to the Start Verdaccio server
-- Execute the actual e2e tests over playwrite, vitest, jest or other test runner
+- Execute the actual E2E tests over Playwright, Vitest, Jest or other test runner
 - NPM uninstall the package from the local setup
 - Stop the Verdaccio server
 - Delete the storage folder
@@ -171,7 +171,7 @@ If we would not have to keep the server running for the whole test we can also:
 - 🐢 Stop wasting CPU power and memory that is consumed by the server
 - 🐢 Think about options to cache parts of the steps
 
-![task-architecture--schema-bad.png](task-architecture--schema-bad.png)
+![task-architecture--schema-bad.png](./task-architecture--schema-bad.png)
 
 Especially the caching is interesting to dive deeper in.
 Let's look at different scenarios and what they miss.

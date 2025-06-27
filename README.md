@@ -2,7 +2,7 @@
 
 ### 🚀 Enterprise Grade Testing with Verdaccio and Nx ⚡
 
-[![version](https://img.shields.io/github/v/release/push-based/nx-verdaccio)](https://github.com/push-based/nx-verdaccio/releases/latest)
+[![npm](https://img.shields.io/npm/v/%40push-based%2Fnx-verdaccio.svg)](https://www.npmjs.com/package/@push-based/nx-verdaccio)
 [![release date](https://img.shields.io/github/release-date/push-based/nx-verdaccio)](https://github.com/push-based/nx-verdaccio/releases)
 [![license](https://img.shields.io/github/license/push-based/nx-verdaccio)](https://opensource.org/licenses/MIT)
 [![commit activity](https://img.shields.io/github/commit-activity/m/push-based/nx-verdaccio)](https://github.com/push-based/nx-verdaccio/pulse/monthly)

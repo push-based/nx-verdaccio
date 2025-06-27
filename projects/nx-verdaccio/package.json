@@ -4,6 +4,15 @@
   "description": "Nx plugin for blazing fast Verdaccio setup & testing",
   "license": "MIT",
   "private": false,
+  "homepage": "https://github.com/push-based/nx-verdaccio#readme",
+  "bugs": {
+    "url": "https://github.com/push-based/nx-verdaccio/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22%F0%9F%90%9B%20bug%22"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/push-based/nx-verdaccio.git",
+    "directory": "projects/nx-verdaccio"
+  },
   "dependencies": {
     "@nx/devkit": "19.8.0",
     "ansis": "^3.3.2",

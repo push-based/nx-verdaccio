@@ -1,6 +1,6 @@
 # Bootstrap Environment Executor
 
-This executor helps to initiate [environment](../../../../../README.md#-environment-folders-to-isolate-files-during-e2e-tests) into a given folder.
+This executor helps to initiate [environment](../../../../../docs/benefits.md#️-environment-folders-to-isolate-files-during-e2e-tests) into a given folder.
 This folder contains all needed configuration and files for a Verdaccio registry as well as the package manager configuration.
 
 **Environment folder**
@@ -36,7 +36,7 @@ Root/
 
 ## Usage
 
-// project.json
+In `project.json`:
 
 ```json
 {
@@ -58,9 +58,9 @@ By default, the Nx executor will derive the options from the executor options.
     "env-bootstrap": {
       "executor": "@code-pushup/nx-verdaccio:env-bootstrap",
       "options": {
-        "keepServerRunning": false
-        "envRoot": "/tmp/test-npm-workspace"
-        "verbose": true,
+        "keepServerRunning": false,
+        "envRoot": "/tmp/test-npm-workspace",
+        "verbose": true
       }
     }
   }
@@ -73,7 +73,7 @@ Show what will be executed without actually executing it:
 
 ## Options
 
-| Name                  | type                     | description                                                                                                                          |
+| Name                  | Type                     | Description                                                                                                                          |
 | --------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
 | **envRoot**           | `string` (REQUIRED)      | The folder in which the package should get published. This folder is the environment folder and contains a configured `.npmrc` file. |
 | **keepServerRunning** | `boolean` (DEFAULT true) | keep the Verdaccio server running after bootstraping the environment                                                                 |

@@ -1,6 +1,6 @@
 # Setup Environment Executor
 
-This executor helps to initiate an [environment folder](../../../../../README.md#-environment-folders-to-isolate-files-during-e2e-tests) and installs it`s dependent projects.
+This executor helps to initiate an [environment folder](../../../../../docs/benefits.md#️-environment-folders-to-isolate-files-during-e2e-tests) and installs it's dependent projects.
 After running this task a ready to use environment is set up with packages published and installed with Verdaccio.
 
 #### @push-based/nx-verdaccio:env-setup
@@ -33,9 +33,9 @@ By default, the Nx executor will derive the options from the executor options.
     "env-setup": {
       "executor": "@code-pushup/nx-verdaccio:env-setup",
       "options": {
-        "keepServerRunning": false
-        "envRoot": "/tmp/test-npm-workspace"
-        "verbose": true,
+        "keepServerRunning": false,
+        "envRoot": "/tmp/test-npm-workspace",
+        "verbose": true
       }
     }
   }
@@ -48,7 +48,7 @@ Show what will be executed without actually executing it:
 
 ## Options
 
-| Name                  | type                      | description                                                                                                                          |
+| Name                  | Type                      | Description                                                                                                                          |
 | --------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | **envRoot**           | `string` (REQUIRED)       | The folder in which the package should get published. This folder is the environment folder and contains a configured `.npmrc` file. |
 | **keepServerRunning** | `boolean` (DEFAULT false) | keep the Verdaccio server running after bootstraping the environment                                                                 |
