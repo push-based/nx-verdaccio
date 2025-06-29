@@ -1,9 +1,11 @@
-import { type Environment } from './npm';
+import type { Environment } from './npm';
 
 export type BootstrapExecutorOptions = Partial<
   {
     keepServerRunning: boolean;
     printConfig: boolean;
     verbose: boolean;
+    verdaccioStartTarget?: string;
+    verdaccioStopTarget?: string;
   } & Environment
 >;

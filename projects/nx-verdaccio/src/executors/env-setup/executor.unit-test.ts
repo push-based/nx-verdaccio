@@ -1,12 +1,8 @@
-import runSetupEnvironmentExecutor from './executor';
+import * as devkit from '@nx/devkit';
+import { MockAsyncIterableIterator } from '@push-based/test-utils';
 import { beforeEach, expect, vi } from 'vitest';
 import * as executeProcessModule from '../../internal/execute-process';
-import * as devkit from '@nx/devkit';
-import {
-  TARGET_ENVIRONMENT_BOOTSTRAP,
-  TARGET_ENVIRONMENT_VERDACCIO_STOP,
-} from '../../plugin/targets/environment.targets';
-import { MockAsyncIterableIterator } from '@push-based/test-utils';
+import runSetupEnvironmentExecutor from './executor';
 import * as npmModule from './npm';
 
 vi.mock('@nx/devkit', async () => {
@@ -103,7 +99,7 @@ describe('runSetupEnvironmentExecutor', () => {
       {
         configuration: undefined,
         project: projectName,
-        target: TARGET_ENVIRONMENT_BOOTSTRAP,
+        target: 'nxv-env-bootstrap',
       },
       {
         keepServerRunning: true,
@@ -114,7 +110,7 @@ describe('runSetupEnvironmentExecutor', () => {
       {
         configuration: undefined,
         project: projectName,
-        target: TARGET_ENVIRONMENT_VERDACCIO_STOP,
+        target: 'nxv-verdaccio-stop',
       },
       {
         filePath: expect.toMatchPath(
@@ -237,7 +233,7 @@ describe('runSetupEnvironmentExecutor', () => {
       {
         configuration: undefined,
         project: 'my-lib-e2e',
-        target: TARGET_ENVIRONMENT_BOOTSTRAP,
+        target: 'nxv-env-bootstrap',
       },
       expect.objectContaining({
         environmentRoot: 'tmp/environments/my-lib-e2e',

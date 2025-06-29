@@ -1,20 +1,19 @@
-import { join } from 'node:path';
-import {
-  type RegistryResult,
-  startVerdaccioServer,
-  type StartVerdaccioOptions,
-  type VercaddioServerResult,
-} from './verdaccio-registry';
+import { logger } from '@nx/devkit';
 import { writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
 import { formatError, formatInfo } from '../../internal/logging';
 import { VERDACCIO_REGISTRY_JSON } from './constants';
-import { logger } from '@nx/devkit';
 import {
   configureRegistry,
   type Environment,
   VERDACCIO_ENV_TOKEN,
 } from './npm';
-import { setupNpmWorkspace } from '../env-setup/npm';
+import {
+  type RegistryResult,
+  type StartVerdaccioOptions,
+  startVerdaccioServer,
+  type VercaddioServerResult,
+} from './verdaccio-registry';
 
 export type BootstrapEnvironmentOptions = StartVerdaccioOptions & Environment;
 
@@ -35,7 +34,7 @@ export async function bootstrapEnvironment(
       storage: parsedStorage,
       verbose,
       readyWhen: 'Environment ready under',
-      ...(rest as StartVerdaccioOptions),
+      ...rest,
     });
   } catch (error) {
     logger.error(

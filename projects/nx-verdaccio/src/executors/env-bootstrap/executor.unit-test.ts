@@ -1,11 +1,10 @@
-import runBootstrapExecutor from './executor';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import * as devkit from '@nx/devkit';
-import * as bootstrapExecutorModule from './bootstrap-env';
-import { PACKAGE_NAME } from '../../plugin/constants';
-import { TARGET_ENVIRONMENT_VERDACCIO_STOP } from '../../plugin/targets/environment.targets';
-import { MockAsyncIterableIterator } from '@push-based/test-utils';
 import { type ExecutorContext } from '@nx/devkit';
+import { MockAsyncIterableIterator } from '@push-based/test-utils';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { PACKAGE_NAME } from '../../plugin/constants';
+import * as bootstrapExecutorModule from './bootstrap-env';
+import runBootstrapExecutor from './executor';
 
 describe('runBootstrapExecutor', () => {
   const e2eProjectName = 'my-lib-e2e';
@@ -17,6 +16,7 @@ describe('runBootstrapExecutor', () => {
     isVerbose: false,
     root: 'tmp/environments/test',
     projectName: e2eProjectName,
+    targetName: 'nxv-env-bootstrap',
     projectsConfigurations: {
       version: 2,
       projects: {
@@ -29,7 +29,7 @@ describe('runBootstrapExecutor', () => {
   };
   const stopVerdaccioTask = {
     project: e2eProjectName,
-    target: TARGET_ENVIRONMENT_VERDACCIO_STOP,
+    target: 'nxv-verdaccio-stop',
     configuration: undefined,
   };
 

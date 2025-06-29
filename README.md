@@ -222,6 +222,37 @@ Tag those projects accordingly:
 - Run E2E with specific environments:  
   `nx run utils-static-e2e:e2e --environmentRoot static-environments/user-lists`
 
+### Customize inferred target names
+
+The inferred Nx targets are prefixed by `nxv-`, e.g. `nxv-e2e` will run your test target (by default `e2e`) and ensure cleanup is done afterwards (`nxv-teardown`).
+Other inferred targets include `nxv-env-setup`, `nxv-env-bootstrap`, `nxv-env-install`, `nxv-pkg-install`, `nxv-verdaccio-start`, etc.
+You can find all these targets in the Nx graph (run `npx nx graph`).
+
+You may prefer to infer different target names, e.g. so you can run `e2e-test` instead of `nxv-e2e`. All target names may be customized for both environment and package targets.
+
+```jsonc
+{
+  "plugins": [
+    {
+      "plugin": "@push-based/nx-verdaccio",
+      "options": {
+        "environments": {
+          "inferredTargets": {
+            "e2e": "e2e-test", // default is "nxv-e2e"
+            "setup": "e2e-test-setup" // default is "nxv-e2e-setup"
+          }
+        },
+        "packages": {
+          "inferredTargets": {
+            "install": "npm-install" // default is "nxv-pkg-install"
+          }
+        }
+      }
+    }
+  ]
+}
+```
+
 ## Benchmarks
 
 This is a first draft of how the benchmarks will look. ATM the data set it not big enough.
