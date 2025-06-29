@@ -1,3 +1,14 @@
+# 0.0.0 (2025-06-29)
+
+
+### 🚀 Features
+
+- support custom target names ([384c8e1](https://github.com/push-based/nx-verdaccio/commit/384c8e1))
+
+### ❤️  Thank You
+
+- Matěj Chalk
+
 ## 0.0.0-alpha.31 (2025-03-24)
 
 
