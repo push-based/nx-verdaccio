@@ -48,6 +48,11 @@
     "nxv-env-setup": {
       "executor": "@push-based/nx-verdaccio:env-setup"
     },
+    "nxv-pkg-publish": {
+      "options": {
+        "distPath": "{projectRoot}/dist"
+      }
+    },
     "nx-release-publish": {},
     "lint": {
       "executor": "@nx/linter:eslint",
@@ -95,6 +100,9 @@
           "filterByTags": ["publishable"]
         },
         "environments": {
+          "inferredTargets": {
+            "e2e": "e2e-test"
+          },
           "targetNames": ["e2e", "e2e-static"]
         }
       }

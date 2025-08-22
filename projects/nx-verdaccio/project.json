@@ -10,7 +10,7 @@
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/projects/nx-verdaccio",
+        "outputPath": "{projectRoot}/dist",
         "main": "projects/nx-verdaccio/src/index.ts",
         "tsConfig": "projects/nx-verdaccio/tsconfig.lib.json",
         "assets": [
