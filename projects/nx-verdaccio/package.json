@@ -27,6 +27,7 @@
   "typings": "./src/index.d.ts",
   "executors": "./executors.json",
   "files": [
+    "docs",
     "src",
     "executors.json",
     "README.md"
