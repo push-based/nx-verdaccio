@@ -1,3 +1,14 @@
+## 0.0.3 (2025-08-22)
+
+
+### 🩹 Fixes
+
+- publish fix ([fcf4412](https://github.com/push-based/nx-verdaccio/commit/fcf4412))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
 ## 0.0.2 (2025-08-22)
 
 This was a version bump only, there were no code changes.
