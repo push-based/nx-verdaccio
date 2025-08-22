@@ -1,3 +1,16 @@
+## 0.0.0-alpha.32 (2025-08-22)
+
+
+### 🚀 Features
+
+- support custom target names ([384c8e1](https://github.com/push-based/nx-verdaccio/commit/384c8e1))
+- **nx-verdaccio:** extend pkg publish options with distPath ([2148f0b](https://github.com/push-based/nx-verdaccio/commit/2148f0b))
+
+### ❤️  Thank You
+
+- Matěj Chalk
+- Michael @rx-angular
+
 # 0.0.0 (2025-06-29)
 
 
