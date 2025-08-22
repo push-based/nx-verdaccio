@@ -1,3 +1,14 @@
+## 0.0.4 (2025-08-22)
+
+
+### 🩹 Fixes
+
+- publish docs ([f95090b](https://github.com/push-based/nx-verdaccio/commit/f95090b))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
 ## 0.0.3 (2025-08-22)
 
 
