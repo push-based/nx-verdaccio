@@ -1,7 +1,7 @@
 import { join } from 'node:path';
+import { readFile } from 'node:fs/promises';
 import { createTreeWithEmptyWorkspace } from 'nx/src/generators/testing-utils/create-tree-with-empty-workspace';
 import { describe, expect, it } from 'vitest';
-import { readJsonFile } from '@code-pushup/utils';
 import { materializeTree } from './tree';
 
 describe('materializeTree', () => {
@@ -14,8 +14,8 @@ describe('materializeTree', () => {
     expect(tree.exists('nx.json')).toBe(true);
 
     await materializeTree(tree, root);
-
-    await expect(readJsonFile(join(root, 'nx.json'))).resolves.toEqual({
+    const res = JSON.parse((await readFile(join(root, 'nx.json'))).toString());
+    expect(res).toStrictEqual({
       affected: {
         defaultBase: 'main',
       },

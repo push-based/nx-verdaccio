@@ -1,10 +1,10 @@
-import { beforeEach, describe, expect, vi, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import runNpmInstallExecutor from './executor';
 import { MEMFS_VOLUME } from '@push-based/test-utils';
 import * as execProcessModule from '../../internal/execute-process';
 import { logger, readJsonFile } from '@nx/devkit';
 import { join } from 'node:path';
-import { DEFAULT_ENVIRONMENTS_OUTPUT_DIR } from '../../plugin/constants';
+
 vi.mock('@nx/devkit', async () => {
   const actual = await vi.importActual('@nx/devkit');
   return {
@@ -68,7 +68,7 @@ describe('runNpmInstallExecutor', () => {
 
     expect(logger.info).toHaveBeenCalledTimes(1);
     expect(logger.info).toHaveBeenCalledWith(
-      expect.stringContaining(`Installing my-lib@1.0.0 in`)
+      expect.stringContaining(`Installing my-lib in`)
     );
 
     expect(executeProcessSpy).toHaveBeenCalledTimes(1);
@@ -77,7 +77,7 @@ describe('runNpmInstallExecutor', () => {
         command: 'npm',
         args: [
           'install',
-          'my-lib@1.0.0',
+          'my-lib',
           '--include=prod',
           // @TODO implement options
           //'--include=dev',

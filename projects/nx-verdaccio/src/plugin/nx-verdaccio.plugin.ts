@@ -1,6 +1,5 @@
 import {
   type CreateNodes,
-  type CreateNodesContext,
   createNodesFromFiles,
   type CreateNodesV2,
   logger,
@@ -9,20 +8,17 @@ import {
 } from '@nx/devkit';
 import { readFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
-import type { NxVerdaccioCreateNodeOptions } from './schema';
-import {
-  normalizeCreateNodesOptions,
-  type NormalizedCreateNodeOptions,
-} from './normalize-create-nodes-options';
 import { hashObject } from 'nx/src/hasher/file-hasher';
 import { workspaceDataDirectory } from 'nx/src/utils/cache-directory';
-import { PLUGIN_NAME } from './constants';
 import {
   getCacheRecord,
   readTargetsCache,
   setCacheRecord,
   writeTargetsToCache,
 } from './caching';
+import { PLUGIN_NAME } from './constants';
+import { normalizeCreateNodesOptions } from './normalize-create-nodes-options';
+import type { NxVerdaccioCreateNodeOptions } from './schema';
 import { createProjectConfiguration } from './targets/create-targets';
 
 const PROJECT_JSON_FILE_GLOB = '**/project.json';
@@ -94,14 +90,9 @@ export const createNodesV2: CreateNodesV2<NxVerdaccioCreateNodeOptions> = [
   },
 ];
 
-export const createNodes: CreateNodes = [
+export const createNodes: CreateNodes<NxVerdaccioCreateNodeOptions> = [
   PROJECT_JSON_FILE_GLOB,
-  (
-    projectConfigurationFile: string,
-    options: NormalizedCreateNodeOptions,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    context: CreateNodesContext
-  ) => {
+  (projectConfigurationFile, options) => {
     logger.info(
       '`createNodes` is deprecated. Update Nx utilize createNodesV2 instead.'
     );

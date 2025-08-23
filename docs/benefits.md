@@ -3,13 +3,13 @@
 Game changing **scalable** and **maintainable** setup for Verdaccio.
 
 > [!NOTE]
-> 💡 Learn more about the common problems with shared environments in the **💡[docs/motivation.md](./docs/motivation.md)💡**.
+> 💡 Learn more about the common problems with shared environments in the **💡[docs/motivation.md](./motivation.md)💡**.
 
 #### Project Graph
 
 Here the project graph of the research.
 
-![utils-project-graph-idle.png](docs%2Futils-project-graph-idle.png)
+![utils-project-graph-idle.png](./utils-project-graph-idle.png)
 
 ## 🛡️ Environment Folders to Isolate Files During E2E Tests
 
@@ -61,7 +61,7 @@ This allows us to **cache** the environment and **reuse** it across tests, leadi
 - 🔥 No need to uninstall packages or delete storage folders manually. We can simply delete the isolated folder when needed.
 - 🔥 The system only installs the necessary packages, further reducing time and resource usage.
 
-![testing-dx--schema-good.png](testing-dx--schema-good.png)
+![testing-dx--schema-good.png](./testing-dx--schema-good.png)
 
 ### Changes in source
 
@@ -111,7 +111,7 @@ This approach makes the E2E setup more **maintainable** and easier to serve edge
 - The NX task graph provides a clear visual overview of the process, making it easy to see what runs when and how the environment is set up.
 - Configuring a test setup is in a single place and provides fine-grained configuration
 
-![utils-task-graph-idle.png](docs%2Futils-task-graph-idle.png)
+![utils-task-graph-idle.png](./utils-task-graph-idle.png)
 
 In summary, this new setup offers a more scalable, maintainable, and performant way to handle E2E testing.
 By isolating environments and using NX’s powerful tools, it becomes easier to run, manage, and debug E2E tests across projects.

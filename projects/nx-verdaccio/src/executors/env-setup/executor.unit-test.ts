@@ -1,12 +1,9 @@
-import runSetupEnvironmentExecutor from './executor';
+import * as devkit from '@nx/devkit';
+import { MockAsyncIterableIterator } from '@push-based/test-utils';
 import { beforeEach, expect, vi } from 'vitest';
 import * as executeProcessModule from '../../internal/execute-process';
-import * as devkit from '@nx/devkit';
-import {
-  TARGET_ENVIRONMENT_BOOTSTRAP,
-  TARGET_ENVIRONMENT_VERDACCIO_STOP,
-} from '../../plugin/targets/environment.targets';
-import { MockAsyncIterableIterator } from '@push-based/test-utils';
+import runSetupEnvironmentExecutor from './executor';
+import * as npmModule from './npm';
 
 vi.mock('@nx/devkit', async () => {
   const actual = await vi.importActual('@nx/devkit');
@@ -38,6 +35,7 @@ vi.mock('fs/promises', async () => {
 describe('runSetupEnvironmentExecutor', () => {
   const runExecutorSpy = vi.spyOn(devkit, 'runExecutor');
   const executeProcessSpy = vi.spyOn(executeProcessModule, 'executeProcess');
+  const setupNpmWorkspaceSpy = vi.spyOn(npmModule, 'setupNpmWorkspace');
 
   beforeEach(() => {
     runExecutorSpy.mockReset();
@@ -101,7 +99,7 @@ describe('runSetupEnvironmentExecutor', () => {
       {
         configuration: undefined,
         project: projectName,
-        target: TARGET_ENVIRONMENT_BOOTSTRAP,
+        target: 'nxv-env-bootstrap',
       },
       {
         keepServerRunning: true,
@@ -112,7 +110,7 @@ describe('runSetupEnvironmentExecutor', () => {
       {
         configuration: undefined,
         project: projectName,
-        target: TARGET_ENVIRONMENT_VERDACCIO_STOP,
+        target: 'nxv-verdaccio-stop',
       },
       {
         filePath: expect.toMatchPath(
@@ -121,6 +119,12 @@ describe('runSetupEnvironmentExecutor', () => {
         verbose: undefined,
       },
       context
+    );
+
+    expect(setupNpmWorkspaceSpy).toHaveBeenCalledTimes(1);
+    expect(setupNpmWorkspaceSpy).toHaveBeenCalledWith(
+      expect.toMatchPath('tmp/environments/my-lib-e2e'),
+      undefined
     );
   });
 
@@ -229,7 +233,7 @@ describe('runSetupEnvironmentExecutor', () => {
       {
         configuration: undefined,
         project: 'my-lib-e2e',
-        target: TARGET_ENVIRONMENT_BOOTSTRAP,
+        target: 'nxv-env-bootstrap',
       },
       expect.objectContaining({
         environmentRoot: 'tmp/environments/my-lib-e2e',
@@ -238,7 +242,7 @@ describe('runSetupEnvironmentExecutor', () => {
       context
     );
 
-    expect(devkit.logger.info).toHaveBeenCalledTimes(1);
+    expect(devkit.logger.info).toHaveBeenCalledTimes(2);
     expect(devkit.logger.info).toHaveBeenCalledWith(
       'Verdaccio server kept running under : http://localhost:4873'
     );

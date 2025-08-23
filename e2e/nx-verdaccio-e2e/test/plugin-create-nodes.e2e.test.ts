@@ -1,28 +1,14 @@
 import type { Tree } from '@nx/devkit';
-import { join } from 'node:path';
-import { afterEach, expect } from 'vitest';
 import {
   addJsLibToWorkspace,
   materializeTree,
   nxShowProjectJson,
   registerPluginInWorkspace,
 } from '@push-based/test-nx-utils';
+import { join } from 'node:path';
 import { updateProjectConfiguration } from 'nx/src/generators/utils/project-configuration';
-import {
-  TARGET_ENVIRONMENT_BOOTSTRAP,
-  TARGET_ENVIRONMENT_SETUP,
-  TARGET_PACKAGE_INSTALL,
-  TARGET_PACKAGE_PUBLISH,
-  TARGET_ENVIRONMENT_VERDACCIO_START,
-  TARGET_ENVIRONMENT_INSTALL,
-  TARGET_ENVIRONMENT_VERDACCIO_STOP,
-} from '@push-based/nx-verdaccio';
+import { afterEach, expect } from 'vitest';
 import { teardownTestFolder } from '@push-based/test-utils';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import {
-  TARGET_ENVIRONMENT_E2E,
-  TARGET_ENVIRONMENT_TEARDOWN,
-} from '../../../projects/nx-verdaccio/src/plugin/targets/environment.targets';
 
 describe('nx-verdaccio plugin create-nodes-v2', () => {
   let tree: Tree;
@@ -62,21 +48,21 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
     expect(code).toBe(0);
 
     expect(projectJson.targets).toStrictEqual({
-      [TARGET_PACKAGE_INSTALL]: expect.objectContaining({
+      'nxv-pkg-install': expect.objectContaining({
         dependsOn: [
           {
-            target: TARGET_PACKAGE_PUBLISH,
+            target: 'nxv-pkg-publish',
             params: 'forward',
           },
           {
-            target: TARGET_PACKAGE_INSTALL,
+            target: 'nxv-pkg-install',
             projects: 'dependencies',
             params: 'forward',
           },
         ],
         executor: '@push-based/nx-verdaccio:pkg-install',
       }),
-      [TARGET_PACKAGE_PUBLISH]: expect.objectContaining({
+      'nxv-pkg-publish': expect.objectContaining({
         dependsOn: [
           {
             params: 'forward',
@@ -111,8 +97,8 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
 
     expect(projectJson.targets).toStrictEqual(
       expect.not.objectContaining({
-        [TARGET_PACKAGE_INSTALL]: expect.any(Object),
-        [TARGET_PACKAGE_PUBLISH]: expect.any(Object),
+        'nxv-package-install': expect.any(Object),
+        'nxv-package-publish': expect.any(Object),
       })
     );
   });
@@ -146,8 +132,8 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
     expect(projectJsonB.tags).toStrictEqual(['publish']);
     expect(projectJsonB.targets).toStrictEqual(
       expect.objectContaining({
-        [TARGET_PACKAGE_INSTALL]: expect.any(Object),
-        [TARGET_PACKAGE_PUBLISH]: expect.any(Object),
+        'nxv-pkg-install': expect.any(Object),
+        'nxv-pkg-publish': expect.any(Object),
       })
     );
 
@@ -159,8 +145,8 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
     expect(projectJsonA.tags).toStrictEqual([]);
     expect(projectJsonA.targets).toStrictEqual(
       expect.not.objectContaining({
-        [TARGET_PACKAGE_INSTALL]: expect.any(Object),
-        [TARGET_PACKAGE_PUBLISH]: expect.any(Object),
+        'nxv-pkg-install': expect.any(Object),
+        'nxv-pkg-publish': expect.any(Object),
       })
     );
   });
@@ -194,19 +180,23 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
           dependsOn: [
             {
               params: 'forward',
-              target: TARGET_ENVIRONMENT_SETUP,
+              target: 'nxv-env-setup',
             },
           ],
         }),
-        [TARGET_ENVIRONMENT_BOOTSTRAP]: expect.objectContaining({
+        'nxv-env-bootstrap': expect.objectContaining({
           executor: '@push-based/nx-verdaccio:env-bootstrap',
+          options: {
+            verdaccioStartTarget: 'nxv-verdaccio-start',
+            verdaccioStopTarget: 'nxv-verdaccio-stop',
+          },
         }),
-        [TARGET_ENVIRONMENT_INSTALL]: expect.objectContaining({
+        'nxv-env-install': expect.objectContaining({
           dependsOn: [
             {
               params: 'forward',
               projects: 'dependencies',
-              target: TARGET_PACKAGE_INSTALL,
+              target: 'nxv-pkg-install',
             },
           ],
           executor: 'nx:run-commands',
@@ -217,10 +207,15 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
             ),
           },
         }),
-        [TARGET_ENVIRONMENT_SETUP]: expect.objectContaining({
+        'nxv-env-setup': expect.objectContaining({
           cache: true,
           executor: '@push-based/nx-verdaccio:env-setup',
-          options: {},
+          options: {
+            envBootstrapTarget: 'nxv-env-bootstrap',
+            envInstallTarget: 'nxv-env-install',
+            envPublishOnlyTarget: 'nxv-env-publish-only',
+            verdaccioStopTarget: 'nxv-verdaccio-stop',
+          },
           inputs: [
             '{projectRoot}/project.json',
             {
@@ -241,7 +236,7 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
             '{options.environmentRoot}/node_modules',
           ],
         }),
-        [TARGET_ENVIRONMENT_VERDACCIO_START]: expect.objectContaining({
+        'nxv-verdaccio-start': expect.objectContaining({
           executor: '@nx/js:verdaccio',
           options: expect.objectContaining({
             clear: true,
@@ -252,7 +247,7 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
             storage: expect.toMatchPath('tmp/environments/lib-a-e2e/storage'),
           }),
         }),
-        [TARGET_ENVIRONMENT_VERDACCIO_STOP]: expect.objectContaining({
+        'nxv-verdaccio-stop': expect.objectContaining({
           executor: '@push-based/nx-verdaccio:kill-process',
           options: {
             filePath: expect.toMatchPath(
@@ -260,7 +255,7 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
             ),
           },
         }),
-        [TARGET_ENVIRONMENT_E2E]: expect.objectContaining({
+        'nxv-e2e': expect.objectContaining({
           executor: '@push-based/nx-verdaccio:env-teardown',
           dependsOn: [
             {
@@ -269,12 +264,11 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
             },
           ],
         }),
-        [TARGET_ENVIRONMENT_TEARDOWN]: expect.objectContaining({
+        'nxv-env-teardown': expect.objectContaining({
           executor: '@push-based/nx-verdaccio:env-teardown',
         }),
       })
     );
-
   });
 
   it('should NOT add environment targets to project without targetName e2e', async () => {
@@ -293,11 +287,63 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
 
     expect(projectJson.targets).toStrictEqual(
       expect.not.objectContaining({
-        [TARGET_ENVIRONMENT_BOOTSTRAP]: expect.any(Object),
-        [TARGET_ENVIRONMENT_INSTALL]: expect.any(Object),
-        [TARGET_ENVIRONMENT_SETUP]: expect.any(Object),
-        [TARGET_ENVIRONMENT_VERDACCIO_START]: expect.any(Object),
-        [TARGET_ENVIRONMENT_VERDACCIO_STOP]: expect.any(Object),
+        'nxv-env-bootstrap': expect.any(Object),
+        'nxv-env-install': expect.any(Object),
+        'nxv-env-setup': expect.any(Object),
+        'nxv-verdaccio-start': expect.any(Object),
+        'nxv-verdaccio-stop': expect.any(Object),
+      })
+    );
+  });
+
+  it('should use custom target names if provided', async () => {
+    const cwd = join(baseDir, 'add-env-targets');
+    registerPluginInWorkspace(tree, {
+      plugin: '@push-based/nx-verdaccio',
+      options: {
+        environments: {
+          targetNames: ['e2e'],
+          inferredTargets: {
+            e2e: 'e2e-test',
+            verdaccioStart: 'verdaccio',
+            verdaccioStop: 'stop-verdaccio',
+          },
+        },
+      },
+    });
+    updateProjectConfiguration(tree, projectAE2e, {
+      root: e2eProjectARoot,
+      projectType: 'application',
+      targets: {
+        e2e: {},
+      },
+    });
+    await materializeTree(tree, cwd);
+
+    const { code, projectJson } = await nxShowProjectJson(cwd, projectAE2e);
+    expect(code).toBe(0);
+
+    expect(projectJson.targets).toStrictEqual(
+      expect.objectContaining({
+        'e2e-test': expect.any(Object),
+        verdaccio: expect.any(Object),
+        'stop-verdaccio': expect.any(Object),
+        'nxv-env-install': expect.any(Object),
+        'nxv-env-teardown': expect.any(Object),
+        'nxv-env-bootstrap': expect.objectContaining({
+          options: {
+            verdaccioStartTarget: 'verdaccio',
+            verdaccioStopTarget: 'stop-verdaccio',
+          },
+        }),
+        'nxv-env-setup': expect.objectContaining({
+          options: {
+            verdaccioStopTarget: 'stop-verdaccio',
+            envBootstrapTarget: 'nxv-env-bootstrap',
+            envInstallTarget: 'nxv-env-install',
+            envPublishOnlyTarget: 'nxv-env-publish-only',
+          },
+        }),
       })
     );
   });

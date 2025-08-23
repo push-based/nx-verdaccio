@@ -1,20 +1,19 @@
 import { type ExecutorContext, logger } from '@nx/devkit';
-import type { BootstrapExecutorOptions } from './schema';
+import { join } from 'node:path';
+import { getEnvironmentRoot } from '../../internal/environment-root';
+import { formatInfo } from '../../internal/logging';
+import { runSingleExecutor } from '../../internal/run-executor';
+import {
+  DEFAULT_ENVIRONMENT_TARGETS,
+  PACKAGE_NAME,
+} from '../../plugin/constants';
 import {
   bootstrapEnvironment,
   type BootstrapEnvironmentResult,
 } from './bootstrap-env';
-import { join } from 'node:path';
-import { formatInfo } from '../../internal/logging';
-import { VERDACCIO_ENV_TOKEN } from './npm';
 import { VERDACCIO_REGISTRY_JSON } from './constants';
-import {
-  TARGET_ENVIRONMENT_BOOTSTRAP,
-  TARGET_ENVIRONMENT_VERDACCIO_STOP,
-} from '../../plugin/targets/environment.targets';
-import { runSingleExecutor } from '../../internal/run-executor';
-import { PACKAGE_NAME } from '../../plugin/constants';
-import { getEnvironmentRoot } from '../../internal/environment-root';
+import { VERDACCIO_ENV_TOKEN } from './npm';
+import type { BootstrapExecutorOptions } from './schema';
 
 export type BootstrapExecutorOutput = {
   success: boolean;
@@ -26,13 +25,18 @@ export async function bootstrapExecutor(
   options: BootstrapExecutorOptions,
   context: ExecutorContext
 ): Promise<BootstrapExecutorOutput> {
-  const { configurationName, projectName } = context;
-  const { keepServerRunning, verbose } = options;
+  const { configurationName, projectName, targetName } = context;
+  const {
+    keepServerRunning,
+    verbose,
+    verdaccioStartTarget = DEFAULT_ENVIRONMENT_TARGETS.verdaccioStart,
+    verdaccioStopTarget = DEFAULT_ENVIRONMENT_TARGETS.verdaccioStop,
+  } = options;
   const environmentRoot = getEnvironmentRoot(context, options);
 
   if (verbose) {
     logger.info(
-      `Execute ${PACKAGE_NAME}:${TARGET_ENVIRONMENT_BOOTSTRAP} with options: ${JSON.stringify(
+      `Execute ${PACKAGE_NAME}:${targetName} with options: ${JSON.stringify(
         options,
         null,
         2
@@ -46,6 +50,7 @@ export async function bootstrapExecutor(
       projectName,
       environmentRoot,
       verbose,
+      verdaccioStartTarget,
     });
   } catch (error) {
     logger.error(error);
@@ -65,7 +70,7 @@ export async function bootstrapExecutor(
     await runSingleExecutor(
       {
         project: projectName,
-        target: TARGET_ENVIRONMENT_VERDACCIO_STOP,
+        target: verdaccioStopTarget,
         configuration: configurationName,
       },
       {

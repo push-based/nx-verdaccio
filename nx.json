@@ -29,8 +29,7 @@
       "cache": true,
       "inputs": ["default", "^production"]
     },
-    "nxv-e2e": {},
-    "nxv-env-setup": {
+    "@push-based/nx-verdaccio:env-setup": {
       "cache": true,
       "inputs": [
         "{projectRoot}/project.json",
@@ -45,6 +44,14 @@
         },
         "^production"
       ]
+    },
+    "nxv-env-setup": {
+      "executor": "@push-based/nx-verdaccio:env-setup"
+    },
+    "nxv-pkg-publish": {
+      "options": {
+        "distPath": "{projectRoot}/dist"
+      }
     },
     "nx-release-publish": {},
     "lint": {
@@ -93,6 +100,9 @@
           "filterByTags": ["publishable"]
         },
         "environments": {
+          "inferredTargets": {
+            "e2e": "e2e-test"
+          },
           "targetNames": ["e2e", "e2e-static"]
         }
       }

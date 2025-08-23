@@ -22,6 +22,14 @@
     "verbose": {
       "type": "boolean",
       "description": "Print additional logs"
+    },
+    "verdaccioStartTarget": {
+      "type": "string",
+      "description": "Name of target which starts the Verdaccio server"
+    },
+    "verdaccioStopTarget": {
+      "type": "string",
+      "description": "Name of target which stops the Verdaccio server"
     }
   },
   "additionalProperties": true,

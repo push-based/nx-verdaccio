@@ -15,6 +15,16 @@
       "default": false,
       "aliases": ["k"]
     },
+    "skipInstall": {
+      "type": "boolean",
+      "description": "Skip installing dependencies",
+      "default": false,
+      "aliases": ["i"]
+    },
+    "postScript": {
+      "type": "string",
+      "description": "The script to run after the setup task have been executed"
+    },
     "dryRun": {
       "type": "boolean",
       "description": "Print the commands that would be run, but don't actually run them"
@@ -23,9 +33,21 @@
       "type": "boolean",
       "description": "Print additional logs"
     },
-    "progress": {
-      "type": "boolean",
-      "description": "Print additional logs"
+    "envBootstrapTarget": {
+      "type": "string",
+      "description": "Name of target which bootstraps the environment"
+    },
+    "envPublishOnlyTarget": {
+      "type": "string",
+      "description": "Name of target which only publishes packages for the environment"
+    },
+    "envInstallTarget": {
+      "type": "string",
+      "description": "Name of target which installs packages for the environment"
+    },
+    "verdaccioStopTarget": {
+      "type": "string",
+      "description": "Name of target which stops the Verdaccio server"
     }
   },
   "additionalProperties": true,

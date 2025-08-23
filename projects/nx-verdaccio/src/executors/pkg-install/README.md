@@ -1,6 +1,6 @@
 # NPM Install Executor
 
-This executor helps to install a [`pubishable`](../../../../../README.md#fine-grained-selection-of-publishable-projects) projects into a given [environment folder](../../../../../README.md#-environment-folders-to-isolate-files-during-e2e-tests).
+This executor helps to install a [`publishable`](../../../../../README.md#fine-grained-control-for-publishable-projects-) projects into a given [environment folder](../../../../../docs/benefits.md#️-environment-folders-to-isolate-files-during-e2e-tests).
 This folder has to contain all needed configuration and files for the `npm install` command to work.
 
 #### @push-based/nx-verdaccio:pkg-install
@@ -11,7 +11,7 @@ This folder has to contain all needed configuration and files for the `npm insta
 
 ## Usage
 
-// project.json
+In `project.json`:
 
 ```json
 {
@@ -33,9 +33,9 @@ By default, the Nx executor will derive the options from the executor options.
     "pkg-install": {
       "executor": "@code-pushup/nx-verdaccio:pkg-install",
       "options": {
-        "pkgVersion": "1.2.3"
-        "envRoot": "/tmp/test-npm-workspace"
-        "verbose": true,
+        "pkgVersion": "1.2.3",
+        "envRoot": "/tmp/test-npm-workspace",
+        "verbose": true
       }
     }
   }
@@ -48,8 +48,8 @@ Show what will be executed without actually executing it:
 
 ## Options
 
-| Name           | type     | description                                                                                                                          |
-| -------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| **pkgVersion** | `string` | The packages version to install. Falls back to get the current version from build output.                                            |
-| **envRoot**    | `string` | The folder in which the package should get installed. This folder is the environment folder and contains a configured `.npmrc` file. |
-| **verbose**    | `bolean` | Show more verbose logs                                                                                                               |
+| Name           | Type      | Description                                                                                                                          |
+| -------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| **pkgVersion** | `string`  | The packages version to install. Falls back to get the current version from build output.                                            |
+| **envRoot**    | `string`  | The folder in which the package should get installed. This folder is the environment folder and contains a configured `.npmrc` file. |
+| **verbose**    | `boolean` | Show more verbose logs                                                                                                               |

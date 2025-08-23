@@ -4,7 +4,7 @@ import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 
 export default defineConfig({
   root: __dirname,
-  cacheDir: '../../node_modules/.vite/projects/build-env',
+  cacheDir: '../../node_modules/.vite/projects/nx-verdaccio',
 
   plugins: [nxViteTsPaths()],
 
@@ -17,9 +17,7 @@ export default defineConfig({
     globals: true,
     cache: { dir: '../../node_modules/.vitest' },
     environment: 'node',
-    include: [
-      'src/**/*.{spec,test,unit-test,integration-test}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
-    ],
+    include: ['src/**/*.{spec,test,unit-test}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     reporters: ['default'],
     setupFiles: [
       '../../testing/test-setup/src/lib/extend/path-matcher.ts',
@@ -27,7 +25,8 @@ export default defineConfig({
       '../../testing/test-setup/src/lib/reset.mock.ts',
     ],
     coverage: {
-      reportsDirectory: '../../coverage/projects/build-env',
+      reporter: ['lcov', 'text-summary'],
+      reportsDirectory: '../../coverage/projects/unit/nx-verdaccio',
       provider: 'v8',
     },
   },

@@ -21,20 +21,19 @@ export default async function runNpmInstallExecutor(
   const packageDistPath = getTargetOutputPath(
     projectsConfigurations.projects[projectName]?.targets['build']
   );
-  const { name: packageName, version } = readJsonFile<PackageJson>(
+  const { name: packageName } = readJsonFile<PackageJson>(
     join(packageDistPath, 'package.json')
   );
   const { environmentRoot } = options;
-  const packageNameAndVersion = `${packageName}@${version}`;
 
-  logger.info(`Installing ${packageNameAndVersion} in ${environmentRoot}`);
+  logger.info(`Installing ${packageName} in ${environmentRoot}`);
 
   await executeProcess({
     command: 'npm',
     args: objectToCliArgs({
       _: [
         'install',
-        `${packageNameAndVersion}`,
+        `${packageName}`,
         '--include=prod',
         '--include=peer',
         // @TODO: implement options for dev and optional dependencies
