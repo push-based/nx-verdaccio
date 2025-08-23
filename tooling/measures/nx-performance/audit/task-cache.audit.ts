@@ -138,8 +138,8 @@ export async function projectTaskCacheSizeData<T extends string>(
         `--environmentRoot=${environmentRoot}`,
       ],
       observer: {
-        onStdout: (stdout) => logger.info(stdout),
-        onStderr: (stderr) => logger.error(stderr),
+        onStdout: (stdout) => console.log(stdout),
+        onStderr: (stderr) => console.error(stderr),
       },
     });
 

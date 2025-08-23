@@ -1,9 +1,6 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
-  "workspaceLayout": {
-    "appsDir": "projects",
-    "libsDir": "projects"
-  },
+  "workspaceLayout": { "appsDir": "projects", "libsDir": "projects" },
   "namedInputs": {
     "default": ["{projectRoot}/**/*", "sharedGlobals"],
     "production": [
@@ -25,37 +22,22 @@
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"]
     },
-    "@nx/vite:test": {
-      "cache": true,
-      "inputs": ["default", "^production"]
-    },
+    "@nx/vite:test": { "cache": true, "inputs": ["default", "^production"] },
     "@push-based/nx-verdaccio:env-setup": {
       "cache": true,
       "inputs": [
         "{projectRoot}/project.json",
-        {
-          "runtime": "node --version"
-        },
-        {
-          "runtime": "npm --version"
-        },
-        {
-          "externalDependencies": ["verdaccio"]
-        },
+        { "runtime": "node --version" },
+        { "runtime": "npm --version" },
+        { "externalDependencies": ["verdaccio"] },
         "^production"
       ]
     },
-    "nxv-env-setup": {
-      "executor": "@push-based/nx-verdaccio:env-setup"
-    },
-    "nxv-pkg-publish": {
-      "options": {
-        "distPath": "{projectRoot}/dist"
-      }
-    },
+    "nxv-env-setup": { "executor": "@push-based/nx-verdaccio:env-setup" },
+    "nxv-pkg-publish": { "options": { "distPath": "{projectRoot}/dist" } },
     "nx-release-publish": {},
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"],
       "inputs": [
         "default",
@@ -69,9 +51,7 @@
       },
       "cache": true
     },
-    "build": {
-      "inputs": ["production", "^production"]
-    },
+    "build": { "inputs": ["production", "^production"] },
     "@nx/js:tsc": {
       "cache": true,
       "dependsOn": ["^build"],
@@ -80,15 +60,8 @@
     "@nx/jest:jest": {
       "cache": true,
       "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
-      "options": {
-        "passWithNoTests": true
-      },
-      "configurations": {
-        "ci": {
-          "ci": true,
-          "codeCoverage": true
-        }
-      }
+      "options": { "passWithNoTests": true },
+      "configurations": { "ci": { "ci": true, "codeCoverage": true } }
     }
   },
   "plugins": [
@@ -96,26 +69,15 @@
       "plugin": "@push-based/nx-verdaccio",
       "exclude": ["examples/e2e/cli-e2e-original/**"],
       "options": {
-        "packages": {
-          "filterByTags": ["publishable"]
-        },
+        "packages": { "filterByTags": ["publishable"] },
         "environments": {
-          "inferredTargets": {
-            "e2e": "e2e-test"
-          },
+          "inferredTargets": { "e2e": "e2e-test" },
           "targetNames": ["e2e", "e2e-static"]
         }
       }
     },
-    {
-      "plugin": "./examples/e2e/cli-e2e-original/tooling/original.plugin.ts"
-    },
-    {
-      "plugin": "@nx/eslint/plugin",
-      "options": {
-        "targetName": "lint"
-      }
-    }
+    { "plugin": "./examples/e2e/cli-e2e-original/tooling/original.plugin.ts" },
+    { "plugin": "@nx/eslint/plugin", "options": { "targetName": "lint" } }
   ],
   "pluginsConfig": {
     "@nx/js": {
@@ -129,10 +91,7 @@
       "conventionalCommits": true,
       "preVersionCommand": "npx nx run-many -t build"
     },
-    "changelog": {
-      "workspaceChangelog": {
-        "createRelease": "github"
-      }
-    }
-  }
+    "changelog": { "workspaceChangelog": { "createRelease": "github" } }
+  },
+  "nxCloudId": "68a9d4a4f0ca0dc700a1e9dd"
 }

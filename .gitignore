@@ -42,3 +42,8 @@ Thumbs.db
 .nx
 .nx/cache
 .nx/workspace-data
+
+# environment variables
+.env
+.env.*
+!.env.example
