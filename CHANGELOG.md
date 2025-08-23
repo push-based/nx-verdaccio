@@ -1,3 +1,104 @@
+## 0.0.4 (2025-08-22)
+
+
+### 🩹 Fixes
+
+- publish docs ([f95090b](https://github.com/push-based/nx-verdaccio/commit/f95090b))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
+## 0.0.3 (2025-08-22)
+
+
+### 🩹 Fixes
+
+- publish fix ([fcf4412](https://github.com/push-based/nx-verdaccio/commit/fcf4412))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
+## 0.0.2 (2025-08-22)
+
+This was a version bump only, there were no code changes.
+
+## 0.0.1 (2025-08-22)
+
+This was a version bump only, there were no code changes.
+
+## 0.0.0-alpha.32 (2025-08-22)
+
+
+### 🚀 Features
+
+- support custom target names ([384c8e1](https://github.com/push-based/nx-verdaccio/commit/384c8e1))
+- **nx-verdaccio:** extend pkg publish options with distPath ([2148f0b](https://github.com/push-based/nx-verdaccio/commit/2148f0b))
+
+### ❤️  Thank You
+
+- Matěj Chalk
+- Michael @rx-angular
+
+# 0.0.0 (2025-06-29)
+
+
+### 🚀 Features
+
+- support custom target names ([384c8e1](https://github.com/push-based/nx-verdaccio/commit/384c8e1))
+
+### ❤️  Thank You
+
+- Matěj Chalk
+
+## 0.0.0-alpha.31 (2025-03-24)
+
+
+### 🩹 Fixes
+
+- **nx-verdaccio:** adjust install ([6aeb5a8](https://github.com/push-based/nx-verdaccio/commit/6aeb5a8))
+- **readme.md:** fixes typos in readme.md ([67eb136](https://github.com/push-based/nx-verdaccio/commit/67eb136))
+
+### ❤️  Thank You
+
+- Alejandro
+- Michael @rx-angular
+
+## 0.0.0-alpha.30 (2025-03-04)
+
+
+### 🩹 Fixes
+
+- **nx-verdaccio:** adjust glob pattern ([a247606](https://github.com/push-based/nx-verdaccio/commit/a247606))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
+## 0.0.0-alpha.29 (2025-03-04)
+
+
+### 🩹 Fixes
+
+- **nx-verdaccio:** adjust globs ([3018aa2](https://github.com/push-based/nx-verdaccio/commit/3018aa2))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
+## 0.0.0-alpha.28 (2025-03-04)
+
+
+### 🩹 Fixes
+
+- update docs ([0b87537](https://github.com/push-based/nx-verdaccio/commit/0b87537))
+- **nx-verdaccio:** add package json glob ([a852200](https://github.com/push-based/nx-verdaccio/commit/a852200))
+
+### ❤️  Thank You
+
+- Michael @rx-angular
+
 ## 0.0.0-alpha.27 (2024-12-11)
 
 

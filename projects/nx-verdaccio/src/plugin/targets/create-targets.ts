@@ -1,6 +1,6 @@
-import type { NxVerdaccioCreateNodeOptions } from '../schema';
 import { logger, type ProjectConfiguration } from '@nx/devkit';
 import { normalizeCreateNodesOptions } from '../normalize-create-nodes-options';
+import type { NxVerdaccioCreateNodeOptions } from '../schema';
 import {
   getEnvTargets,
   isEnvProject,
@@ -45,9 +45,7 @@ export function createProjectConfiguration(
       // === ENVIRONMENT TARGETS ===
       targets: {
         // start-verdaccio, stop-verdaccio
-        ...verdaccioTargets(projectConfiguration, {
-          environmentsDir: environments.environmentsDir,
-        }),
+        ...verdaccioTargets(projectConfiguration, environments),
         // env-bootstrap-env, env-setup-env, install-env (intermediate target to run dependency targets)
         ...getEnvTargets(projectConfiguration, environments),
         // adjust targets to run env-setup-env

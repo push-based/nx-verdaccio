@@ -32,6 +32,22 @@
     "verbose": {
       "type": "boolean",
       "description": "Print additional logs"
+    },
+    "envBootstrapTarget": {
+      "type": "string",
+      "description": "Name of target which bootstraps the environment"
+    },
+    "envPublishOnlyTarget": {
+      "type": "string",
+      "description": "Name of target which only publishes packages for the environment"
+    },
+    "envInstallTarget": {
+      "type": "string",
+      "description": "Name of target which installs packages for the environment"
+    },
+    "verdaccioStopTarget": {
+      "type": "string",
+      "description": "Name of target which stops the Verdaccio server"
     }
   },
   "additionalProperties": true,

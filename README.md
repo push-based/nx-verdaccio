@@ -2,7 +2,7 @@
 
 ### 🚀 Enterprise Grade Testing with Verdaccio and Nx ⚡
 
-[![version](https://img.shields.io/github/v/release/push-based/nx-verdaccio)](https://github.com/push-based/nx-verdaccio/releases/latest)
+[![npm](https://img.shields.io/npm/v/%40push-based%2Fnx-verdaccio.svg)](https://www.npmjs.com/package/@push-based/nx-verdaccio)
 [![release date](https://img.shields.io/github/release-date/push-based/nx-verdaccio)](https://github.com/push-based/nx-verdaccio/releases)
 [![license](https://img.shields.io/github/license/push-based/nx-verdaccio)](https://opensource.org/licenses/MIT)
 [![commit activity](https://img.shields.io/github/commit-activity/m/push-based/nx-verdaccio)](https://github.com/push-based/nx-verdaccio/pulse/monthly)
@@ -88,7 +88,7 @@ With this plugin, say goodbye to the old days of waiting around for your tests a
 >   "targets": {
 >     "e2e": {
 >       "dependsOn": [
->         // dynamically aded
+>         // dynamically added
 >         { "target": "env-setup", "params": "forward" }
 >       ]
 >       // ...
@@ -98,7 +98,7 @@ With this plugin, say goodbye to the old days of waiting around for your tests a
 > }
 > ```
 
-### Optional: Add the Package Under Test as implicitDependency (OPTIONAL)
+### Optional: Add the Package Under Test as implicitDependencies
 
 Let the plugin detect your implicit dependencies:
 
@@ -106,7 +106,7 @@ Let the plugin detect your implicit dependencies:
 // projects/utils-e2e/project.json
 {
   "name": "utils-e2e",
-  "implicitDependency": ["utils"]
+  "implicitDependencies": ["utils"]
 }
 ```
 
@@ -222,11 +222,42 @@ Tag those projects accordingly:
 - Run E2E with specific environments:  
   `nx run utils-static-e2e:e2e --environmentRoot static-environments/user-lists`
 
+### Customize inferred target names
+
+The inferred Nx targets are prefixed by `nxv-`, e.g. `nxv-e2e` will run your test target (by default `e2e`) and ensure cleanup is done afterwards (`nxv-teardown`).
+Other inferred targets include `nxv-env-setup`, `nxv-env-bootstrap`, `nxv-env-install`, `nxv-pkg-install`, `nxv-verdaccio-start`, etc.
+You can find all these targets in the Nx graph (run `npx nx graph`).
+
+You may prefer to infer different target names, e.g. so you can run `e2e-test` instead of `nxv-e2e`. All target names may be customized for both environment and package targets.
+
+```jsonc
+{
+  "plugins": [
+    {
+      "plugin": "@push-based/nx-verdaccio",
+      "options": {
+        "environments": {
+          "inferredTargets": {
+            "e2e": "e2e-test", // default is "nxv-e2e"
+            "setup": "e2e-test-setup" // default is "nxv-e2e-setup"
+          }
+        },
+        "packages": {
+          "inferredTargets": {
+            "install": "npm-install" // default is "nxv-pkg-install"
+          }
+        }
+      }
+    }
+  ]
+}
+```
+
 ## Benchmarks
 
-This is a first draft of how the benchmarks will look. ATM the data set it not big proper.
+This is a first draft of how the benchmarks will look. ATM the data set it not big enough.
 
-> [!warn]
+> ⚠️
 > The data is a first draft of the structure and does not reflect a clean data set.
 > Work on the real benchmark data in progress
 
@@ -241,9 +272,9 @@ This is a first draft of how the benchmarks will look. ATM the data set it not b
 
 ## Next Steps
 
-- [configure cacheable environments](./projects/nx-verdaccio/docs/static-environments.md)
-- [static environments](.)
-- [debugging](.)
+- [Configure cacheable environments](./docs/benefits.md#-task-performance---optimized-execution)
+- [Configure Static environments](./projects/nx-verdaccio/docs/static-environments.md)
+- [Debugging](./projects/nx-verdaccio/README.md#debugging-e2e-environments)
 
 ## Stay Connected! 🔗
 

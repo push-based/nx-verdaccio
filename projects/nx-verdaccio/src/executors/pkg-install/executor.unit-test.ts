@@ -68,7 +68,7 @@ describe('runNpmInstallExecutor', () => {
 
     expect(logger.info).toHaveBeenCalledTimes(1);
     expect(logger.info).toHaveBeenCalledWith(
-      expect.stringContaining(`Installing my-lib@1.0.0 in`)
+      expect.stringContaining(`Installing my-lib in`)
     );
 
     expect(executeProcessSpy).toHaveBeenCalledTimes(1);
@@ -77,7 +77,7 @@ describe('runNpmInstallExecutor', () => {
         command: 'npm',
         args: [
           'install',
-          'my-lib@1.0.0',
+          'my-lib',
           '--include=prod',
           // @TODO implement options
           //'--include=dev',
