@@ -4,7 +4,7 @@
   "sourceRoot": "projects/nx-verdaccio-e2e/test",
   "projectType": "application",
   "tags": ["type:e2e", "type:e2e-vi", "npm-env"],
-  "implicitDependencies": ["@push-based/nx-verdaccio"],
+  "implicitDependencies": ["@push-based/nx-verdaccio", "test-setup"],
   "targets": {
     "lint": {},
     "e2e": {
