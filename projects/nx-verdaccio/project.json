@@ -43,15 +43,13 @@
       }
     },
     "unit-test": {
-      "executor": "@nx/vite:test",
       "options": {
-        "configFile": "projects/nx-verdaccio/vite.config.ts"
+        "config": "./vite.config.ts"
       }
     },
     "integration-test": {
-      "executor": "@nx/vite:test",
       "options": {
-        "configFile": "projects/nx-verdaccio/vite.integration.config.ts"
+        "config": "./vite.integration.config.ts"
       }
     }
   }

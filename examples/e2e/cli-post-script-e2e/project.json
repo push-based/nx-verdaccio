@@ -11,10 +11,6 @@
         "skipInstall": true,
         "postScript": "npx tsx --tsconfig examples/e2e/cli-post-script-e2e/tsconfig.spec.json examples/e2e/cli-post-script-e2e/setup/exec-global-setup.ts"
       }
-    },
-    "e2e": {
-      "executor": "@nx/vite:test",
-      "inputs": ["default", "^production"]
     }
   }
 }

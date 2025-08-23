@@ -27,10 +27,12 @@
       }
     },
     "unit-test": {
-      "executor": "@nx/vite:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{projectRoot}/{options.coverage.reportsDirectory}",
+        "{workspaceRoot}/coverage/projects/plugin-1"
+      ],
       "options": {
-        "reportsDirectory": "../../../coverage/examples/projects/push-based"
+        "coverage.reportsDirectory": "../../../coverage/examples/projects/push-based"
       }
     }
   }

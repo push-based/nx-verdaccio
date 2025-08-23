@@ -1,6 +1,9 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
-  "workspaceLayout": { "appsDir": "projects", "libsDir": "projects" },
+  "workspaceLayout": {
+    "appsDir": "projects",
+    "libsDir": "projects"
+  },
   "namedInputs": {
     "default": ["{projectRoot}/**/*", "sharedGlobals"],
     "production": [
@@ -9,7 +12,6 @@
       "!{projectRoot}/eslint.config.js",
       "!{projectRoot}/**/?(*.)+(unit-test|spec|test).[jt]s?(x)?(.snap)",
       "!{projectRoot}/tsconfig.spec.json",
-      "!{projectRoot}/jest.config.[jt]s",
       "!{projectRoot}/src/test-setup.[jt]s",
       "!{projectRoot}/test-setup.[jt]s",
       "!{projectRoot}/vite.config.[jt]s"
@@ -22,19 +24,34 @@
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"]
     },
-    "@nx/vite:test": { "cache": true, "inputs": ["default", "^production"] },
+    "@nx/vite:test": {
+      "cache": true,
+      "inputs": ["default", "^production"]
+    },
     "@push-based/nx-verdaccio:env-setup": {
       "cache": true,
       "inputs": [
         "{projectRoot}/project.json",
-        { "runtime": "node --version" },
-        { "runtime": "npm --version" },
-        { "externalDependencies": ["verdaccio"] },
+        {
+          "runtime": "node --version"
+        },
+        {
+          "runtime": "npm --version"
+        },
+        {
+          "externalDependencies": ["verdaccio"]
+        },
         "^production"
       ]
     },
-    "nxv-env-setup": { "executor": "@push-based/nx-verdaccio:env-setup" },
-    "nxv-pkg-publish": { "options": { "distPath": "{projectRoot}/dist" } },
+    "nxv-env-setup": {
+      "executor": "@push-based/nx-verdaccio:env-setup"
+    },
+    "nxv-pkg-publish": {
+      "options": {
+        "distPath": "{projectRoot}/dist"
+      }
+    },
     "nx-release-publish": {},
     "lint": {
       "executor": "@nx/eslint:lint",
@@ -51,17 +68,13 @@
       },
       "cache": true
     },
-    "build": { "inputs": ["production", "^production"] },
+    "build": {
+      "inputs": ["production", "^production"]
+    },
     "@nx/js:tsc": {
       "cache": true,
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"]
-    },
-    "@nx/jest:jest": {
-      "cache": true,
-      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
-      "options": { "passWithNoTests": true },
-      "configurations": { "ci": { "ci": true, "codeCoverage": true } }
     }
   },
   "plugins": [
@@ -69,15 +82,108 @@
       "plugin": "@push-based/nx-verdaccio",
       "exclude": ["examples/e2e/cli-e2e-original/**"],
       "options": {
-        "packages": { "filterByTags": ["publishable"] },
+        "packages": {
+          "filterByTags": ["publishable"]
+        },
         "environments": {
-          "inferredTargets": { "e2e": "e2e-test" },
+          "inferredTargets": {
+            "e2e": "e2e-test"
+          },
           "targetNames": ["e2e", "e2e-static"]
         }
       }
     },
-    { "plugin": "./examples/e2e/cli-e2e-original/tooling/original.plugin.ts" },
-    { "plugin": "@nx/eslint/plugin", "options": { "targetName": "lint" } }
+    {
+      "plugin": "./examples/e2e/cli-e2e-original/tooling/original.plugin.ts"
+    },
+    {
+      "plugin": "@nx/eslint/plugin",
+      "options": {
+        "targetName": "lint"
+      }
+    },
+    {
+      "plugin": "@nx/vite/plugin",
+      "options": {
+        "buildTargetName": "build",
+        "serveTargetName": "serve",
+        "previewTargetName": "preview",
+        "testTargetName": "e2e",
+        "serveStaticTargetName": "serve-static",
+        "devTargetName": "dev",
+        "typecheckTargetName": "typecheck"
+      },
+      "include": [
+        "e2e/nx-verdaccio-e2e/**/*",
+        "examples/e2e/cli-e2e/**/*",
+        "examples/e2e/cli-post-script-e2e/**/*",
+        "examples/e2e/cli-static-e2e/**/*",
+        "examples/e2e/core-e2e/**/*",
+        "examples/e2e/models-e2e/**/*",
+        "examples/e2e/playground-e2e/**/*",
+        "examples/e2e/plugin-1-e2e/**/*",
+        "examples/e2e/utils-e2e/**/*"
+      ]
+    },
+    {
+      "plugin": "@nx/vite/plugin",
+      "options": {
+        "buildTargetName": "build",
+        "serveTargetName": "serve",
+        "previewTargetName": "preview",
+        "testTargetName": "original-e2e",
+        "serveStaticTargetName": "serve-static",
+        "devTargetName": "dev",
+        "typecheckTargetName": "typecheck"
+      },
+      "include": ["examples/e2e/cli-e2e-original/**/*"]
+    },
+    {
+      "plugin": "@nx/vite/plugin",
+      "options": {
+        "buildTargetName": "build",
+        "serveTargetName": "serve",
+        "previewTargetName": "preview",
+        "testTargetName": "unit-test",
+        "serveStaticTargetName": "serve-static",
+        "devTargetName": "dev",
+        "typecheckTargetName": "typecheck"
+      },
+      "include": [
+        "examples/projects/cli/**/*",
+        "examples/projects/core/**/*",
+        "examples/projects/models/**/*",
+        "examples/projects/plugin-1/**/*",
+        "examples/projects/utils/**/*",
+        "testing/test-nx-utils/**/*"
+      ]
+    },
+    {
+      "plugin": "@nx/vite/plugin",
+      "options": {
+        "buildTargetName": "build",
+        "serveTargetName": "serve",
+        "previewTargetName": "preview",
+        "testTargetName": "integration-test",
+        "serveStaticTargetName": "serve-static",
+        "devTargetName": "dev",
+        "typecheckTargetName": "typecheck"
+      },
+      "include": ["projects/nx-verdaccio/**/*"]
+    },
+    {
+      "plugin": "@nx/vite/plugin",
+      "options": {
+        "buildTargetName": "build",
+        "serveTargetName": "serve",
+        "previewTargetName": "preview",
+        "testTargetName": "test",
+        "serveStaticTargetName": "serve-static",
+        "devTargetName": "dev",
+        "typecheckTargetName": "typecheck"
+      },
+      "include": ["testing/test-utils/**/*"]
+    }
   ],
   "pluginsConfig": {
     "@nx/js": {
@@ -91,7 +197,11 @@
       "conventionalCommits": true,
       "preVersionCommand": "npx nx run-many -t build"
     },
-    "changelog": { "workspaceChangelog": { "createRelease": "github" } }
+    "changelog": {
+      "workspaceChangelog": {
+        "createRelease": "github"
+      }
+    }
   },
   "nxCloudId": "68a9d4a4f0ca0dc700a1e9dd"
 }

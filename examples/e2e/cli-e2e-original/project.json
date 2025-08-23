@@ -9,11 +9,12 @@
     "lint": {},
     "original-e2e": {
       "dependsOn": ["^build"],
-      "executor": "@nx/vite:test",
-      "inputs": ["default", "^production"],
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{projectRoot}/{options.coverage.reportsDirectory}",
+        "{workspaceRoot}/coverage/projects/cli-e2e-original"
+      ],
       "options": {
-        "reportsDirectory": "../../../coverage/projects/cli-e2e-original"
+        "coverage.reportsDirectory": "../../../coverage/projects/cli-e2e-original"
       }
     }
   }
