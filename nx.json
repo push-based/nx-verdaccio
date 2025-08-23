@@ -79,21 +79,6 @@
   },
   "plugins": [
     {
-      "plugin": "@push-based/nx-verdaccio",
-      "exclude": ["examples/e2e/cli-e2e-original/**"],
-      "options": {
-        "packages": {
-          "filterByTags": ["publishable"]
-        },
-        "environments": {
-          "inferredTargets": {
-            "e2e": "e2e-test"
-          },
-          "targetNames": ["e2e", "e2e-static"]
-        }
-      }
-    },
-    {
       "plugin": "./examples/e2e/cli-e2e-original/tooling/original.plugin.ts"
     },
     {
@@ -183,6 +168,18 @@
         "typecheckTargetName": "typecheck"
       },
       "include": ["testing/test-utils/**/*"]
+    },
+    {
+      "plugin": "@push-based/nx-verdaccio",
+      "exclude": ["examples/e2e/cli-e2e-original/**"],
+      "options": {
+        "packages": {
+          "filterByTags": ["publishable"]
+        },
+        "environments": {
+          "targetNames": ["e2e", "e2e-static"]
+        }
+      }
     }
   ],
   "pluginsConfig": {

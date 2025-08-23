@@ -29,7 +29,10 @@ export function isPkgProject(
   return true;
 }
 
-export function getPkgTargets(): Record<string, TargetConfiguration> {
+export function getPkgTargets(projectConfig: ProjectConfiguration): Record<string, TargetConfiguration> {
+  const buildTarget = projectConfig.targets?.['build'];
+  const outputPath = buildTarget?.options?.['outputPath'];
+
   return {
     [TARGET_PACKAGE_PUBLISH]: {
       dependsOn: [
@@ -41,7 +44,7 @@ export function getPkgTargets(): Record<string, TargetConfiguration> {
         },
       ],
       executor: `${PACKAGE_NAME}:${EXECUTOR_PACKAGE_NPM_PUBLISH}`,
-      options: {},
+      options: outputPath ? { distPath: outputPath } : {},
     },
     [TARGET_PACKAGE_INSTALL]: {
       dependsOn: [
@@ -56,7 +59,7 @@ export function getPkgTargets(): Record<string, TargetConfiguration> {
         },
       ],
       executor: `${PACKAGE_NAME}:${EXECUTOR_PACKAGE_NPM_INSTALL}`,
-      options: {},
+      options: outputPath ? { outputPath } : {},
     },
   };
 }

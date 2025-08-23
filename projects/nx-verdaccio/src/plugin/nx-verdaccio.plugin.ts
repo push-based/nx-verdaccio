@@ -1,12 +1,13 @@
 import {
   type CreateNodes,
+  CreateNodesContextV2,
   createNodesFromFiles,
+  CreateNodesResult,
   type CreateNodesV2,
   logger,
   type ProjectConfiguration,
   readJsonFile,
 } from '@nx/devkit';
-import { readFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { hashObject } from 'nx/src/hasher/file-hasher';
 import { workspaceDataDirectory } from 'nx/src/utils/cache-directory';
@@ -20,30 +21,62 @@ import { PLUGIN_NAME } from './constants';
 import { normalizeCreateNodesOptions } from './normalize-create-nodes-options';
 import type { NxVerdaccioCreateNodeOptions } from './schema';
 import { createProjectConfiguration } from './targets/create-targets';
+import {
+  getPackageJsonNxConfig,
+  getProjectConfig,
+  getProjectJsonNxConfig,
+} from './project-config';
+import { combineGlobPatterns } from 'nx/src/utils/globs';
 
 const PROJECT_JSON_FILE_GLOB = '**/project.json';
+const PACKAGE_JSON_FILE_GLOB = '**/package.json';
+const FILE_GLOB = combineGlobPatterns(
+  PROJECT_JSON_FILE_GLOB,
+  PACKAGE_JSON_FILE_GLOB
+);
 
 export const createNodesV2: CreateNodesV2<NxVerdaccioCreateNodeOptions> = [
-  PROJECT_JSON_FILE_GLOB,
-  async (configFiles, options, context) => {
+  FILE_GLOB,
+  async (configFiles, options, context: CreateNodesContextV2) => {
     const optionsHash = hashObject({ options: options ?? {} });
     const nxVerdaccioEnvPluginCachePath = join(
       workspaceDataDirectory,
       `push-based--${PLUGIN_NAME}-${optionsHash}.hash`
     );
     const targetsCache = readTargetsCache(nxVerdaccioEnvPluginCachePath);
+
+    // key is projectRoot, value is true if the project was already processed
+    const pluginSetup = new Map();
     try {
       return await createNodesFromFiles(
         async (projectConfigurationFile, internalOptions) => {
-          const projectConfiguration: ProjectConfiguration = await readFile(
-            join(process.cwd(), projectConfigurationFile),
-            'utf8'
-          ).then(JSON.parse);
+          if (pluginSetup.has(dirname(projectConfigurationFile)) === true) {
+            return {
+              projects: {},
+            } as CreateNodesResult;
+          }
+
+          const isPkgJson = projectConfigurationFile.endsWith('package.json');
+          pluginSetup.set(dirname(projectConfigurationFile), true);
+          const [primaryConfig, fallback] = isPkgJson
+            ? [getPackageJsonNxConfig, getProjectJsonNxConfig]
+            : [getProjectJsonNxConfig, getPackageJsonNxConfig];
+
+          const projectConfiguration: ProjectConfiguration =
+            await getProjectConfig(
+              projectConfigurationFile,
+              primaryConfig,
+              fallback
+            );
           if (
             !('name' in projectConfiguration) ||
             typeof projectConfiguration.name !== 'string'
           ) {
-            throw new Error('Project name is required');
+            // Skip processing files that don't have valid project configurations
+            // (e.g., workspace root package.json with no project.json)
+            return {
+              projects: {},
+            } as CreateNodesResult;
           }
 
           const normalizedOptions = normalizeCreateNodesOptions(options);
