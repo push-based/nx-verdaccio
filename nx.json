@@ -37,7 +37,7 @@
     "nxv-pkg-publish": { "options": { "distPath": "{projectRoot}/dist" } },
     "nx-release-publish": {},
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"],
       "inputs": [
         "default",
