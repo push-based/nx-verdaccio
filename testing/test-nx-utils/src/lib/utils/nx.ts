@@ -5,7 +5,7 @@ import {
   type ProjectConfiguration,
   type ProjectGraph,
   type Tree,
-  updateJson
+  updateJson,
 } from '@nx/devkit';
 import { libraryGenerator } from '@nx/js';
 import type { LibraryGeneratorSchema } from '@nx/js/src/generators/library/schema';

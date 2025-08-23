@@ -2,6 +2,10 @@
   "extends": ["../../.eslintrc.base.json"],
   "ignorePatterns": [
     "!**/*",
+    "**/dist/**",
+    "**/coverage/**",
+    "**/.code-pushup/**",
+    "**/.eslint/**",
     "**/vite.config.*.timestamp*",
     "**/vitest.config.*.timestamp*"
   ],
@@ -48,7 +52,10 @@
               "verdaccio",
               "nx",
               "@code-pushup/models",
-              "@nx/plugin"
+              "@nx/plugin",
+              "vitest",
+              "vite",
+              "@nx/vite"
             ],
             "checkMissingDependencies": true,
             "checkObsoleteDependencies": true,
