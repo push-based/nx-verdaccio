@@ -1,5 +1,10 @@
 import { AuditOutput, Audit, Table, Issue } from '@code-pushup/models';
-import {executeProcess, slugify, formatDuration, objectToCliArgs} from '@code-pushup/utils';
+import {
+  executeProcess,
+  slugify,
+  formatDuration,
+  objectToCliArgs,
+} from '@code-pushup/utils';
 import { logger, readJsonFile } from '@nx/devkit';
 import { DEFAULT_PLUGIN_OUTPUT } from '../constant';
 import { join } from 'node:path';
@@ -87,10 +92,17 @@ export async function taskTimeData<T extends TaskTimeAuditOption>(
       command: `NX_DAEMON=false NX_PROFILE=${dist}/${slugify(
         task
       )}-profile.json npx`,
-      args: ['nx', 'run', task, '--parallel=1', '--skipNxCache', ...objectToCliArgs(options)],
+      args: [
+        'nx',
+        'run',
+        task,
+        '--parallel=1',
+        '--skipNxCache',
+        ...objectToCliArgs(options),
+      ],
       observer: {
-        onStdout: (stdout) => logger.info(stdout),
-        onStderr: (stderr) => logger.error(stderr),
+        onStdout: (stdout) => console.log(stdout),
+        onStderr: (stderr) => console.error(stderr),
       },
     });
 
