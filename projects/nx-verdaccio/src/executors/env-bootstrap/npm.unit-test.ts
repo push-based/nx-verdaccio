@@ -1,6 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { bold, red } from 'ansis';
-import { MEMFS_VOLUME } from '@push-based/test-utils';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   configureRegistry,
   type ConfigureRegistryOptions,
@@ -9,7 +7,6 @@ import {
 } from './npm';
 import { logger } from '@nx/devkit';
 import { formatInfo } from '../../internal/logging';
-import { setupNpmWorkspace } from '../env-setup/npm';
 
 const execMock = vi.fn();
 vi.mock('util', () => ({

@@ -1,6 +1,14 @@
 {
   "extends": ["../../.eslintrc.base.json"],
-  "ignorePatterns": ["!**/*"],
+  "ignorePatterns": [
+    "!**/*",
+    "**/dist/**",
+    "**/coverage/**",
+    "**/.code-pushup/**",
+    "**/.eslint/**",
+    "**/vite.config.*.timestamp*",
+    "**/vitest.config.*.timestamp*"
+  ],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
@@ -44,7 +52,10 @@
               "verdaccio",
               "nx",
               "@code-pushup/models",
-              "@nx/plugin"
+              "@nx/plugin",
+              "vitest",
+              "vite",
+              "@nx/vite"
             ],
             "checkMissingDependencies": true,
             "checkObsoleteDependencies": true,
