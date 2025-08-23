@@ -51,8 +51,6 @@
             "ignoredDependencies": [
               "verdaccio",
               "nx",
-              "@code-pushup/models",
-              "@nx/plugin",
               "vitest",
               "vite",
               "@nx/vite"
