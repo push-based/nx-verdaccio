@@ -35,7 +35,6 @@ testem.log
 /typings
 
 # System Files
-.env
 .DS_Store
 Thumbs.db
 
@@ -43,3 +42,8 @@ Thumbs.db
 .nx
 .nx/cache
 .nx/workspace-data
+
+# environment variables
+.env
+.env.*
+!.env.example
