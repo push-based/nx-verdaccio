@@ -35,6 +35,14 @@ const cacheSizeTasks = [
 ];
 export default mergeConfigs(
   {
+    ...(process.env['CP_API_KEY'] && {
+      upload: {
+        project: 'nx-verdaccio',
+        organization: 'code-pushup',
+        server: 'https://api.staging.code-pushup.dev/graphql',
+        apiKey: process.env['CP_API_KEY'],
+      },
+    }),
     plugins: [
       nxPerformancePlugin({
         taskTimeTasks,
