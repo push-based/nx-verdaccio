@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import nxPerformancePlugin, {
   nxPerformanceCategoryRefs,
   type OnlyAudit,
@@ -38,7 +39,7 @@ export default mergeConfigs(
     ...(process.env['CP_API_KEY'] && {
       upload: {
         project: 'nx-verdaccio',
-        organization: 'code-pushup',
+        organization: 'push-based',
         server: 'https://api.staging.code-pushup.dev/graphql',
         apiKey: process.env['CP_API_KEY'],
       },
