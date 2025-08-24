@@ -1,6 +1,6 @@
 {
   "name": "@push-based/nx-verdaccio",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Nx plugin for blazing fast Verdaccio setup & testing",
   "license": "MIT",
   "private": false,
@@ -17,8 +17,8 @@
     "@nx/devkit": "^21.4.1",
     "ansis": "^3.3.2",
     "simple-git": "^3.27.0",
-    "tslib": "^2.3.0",
-    "@nx/plugin": "21.4.1"
+    "@nx/plugin": "21.4.1",
+    "memfs": "^4.11.1"
   },
   "devDependencies": {
     "@nx/vite": "21.4.1",

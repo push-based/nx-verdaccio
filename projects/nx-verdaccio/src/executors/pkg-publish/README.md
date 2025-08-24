@@ -34,7 +34,7 @@ By default, the Nx executor will derive the options from the executor options.
       "executor": "@code-pushup/nx-verdaccio:pkg-publish",
       "options": {
         "pkgVersion": "1.2.3",
-        "envRoot": "/tmp/test-npm-workspace",
+        "environmentRoot": "/tmp/test-npm-workspace",
         "verbose": true
       }
     }
@@ -48,8 +48,8 @@ Show what will be executed without actually executing it:
 
 ## Options
 
-| Name           | Type      | Description                                                                                                                          |
-| -------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| **pkgVersion** | `string`  | The packages version to publish. Falls back to get the current version from build output.                                            |
-| **envRoot**    | `string`  | The folder in which the package should get published. This folder is the environment folder and contains a configured `.npmrc` file. |
-| **verbose**    | `boolean` | Show more verbose logs                                                                                                               |
+| Name                | Type      | Description                                                                                                                          |
+| ------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| **pkgVersion**      | `string`  | The packages version to publish. Falls back to get the current version from build output.                                            |
+| **environmentRoot** | `string`  | The folder in which the package should get published. This folder is the environment folder and contains a configured `.npmrc` file. |
+| **verbose**         | `boolean` | Show more verbose logs                                                                                                               |

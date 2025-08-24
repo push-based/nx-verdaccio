@@ -9,12 +9,12 @@
     "lint": {},
     "nxv-e2e": {
       "options": {
-        "envRoot": "static-environments/user-lists"
+        "environmentRoot": "static-environments/user-lists"
       }
     },
     "nxv-env-setup": {
       "options": {
-        "envRoot": "static-environments/user-lists"
+        "environmentRoot": "static-environments/user-lists"
       }
     },
     "e2e": {
