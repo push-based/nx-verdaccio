@@ -5,11 +5,19 @@ export function getTargetOutputPath(
   context: ExecutorContext
 ) {
   const { optionsKey, ...target } = targetOptions;
-  const { options, ...restTarget } = readTargetOptions(target, context);
+  const options = readTargetOptions(target, context);
   const outputPath = (options ?? {})[optionsKey];
   if (!(optionsKey in (options ?? {})) || !outputPath) {
     throw new Error(
-      `The target: ${target.target} in project: ${context.projectName} has no option: ${optionsKey} configured. /n${JSON.stringify({ options, ...restTarget })}`
+      `The target: ${target.target} in project: ${
+        context.projectName
+      } has no option: ${optionsKey} configured. /n ${JSON.stringify(
+        {
+          options,
+        },
+        null,
+        2
+      )}`
     );
   }
   return outputPath;
