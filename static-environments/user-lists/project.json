@@ -8,11 +8,8 @@
     "lint": {
       "executor": "@nx/eslint:lint",
       "options": {
-        "noErrorOnUnmatchedPattern": true,
-        "lintFilePatterns": [
-          "{projectRoot}/**/*.{ts,tsx,js,jsx}",
-          "{projectRoot}/**/*.json"
-        ]
+        "errorOnUnmatchedPattern": false,
+        "lintFilePatterns": ["{projectRoot}/**/*.{ts,tsx,js,jsx}"]
       }
     }
   }

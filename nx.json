@@ -1,6 +1,9 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
-  "workspaceLayout": { "appsDir": "projects", "libsDir": "projects" },
+  "workspaceLayout": {
+    "appsDir": "projects",
+    "libsDir": "projects"
+  },
   "namedInputs": {
     "default": ["{projectRoot}/**/*", "sharedGlobals"],
     "production": [
@@ -9,7 +12,6 @@
       "!{projectRoot}/eslint.config.js",
       "!{projectRoot}/**/?(*.)+(unit-test|spec|test).[jt]s?(x)?(.snap)",
       "!{projectRoot}/tsconfig.spec.json",
-      "!{projectRoot}/jest.config.[jt]s",
       "!{projectRoot}/src/test-setup.[jt]s",
       "!{projectRoot}/test-setup.[jt]s",
       "!{projectRoot}/vite.config.[jt]s"
@@ -17,14 +19,28 @@
     "sharedGlobals": []
   },
   "targetDefaults": {
-    "@nx/vite:test": { "cache": true, "inputs": ["default", "^production"] },
+    "@nx/esbuild:esbuild": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
+    },
+    "@nx/vite:test": {
+      "cache": true,
+      "inputs": ["default", "^production"]
+    },
     "@push-based/nx-verdaccio:env-setup": {
       "cache": true,
       "inputs": [
         "{projectRoot}/project.json",
-        { "runtime": "node --version" },
-        { "runtime": "npm --version" },
-        { "externalDependencies": ["verdaccio"] },
+        {
+          "runtime": "node --version"
+        },
+        {
+          "runtime": "npm --version"
+        },
+        {
+          "externalDependencies": ["verdaccio"]
+        },
         "^production"
       ]
     },
@@ -50,49 +66,13 @@
       },
       "cache": true
     },
+    "build": {
+      "inputs": ["production", "^production"]
+    },
     "@nx/js:tsc": {
       "cache": true,
       "dependsOn": ["^build"],
-      "inputs": ["production", "^production"],
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "{projectRoot}/dist",
-        "main": "{projectRoot}/src/index.ts",
-        "tsConfig": "{projectRoot}/tsconfig.lib.json",
-        "assets": [
-          "{projectRoot}/*.md",
-          {
-            "input": "{projectRoot}/src",
-            "glob": "**/!(*.ts)",
-            "output": "./src"
-          },
-          {
-            "input": "{projectRoot}/src",
-            "glob": "**/*.d.ts",
-            "output": "./src"
-          }
-        ]
-      }
-    },
-    "@nx/esbuild:esbuild": {
-      "cache": true,
-      "dependsOn": ["^build"],
-      "inputs": ["production", "^production"],
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "{projectRoot}/dist",
-        "main": "{projectRoot}/src/index.ts",
-        "tsConfig": "{projectRoot}/tsconfig.lib.json",
-        "assets": ["{projectRoot}/*.md"],
-        "generatePackageJson": true,
-        "format": ["esm"]
-      }
-    },
-    "@nx/jest:jest": {
-      "cache": true,
-      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
-      "options": { "passWithNoTests": true },
-      "configurations": { "ci": { "ci": true, "codeCoverage": true } }
+      "inputs": ["production", "^production"]
     }
   },
   "plugins": [
@@ -212,7 +192,11 @@
       "conventionalCommits": true,
       "preVersionCommand": "npx nx run-many -t build"
     },
-    "changelog": { "workspaceChangelog": { "createRelease": "github" } }
+    "changelog": {
+      "workspaceChangelog": {
+        "createRelease": "github"
+      }
+    }
   },
   "nxCloudId": "68a9d4a4f0ca0dc700a1e9dd"
 }

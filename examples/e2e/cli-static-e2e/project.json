@@ -16,10 +16,6 @@
       "options": {
         "environmentRoot": "static-environments/user-lists"
       }
-    },
-    "e2e": {
-      "executor": "@nx/vite:test",
-      "inputs": ["default", "^production"]
     }
   }
 }
