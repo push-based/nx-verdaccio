@@ -13,7 +13,7 @@ import type { NxVerdaccioCreateNodeOptions } from './schema';
 import { createProjectConfiguration } from './targets/create-targets';
 import {
   getPackageJsonNxConfig,
-  getProjectConfig,
+  getProjectConfigWithNameFallback,
   getProjectJsonNxConfig,
 } from './project-config';
 import { combineGlobPatterns } from 'nx/src/utils/globs';
@@ -42,14 +42,11 @@ export const createNodesV2: CreateNodesV2<NxVerdaccioCreateNodeOptions> = [
           ? [getPackageJsonNxConfig, getProjectJsonNxConfig]
           : [getProjectJsonNxConfig, getPackageJsonNxConfig];
 
-        const cfg = await getProjectConfig(configPath, primary, fallback).catch(
-          () => null
+        const cfg = await getProjectConfigWithNameFallback(
+          configPath,
+          primary,
+          fallback
         );
-        if (!cfg?.name) {
-          throw new Error(
-            'A reasonn name is not given is this source does not take over name from package json'
-          );
-        }
 
         const { targets, namedInputs = {} } = createProjectConfiguration(
           cfg,
