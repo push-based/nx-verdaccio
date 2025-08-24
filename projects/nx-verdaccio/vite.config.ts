@@ -19,6 +19,7 @@ export default defineConfig({
     environment: 'node',
     include: ['src/**/*.{spec,test,unit-test}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     reporters: ['default'],
+    watch: false,
     setupFiles: [
       '../../testing/test-setup/src/lib/extend/path-matcher.ts',
       '../../testing/test-setup/src/lib/fs.mock.ts',

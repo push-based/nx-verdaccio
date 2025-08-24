@@ -4,7 +4,6 @@
   "sourceRoot": "projects/nx-verdaccio/src",
   "projectType": "library",
   "tags": ["publishable"],
-
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",

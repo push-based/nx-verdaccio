@@ -22,11 +22,7 @@
       }
     },
     "unit-test": {
-      "executor": "@nx/vite:test",
-      "outputs": ["{options.reportsDirectory}"],
-      "options": {
-        "reportsDirectory": "../../../coverage/{projectRoot}"
-      }
+      "executor": "@nx/vite:test"
     }
   }
 }

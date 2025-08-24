@@ -10,7 +10,9 @@
     "original-e2e": {
       "dependsOn": ["^build"],
       "executor": "@nx/vite:test",
-      "options": {}
+      "options": {
+        "coverage": false
+      }
     }
   }
 }

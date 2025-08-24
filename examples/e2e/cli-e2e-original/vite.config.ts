@@ -19,6 +19,7 @@ export default defineConfig({
     environment: 'node',
     include: ['test/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     reporters: ['default'],
+    watch: false,
     globalSetup: ['./setup/global-setup.ts'],
     coverage: {
       enabled: false,

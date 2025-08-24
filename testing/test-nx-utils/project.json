@@ -18,10 +18,15 @@
       }
     },
     "unit-test": {
-      "executor": "@nx/vite:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{projectRoot}/{options.coverage.reportsDirectory}",
+        "{workspaceRoot}/coverage/projects/test-utils"
+      ],
       "options": {
-        "reportsDirectory": "../../coverage/testing/test-nx-utils"
+        "coverage": {
+          "enabled": true
+        },
+        "coverage.reportsDirectory": "../../coverage/testing/test-nx-utils"
       }
     }
   }
