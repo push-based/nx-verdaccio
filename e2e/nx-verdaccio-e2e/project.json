@@ -12,7 +12,7 @@
       "inputs": ["default", "^production"],
       "outputs": ["{options.reportsDirectory}"],
       "options": {
-        "coverage.reportsDirectory": "../../coverage/projects/nx-verdaccio-e2e"
+        "reportsDirectory": "../../../coverage/projects/nx-verdaccio-e2e"
       }
     }
   }

@@ -28,12 +28,10 @@
       }
     },
     "unit-test": {
-      "outputs": [
-        "{projectRoot}/{options.coverage.reportsDirectory}",
-        "{workspaceRoot}/coverage/projects/cli"
-      ],
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
       "options": {
-        "coverage.reportsDirectory": "../../../coverage/examples/projects/cli"
+        "reportsDirectory": "../../../coverage/examples/projects/cli"
       }
     }
   }
