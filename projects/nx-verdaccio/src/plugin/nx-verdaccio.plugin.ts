@@ -24,8 +24,7 @@ const FILE_GLOB = combineGlobPatterns(
 export const createNodesV2: CreateNodesV2<NxVerdaccioCreateNodeOptions> = [
   FILE_GLOB,
   async (configFiles, options, context: CreateNodesContextV2) => {
-    // key is projectRoot, value is true if the project was already processed
-    const pluginSetup = new Map();
+    const pluginSetup = new Map<string, boolean>();
     return await createNodesFromFiles(
       async (configPath) => {
         const root = dirname(configPath);
