@@ -46,7 +46,9 @@ export const createNodesV2: CreateNodesV2<NxVerdaccioCreateNodeOptions> = [
           () => null
         );
         if (!cfg?.name) {
-          throw new Error('A reasonn name is not given is this source does not take over name from package json')
+          throw new Error(
+            'A reasonn name is not given is this source does not take over name from package json'
+          );
         }
 
         const { targets, namedInputs = {} } = createProjectConfiguration(
