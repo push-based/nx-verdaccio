@@ -33,11 +33,9 @@ describe('runNpmPublishExecutor', () => {
     readTargetOptionsSpy.mockReset();
 
     readTargetOptionsSpy.mockReturnValue({
-      options: {
-        outputPath: 'dist/projects/my-lib',
-        main: 'libs/my-lib/src/index.ts',
-        tsConfig: 'libs/my-lib/tsconfig.json',
-      },
+      outputPath: 'dist/projects/my-lib',
+      main: 'libs/my-lib/src/index.ts',
+      tsConfig: 'libs/my-lib/tsconfig.json',
     });
   });
 

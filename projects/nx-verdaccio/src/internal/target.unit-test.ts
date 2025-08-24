@@ -27,11 +27,9 @@ describe('getTargetOutputPath', () => {
     const expectedOutputPath = `${projectName}/dist`;
 
     readTargetOptionsSpy.mockReturnValue({
-      options: {
-        outputPath: expectedOutputPath,
-        main: `${projectName}/src/index.ts`,
-        tsConfig: `${projectName}/tsconfig.json`,
-      },
+      outputPath: expectedOutputPath,
+      main: `${projectName}/src/index.ts`,
+      tsConfig: `${projectName}/tsconfig.json`,
     });
 
     expect(
@@ -50,10 +48,8 @@ describe('getTargetOutputPath', () => {
     const projectName = 'my-lib';
 
     readTargetOptionsSpy.mockReturnValue({
-      options: {
-        main: `${projectName}/src/index.ts`,
-        tsConfig: `${projectName}/tsconfig.json`,
-      },
+      main: `${projectName}/src/index.ts`,
+      tsConfig: `${projectName}/tsconfig.json`,
     });
 
     expect(() =>
@@ -71,9 +67,7 @@ describe('getTargetOutputPath', () => {
   });
 
   it('should throw if empty object is passed', () => {
-    readTargetOptionsSpy.mockReturnValue({
-      options: {},
-    });
+    readTargetOptionsSpy.mockReturnValue({});
 
     expect(() => getTargetOutputPath({} as any, mockContext)).toThrow(
       `The target: undefined in project: my-lib has no option: undefined configured`
@@ -89,9 +83,7 @@ describe('getTargetOutputPath', () => {
     };
 
     readTargetOptionsSpy.mockReturnValue({
-      options: {
-        outputPath: `${projectName}/dist`,
-      },
+      outputPath: `${projectName}/dist`,
     });
 
     getTargetOutputPath(targetOptions, mockContext);
