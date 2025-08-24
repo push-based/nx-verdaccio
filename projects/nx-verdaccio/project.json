@@ -1,10 +1,10 @@
 {
-  "name": "nx-verdaccio",
+  "name": "@push-based/nx-verdaccio",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "projects/nx-verdaccio/src",
   "projectType": "library",
   "tags": ["publishable"],
-  "implicitDependencies": ["nx-verdaccio"],
+
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",

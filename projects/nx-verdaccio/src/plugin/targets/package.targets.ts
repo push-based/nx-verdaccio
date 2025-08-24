@@ -13,6 +13,7 @@ export function isPkgProject(
 ): boolean {
   const { projectType, tags: existingTags = [] } = projectConfig;
   const { filterByTags: publishableTagFilters = [] } = options;
+
   if (projectType !== 'library') {
     return false;
   }

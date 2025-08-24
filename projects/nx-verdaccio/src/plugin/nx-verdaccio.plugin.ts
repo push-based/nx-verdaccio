@@ -1,92 +1,67 @@
 import {
   type CreateNodes,
+  CreateNodesContextV2,
   createNodesFromFiles,
   type CreateNodesV2,
   logger,
   type ProjectConfiguration,
   readJsonFile,
 } from '@nx/devkit';
-import { readFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
-import { hashObject } from 'nx/src/hasher/file-hasher';
-import { workspaceDataDirectory } from 'nx/src/utils/cache-directory';
-import {
-  getCacheRecord,
-  readTargetsCache,
-  setCacheRecord,
-  writeTargetsToCache,
-} from './caching';
-import { PLUGIN_NAME } from './constants';
 import { normalizeCreateNodesOptions } from './normalize-create-nodes-options';
 import type { NxVerdaccioCreateNodeOptions } from './schema';
 import { createProjectConfiguration } from './targets/create-targets';
+import {
+  getPackageJsonNxConfig,
+  getProjectConfig,
+  getProjectJsonNxConfig,
+} from './project-config';
+import { combineGlobPatterns } from 'nx/src/utils/globs';
 
 const PROJECT_JSON_FILE_GLOB = '**/project.json';
+const PACKAGE_JSON_FILE_GLOB = '**/package.json';
+const FILE_GLOB = combineGlobPatterns(
+  PROJECT_JSON_FILE_GLOB,
+  PACKAGE_JSON_FILE_GLOB
+);
 
 export const createNodesV2: CreateNodesV2<NxVerdaccioCreateNodeOptions> = [
-  PROJECT_JSON_FILE_GLOB,
-  async (configFiles, options, context) => {
-    const optionsHash = hashObject({ options: options ?? {} });
-    const nxVerdaccioEnvPluginCachePath = join(
-      workspaceDataDirectory,
-      `push-based--${PLUGIN_NAME}-${optionsHash}.hash`
+  FILE_GLOB,
+  async (configFiles, options, context: CreateNodesContextV2) => {
+    // key is projectRoot, value is true if the project was already processed
+    const pluginSetup = new Map();
+    return await createNodesFromFiles(
+      async (configPath, _internalOptions) => {
+        const root = dirname(configPath);
+
+        if (pluginSetup.has(root)) return { projects: {} };
+        pluginSetup.set(root, true);
+
+        const isPkg = configPath.endsWith('package.json');
+        const [primary, fallback] = isPkg
+          ? [getPackageJsonNxConfig, getProjectJsonNxConfig]
+          : [getProjectJsonNxConfig, getPackageJsonNxConfig];
+
+        const cfg = await getProjectConfig(configPath, primary, fallback).catch(
+          () => null
+        );
+        if (!cfg?.name) {
+          throw new Error(
+            'A reasonn name is not given is this source does not take over name from package json'
+          );
+        }
+
+        const { targets, namedInputs = {} } = createProjectConfiguration(
+          cfg,
+          normalizeCreateNodesOptions(options)
+        );
+
+        return { projects: { [root]: { namedInputs, targets } } };
+      },
+      configFiles,
+      options,
+      context
     );
-    const targetsCache = readTargetsCache(nxVerdaccioEnvPluginCachePath);
-    try {
-      return await createNodesFromFiles(
-        async (projectConfigurationFile, internalOptions) => {
-          const projectConfiguration: ProjectConfiguration = await readFile(
-            join(process.cwd(), projectConfigurationFile),
-            'utf8'
-          ).then(JSON.parse);
-          if (
-            !('name' in projectConfiguration) ||
-            typeof projectConfiguration.name !== 'string'
-          ) {
-            throw new Error('Project name is required');
-          }
-
-          const normalizedOptions = normalizeCreateNodesOptions(options);
-          const projectRoot = dirname(projectConfigurationFile);
-          const hashData = {
-            projectRoot,
-            internalOptions,
-          };
-          let cachedProjectConfiguration = getCacheRecord<
-            Partial<ProjectConfiguration>
-          >(targetsCache, projectRoot, hashData);
-
-          if (cachedProjectConfiguration === undefined) {
-            cachedProjectConfiguration = createProjectConfiguration(
-              projectConfiguration,
-              normalizedOptions
-            );
-            if (cachedProjectConfiguration.targets) {
-              setCacheRecord(
-                targetsCache,
-                projectRoot,
-                hashData,
-                cachedProjectConfiguration
-              );
-            }
-          }
-          const { targets, namedInputs = {} } = cachedProjectConfiguration;
-          return {
-            projects: {
-              [projectRoot]: {
-                namedInputs,
-                targets,
-              },
-            },
-          };
-        },
-        configFiles,
-        options,
-        context
-      );
-    } finally {
-      writeTargetsToCache(nxVerdaccioEnvPluginCachePath, targetsCache);
-    }
   },
 ];
 

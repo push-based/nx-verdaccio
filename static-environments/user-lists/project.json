@@ -1,19 +1,15 @@
 {
   "name": "user-lists",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "projects/user-lists/src",
+  "sourceRoot": "static-environments/user-lists/src",
   "projectType": "library",
   "tags": [],
-  "// targets": "to see all targets run: nx show project user-lists --web",
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint",
       "options": {
-        "noErrorOnUnmatchedPattern": true,
-        "lintFilePatterns": [
-          "{projectRoot}/**/*.{ts,tsx,js,jsx}",
-          "{projectRoot}/**/*.json"
-        ]
+        "errorOnUnmatchedPattern": false,
+        "lintFilePatterns": ["{projectRoot}/**/*.{ts,tsx,js,jsx}"]
       }
     }
   }

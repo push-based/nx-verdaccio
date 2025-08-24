@@ -28,7 +28,7 @@ This executor helps to initiate an [environment folder](../../docs/benefits.md#-
       "options": {
         "skipInstall": true,
         "keepServerRunning": true,
-        "envRoot": "/tmp/test-npm-workspace"
+        "environmentRoot": "/tmp/test-npm-workspace"
       }
     }
   }
@@ -46,11 +46,11 @@ This executor helps to initiate [environment](../../docs/benefits.md#-environmen
 {
   "name": "my-project",
   "targets": {
-    "nx-verdaccio-env-bootstrap": {
+    "nxv-env-bootstrap": {
       "executor": "@code-pushup/nx-verdaccio:env-bootstrap",
       "options": {
         "keepServerRunning": false,
-        "envRoot": "/tmp/test-npm-workspace",
+        "environmentRoot": "/tmp/test-npm-workspace",
         "verbose": true
       }
     }
@@ -69,7 +69,7 @@ This executor helps to kill processes by `ProcessID` or a JSON file containing a
 {
   "name": "my-project",
   "targets": {
-    "nx-verdaccio-kill-process": {
+    "nxv-kill-process": {
       "executor": "@push-based/nx-verdaccio:kill-process",
       "options": {
         "pid": "42312",
@@ -93,11 +93,11 @@ In `project.json`:
 {
   "name": "my-project",
   "targets": {
-    "nx-verdaccio-npm-install": {
+    "nxv-pkg-install": {
       "executor": "@code-pushup/nx-verdaccio:pkg-install",
       "options": {
         "pkgVersion": "1.2.3",
-        "envRoot": "/tmp/test-npm-workspace",
+        "environmentRoot": "/tmp/test-npm-workspace",
         "verbose": true
       }
     }
@@ -117,11 +117,11 @@ In `project.json`:
 {
   "name": "my-project",
   "targets": {
-    "nx-verdaccio-npm-publish": {
+    "nxv-pkg-publish": {
       "executor": "@code-pushup/nx-verdaccio:pkg-publish",
       "options": {
         "pkgVersion": "1.2.3",
-        "envRoot": "/tmp/test-npm-workspace",
+        "environmentRoot": "/tmp/test-npm-workspace",
         "verbose": true
       }
     }
