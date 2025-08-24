@@ -3,11 +3,12 @@ import {
   type NxJsonConfiguration,
   type PluginConfiguration,
   type ProjectConfiguration,
+  type ProjectGraph,
   type Tree,
   updateJson,
 } from '@nx/devkit';
 import { libraryGenerator } from '@nx/js';
-import type { LibraryGeneratorSchema } from '@nx/js/src/utils/schema';
+import type { LibraryGeneratorSchema } from '@nx/js/src/generators/library/schema';
 import { createTreeWithEmptyWorkspace } from 'nx/src/generators/testing-utils/create-tree-with-empty-workspace';
 import { objectToCliArgs } from '@push-based/test-utils';
 import { join, relative } from 'node:path';
@@ -32,6 +33,13 @@ export function executorContext<
       },
       version: 1,
     },
+    nxJsonConfiguration: {
+      plugins: [],
+    } as NxJsonConfiguration,
+    projectGraph: {
+      nodes: {},
+      dependencies: {},
+    } as ProjectGraph,
   };
 }
 
@@ -50,7 +58,6 @@ export async function addJsLibToWorkspace(
   await await libraryGenerator(fileTree, {
     name,
     directory: `projects/${name}`,
-    projectNameAndRootFormat: 'as-provided',
     linter: 'none',
     unitTestRunner: 'none',
     testEnvironment: 'node',
