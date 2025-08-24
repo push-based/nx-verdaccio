@@ -13,5 +13,6 @@
     "@push-based/models": "^0.0.1",
     "@push-based/utils": "^0.0.1"
   },
-  "description": ""
+  "description": "",
+  "type": "commonjs"
 }

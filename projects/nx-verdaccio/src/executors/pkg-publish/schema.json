@@ -14,6 +14,14 @@
       "description": "The root folder of the environment",
       "aliases": ["envRoot", "e"]
     },
+    "releaseTarget": {
+      "type": "string",
+      "description": "The target to use to build the package"
+    },
+    "distPath": {
+      "type": "string",
+      "description": "The path to the dist folder"
+    },
     "verbose": {
       "type": "boolean",
       "description": "Print additional logs"
