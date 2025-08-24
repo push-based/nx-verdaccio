@@ -10,9 +10,8 @@
     "e2e": {
       "executor": "@nx/vite:test",
       "inputs": ["default", "^production"],
-      "outputs": ["{options.reportsDirectory}"],
       "options": {
-        "reportsDirectory": "../../../coverage/projects/nx-verdaccio-e2e"
+        "coverage":  false
       }
     }
   }

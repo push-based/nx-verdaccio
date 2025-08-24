@@ -21,6 +21,7 @@ export default defineConfig({
     reporters: ['default'],
     globalSetup: ['./setup/global-setup.ts'],
     coverage: {
+      enabled: false,
       reportsDirectory: '../../../coverage/projects/cli-e2e-original',
       provider: 'v8',
     },

@@ -44,14 +44,16 @@
     },
     "unit-test": {
       "executor": "@nx/vite:test",
+      "outputs": ["{projectRoot}/coverage/unit-tests/*.lcov"],
       "options": {
-        "configFile": "projects/nx-verdaccio/vite.config.ts"
+        "configFile": "{projectRoot}/vite.config.ts"
       }
     },
     "integration-test": {
       "executor": "@nx/vite:test",
+      "outputs": ["{projectRoot}/coverage/int-tests/*.lcov"],
       "options": {
-        "configFile": "projects/nx-verdaccio/vite.integration.config.ts"
+        "configFile": "{projectRoot}/vite.integration.config.ts"
       }
     }
   }

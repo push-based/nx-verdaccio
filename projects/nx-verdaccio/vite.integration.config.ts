@@ -17,8 +17,8 @@ export default defineConfig({
     setupFiles: ['../../testing/test-setup/src/lib/extend/path-matcher.ts'],
     coverage: {
       reporter: ['lcov', 'text-summary'],
-      reportsDirectory: '../../coverage/projects/integration/nx-verdaccio',
       provider: 'v8',
+      reportsDirectory: './coverage/int-tests',
     },
   },
 });

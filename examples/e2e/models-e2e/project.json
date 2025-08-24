@@ -9,11 +9,8 @@
     "lint": {},
     "e2e": {
       "executor": "@nx/vite:test",
-      "inputs": ["default", "^production"],
       "outputs": ["{options.reportsDirectory}"],
-      "options": {
-        "reportsDirectory": "../../../coverage/projects/models-e2e"
-      }
+      "options": {}
     }
   }
 }
