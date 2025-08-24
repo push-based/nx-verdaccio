@@ -1,4 +1,4 @@
-import type { ProjectConfiguration, TargetConfiguration } from '@nx/devkit';
+import type { ProjectConfiguration } from '@nx/devkit';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 

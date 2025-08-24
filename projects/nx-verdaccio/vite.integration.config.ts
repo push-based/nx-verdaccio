@@ -12,7 +12,7 @@ export default defineConfig({
     globals: true,
     cache: { dir: '../../node_modules/.vitest' },
     environment: 'node',
-    include: ['src/**/*.integration.test.{js,mjs,ts}'],
+    include: ['src/**/*.integration-test.{js,mjs,ts}'],
     reporters: ['default'],
     setupFiles: ['../../testing/test-setup/src/lib/extend/path-matcher.ts'],
     coverage: {
