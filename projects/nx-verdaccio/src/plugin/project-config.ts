@@ -28,23 +28,43 @@ export async function getPackageJsonNxConfig(
   ).then(JSON.parse);
 
   // Check for both 'nx' and '_nx' properties (Nx supports both)
-  const pkgNxConfig = packageJson.nx || {};
-  return {
+  const pkgNxConfig = packageJson.nx || packageJson._nx || {};
+
+  // Create a normalized ProjectConfiguration
+  const projectConfiguration: ProjectConfiguration = {
     name: packageJson.name,
     root: dirname(packageJsonFile),
+    sourceRoot: pkgNxConfig.sourceRoot || `${dirname(packageJsonFile)}/src`,
+    projectType: pkgNxConfig.projectType || 'library',
+    tags: pkgNxConfig.tags || [],
+    targets: pkgNxConfig.targets || {},
     ...pkgNxConfig,
   };
+
+  return projectConfiguration;
 }
 
 export async function getProjectConfig(
-  projectConfigFile,
+  projectConfigFile: string,
   getConfig: (projectConfigFile: string) => Promise<ProjectConfiguration>,
   fallback: (projectConfigFile: string) => Promise<ProjectConfiguration>
-) {
-  try {
-    const pkgNxConfig = await getConfig(projectConfigFile);
+): Promise<ProjectConfiguration> {
+  const isPkgJson = projectConfigFile.endsWith('package.json');
 
-    if (!('name' in pkgNxConfig) || typeof pkgNxConfig?.name !== 'string') {
+  try {
+    const primaryConfig = await getConfig(projectConfigFile);
+
+    // For package.json files, the getPackageJsonNxConfig should always return a valid config
+    // since it creates defaults for missing properties
+    if (isPkgJson) {
+      // If it's a package.json, we should have a valid config with name
+      if (primaryConfig.name) {
+        return primaryConfig;
+      }
+    }
+
+    // For project.json files or if somehow the name is missing
+    if (!('name' in primaryConfig) || typeof primaryConfig?.name !== 'string') {
       try {
         return await fallback(projectConfigFile);
       } catch (fallbackError) {
@@ -53,7 +73,8 @@ export async function getProjectConfig(
         return {} as ProjectConfiguration;
       }
     }
-    return pkgNxConfig;
+
+    return primaryConfig;
   } catch (primaryError) {
     try {
       return await fallback(projectConfigFile);

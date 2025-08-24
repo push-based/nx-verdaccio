@@ -13,6 +13,7 @@ export function isPkgProject(
 ): boolean {
   const { projectType, tags: existingTags = [] } = projectConfig;
   const { filterByTags: publishableTagFilters = [] } = options;
+
   if (projectType !== 'library') {
     return false;
   }
@@ -35,6 +36,28 @@ export function getPkgTargets(
   const buildTarget = projectConfig.targets?.['build'];
   const outputPath = buildTarget?.options?.['outputPath'];
 
+  console.log(`DEBUG: getPkgTargets for project "${projectConfig.name}":`, {
+    hasTargets: !!projectConfig.targets,
+    targetKeys: Object.keys(projectConfig.targets || {}),
+    buildTarget: buildTarget
+      ? {
+          executor: buildTarget.executor,
+          hasOptions: !!buildTarget.options,
+          outputPath: buildTarget.options?.['outputPath'],
+        }
+      : null,
+    fullProjectConfig: JSON.stringify(projectConfig, null, 2),
+  });
+
+  if (!outputPath) {
+    // Log a warning instead of throwing an error to prevent plugin from failing to load
+    console.warn(
+      `Warning: Project "${projectConfig.name}" is missing outputPath in build target. ` +
+        `Package targets require a build target with outputPath option. Skipping package target creation.`
+    );
+    return {};
+  }
+
   return {
     [TARGET_PACKAGE_PUBLISH]: {
       dependsOn: [
@@ -46,7 +69,7 @@ export function getPkgTargets(
         },
       ],
       executor: `${PACKAGE_NAME}:${EXECUTOR_PACKAGE_NPM_PUBLISH}`,
-      options: outputPath ? { distPath: outputPath } : {},
+      options: {},
     },
     [TARGET_PACKAGE_INSTALL]: {
       dependsOn: [
@@ -61,7 +84,7 @@ export function getPkgTargets(
         },
       ],
       executor: `${PACKAGE_NAME}:${EXECUTOR_PACKAGE_NPM_INSTALL}`,
-      options: outputPath ? { outputPath } : {},
+      options: { outputPath },
     },
   };
 }

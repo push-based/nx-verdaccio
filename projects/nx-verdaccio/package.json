@@ -34,5 +34,29 @@
     "src",
     "executors.json",
     "README.md"
-  ]
+  ],
+  "nx": {
+    "name": "@push-based/nx-verdaccio",
+    "sourceRoot": "projects/nx-verdaccio/src",
+    "projectType": "library",
+    "tags": ["publishable"],
+    "targets": {
+      "nxv-pkg-publish": {
+        "dependsOn": [
+          { "target": "build", "params": "forward" },
+          { "projects": "dependencies", "target": "nxv-pkg-publish", "params": "forward" }
+        ],
+        "executor": "@push-based/nx-verdaccio:pkg-publish",
+        "options": {}
+      },
+      "nxv-pkg-install": {
+        "dependsOn": [
+          { "target": "nxv-pkg-publish", "params": "forward" },
+          { "projects": "dependencies", "target": "nxv-pkg-install", "params": "forward" }
+        ],
+        "executor": "@push-based/nx-verdaccio:pkg-install",
+        "options": { "outputPath": "projects/nx-verdaccio/dist" }
+      }
+    }
+  }
 }

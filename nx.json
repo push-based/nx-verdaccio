@@ -48,9 +48,7 @@
       "executor": "@push-based/nx-verdaccio:env-setup"
     },
     "nxv-pkg-publish": {
-      "options": {
-        "distPath": "{projectRoot}/dist"
-      }
+      "options": {}
     },
     "nx-release-publish": {},
     "lint": {
@@ -154,7 +152,7 @@
         "devTargetName": "dev",
         "typecheckTargetName": "typecheck"
       },
-      "include": ["projects/nx-verdaccio/**/*"]
+      "exclude": ["projects/nx-verdaccio/**/*"]
     },
     {
       "plugin": "@nx/vite/plugin",
@@ -170,7 +168,7 @@
       "include": ["testing/test-utils/**/*"]
     },
     {
-      "plugin": "@push-based/nx-verdaccio",
+      "plugin": "./projects/nx-verdaccio/dist/src/plugin/nx-verdaccio.plugin.js",
       "exclude": ["examples/e2e/cli-e2e-original/**"],
       "options": {
         "packages": {

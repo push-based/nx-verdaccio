@@ -122,8 +122,7 @@ In `project.json`:
       "options": {
         "pkgVersion": "1.2.3",
         "envRoot": "/tmp/test-npm-workspace",
-        "verbose": true,
-        "distPath": "{projectRoot}/dist"
+        "verbose": true
       }
     }
   }
