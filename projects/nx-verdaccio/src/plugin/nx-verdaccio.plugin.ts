@@ -1,6 +1,6 @@
 import {
   type CreateNodes,
-  CreateNodesContextV2,
+  type CreateNodesContextV2,
   createNodesFromFiles,
   type CreateNodesV2,
   logger,
@@ -31,7 +31,7 @@ export const createNodesV2: CreateNodesV2<NxVerdaccioCreateNodeOptions> = [
     // key is projectRoot, value is true if the project was already processed
     const pluginSetup = new Map();
     return await createNodesFromFiles(
-      async (configPath, _internalOptions) => {
+      async (configPath) => {
         const root = dirname(configPath);
 
         if (pluginSetup.has(root)) return { projects: {} };

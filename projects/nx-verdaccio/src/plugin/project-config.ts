@@ -13,7 +13,7 @@ async function readJson<T>(path: string): Promise<T | null> {
 export async function getPackageJsonNxConfig(
   path: string
 ): Promise<ProjectConfiguration | null> {
-  const pkg = await readJson<any>(join(process.cwd(), path));
+  const pkg = await readJson<Record<string, unknown>>(join(process.cwd(), path));
   const nx = pkg?.nx as ProjectConfiguration | undefined;
   return nx && typeof nx.name === 'string' ? nx : null;
 }

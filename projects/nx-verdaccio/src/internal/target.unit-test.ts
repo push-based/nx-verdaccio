@@ -1,5 +1,5 @@
 import { getTargetOutputPath } from './target';
-import { ExecutorContext } from '@nx/devkit';
+import { type ExecutorContext } from '@nx/devkit';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as devkit from '@nx/devkit';
 
@@ -69,7 +69,7 @@ describe('getTargetOutputPath', () => {
   it('should throw if empty object is passed', () => {
     readTargetOptionsSpy.mockReturnValue({});
 
-    expect(() => getTargetOutputPath({} as any, mockContext)).toThrow(
+    expect(() => getTargetOutputPath({} as never, mockContext)).toThrow(
       `The target: undefined in project: my-lib has no option: undefined configured`
     );
   });
