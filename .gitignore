@@ -38,7 +38,9 @@ testem.log
 .DS_Store
 Thumbs.db
 
-.code-pushup
+.code-pushup/
+.coverage/
+coverage/
 .env
 .nx
 .nx/cache
