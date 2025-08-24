@@ -7,23 +7,26 @@
   "implicitDependencies": ["nx-verdaccio"],
   "targets": {
     "build": {
-      "dependsOn": ["^build"],
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/projects/nx-verdaccio",
+        "main": "projects/nx-verdaccio/src/index.ts",
+        "tsConfig": "projects/nx-verdaccio/tsconfig.lib.json",
         "assets": [
-          "{projectRoot}/*.md",
+          "projects/nx-verdaccio/*.md",
           {
-            "input": "{projectRoot}/src",
+            "input": "./projects/nx-verdaccio/src",
             "glob": "**/!(*.ts)",
             "output": "./src"
           },
           {
-            "input": "{projectRoot}/src",
+            "input": "./projects/nx-verdaccio/src",
             "glob": "**/*.d.ts",
             "output": "./src"
           },
           {
-            "input": "{projectRoot}",
+            "input": "./projects/nx-verdaccio",
             "glob": "executors.json",
             "output": "."
           }

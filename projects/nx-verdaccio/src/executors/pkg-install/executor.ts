@@ -16,20 +16,16 @@ export default async function runNpmInstallExecutor(
   options: NpmInstallExecutorOptions,
   context: ExecutorContext
 ) {
-  const { projectName } = context;
-  const { releaseTarget = 'build', environmentRoot, distPath } = options;
-  logger.info(`Prep install of ${projectName} to ${environmentRoot}`);
+  const { projectName, projectsConfigurations } = context;
 
   const packageDistPath = getTargetOutputPath(
-    {
-      project: projectName,
-      target: releaseTarget,
-    },
-    context
+    projectsConfigurations.projects[projectName]?.targets['build']
   );
   const { name: packageName } = readJsonFile<PackageJson>(
     join(packageDistPath, 'package.json')
   );
+  const { environmentRoot } = options;
+
   logger.info(`Installing ${packageName} in ${environmentRoot}`);
 
   await executeProcess({

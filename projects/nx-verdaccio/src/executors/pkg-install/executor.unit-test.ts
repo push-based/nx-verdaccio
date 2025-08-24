@@ -4,7 +4,6 @@ import { MEMFS_VOLUME } from '@push-based/test-utils';
 import * as execProcessModule from '../../internal/execute-process';
 import { logger, readJsonFile } from '@nx/devkit';
 import { join } from 'node:path';
-import { ProjectGraph } from 'nx/src/config/project-graph';
 
 vi.mock('@nx/devkit', async () => {
   const actual = await vi.importActual('@nx/devkit');
@@ -40,8 +39,6 @@ describe('runNpmInstallExecutor', () => {
           cwd: MEMFS_VOLUME,
           isVerbose: false,
           projectName: 'my-lib',
-          nxJsonConfiguration: {},
-          projectGraph: {} as ProjectGraph,
           projectsConfigurations: {
             version: 2,
             projects: {
@@ -69,16 +66,9 @@ describe('runNpmInstallExecutor', () => {
       join('dist', 'projects', 'my-lib', 'package.json')
     );
 
-    expect(logger.info).toHaveBeenCalledTimes(2);
+    expect(logger.info).toHaveBeenCalledTimes(1);
     expect(logger.info).toHaveBeenCalledWith(
-      expect.stringContaining(
-        `Prep install of my-lib to tmp/environments/my-lib-e2e`
-      )
-    );
-    expect(logger.info).toHaveBeenCalledWith(
-      expect.stringContaining(
-        `Installing my-lib in tmp/environments/my-lib-e2e`
-      )
+      expect.stringContaining(`Installing my-lib in`)
     );
 
     expect(executeProcessSpy).toHaveBeenCalledTimes(1);

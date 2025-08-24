@@ -34,7 +34,7 @@ By default, the Nx executor will derive the options from the executor options.
       "executor": "@code-pushup/nx-verdaccio:env-setup",
       "options": {
         "keepServerRunning": false,
-        "environmentRoot": "/tmp/test-npm-workspace",
+        "envRoot": "/tmp/test-npm-workspace",
         "verbose": true
       }
     }
@@ -50,7 +50,7 @@ Show what will be executed without actually executing it:
 
 | Name                  | Type                      | Description                                                                                                                          |
 | --------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| **environmentRoot**   | `string` (REQUIRED)       | The folder in which the package should get published. This folder is the environment folder and contains a configured `.npmrc` file. |
+| **envRoot**           | `string` (REQUIRED)       | The folder in which the package should get published. This folder is the environment folder and contains a configured `.npmrc` file. |
 | **keepServerRunning** | `boolean` (DEFAULT false) | keep the Verdaccio server running after bootstraping the environment                                                                 |
 | **skipInstall**       | `boolean` (DEFAULT false) | Skip package install during setup                                                                                                    |
 | **postScript**        | `string`                  | Script executed after packge publish/install is finished but before server teardown                                                  |
@@ -74,7 +74,7 @@ That means if you run `nx run my-project:env-setup` the environment root will be
   "targets": {
     "env-setup": {
       "options": {
-        "environmentRoot": "/tmp/e2e/{projectName}"
+        "envRoot": "/tmp/e2e/{projectName}"
       }
     },
     "e2e": {

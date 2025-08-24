@@ -7,11 +7,6 @@
       "rules": {}
     },
     {
-      "files": ["*.json", "*.jsonc"],
-      "parser": "jsonc-eslint-parser",
-      "rules": {}
-    },
-    {
       "files": ["*.ts", "*.tsx"],
       "rules": {}
     },

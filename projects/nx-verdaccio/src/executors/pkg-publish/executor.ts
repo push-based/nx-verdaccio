@@ -22,33 +22,13 @@ export default async function runNpmPublishExecutor(
   options: NpmPublishExecutorOptions,
   context: ExecutorContext
 ) {
-  const {
-    environmentRoot,
-    verbose,
-    distPath,
-    releaseTarget = 'build',
-  } = options;
+  const { projectsConfigurations } = context;
+  const { environmentRoot, verbose } = options;
 
   const { projectName } = context;
-
-  const packageDistPath = releaseTarget
-    ? getTargetOutputPath(
-        {
-          project: projectName,
-          target: releaseTarget,
-        },
-        context
-      )
-    : distPath;
-
-  if (environmentRoot == null) {
-    logger.log(
-      `Executor options environmentRoot not given for project ${projectName} releaseTarget ${releaseTarget}`
-    );
-  }
-  if (packageDistPath == null) {
-    logger.log(`Package dist path not found for ${projectName}`);
-  }
+  const { targets } = projectsConfigurations.projects[projectName];
+  const packageDistPath = getTargetOutputPath(targets['build']);
+  logger.info(`Publishing package from ${environmentRoot}`);
   const userconfig = join(
     relativeFromDist(packageDistPath),
     join(environmentRoot, NPMRC_FILENAME)

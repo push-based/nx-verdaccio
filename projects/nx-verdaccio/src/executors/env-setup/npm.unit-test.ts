@@ -1,6 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { bold, red } from 'ansis';
 import { MEMFS_VOLUME } from '@push-based/test-utils';
+import {
+  configureRegistry,
+  type ConfigureRegistryOptions,
+  unconfigureRegistry,
+  VERDACCIO_ENV_TOKEN,
+} from './npm';
+import { logger } from '@nx/devkit';
+import { formatInfo } from '../../internal/logging';
 import { setupNpmWorkspace } from '../env-setup/npm';
 
 vi.mock('@nx/devkit', async () => {

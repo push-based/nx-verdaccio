@@ -23,12 +23,12 @@ This executor helps to initiate an [environment folder](../../docs/benefits.md#-
 {
   "name": "my-project",
   "targets": {
-    "nxv-env-setup": {
+    "env-setup": {
       "executor": "@code-pushup/nx-verdaccio:env-setup",
       "options": {
         "skipInstall": true,
         "keepServerRunning": true,
-        "environmentRoot": "/tmp/test-npm-workspace"
+        "envRoot": "/tmp/test-npm-workspace"
       }
     }
   }
@@ -46,11 +46,11 @@ This executor helps to initiate [environment](../../docs/benefits.md#-environmen
 {
   "name": "my-project",
   "targets": {
-    "nxv-env-bootstrap": {
+    "nx-verdaccio-env-bootstrap": {
       "executor": "@code-pushup/nx-verdaccio:env-bootstrap",
       "options": {
         "keepServerRunning": false,
-        "environmentRoot": "/tmp/test-npm-workspace",
+        "envRoot": "/tmp/test-npm-workspace",
         "verbose": true
       }
     }
@@ -69,7 +69,7 @@ This executor helps to kill processes by `ProcessID` or a JSON file containing a
 {
   "name": "my-project",
   "targets": {
-    "nxv-kill-process": {
+    "nx-verdaccio-kill-process": {
       "executor": "@push-based/nx-verdaccio:kill-process",
       "options": {
         "pid": "42312",
@@ -93,11 +93,11 @@ In `project.json`:
 {
   "name": "my-project",
   "targets": {
-    "nxv-pkg-install": {
+    "nx-verdaccio-npm-install": {
       "executor": "@code-pushup/nx-verdaccio:pkg-install",
       "options": {
         "pkgVersion": "1.2.3",
-        "environmentRoot": "/tmp/test-npm-workspace",
+        "envRoot": "/tmp/test-npm-workspace",
         "verbose": true
       }
     }
@@ -117,13 +117,12 @@ In `project.json`:
 {
   "name": "my-project",
   "targets": {
-    "nxv-pkg-publish": {
+    "nx-verdaccio-npm-publish": {
       "executor": "@code-pushup/nx-verdaccio:pkg-publish",
       "options": {
         "pkgVersion": "1.2.3",
-        "environmentRoot": "/tmp/test-npm-workspace",
-        "verbose": true,
-        "distPath": "{projectRoot}/dist"
+        "envRoot": "/tmp/test-npm-workspace",
+        "verbose": true
       }
     }
   }
