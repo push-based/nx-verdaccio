@@ -73,8 +73,8 @@
     "executor": "@push-based/nx-verdaccio:env-setup"
   },
   "nx-release-publish": {},
-  "@nx/linter:eslint": {
-    "outputs": ["{options.outputFile}"],
+  "@nx/eslint:lint": {
+    "cache": true,
     "inputs": [
       "default",
       "{workspaceRoot}/.eslintrc.json",

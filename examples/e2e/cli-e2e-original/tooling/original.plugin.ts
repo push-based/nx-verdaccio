@@ -1,5 +1,8 @@
 import {
   type CreateNodes,
+  CreateNodesContextV2,
+  createNodesFromFiles,
+  type CreateNodesV2,
   readJsonFile,
   TargetConfiguration,
 } from '@nx/devkit';
@@ -7,6 +10,49 @@ import { dirname, join } from 'node:path';
 import type { ProjectConfiguration } from 'nx/src/config/workspace-json-project-json';
 import { getBuildOutputPathFromBuildTarget } from './utils/build-target-helper';
 
+export const createNodesV2: CreateNodesV2 = [
+  '**/project.json',
+  async (configFiles, options, context: CreateNodesContextV2) => {
+    return await createNodesFromFiles(
+      async (projectConfigurationFile, _internalOptions) => {
+        const root = dirname(projectConfigurationFile);
+        const projectConfiguration: ProjectConfiguration = readJsonFile(
+          join(process.cwd(), projectConfigurationFile)
+        );
+
+        const projectName = projectConfiguration.name;
+        if (projectName == null) {
+          throw new Error('Project name required');
+        }
+        const isRoot = root === '.';
+        const isPublishable = (projectConfiguration?.tags ?? []).some(
+          (tag) => tag === 'publishable'
+        );
+
+        return {
+          projects: {
+            [root]: {
+              targets: {
+                ...(isRoot && verdaccioTargets()),
+                ...(isPublishable &&
+                  npmTargets({
+                    ...projectConfiguration,
+                    root,
+                    name: projectName,
+                  })),
+              },
+            },
+          },
+        };
+      },
+      configFiles,
+      options,
+      context
+    );
+  },
+];
+
+// Keep the legacy createNodes for backward compatibility if needed
 export const createNodes: CreateNodes = [
   '**/project.json',
   (projectConfigurationFile: string, _: undefined | unknown) => {
@@ -61,7 +107,7 @@ function npmTargets(
     join(root, 'package.json')
   );
   //
-  if(!tags.some(i => i === 'type:example')) {
+  if (!tags.some((i) => i === 'type:example')) {
     return {};
   }
   return {
