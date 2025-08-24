@@ -5,5 +5,4 @@ export type NpmInstallExecutorOptions = Partial<{
   releaseTarget: string;
   distPath: string;
   environmentRoot: string;
-  envRoot: string;
 }>;

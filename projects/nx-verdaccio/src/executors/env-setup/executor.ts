@@ -78,7 +78,6 @@ export default async function runSetupEnvironmentExecutor(
         args: objectToCliArgs({
           _: ['nx', envPublishOnlyTarget, projectName],
           environmentRoot,
-          envRoot: environmentRoot,
           ...(verbose ? { verbose } : {}),
         }),
         cwd: process.cwd(),
@@ -92,7 +91,6 @@ export default async function runSetupEnvironmentExecutor(
         args: objectToCliArgs({
           _: ['nx', envInstallTarget, projectName],
           environmentRoot,
-          envRoot: environmentRoot,
           ...(verbose ? { verbose } : {}),
         }),
         cwd: process.cwd(),
