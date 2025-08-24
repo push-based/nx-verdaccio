@@ -9,6 +9,7 @@
     "@code-pushup/coverage-plugin": "^0.69.2",
     "@code-pushup/eslint-plugin": "^0.69.2",
     "@code-pushup/js-packages-plugin": "^0.69.2",
+    "@code-pushup/portal-client": "^0.13.0",
     "@nx/devkit": "19.8.0",
     "@nx/esbuild": "19.8.0",
     "@nx/eslint": "19.8.0",
