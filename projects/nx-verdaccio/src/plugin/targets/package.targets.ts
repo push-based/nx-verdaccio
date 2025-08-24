@@ -84,7 +84,7 @@ export function getPkgTargets(
         },
       ],
       executor: `${PACKAGE_NAME}:${EXECUTOR_PACKAGE_NPM_INSTALL}`,
-      options: { outputPath },
+      options: {},
     },
   };
 }
