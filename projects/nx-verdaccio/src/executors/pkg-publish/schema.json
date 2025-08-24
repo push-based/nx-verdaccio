@@ -16,11 +16,13 @@
     },
     "releaseTarget": {
       "type": "string",
-      "description": "The target to use to build the package"
+      "description": "The target to run to release the package",
+      "default": "build"
     },
-    "distPath": {
+    "optionsOutputPathKey": {
       "type": "string",
-      "description": "The path to the dist folder"
+      "description": "The key in options specifying the output path of the build target",
+      "default": "outputPath"
     },
     "verbose": {
       "type": "boolean",

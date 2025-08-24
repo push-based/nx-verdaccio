@@ -8,13 +8,9 @@
   "targets": {
     "lint": {},
     "e2e": {
-      "outputs": [
-        "{projectRoot}/{options.coverage.reportsDirectory}",
-        "{workspaceRoot}/coverage/projects/utils-e2e"
-      ],
-      "options": {
-        "coverage.reportsDirectory": "../../../coverage/projects/utils-e2e"
-      }
+      "executor": "@nx/vite:test",
+      "inputs": ["default", "^production"],
+      "options": {}
     }
   }
 }

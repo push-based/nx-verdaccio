@@ -1,86 +1,100 @@
 import { getTargetOutputPath } from './target';
-import { beforeEach } from 'vitest';
-import { type ProjectGraph } from 'nx/src/config/project-graph';
-import { type ExecutorContext } from '@nx/devkit';
+import { ExecutorContext } from '@nx/devkit';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import * as devkit from '@nx/devkit';
 
 describe('getTargetOutputPath', () => {
-  const executorContext: ExecutorContext = {
-    root: '',
-    nxJsonConfiguration: {},
-    cwd: '',
+  const mockContext: ExecutorContext = {
+    projectName: 'my-lib',
+    targetName: 'build',
+    root: '.',
+    cwd: process.cwd(),
     isVerbose: false,
-    projectGraph: {} as ProjectGraph,
     projectsConfigurations: {
-      version: 2,
-      projects: {
-        'my-lib': {
-          root: 'libs/my-lib',
-          sourceRoot: 'libs/my-lib/src',
-          projectType: 'library',
-          targets: {
-            build: {
-              executor: '@nx/vite:build',
-              options: {
-                outputPath: 'build-out-dir',
-              },
-            },
-            release: {
-              executor: '@nx/vite:build',
-              options: {
-                outputPath: 'release-out-dir',
-              },
-            },
-          },
-        },
-      },
+      version: 1,
+      projects: {},
     },
-  };
+  } as ExecutorContext;
+
+  const readTargetOptionsSpy = vi.spyOn(devkit, 'readTargetOptions');
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    readTargetOptionsSpy.mockReset();
   });
 
   it('should return output path of the build target if given', () => {
+    const projectName = 'my-lib';
+    const expectedOutputPath = `${projectName}/dist`;
+
+    readTargetOptionsSpy.mockReturnValue({
+      outputPath: expectedOutputPath,
+      main: `${projectName}/src/index.ts`,
+      tsConfig: `${projectName}/tsconfig.json`,
+    });
+
     expect(
       getTargetOutputPath(
         {
-          project: 'my-lib',
+          project: projectName,
           target: 'build',
+          optionsKey: 'outputPath',
         },
-        executorContext
+        mockContext
       )
-    ).toBe('build-out-dir');
+    ).toBe(expectedOutputPath);
   });
 
   it('should throw if no outputPath is given in options', () => {
+    const projectName = 'my-lib';
+
+    readTargetOptionsSpy.mockReturnValue({
+      main: `${projectName}/src/index.ts`,
+      tsConfig: `${projectName}/tsconfig.json`,
+    });
+
     expect(() =>
       getTargetOutputPath(
         {
-          project: 'my-lib',
+          project: projectName,
           target: 'build',
+          optionsKey: 'outputPath',
         },
-        {
-          ...executorContext,
-          projectsConfigurations: {
-            ...executorContext.projectsConfigurations,
-            projects: {
-              ...executorContext.projectsConfigurations.projects,
-              'my-lib': {
-                ...executorContext.projectsConfigurations.projects['my-lib'],
-                targets: {
-                  ...executorContext.projectsConfigurations.projects['my-lib']
-                    .targets,
-                  build: {
-                    ...executorContext.projectsConfigurations.projects['my-lib']
-                      .targets['build'],
-                    options: {},
-                  },
-                },
-              },
-            },
-          },
-        }
+        mockContext
       )
-    ).toThrow('outputPath is required');
+    ).toThrow(
+      `The target: build in project: ${projectName} has no option: outputPath configured`
+    );
+  });
+
+  it('should throw if empty object is passed', () => {
+    readTargetOptionsSpy.mockReturnValue({});
+
+    expect(() => getTargetOutputPath({} as any, mockContext)).toThrow(
+      `The target: undefined in project: my-lib has no option: undefined configured`
+    );
+  });
+
+  it('should call readTargetOptions with correct arguments', () => {
+    const projectName = 'my-lib';
+    const targetOptions = {
+      project: projectName,
+      target: 'build',
+      optionsKey: 'outputPath',
+    };
+
+    readTargetOptionsSpy.mockReturnValue({
+      outputPath: `${projectName}/dist`,
+    });
+
+    getTargetOutputPath(targetOptions, mockContext);
+
+    expect(readTargetOptionsSpy).toHaveBeenCalledWith(
+      {
+        project: projectName,
+        target: 'build',
+      },
+      mockContext
+    );
+    expect(readTargetOptionsSpy).toHaveBeenCalledTimes(1);
   });
 });

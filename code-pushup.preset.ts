@@ -1,6 +1,4 @@
-import coveragePlugin, {
-  getNxCoveragePaths,
-} from '@code-pushup/coverage-plugin';
+import coveragePlugin from '@code-pushup/coverage-plugin';
 import eslintPlugin, {
   eslintConfigFromAllNxProjects,
   eslintConfigFromNxProject,
@@ -104,13 +102,7 @@ export const coverageCoreConfigNx = async (
   projectName?: string[]
 ): Promise<CoreConfig> => {
   const targetNames = ['unit-test', 'integration-test'];
-  const targetArgs = [
-    '-t',
-    'unit-test',
-    'integration-test',
-    '--coverage.enabled',
-    '--skipNxCache',
-  ];
+  const targetArgs = ['-t', ...targetNames];
   return {
     plugins: [
       await coveragePlugin({
@@ -121,12 +113,12 @@ export const coverageCoreConfigNx = async (
             projectName
               ? `run-many --projects ${projectName.join(' ')}`
               : 'run',
-            ...targetArgs
+            ...targetArgs,
           ],
         },
         reports: [
-          'coverage/projects/unit/nx-verdaccio/lcov.info',
-          'coverage/projects/integration/nx-verdaccio/lcov.info',
+          'projects/nx-verdaccio/coverage/unit-tests/lcov.info',
+          'projects/nx-verdaccio/coverage/int-tests/lcov.info',
         ],
       }),
     ],

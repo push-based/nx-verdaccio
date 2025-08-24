@@ -4,15 +4,14 @@
   "sourceRoot": "projects/nx-verdaccio-e2e/test",
   "projectType": "application",
   "tags": ["type:e2e", "type:e2e-vi", "npm-env"],
-  "implicitDependencies": ["nx-verdaccio", "test-setup"],
+  "implicitDependencies": ["nx-verdaccio"],
   "targets": {
     "lint": {},
     "e2e": {
       "executor": "@nx/vite:test",
       "inputs": ["default", "^production"],
-      "outputs": ["{options.reportsDirectory}"],
       "options": {
-        "coverage.reportsDirectory": "../../coverage/projects/nx-verdaccio-e2e"
+        "coverage":  false
       }
     }
   }

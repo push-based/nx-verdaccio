@@ -10,12 +10,12 @@ To use static environments, you need to configure the `environmentRoot` option i
 {
   "nxv-e2e": {
     "options": {
-      "environmentRoot": "examples/my-env" // needed for clenaup
+      "envRoot": "examples/my-env" // needed for clenaup
     }
   },
   "nxv-env-setup": {
     "options": {
-      "environmentRoot": "examples/my-env" // needed for install
+      "envRoot": "examples/my-env" // needed for install
     }
   }
 }

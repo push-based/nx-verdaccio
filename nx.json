@@ -12,163 +12,118 @@
       "!{projectRoot}/eslint.config.js",
       "!{projectRoot}/**/?(*.)+(unit-test|spec|test).[jt]s?(x)?(.snap)",
       "!{projectRoot}/tsconfig.spec.json",
+      "!{projectRoot}/jest.config.[jt]s",
       "!{projectRoot}/src/test-setup.[jt]s",
       "!{projectRoot}/test-setup.[jt]s",
       "!{projectRoot}/vite.config.[jt]s"
     ],
-    "sharedGlobals": []
+    "sharedGlobals": [
+      {
+        "runtime": "node -e \"console.log(require('os').platform())\""
+      },
+      {
+        "runtime": "node --version"
+      },
+      {
+        "runtime": "npm --version"
+      }
+    ]
   },
   "targetDefaults": {
     "@nx/esbuild:esbuild": {
       "cache": true,
       "dependsOn": ["^build"],
-      "inputs": ["production", "^production"]
+      "inputs": ["production", "^production"],
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "main": "{projectRoot}/src/index.ts",
+        "tsConfig": "{projectRoot}/tsconfig.lib.json",
+        "assets": ["{projectRoot}/*.md"],
+        "generatePackageJson": true,
+        "format": ["esm"]
+      }
     },
     "@nx/vite:test": {
       "cache": true,
-      "inputs": ["default", "^production"]
-    },
-    "@push-based/nx-verdaccio:env-setup": {
-      "cache": true,
-      "inputs": [
-        "{projectRoot}/project.json",
-        {
-          "runtime": "node --version"
-        },
-        {
-          "runtime": "npm --version"
-        },
-        {
-          "externalDependencies": ["verdaccio"]
-        },
-        "^production"
-      ]
-    },
-    "nxv-env-setup": {
-      "executor": "@push-based/nx-verdaccio:env-setup"
-    },
-    "nxv-pkg-publish": {
-      "options": {}
-    },
-    "nx-release-publish": {},
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"],
-      "inputs": [
-        "default",
-        "{workspaceRoot}/.eslintrc.json",
-        "{workspaceRoot}/.eslintignore"
-      ],
+      "inputs": ["default", "^production"],
       "options": {
-        "maxWarnings": 0,
-        "reportUnusedDisableDirectives": "warn",
-        "lintFilePatterns": ["{projectRoot}/**/*.ts"]
+        "coverage": {
+          "enabled": true
+        }
+      }
+    }
+  },
+  "@push-based/nx-verdaccio:env-setup": {
+    "cache": true,
+    "inputs": [
+      "{projectRoot}/project.json",
+      {
+        "runtime": "node --version"
       },
-      "cache": true
+      {
+        "runtime": "npm --version"
+      },
+      {
+        "externalDependencies": ["verdaccio"]
+      },
+      "^production"
+    ]
+  },
+  "nxv-env-setup": {
+    "executor": "@push-based/nx-verdaccio:env-setup"
+  },
+  "nx-release-publish": {},
+  "@nx/linter:eslint": {
+    "outputs": ["{options.outputFile}"],
+    "inputs": [
+      "default",
+      "{workspaceRoot}/.eslintrc.json",
+      "{workspaceRoot}/.eslintignore"
+    ],
+    "options": {
+      "maxWarnings": 0,
+      "reportUnusedDisableDirectives": "warn",
+      "lintFilePatterns": ["{projectRoot}/**/*.ts"]
     },
-    "build": {
-      "inputs": ["production", "^production"]
+    "cache": true
+  },
+  "@nx/js:tsc": {
+    "cache": true,
+    "dependsOn": ["^build"],
+    "inputs": ["production", "^production"],
+    "outputs": ["{options.outputPath}"],
+    "options": {
+      "assets": [
+        "{projectRoot}/*.md",
+        {
+          "input": "{projectRoot}/src",
+          "glob": "**/!(*.ts)",
+          "output": "./src"
+        },
+        {
+          "input": "{projectRoot}/src",
+          "glob": "**/*.d.ts",
+          "output": "./src"
+        }
+      ]
+    }
+  },
+  "@nx/jest:jest": {
+    "cache": true,
+    "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
+    "options": {
+      "passWithNoTests": true
     },
-    "@nx/js:tsc": {
-      "cache": true,
-      "dependsOn": ["^build"],
-      "inputs": ["production", "^production"]
+    "configurations": {
+      "ci": {
+        "ci": true,
+        "codeCoverage": true
+      }
     }
   },
   "plugins": [
     {
-      "plugin": "./examples/e2e/cli-e2e-original/tooling/original.plugin.ts"
-    },
-    {
-      "plugin": "@nx/eslint/plugin",
-      "options": {
-        "targetName": "lint"
-      }
-    },
-    {
-      "plugin": "@nx/vite/plugin",
-      "options": {
-        "buildTargetName": "build",
-        "serveTargetName": "serve",
-        "previewTargetName": "preview",
-        "testTargetName": "e2e",
-        "serveStaticTargetName": "serve-static",
-        "devTargetName": "dev",
-        "typecheckTargetName": "typecheck"
-      },
-      "include": [
-        "e2e/nx-verdaccio-e2e/**/*",
-        "examples/e2e/cli-e2e/**/*",
-        "examples/e2e/cli-post-script-e2e/**/*",
-        "examples/e2e/cli-static-e2e/**/*",
-        "examples/e2e/core-e2e/**/*",
-        "examples/e2e/models-e2e/**/*",
-        "examples/e2e/playground-e2e/**/*",
-        "examples/e2e/plugin-1-e2e/**/*",
-        "examples/e2e/utils-e2e/**/*"
-      ]
-    },
-    {
-      "plugin": "@nx/vite/plugin",
-      "options": {
-        "buildTargetName": "build",
-        "serveTargetName": "serve",
-        "previewTargetName": "preview",
-        "testTargetName": "original-e2e",
-        "serveStaticTargetName": "serve-static",
-        "devTargetName": "dev",
-        "typecheckTargetName": "typecheck"
-      },
-      "include": ["examples/e2e/cli-e2e-original/**/*"]
-    },
-    {
-      "plugin": "@nx/vite/plugin",
-      "options": {
-        "buildTargetName": "build",
-        "serveTargetName": "serve",
-        "previewTargetName": "preview",
-        "testTargetName": "unit-test",
-        "serveStaticTargetName": "serve-static",
-        "devTargetName": "dev",
-        "typecheckTargetName": "typecheck"
-      },
-      "include": [
-        "examples/projects/cli/**/*",
-        "examples/projects/core/**/*",
-        "examples/projects/models/**/*",
-        "examples/projects/plugin-1/**/*",
-        "examples/projects/utils/**/*",
-        "testing/test-nx-utils/**/*"
-      ]
-    },
-    {
-      "plugin": "@nx/vite/plugin",
-      "options": {
-        "buildTargetName": "build",
-        "serveTargetName": "serve",
-        "previewTargetName": "preview",
-        "testTargetName": "integration-test",
-        "serveStaticTargetName": "serve-static",
-        "devTargetName": "dev",
-        "typecheckTargetName": "typecheck"
-      },
-      "exclude": ["projects/nx-verdaccio/**/*"]
-    },
-    {
-      "plugin": "@nx/vite/plugin",
-      "options": {
-        "buildTargetName": "build",
-        "serveTargetName": "serve",
-        "previewTargetName": "preview",
-        "testTargetName": "test",
-        "serveStaticTargetName": "serve-static",
-        "devTargetName": "dev",
-        "typecheckTargetName": "typecheck"
-      },
-      "include": ["testing/test-utils/**/*"]
-    },
-    {
-      "plugin": "./projects/nx-verdaccio/dist/src/plugin/nx-verdaccio.plugin.js",
+      "plugin": "@push-based/nx-verdaccio",
       "exclude": ["examples/e2e/cli-e2e-original/**"],
       "options": {
         "packages": {
@@ -177,6 +132,15 @@
         "environments": {
           "targetNames": ["e2e", "e2e-static"]
         }
+      }
+    },
+    {
+      "plugin": "./examples/e2e/cli-e2e-original/tooling/original.plugin.ts"
+    },
+    {
+      "plugin": "@nx/eslint/plugin",
+      "options": {
+        "targetName": "lint"
       }
     }
   ],
@@ -197,6 +161,5 @@
         "createRelease": "github"
       }
     }
-  },
-  "nxCloudId": "68a9d4a4f0ca0dc700a1e9dd"
+  }
 }

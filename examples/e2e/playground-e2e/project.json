@@ -8,12 +8,9 @@
   "targets": {
     "lint": {},
     "e2e": {
-      "outputs": [
-        "{projectRoot}/{options.coverage.reportsDirectory}",
-        "{workspaceRoot}/coverage/projects/playground-e2e"
-      ],
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
       "options": {
-        "coverage.reportsDirectory": "../../../coverage/projects/playground-e2e"
       }
     },
     "open-e2e-env": {

@@ -4,7 +4,6 @@ import { beforeEach, expect, vi } from 'vitest';
 import * as executeProcessModule from '../../internal/execute-process';
 import runSetupEnvironmentExecutor from './executor';
 import * as npmModule from './npm';
-import { type ProjectGraph } from 'nx/src/config/project-graph';
 
 vi.mock('@nx/devkit', async () => {
   const actual = await vi.importActual('@nx/devkit');
@@ -142,8 +141,6 @@ describe('runSetupEnvironmentExecutor', () => {
           isVerbose: false,
           root: 'tmp/environments/test',
           projectName: 'my-lib-e2e',
-          nxJsonConfiguration: {},
-          projectGraph: {} as ProjectGraph,
           projectsConfigurations: {
             version: 2,
             projects: {
@@ -204,8 +201,6 @@ describe('runSetupEnvironmentExecutor', () => {
           isVerbose: false,
           root: 'e2e/my-lib-e2e',
           projectName: 'my-lib-e2e',
-          nxJsonConfiguration: {},
-          projectGraph: {} as ProjectGraph,
           projectsConfigurations: {
             version: 2,
             projects: {

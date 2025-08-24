@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import nxPerformancePlugin, {
   nxPerformanceCategoryRefs,
   type OnlyAudit,

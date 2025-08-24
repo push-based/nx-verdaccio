@@ -1,7 +1,7 @@
 export type NpmPublishExecutorOptions = Partial<{
   environmentRoot: string;
-  releaseTarget: string;
-  distPath: string;
   verbose: boolean;
+  releaseTarget: string;
+  optionsOutputPathKey: string;
   printConfig: boolean;
 }>;

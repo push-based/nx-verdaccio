@@ -1,26 +1,23 @@
-import { type ExecutorContext } from '@nx/devkit';
-import { type Target } from 'nx/src/command-line/run/run';
+import { ExecutorContext, readTargetOptions, Target } from '@nx/devkit';
 
 export function getTargetOutputPath(
-  task: Target,
+  targetOptions: Target & { optionsKey: string },
   context: ExecutorContext
-): string {
-  const { project, target } = task;
-
-  const projectConfig = context.projectsConfigurations?.projects?.[project];
-  if (!projectConfig) {
-    throw new Error(`Project ${project} not found in context`);
-  }
-
-  const targetConfig = projectConfig.targets?.[target];
-  if (!targetConfig) {
-    throw new Error(`Target ${target} not found for project ${project}`);
-  }
-
-  const { outputPath } = targetConfig.options ?? {};
-  if (!outputPath) {
+) {
+  const { optionsKey, ...target } = targetOptions;
+  const options = readTargetOptions(target, context);
+  const outputPath = (options ?? {})[optionsKey];
+  if (!(optionsKey in (options ?? {})) || !outputPath) {
     throw new Error(
-      `outputPath is required in target ${target} for project ${project}`
+      `The target: ${target.target} in project: ${
+        context.projectName
+      } has no option: ${optionsKey} configured. /n ${JSON.stringify(
+        {
+          options,
+        },
+        null,
+        2
+      )}`
     );
   }
   return outputPath;

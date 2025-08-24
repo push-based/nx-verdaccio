@@ -4,7 +4,7 @@ import { MEMFS_VOLUME } from '@push-based/test-utils';
 import * as execProcessModule from '../../internal/execute-process';
 import { logger, readJsonFile } from '@nx/devkit';
 import { join } from 'node:path';
-import { ProjectGraph } from 'nx/src/config/project-graph';
+import * as devkit from '@nx/devkit';
 
 vi.mock('@nx/devkit', async () => {
   const actual = await vi.importActual('@nx/devkit');
@@ -17,6 +17,7 @@ vi.mock('@nx/devkit', async () => {
       name: 'my-lib',
       version: '1.0.0',
     }),
+    readTargetOptions: vi.fn(),
   };
 });
 
@@ -25,8 +26,17 @@ describe('runNpmInstallExecutor', () => {
     .spyOn(execProcessModule, 'executeProcess')
     .mockImplementation(vi.fn());
 
+  const readTargetOptionsSpy = vi.spyOn(devkit, 'readTargetOptions');
+
   beforeEach(() => {
     executeProcessSpy.mockReset();
+    readTargetOptionsSpy.mockReset();
+
+    readTargetOptionsSpy.mockReturnValue({
+      outputPath: 'dist/projects/my-lib',
+      main: 'libs/my-lib/src/index.ts',
+      tsConfig: 'libs/my-lib/tsconfig.json',
+    });
   });
 
   it('should execute npm install for the given project', async () => {
@@ -36,27 +46,11 @@ describe('runNpmInstallExecutor', () => {
           environmentRoot: 'tmp/environments/my-lib-e2e',
         },
         {
-          root: 'tmp/environments/my-lib',
+          root: '.',
           cwd: MEMFS_VOLUME,
           isVerbose: false,
           projectName: 'my-lib',
-          nxJsonConfiguration: {},
-          projectGraph: {} as ProjectGraph,
-          projectsConfigurations: {
-            version: 2,
-            projects: {
-              'my-lib': {
-                root: 'libs/my-lib',
-                targets: {
-                  build: {
-                    options: {
-                      outputPath: 'dist/projects/my-lib',
-                    },
-                  },
-                },
-              },
-            },
-          },
+          targetName: 'pkg-install',
         }
       )
     ).resolves.toStrictEqual({
@@ -69,16 +63,9 @@ describe('runNpmInstallExecutor', () => {
       join('dist', 'projects', 'my-lib', 'package.json')
     );
 
-    expect(logger.info).toHaveBeenCalledTimes(2);
+    expect(logger.info).toHaveBeenCalledTimes(1);
     expect(logger.info).toHaveBeenCalledWith(
-      expect.stringContaining(
-        `Prep install of my-lib to tmp/environments/my-lib-e2e`
-      )
-    );
-    expect(logger.info).toHaveBeenCalledWith(
-      expect.stringContaining(
-        `Installing my-lib in tmp/environments/my-lib-e2e`
-      )
+      expect.stringContaining(`Installing my-lib in`)
     );
 
     expect(executeProcessSpy).toHaveBeenCalledTimes(1);

@@ -23,7 +23,7 @@
     "build": {
       "executor": "@nx/esbuild:esbuild",
       "options": {
-        "outputPath": "{projectRoot}/dist"
+        "outputPath": "dist/{projectRoot}"
       }
     },
     "unit-test": {

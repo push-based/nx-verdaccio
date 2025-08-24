@@ -9,13 +9,16 @@
     "lint": {},
     "nxv-e2e": {
       "options": {
-        "environmentRoot": "static-environments/user-lists"
+        "envRoot": "static-environments/user-lists"
       }
     },
     "nxv-env-setup": {
       "options": {
-        "environmentRoot": "static-environments/user-lists"
+        "envRoot": "static-environments/user-lists"
       }
+    },
+    "e2e": {
+      "executor": "@nx/vite:test"
     }
   }
 }

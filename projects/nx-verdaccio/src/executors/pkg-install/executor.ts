@@ -16,20 +16,26 @@ export default async function runNpmInstallExecutor(
   options: NpmInstallExecutorOptions,
   context: ExecutorContext
 ) {
-  const { projectName } = context;
-  const { releaseTarget = 'build', environmentRoot, distPath } = options;
-  logger.info(`Prep install of ${projectName} to ${environmentRoot}`);
+  const {
+    verbose,
+    environmentRoot,
+    releaseTarget = 'build',
+    optionsOutputPathKey = 'outputPath',
+  } = options;
 
+  const { projectName } = context;
   const packageDistPath = getTargetOutputPath(
     {
       project: projectName,
       target: releaseTarget,
+      optionsKey: optionsOutputPathKey,
     },
     context
   );
   const { name: packageName } = readJsonFile<PackageJson>(
     join(packageDistPath, 'package.json')
   );
+
   logger.info(`Installing ${packageName} in ${environmentRoot}`);
 
   await executeProcess({
@@ -49,7 +55,7 @@ export default async function runNpmInstallExecutor(
       save: true, // save to package.json dependencies
     }),
     cwd: environmentRoot,
-    verbose: true,
+    verbose: verbose === false ? false : true,
   });
 
   return Promise.resolve({
