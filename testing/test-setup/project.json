@@ -8,7 +8,7 @@
     "lint": {
       "executor": "@nx/eslint:lint",
       "options": {
-        "lintFilePatterns": ["testing/test-setup/**/*.ts"]
+        "args": ["{projectRoot}/**/*.ts"]
       }
     }
   }
