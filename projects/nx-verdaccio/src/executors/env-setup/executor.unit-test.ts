@@ -204,6 +204,8 @@ describe('runSetupEnvironmentExecutor', () => {
           isVerbose: false,
           root: 'e2e/my-lib-e2e',
           projectName: 'my-lib-e2e',
+          nxJsonConfiguration: {},
+          projectGraph: {} as ProjectGraph,
           projectsConfigurations: {
             version: 2,
             projects: {
