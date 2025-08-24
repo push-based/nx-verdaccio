@@ -26,8 +26,8 @@ export default defineConfig({
     ],
     coverage: {
       reporter: ['lcov', 'text-summary'],
-      reportsDirectory: '../../coverage/projects/unit/nx-verdaccio',
       provider: 'v8',
+      reportsDirectory: './coverage/unit-tests',
     },
   },
 });
