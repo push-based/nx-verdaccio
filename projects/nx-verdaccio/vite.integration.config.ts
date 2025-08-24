@@ -14,6 +14,7 @@ export default defineConfig({
     environment: 'node',
     include: ['src/**/*.integration-test.{js,mjs,ts}'],
     reporters: ['default'],
+    watch: false,
     setupFiles: ['../../testing/test-setup/src/lib/extend/path-matcher.ts'],
     coverage: {
       reporter: ['lcov', 'text-summary'],

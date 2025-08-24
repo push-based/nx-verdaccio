@@ -9,8 +9,9 @@
     "lint": {},
     "e2e": {
       "executor": "@nx/vite:test",
-      "outputs": ["{options.reportsDirectory}"],
-      "options": {}
+      "options": {
+        "coverage": false
+      }
     }
   }
 }

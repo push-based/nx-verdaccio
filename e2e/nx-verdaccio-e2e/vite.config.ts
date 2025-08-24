@@ -21,6 +21,7 @@ export default defineConfig({
     environment: 'node',
     include: ['test/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     reporters: ['default'],
+    watch: false,
     coverage: {
       enabled: false,
       reportsDirectory: '../../coverage/projects/nx-verdaccio-e2e',

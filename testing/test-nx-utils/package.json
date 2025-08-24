@@ -1,0 +1,11 @@
+{
+  "name": "test-nx-utils",
+  "version": "0.0.1",
+  "dependencies": {
+    "@nx/devkit": "21.4.1",
+    "memfs": "^4.9.2",
+    "@nx/js": "21.4.1",
+    "nx": "21.4.1"
+  },
+  "type": "module"
+}

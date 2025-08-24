@@ -18,7 +18,10 @@
       }
     },
     "e2e": {
-      "executor": "@nx/vite:test"
+      "executor": "@nx/vite:test",
+      "options": {
+        "coverage": false
+      }
     }
   }
 }
