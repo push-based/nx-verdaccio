@@ -33,7 +33,15 @@
     "@nx/esbuild:esbuild": {
       "cache": true,
       "dependsOn": ["^build"],
-      "inputs": ["production", "^production"]
+      "inputs": ["production", "^production"],
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "main": "{projectRoot}/src/index.ts",
+        "tsConfig": "{projectRoot}/tsconfig.lib.json",
+        "assets": ["{projectRoot}/*.md"],
+        "generatePackageJson": true,
+        "format": ["esm"]
+      }
     },
     "@nx/vite:test": {
       "cache": true,
@@ -65,8 +73,7 @@
     "executor": "@push-based/nx-verdaccio:env-setup"
   },
   "nx-release-publish": {},
-  "lint": {
-    "executor": "@nx/linter:eslint",
+  "@nx/linter:eslint": {
     "outputs": ["{options.outputFile}"],
     "inputs": [
       "default",
@@ -80,13 +87,26 @@
     },
     "cache": true
   },
-  "build": {
-    "inputs": ["production", "^production"]
-  },
   "@nx/js:tsc": {
     "cache": true,
     "dependsOn": ["^build"],
-    "inputs": ["production", "^production"]
+    "inputs": ["production", "^production"],
+    "outputs": ["{options.outputPath}"],
+    "options": {
+      "assets": [
+        "{projectRoot}/*.md",
+        {
+          "input": "{projectRoot}/src",
+          "glob": "**/!(*.ts)",
+          "output": "./src"
+        },
+        {
+          "input": "{projectRoot}/src",
+          "glob": "**/*.d.ts",
+          "output": "./src"
+        }
+      ]
+    }
   },
   "@nx/jest:jest": {
     "cache": true,

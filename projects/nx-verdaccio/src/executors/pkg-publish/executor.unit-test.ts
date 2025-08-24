@@ -4,6 +4,7 @@ import { MEMFS_VOLUME } from '@push-based/test-utils';
 import * as execProcessModule from '../../internal/execute-process';
 import * as pkgVersionModule from './pkg-version';
 import { logger } from '@nx/devkit';
+import * as devkit from '@nx/devkit';
 
 vi.mock('@nx/devkit', async () => {
   const actual = await vi.importActual('@nx/devkit');
@@ -12,6 +13,7 @@ vi.mock('@nx/devkit', async () => {
     logger: {
       info: vi.fn(),
     },
+    readTargetOptions: vi.fn(),
   };
 });
 
@@ -23,9 +25,18 @@ describe('runNpmPublishExecutor', () => {
     .spyOn(pkgVersionModule, 'markPackageJson')
     .mockResolvedValue(undefined);
 
+  const readTargetOptionsSpy = vi.spyOn(devkit, 'readTargetOptions');
+
   beforeEach(() => {
     executeProcessSpy.mockReset();
     pkgVersionModuleSpy.mockReset();
+    readTargetOptionsSpy.mockReset();
+
+    readTargetOptionsSpy.mockReturnValue({
+      outputPath: 'dist/projects/my-lib',
+      main: 'libs/my-lib/src/index.ts',
+      tsConfig: 'libs/my-lib/tsconfig.json',
+    });
   });
 
   it('should execute npm publish for the given project', async () => {
@@ -35,25 +46,11 @@ describe('runNpmPublishExecutor', () => {
           environmentRoot: 'tmp/environments/my-lib-e2e',
         },
         {
-          root: 'libs/my-lib',
+          root: '.',
           cwd: MEMFS_VOLUME,
           isVerbose: false,
           projectName: 'my-lib',
-          projectsConfigurations: {
-            version: 2,
-            projects: {
-              'my-lib': {
-                root: 'libs/my-lib',
-                targets: {
-                  build: {
-                    options: {
-                      outputPath: 'dist/projects/my-lib',
-                    },
-                  },
-                },
-              },
-            },
-          },
+          targetName: 'pkg-publish',
         }
       )
     ).resolves.toStrictEqual({

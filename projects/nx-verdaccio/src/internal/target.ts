@@ -1,10 +1,24 @@
-import type { TargetConfiguration } from '@nx/devkit';
+import { ExecutorContext, readTargetOptions, Target } from '@nx/devkit';
 
-export function getTargetOutputPath(target?: TargetConfiguration) {
-  const { options } = target ?? {};
-  const { outputPath } = options ?? {};
-  if (!outputPath) {
-    throw new Error('outputPath is required');
+export function getTargetOutputPath(
+  targetOptions: Target & { optionsKey: string },
+  context: ExecutorContext
+) {
+  const { optionsKey, ...target } = targetOptions;
+  const options = readTargetOptions(target, context);
+  const outputPath = (options ?? {})[optionsKey];
+  if (!(optionsKey in (options ?? {})) || !outputPath) {
+    throw new Error(
+      `The target: ${target.target} in project: ${
+        context.projectName
+      } has no option: ${optionsKey} configured. /n ${JSON.stringify(
+        {
+          options,
+        },
+        null,
+        2
+      )}`
+    );
   }
   return outputPath;
 }

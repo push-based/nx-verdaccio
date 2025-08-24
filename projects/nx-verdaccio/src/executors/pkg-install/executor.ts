@@ -16,15 +16,25 @@ export default async function runNpmInstallExecutor(
   options: NpmInstallExecutorOptions,
   context: ExecutorContext
 ) {
-  const { projectName, projectsConfigurations } = context;
+  const {
+    verbose,
+    environmentRoot,
+    releaseTarget = 'build',
+    optionsOutputPathKey = 'outputPath',
+  } = options;
 
+  const { projectName } = context;
   const packageDistPath = getTargetOutputPath(
-    projectsConfigurations.projects[projectName]?.targets['build']
+    {
+      project: projectName,
+      target: releaseTarget,
+      optionsKey: optionsOutputPathKey,
+    },
+    context
   );
   const { name: packageName } = readJsonFile<PackageJson>(
     join(packageDistPath, 'package.json')
   );
-  const { environmentRoot } = options;
 
   logger.info(`Installing ${packageName} in ${environmentRoot}`);
 
@@ -45,7 +55,7 @@ export default async function runNpmInstallExecutor(
       save: true, // save to package.json dependencies
     }),
     cwd: environmentRoot,
-    verbose: true,
+    verbose: verbose === false ? false : true,
   });
 
   return Promise.resolve({
