@@ -54,7 +54,7 @@ export function createProjectConfiguration(
     }),
     ...(isPublishableProject && {
       // === PACKAGE TARGETS ===
-      targets: getPkgTargets(projectConfiguration),
+      targets: getPkgTargets(),
     }),
   };
 }
