@@ -17,7 +17,7 @@ With this plugin, say goodbye to the old days of waiting around for your tests a
 **Key Features:**
 
 - ⚙️ **ZERO Config** — You won’t need any global setup or teardown scripts.
-- 🔥 **BRUTALLY FAST** — Up to **⚡110x faster⚡** than traditional setups. Yes, you read that right.
+- 🔥 **BRUTALLY FAST** — Up to **⚡110X faster⚡** than traditional setups. Yes, you read that right.
 - 🛡️ **Isolated** — No more conflicts with local file systems. Everything’s clean.
 - 🚀 **Scalable** — Run your tests in parallel, no matter how big your project.
 - 🕒 **Optimized** — We cache everything we can, so your tests run faster over time.
