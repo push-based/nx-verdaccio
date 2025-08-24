@@ -11,6 +11,9 @@ vi.mock('@nx/devkit', async () => {
     ...actual,
     logger: {
       info: vi.fn(),
+      log: vi.fn(),
+      error: vi.fn(),
+      warn: vi.fn(),
     },
   };
 });

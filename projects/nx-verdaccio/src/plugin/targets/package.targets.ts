@@ -16,7 +16,7 @@ export function isPkgProject(
   if (projectType !== 'library') {
     return false;
   }
-  // if tags are configured check for at least one given tags
+  // if tags are configured, check for at least one given tags
   if (publishableTagFilters.length > 0) {
     return (
       existingTags.length > 0 &&

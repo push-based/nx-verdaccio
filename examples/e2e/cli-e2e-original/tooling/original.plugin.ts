@@ -2,12 +2,13 @@ import {
   type CreateNodes,
   createNodesFromFiles,
   type CreateNodesV2,
+  ExecutorContext,
   readJsonFile,
   TargetConfiguration,
 } from '@nx/devkit';
 import { dirname, join } from 'node:path';
 import type { ProjectConfiguration } from 'nx/src/config/workspace-json-project-json';
-import { getBuildOutputPathFromBuildTarget } from './utils/build-target-helper';
+import { getTargetOutputPath } from './utils/build-target-helper';
 
 export const createNodes: CreateNodes = [
   '**/project.json',
@@ -99,13 +100,30 @@ function npmTargets(
   projectConfiguration: ProjectConfiguration & { name: string }
 ): Record<string, TargetConfiguration> {
   const { root, name, tags } = projectConfiguration;
-  const outputPath = getBuildOutputPathFromBuildTarget(projectConfiguration);
+  const outputPath = getTargetOutputPath(
+    {
+      project: name,
+      target: 'build',
+    },
+    {
+      root,
+      cwd: process.cwd(),
+      isVerbose: false,
+      nxJsonConfiguration: {},
+      projectsConfigurations: {
+        version: 2,
+        projects: {
+          [name]: projectConfiguration,
+        },
+      },
+    } as ExecutorContext
+  );
 
   const { name: packageName, version: pkgVersion } = readJsonFile(
     join(root, 'package.json')
   );
   //
-  if (!tags.some((i) => i === 'type:example')) {
+  if (!tags?.some((i) => i === 'type:example')) {
     return {};
   }
   return {

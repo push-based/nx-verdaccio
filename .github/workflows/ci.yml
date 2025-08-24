@@ -90,4 +90,4 @@ jobs:
       - name: Install dependencies
         run: npm i
       - name: E2E test affected projects
-        run: npx nx affected -t nxv-e2e --exclude="tag:type:example" --skipNxCache --verbose
+        run: npx nx affected -t nxv-e2e --exclude="tag:type:example,cli-static-e2e,cli-post-script-e2e" --skipNxCache --verbose

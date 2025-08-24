@@ -22,14 +22,8 @@
     "lint": {},
     "build": {
       "executor": "@nx/esbuild:esbuild",
-      "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/examples/projects/utils",
-        "main": "examples/projects/utils/src/index.ts",
-        "tsConfig": "examples/projects/utils/tsconfig.lib.json",
-        "assets": ["examples/projects/utils/*.md"],
-        "generatePackageJson": true,
-        "format": ["esm"]
+        "outputPath": "{projectRoot}/dist"
       }
     },
     "unit-test": {
