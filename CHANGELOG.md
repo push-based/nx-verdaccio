@@ -1,3 +1,15 @@
+## 0.0.5 (2025-08-24)
+
+### 🩹 Fixes
+
+- make publish/install targets more robust ([b58d315](https://github.com/push-based/nx-verdaccio/commit/b58d315))
+- bump version ([ef1e7bd](https://github.com/push-based/nx-verdaccio/commit/ef1e7bd))
+- build ([29e6988](https://github.com/push-based/nx-verdaccio/commit/29e6988))
+
+### ❤️ Thank You
+
+- Michael @rx-angular
+
 ## 0.0.4 (2025-08-22)
 
 
