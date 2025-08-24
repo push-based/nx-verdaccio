@@ -11,11 +11,7 @@ import { dirname, join } from 'node:path';
 import { normalizeCreateNodesOptions } from './normalize-create-nodes-options';
 import type { NxVerdaccioCreateNodeOptions } from './schema';
 import { createProjectConfiguration } from './targets/create-targets';
-import {
-  getPackageJsonNxConfig,
-  getProjectConfigWithNameFallback,
-  getProjectJsonNxConfig,
-} from './project-config';
+import { loadMergedProjectConfig } from './project-config';
 import { combineGlobPatterns } from 'nx/src/utils/globs';
 
 const PROJECT_JSON_FILE_GLOB = '**/project.json';
@@ -37,16 +33,7 @@ export const createNodesV2: CreateNodesV2<NxVerdaccioCreateNodeOptions> = [
         if (pluginSetup.has(root)) return { projects: {} };
         pluginSetup.set(root, true);
 
-        const isPkg = configPath.endsWith('package.json');
-        const [primary, fallback] = isPkg
-          ? [getPackageJsonNxConfig, getProjectJsonNxConfig]
-          : [getProjectJsonNxConfig, getPackageJsonNxConfig];
-
-        const cfg = await getProjectConfigWithNameFallback(
-          configPath,
-          primary,
-          fallback
-        );
+        const cfg = await loadMergedProjectConfig(root);
 
         const { targets, namedInputs = {} } = createProjectConfiguration(
           cfg,
