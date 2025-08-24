@@ -11,7 +11,8 @@ async function readJson<T>(path: string): Promise<T | null> {
 }
 
 export async function loadMergedProjectConfig(
-  projectRoot: string
+  projectRoot: string,
+  workspaceRoot?: string
 ): Promise<ProjectConfiguration> {
   const baseConfig: ProjectConfiguration = {
     name: '',
@@ -22,13 +23,12 @@ export async function loadMergedProjectConfig(
     return baseConfig;
   }
 
+  const baseDir = workspaceRoot || process.cwd();
   const [packageJson, projectJson] = await Promise.all([
     readJson<Record<string, unknown>>(
-      join(process.cwd(), projectRoot, 'package.json')
+      join(baseDir, projectRoot, 'package.json')
     ),
-    readJson<ProjectConfiguration>(
-      join(process.cwd(), projectRoot, 'project.json')
-    ),
+    readJson<ProjectConfiguration>(join(baseDir, projectRoot, 'project.json')),
   ]);
 
   const packageConfig: Partial<ProjectConfiguration> =

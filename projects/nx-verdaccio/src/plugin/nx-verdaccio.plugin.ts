@@ -33,7 +33,7 @@ export const createNodesV2: CreateNodesV2<NxVerdaccioCreateNodeOptions> = [
         if (pluginSetup.has(root)) return { projects: {} };
         pluginSetup.set(root, true);
 
-        const cfg = await loadMergedProjectConfig(root);
+        const cfg = await loadMergedProjectConfig(root, context.workspaceRoot);
 
         const { targets, namedInputs = {} } = createProjectConfiguration(
           cfg,
