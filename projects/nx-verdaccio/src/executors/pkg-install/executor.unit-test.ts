@@ -87,7 +87,7 @@ describe('runNpmInstallExecutor', () => {
           '--save',
         ],
         cwd: expect.toMatchPath('tmp/environments/my-lib-e2e'),
-        verbose: false,
+        verbose: true,
       })
     );
   });
