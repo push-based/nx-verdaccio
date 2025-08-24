@@ -6,10 +6,10 @@ export function getTargetOutputPath(
 ) {
   const { optionsKey, ...target } = targetOptions;
   const { options } = readTargetOptions(target, context);
-  const { [optionsKey]: outputPath } = options ?? {};
-  if (!outputPath) {
+  const outputPath = (options ?? {})[optionsKey];
+  if (!(optionsKey in (options ?? {})) || !outputPath) {
     throw new Error(
-      `The tagtet ${target.target} in project ${context.projectName} has no option ${optionsKey} configured.`
+      `The target: ${target.target} in project: ${context.projectName} has no option: ${optionsKey} configured.`
     );
   }
   return outputPath;

@@ -66,7 +66,7 @@ describe('getTargetOutputPath', () => {
         mockContext
       )
     ).toThrow(
-      'The tagtet build in project my-lib has no option outputPath configured.'
+      `The target: build in project: ${projectName} has no option: outputPath configured`
     );
   });
 
@@ -76,7 +76,7 @@ describe('getTargetOutputPath', () => {
     });
 
     expect(() => getTargetOutputPath({} as any, mockContext)).toThrow(
-      'The tagtet undefined in project my-lib has no option undefined configured.'
+      `The target: undefined in project: my-lib has no option: undefined configured`
     );
   });
 
