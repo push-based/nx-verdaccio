@@ -9,6 +9,7 @@
     "lint": {},
     "e2e": {
       "executor": "@nx/vite:test",
+      "inputs": ["default", "^production"],
       "options": {
         "coverage": false
       }
