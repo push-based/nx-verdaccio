@@ -65,8 +65,7 @@
     "executor": "@push-based/nx-verdaccio:env-setup"
   },
   "nx-release-publish": {},
-  "lint": {
-    "executor": "@nx/linter:eslint",
+  "@nx/linter:eslint": {
     "outputs": ["{options.outputFile}"],
     "inputs": [
       "default",
@@ -80,13 +79,27 @@
     },
     "cache": true
   },
-  "build": {
-    "inputs": ["production", "^production"]
-  },
   "@nx/js:tsc": {
     "cache": true,
     "dependsOn": ["^build"],
-    "inputs": ["production", "^production"]
+    "inputs": ["production", "^production"],
+    "outputs": ["{options.outputPath}"],
+    "options": {
+      "outputPath": "{projectRoot}/dist",
+      "assets": [
+        "{projectRoot}/*.md",
+        {
+          "input": "{projectRoot}/src",
+          "glob": "**/!(*.ts)",
+          "output": "./src"
+        },
+        {
+          "input": "{projectRoot}/src",
+          "glob": "**/*.d.ts",
+          "output": "./src"
+        }
+      ]
+    }
   },
   "@nx/jest:jest": {
     "cache": true,

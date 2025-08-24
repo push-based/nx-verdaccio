@@ -10,23 +10,23 @@
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/projects/nx-verdaccio",
-        "main": "projects/nx-verdaccio/src/index.ts",
-        "tsConfig": "projects/nx-verdaccio/tsconfig.lib.json",
+        "outputPath": "dist/projects/{projectName}",
+        "main": "{projectRoot}/src/index.ts",
+        "tsConfig": "{projectRoot}/tsconfig.lib.json",
         "assets": [
-          "projects/nx-verdaccio/*.md",
+          "{projectRoot}/*.md",
           {
-            "input": "./projects/nx-verdaccio/src",
+            "input": "{projectRoot}/src",
             "glob": "**/!(*.ts)",
             "output": "./src"
           },
           {
-            "input": "./projects/nx-verdaccio/src",
+            "input": "{projectRoot}/src",
             "glob": "**/*.d.ts",
             "output": "./src"
           },
           {
-            "input": "./projects/nx-verdaccio",
+            "input": "{projectRoot}",
             "glob": "executors.json",
             "output": "."
           }
