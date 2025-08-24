@@ -85,7 +85,6 @@
     "inputs": ["production", "^production"],
     "outputs": ["{options.outputPath}"],
     "options": {
-      "outputPath": "{projectRoot}/dist",
       "assets": [
         "{projectRoot}/*.md",
         {
