@@ -22,12 +22,22 @@ export default async function runNpmPublishExecutor(
   options: NpmPublishExecutorOptions,
   context: ExecutorContext
 ) {
-  const { projectsConfigurations } = context;
-  const { environmentRoot, verbose } = options;
+  const {
+    environmentRoot,
+    verbose,
+    releaseTarget = 'build',
+    optionsOutputPathKey = 'outputPath',
+  } = options;
 
   const { projectName } = context;
-  const { targets } = projectsConfigurations.projects[projectName];
-  const packageDistPath = getTargetOutputPath(targets['build']);
+  const packageDistPath = getTargetOutputPath(
+    {
+      project: projectName,
+      target: releaseTarget,
+      optionsKey: optionsOutputPathKey,
+    },
+    context
+  );
   logger.info(`Publishing package from ${environmentRoot}`);
   const userconfig = join(
     relativeFromDist(packageDistPath),

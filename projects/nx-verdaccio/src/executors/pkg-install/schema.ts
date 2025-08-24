@@ -3,4 +3,6 @@ export type NpmInstallExecutorOptions = Partial<{
   verbose: boolean;
   printConfig: boolean;
   environmentRoot: string;
+  releaseTarget: string;
+  optionsOutputPathKey: string;
 }>;

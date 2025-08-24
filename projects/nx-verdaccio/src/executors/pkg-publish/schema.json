@@ -14,6 +14,16 @@
       "description": "The root folder of the environment",
       "aliases": ["envRoot", "e"]
     },
+    "releaseTarget": {
+      "type": "string",
+      "description": "The target to run to release the package",
+      "default": "build"
+    },
+    "optionsOutputPathKey": {
+      "type": "string",
+      "description": "The key in options specifying the output path of the build target",
+      "default": "outputPath"
+    },
     "verbose": {
       "type": "boolean",
       "description": "Print additional logs"

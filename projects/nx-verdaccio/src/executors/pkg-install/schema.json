@@ -18,6 +18,16 @@
       "description": "The root directory for the environment",
       "aliases": ["envRoot", "e"]
     },
+    "releaseTarget": {
+      "type": "string",
+      "description": "The target to run to release the package",
+      "default": "build"
+    },
+    "optionsOutputPathKey": {
+      "type": "string",
+      "description": "The key in options specifying the output path of the build target",
+      "default": "outputPath"
+    },
     "filePath": {
       "type": "string",
       "description": "The path to the file to kill the process for"
