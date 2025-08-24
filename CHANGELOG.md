@@ -1,3 +1,20 @@
+## 0.0.6 (2025-08-24)
+
+### 🚀 Features
+
+- extend pkg targets ([#90](https://github.com/push-based/nx-verdaccio/pull/90))
+- package.json configuration setup and plugin improvements ([#91](https://github.com/push-based/nx-verdaccio/pull/91))
+
+### 🩹 Fixes
+
+- typing bugs ([916ed96](https://github.com/push-based/nx-verdaccio/commit/916ed96))
+- adjust package config logic ([f2de1b7](https://github.com/push-based/nx-verdaccio/commit/f2de1b7))
+
+### ❤️ Thank You
+
+- Michael @rx-angular
+- Michael Hladky @BioPhoton
+
 # 0.0.0 (2025-06-29)
 
 
