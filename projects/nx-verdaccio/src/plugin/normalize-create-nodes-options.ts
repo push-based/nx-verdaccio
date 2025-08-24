@@ -35,7 +35,8 @@ export function normalizeCreateNodesOptions(
     environments: {
       environmentsDir: DEFAULT_ENVIRONMENTS_OUTPUT_DIR,
       ...environments,
-      targetNames: environments.targetNames || DEFAULT_OPTION_ENVIRONMENT_TARGET_NAMES,
+      targetNames:
+        environments.targetNames || DEFAULT_OPTION_ENVIRONMENT_TARGET_NAMES,
       inferredTargets: {
         ...DEFAULT_ENVIRONMENT_TARGETS,
         ...environments.inferredTargets,

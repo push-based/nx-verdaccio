@@ -23,11 +23,18 @@ export default async function runNpmPublishExecutor(
   context: ExecutorContext
 ) {
   const { projectsConfigurations } = context;
-  const { environmentRoot, verbose, distPath } = options;
+  const { environmentRoot, verbose } = options;
+
+  if (!environmentRoot) {
+    logger.error(
+      'environmentRoot is required for pkg-publish. This target should be run as part of the environment setup workflow.'
+    );
+    return { success: false };
+  }
 
   const { projectName } = context;
   const { targets } = projectsConfigurations.projects[projectName];
-  const packageDistPath = distPath ?? getTargetOutputPath(targets['build']);
+  const packageDistPath = getTargetOutputPath(targets['build']);
   if (packageDistPath == null) {
     logger.error(`Package dist path not found for ${projectName}`);
   }

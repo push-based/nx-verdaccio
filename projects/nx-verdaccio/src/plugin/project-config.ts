@@ -19,15 +19,21 @@ export async function getProjectJsonNxConfig(configFile: string) {
   return projectConfig;
 }
 
-export async function getPackageJsonNxConfig(packageJsonFile: string) {
+export async function getPackageJsonNxConfig(
+  packageJsonFile: string
+): Promise<ProjectConfiguration> {
   const packageJson = await readFile(
     join(process.cwd(), packageJsonFile),
     'utf8'
   ).then(JSON.parse);
-  
+
   // Check for both 'nx' and '_nx' properties (Nx supports both)
-  const pkgNxConfig = packageJson.nx || packageJson._nx || {};
-  return pkgNxConfig;
+  const pkgNxConfig = packageJson.nx || {};
+  return {
+    name: packageJson.name,
+    root: dirname(packageJsonFile),
+    ...pkgNxConfig,
+  };
 }
 
 export async function getProjectConfig(

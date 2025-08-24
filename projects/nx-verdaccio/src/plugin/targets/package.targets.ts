@@ -29,7 +29,9 @@ export function isPkgProject(
   return true;
 }
 
-export function getPkgTargets(projectConfig: ProjectConfiguration): Record<string, TargetConfiguration> {
+export function getPkgTargets(
+  projectConfig: ProjectConfiguration
+): Record<string, TargetConfiguration> {
   const buildTarget = projectConfig.targets?.['build'];
   const outputPath = buildTarget?.options?.['outputPath'];
 

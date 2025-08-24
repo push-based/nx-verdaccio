@@ -9,9 +9,7 @@
       "executor": "@nx/eslint:lint",
       "options": {
         "errorOnUnmatchedPattern": false,
-        "lintFilePatterns": [
-          "{projectRoot}/**/*.{ts,tsx,js,jsx}"
-        ]
+        "lintFilePatterns": ["{projectRoot}/**/*.{ts,tsx,js,jsx}"]
       }
     }
   }
