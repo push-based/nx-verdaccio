@@ -1,7 +1,5 @@
 {
-  "extends": [
-    "../../.eslintrc.base.json"
-  ],
+  "extends": ["../../.eslintrc.base.json"],
   "ignorePatterns": [
     "!**/*",
     "**/dist/**",
@@ -13,23 +11,13 @@
   ],
   "overrides": [
     {
-      "files": [
-        "*.ts",
-        "*.tsx",
-        "*.js",
-        "*.jsx"
-      ],
+      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {}
     },
     {
-      "files": [
-        "*.ts",
-        "*.tsx"
-      ],
+      "files": ["*.ts", "*.tsx"],
       "parserOptions": {
-        "project": [
-          "projects/nx-verdaccio/tsconfig.*?.json"
-        ]
+        "project": ["projects/nx-verdaccio/tsconfig.*?.json"]
       },
       "rules": {
         "unicorn/prefer-module": "off",
@@ -49,25 +37,17 @@
       }
     },
     {
-      "files": [
-        "*.js",
-        "*.jsx"
-      ],
+      "files": ["*.js", "*.jsx"],
       "rules": {}
     },
     {
-      "files": [
-        "./package.json",
-        "./generators.json"
-      ],
+      "files": ["./package.json", "./generators.json"],
       "parser": "jsonc-eslint-parser",
       "rules": {
         "@nx/dependency-checks": [
           "error",
           {
-            "buildTargets": [
-              "build"
-            ],
+            "buildTargets": ["build"],
             "ignoredDependencies": [
               "@nx/devkit",
               "vitest",

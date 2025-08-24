@@ -1,4 +1,8 @@
-import { type ExecutorContext, readTargetOptions, type Target } from '@nx/devkit';
+import {
+  type ExecutorContext,
+  readTargetOptions,
+  type Target,
+} from '@nx/devkit';
 
 export function getTargetOutputPath(
   targetOptions: Target & { optionsKey: string },
