@@ -7,7 +7,7 @@ import {
   updateJson,
 } from '@nx/devkit';
 import { libraryGenerator } from '@nx/js';
-import type { LibraryGeneratorSchema } from '@nx/js/src/utils/schema';
+import type { LibraryGeneratorSchema } from '@nx/js/src/generators/library/schema';
 import { createTreeWithEmptyWorkspace } from 'nx/src/generators/testing-utils/create-tree-with-empty-workspace';
 import { objectToCliArgs } from '@push-based/test-utils';
 import { join, relative } from 'node:path';
@@ -23,6 +23,11 @@ export function executorContext<
     isVerbose: false,
     projectName,
     root: '.',
+    nxJsonConfiguration: {},
+    projectGraph: {
+      nodes: {},
+      dependencies: {},
+    },
     projectsConfigurations: {
       projects: {
         [projectName]: {
@@ -47,10 +52,9 @@ export async function addJsLibToWorkspace(
   const { name, ...normalizedOptions } =
     typeof options === 'string' ? { name: options } : options;
 
-  await await libraryGenerator(fileTree, {
+  await libraryGenerator(fileTree, {
     name,
     directory: `projects/${name}`,
-    projectNameAndRootFormat: 'as-provided',
     linter: 'none',
     unitTestRunner: 'none',
     testEnvironment: 'node',
