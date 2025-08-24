@@ -1,5 +1,18 @@
 import { expect } from 'vitest';
 import path from 'path';
+// eslint-disable @typescript-eslint/no-explicit-any
+declare module 'vitest' {
+  interface Assertion<T = any> {
+    toMatchPath(expected: string): T;
+    pathToMatch(expected: string): T;
+  }
+
+  interface AsymmetricMatchersContaining {
+    toMatchPath(expected: string): any;
+    pathToMatch(expected: string): any;
+  }
+}
+// eslint-enable @typescript-eslint/no-explicit-any
 
 expect.extend({
   toMatchPath(received, expected) {
