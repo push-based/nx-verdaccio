@@ -11,9 +11,7 @@
       "executor": "@nx/vite:test",
       "inputs": ["default", "^production"],
       "outputs": ["{options.reportsDirectory}"],
-      "options": {
-        "reportsDirectory": "../../../coverage/projects/cli-e2e"
-      }
+      "options": {}
     }
   }
 }

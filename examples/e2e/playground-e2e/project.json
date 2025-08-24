@@ -9,10 +9,8 @@
     "lint": {},
     "e2e": {
       "executor": "@nx/vite:test",
-      "inputs": ["default", "^production"],
       "outputs": ["{options.reportsDirectory}"],
       "options": {
-        "reportsDirectory": "../../../coverage/projects/playground-e2e"
       }
     },
     "open-e2e-env": {

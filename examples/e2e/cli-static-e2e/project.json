@@ -18,8 +18,7 @@
       }
     },
     "e2e": {
-      "executor": "@nx/vite:test",
-      "inputs": ["default", "^production"]
+      "executor": "@nx/vite:test"
     }
   }
 }
