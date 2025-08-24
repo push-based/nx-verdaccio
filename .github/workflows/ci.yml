@@ -66,7 +66,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Unit test affected projects
-        run: npx nx affected -t unit-test --parallel=3 --coverage.enabled
+        run: npx nx affected -t unit-test integration-test --parallel=3 --coverage.enabled
 
   e2e:
     strategy:

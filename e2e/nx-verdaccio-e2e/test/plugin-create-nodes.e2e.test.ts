@@ -8,6 +8,7 @@ import {
 import { join } from 'node:path';
 import { updateProjectConfiguration } from 'nx/src/generators/utils/project-configuration';
 import { afterEach, expect } from 'vitest';
+import { teardownTestFolder } from '@push-based/test-utils';
 
 describe('nx-verdaccio plugin create-nodes-v2', () => {
   let tree: Tree;
@@ -28,7 +29,7 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
   });
 
   afterEach(async () => {
-    // await teardownTestFolder(baseDir);
+    await teardownTestFolder(baseDir);
   });
 
   it('should add package targets to library project', async () => {
@@ -301,6 +302,7 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
       plugin: '@push-based/nx-verdaccio',
       options: {
         environments: {
+          targetNames: ['e2e'],
           inferredTargets: {
             e2e: 'e2e-test',
             verdaccioStart: 'verdaccio',

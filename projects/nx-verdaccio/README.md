@@ -23,7 +23,7 @@ This executor helps to initiate an [environment folder](../../docs/benefits.md#-
 {
   "name": "my-project",
   "targets": {
-    "env-setup": {
+    "nxv-env-setup": {
       "executor": "@code-pushup/nx-verdaccio:env-setup",
       "options": {
         "skipInstall": true,

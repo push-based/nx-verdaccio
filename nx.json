@@ -17,7 +17,11 @@
       "!{projectRoot}/test-setup.[jt]s",
       "!{projectRoot}/vite.config.[jt]s"
     ],
-    "sharedGlobals": []
+    "sharedGlobals": [
+      { "runtime": "node -e \"console.log(require('os').platform())\"" },
+      { "runtime": "node --version" },
+      { "runtime": "npm --version" }
+    ]
   },
   "targetDefaults": {
     "@nx/esbuild:esbuild": {
