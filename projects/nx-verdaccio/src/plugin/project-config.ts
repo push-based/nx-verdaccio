@@ -1,22 +1,83 @@
 import type { ProjectConfiguration } from '@nx/devkit';
 import { readFile } from 'node:fs/promises';
-import { dirname, join } from 'node:path';
+import { join } from 'node:path';
 
-export async function getProjectConfig(packageJsonFile: string) {
-  const { nx: pkgNxConfig = {} } = await readFile(
-    join(process.cwd(), packageJsonFile),
-    'utf8'
-  ).then(JSON.parse);
-  if (!('name' in pkgNxConfig) || typeof pkgNxConfig?.name !== 'string') {
-    // fallback to project.json
-    const projectConfig: ProjectConfiguration = await readFile(
-      join(process.cwd(), dirname(packageJsonFile), 'project.json'),
-      'utf8'
-    ).then(JSON.parse);
-    if (!('name' in projectConfig) || typeof projectConfig.name !== 'string') {
-      throw new Error('Project name is required');
-    }
-    return projectConfig;
+async function readJson<T>(path: string): Promise<T | null> {
+  try {
+    return JSON.parse(await readFile(path, 'utf8')) as T;
+  } catch {
+    return null;
   }
-  return pkgNxConfig;
+}
+
+export async function loadMergedProjectConfig(
+  projectRoot: string
+): Promise<ProjectConfiguration> {
+  const baseConfig: ProjectConfiguration = {
+    name: '',
+    root: projectRoot,
+  };
+
+  if (!projectRoot) {
+    return baseConfig;
+  }
+
+  const [packageJson, projectJson] = await Promise.all([
+    readJson<Record<string, unknown>>(
+      join(process.cwd(), projectRoot, 'package.json')
+    ),
+    readJson<ProjectConfiguration>(
+      join(process.cwd(), projectRoot, 'project.json')
+    ),
+  ]);
+
+  const packageConfig: Partial<ProjectConfiguration> =
+    (packageJson?.nx as ProjectConfiguration) || {};
+  const packageName = packageJson?.name as string | undefined;
+
+  if (!packageJson && !projectJson) {
+    return baseConfig;
+  }
+
+  const merged: ProjectConfiguration = {
+    ...baseConfig,
+    ...packageConfig,
+    ...projectJson,
+  };
+
+  if (packageConfig.targets || projectJson?.targets) {
+    merged.targets = {};
+
+    if (packageConfig.targets) {
+      Object.assign(merged.targets, packageConfig.targets);
+    }
+
+    if (projectJson?.targets) {
+      for (const [targetName, projectTarget] of Object.entries(
+        projectJson.targets
+      )) {
+        const packageTarget = merged.targets[targetName];
+        merged.targets[targetName] = packageTarget
+          ? {
+              ...packageTarget,
+              ...projectTarget,
+              options: { ...packageTarget.options, ...projectTarget.options },
+            }
+          : projectTarget;
+      }
+    }
+  }
+
+  if (!merged.name && packageName) {
+    merged.name = packageName;
+  }
+
+  if (!merged.name) {
+    throw new Error(
+      `No project name found in configuration at ${projectRoot}. ` +
+        `Please ensure the project has a name defined in project.json or package.json.`
+    );
+  }
+
+  return merged;
 }

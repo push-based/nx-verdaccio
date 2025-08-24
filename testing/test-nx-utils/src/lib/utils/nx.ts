@@ -3,11 +3,11 @@ import {
   type NxJsonConfiguration,
   type PluginConfiguration,
   type ProjectConfiguration,
+  type ProjectGraph,
   type Tree,
   updateJson,
 } from '@nx/devkit';
 import { libraryGenerator } from '@nx/js';
-import type { LibraryGeneratorSchema } from '@nx/js/src/utils/schema';
 import { createTreeWithEmptyWorkspace } from 'nx/src/generators/testing-utils/create-tree-with-empty-workspace';
 import { objectToCliArgs } from '@push-based/test-utils';
 import { join, relative } from 'node:path';
@@ -32,25 +32,37 @@ export function executorContext<
       },
       version: 1,
     },
+    nxJsonConfiguration: {} as NxJsonConfiguration,
+    projectGraph: {} as ProjectGraph,
   };
 }
 
+// Local interface for library generator options
+interface LibraryOptions {
+  name: string;
+  directory?: string;
+  linter?: 'none' | 'eslint';
+  unitTestRunner?: 'none' | 'jest' | 'vitest';
+  testEnvironment?: 'node' | 'jsdom';
+  buildable?: boolean;
+  publishable?: boolean;
+  importPath?: string;
+  tags?: string;
+  strict?: boolean;
+  [key: string]: unknown;
+}
+
 export async function addJsLibToWorkspace(
-  options:
-    | string
-    | (Omit<Partial<LibraryGeneratorSchema>, 'name'> & {
-        name: string;
-      }),
+  options: string | (Omit<Partial<LibraryOptions>, 'name'> & { name: string }),
   tree?: Tree
 ) {
   const fileTree = tree ?? createTreeWithEmptyWorkspace({});
   const { name, ...normalizedOptions } =
     typeof options === 'string' ? { name: options } : options;
 
-  await await libraryGenerator(fileTree, {
+  await libraryGenerator(fileTree, {
     name,
     directory: `projects/${name}`,
-    projectNameAndRootFormat: 'as-provided',
     linter: 'none',
     unitTestRunner: 'none',
     testEnvironment: 'node',

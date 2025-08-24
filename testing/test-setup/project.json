@@ -6,8 +6,7 @@
   "tags": ["scope:shared", "type:testing"],
   "targets": {
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "outputs": ["{options.outputFile}"],
+      "executor": "@nx/eslint:lint",
       "options": {
         "lintFilePatterns": ["testing/test-setup/**/*.ts"]
       }

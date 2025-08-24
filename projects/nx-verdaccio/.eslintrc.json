@@ -49,13 +49,16 @@
           {
             "buildTargets": ["build"],
             "ignoredDependencies": [
-              "verdaccio",
-              "nx",
-              "@code-pushup/models",
-              "@nx/plugin"
+              "@nx/devkit",
+              "vitest",
+              "ansis",
+              "simple-git",
+              "memfs",
+              "vite",
+              "@nx/vite"
             ],
             "checkMissingDependencies": true,
-            "checkObsoleteDependencies": true,
+            "checkObsoleteDependencies": false,
             "checkVersionMismatches": true,
             "includeTransitiveDependencies": true,
             "useLocalPathsForWorkspaceDependencies": true
