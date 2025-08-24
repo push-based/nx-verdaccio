@@ -45,7 +45,9 @@ export const createNodesV2: CreateNodesV2<NxVerdaccioCreateNodeOptions> = [
         const cfg = await getProjectConfig(configPath, primary, fallback).catch(
           () => null
         );
-        if (!cfg?.name) return { projects: {} }; // ignore roots without a valid project
+        if (!cfg?.name) {
+          throw new Error('A reasonn name is not given is this source does not take over name from package json')
+        }
 
         const { targets, namedInputs = {} } = createProjectConfiguration(
           cfg,
