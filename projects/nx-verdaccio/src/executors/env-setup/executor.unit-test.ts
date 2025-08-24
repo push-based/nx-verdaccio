@@ -4,7 +4,7 @@ import { beforeEach, expect, vi } from 'vitest';
 import * as executeProcessModule from '../../internal/execute-process';
 import runSetupEnvironmentExecutor from './executor';
 import * as npmModule from './npm';
-import { ProjectGraph } from 'nx/src/config/project-graph';
+import { type ProjectGraph } from 'nx/src/config/project-graph';
 
 vi.mock('@nx/devkit', async () => {
   const actual = await vi.importActual('@nx/devkit');

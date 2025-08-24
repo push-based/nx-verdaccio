@@ -1,5 +1,5 @@
-import { ExecutorContext } from '@nx/devkit';
-import { Target } from 'nx/src/command-line/run/run';
+import { type ExecutorContext } from '@nx/devkit';
+import { type Target } from 'nx/src/command-line/run/run';
 
 export function getTargetOutputPath(
   task: Target,

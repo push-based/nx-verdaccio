@@ -1,7 +1,7 @@
 import { getTargetOutputPath } from './target';
 import { beforeEach } from 'vitest';
-import { ProjectGraph } from 'nx/src/config/project-graph';
-import { ExecutorContext } from '@nx/devkit';
+import { type ProjectGraph } from 'nx/src/config/project-graph';
+import { type ExecutorContext } from '@nx/devkit';
 
 describe('getTargetOutputPath', () => {
   const executorContext: ExecutorContext = {
