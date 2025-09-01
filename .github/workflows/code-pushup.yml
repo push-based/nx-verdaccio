@@ -35,3 +35,5 @@ jobs:
         run: npm ci
       - name: Run Code PushUp action
         uses: code-pushup/github-action@v0
+        with:
+          bin: npx nx cp --nx-bail --verbose

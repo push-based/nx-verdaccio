@@ -123,6 +123,13 @@
   },
   "plugins": [
     {
+      "plugin": "@code-pushup/nx-plugin",
+      "options": {
+        "targetName": "cp",
+        "projectPrefix": "nxv"
+      }
+    },
+    {
       "plugin": "@push-based/nx-verdaccio",
       "exclude": ["examples/e2e/cli-e2e-original/**"],
       "options": {
