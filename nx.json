@@ -43,7 +43,7 @@
         "format": ["esm"]
       }
     },
-    "@nx/vite:test": {
+    "@nx/vitest:test": {
       "cache": true,
       "inputs": ["default", "^production"],
       "options": {

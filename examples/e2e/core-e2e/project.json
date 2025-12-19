@@ -8,7 +8,7 @@
   "targets": {
     "lint": {},
     "e2e": {
-      "executor": "@nx/vite:test",
+      "executor": "@nx/vitest:test",
       "options": {
         "coverage": false
       }
