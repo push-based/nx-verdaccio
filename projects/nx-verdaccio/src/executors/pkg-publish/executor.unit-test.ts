@@ -25,18 +25,18 @@ describe('runNpmPublishExecutor', () => {
     .spyOn(pkgVersionModule, 'markPackageJson')
     .mockResolvedValue(undefined);
 
-  const readTargetOptionsSpy = vi.spyOn(devkit, 'readTargetOptions');
-
-  beforeEach(() => {
-    executeProcessSpy.mockReset();
-    pkgVersionModuleSpy.mockReset();
-    readTargetOptionsSpy.mockReset();
-
-    readTargetOptionsSpy.mockReturnValue({
+  const readTargetOptionsSpy = vi
+    .spyOn(devkit, 'readTargetOptions')
+    .mockReturnValue({
       outputPath: 'dist/projects/my-lib',
       main: 'libs/my-lib/src/index.ts',
       tsConfig: 'libs/my-lib/tsconfig.json',
     });
+
+  beforeEach(() => {
+    executeProcessSpy.mockClear();
+    pkgVersionModuleSpy.mockClear();
+    readTargetOptionsSpy.mockClear();
   });
 
   it('should execute npm publish for the given project', async () => {

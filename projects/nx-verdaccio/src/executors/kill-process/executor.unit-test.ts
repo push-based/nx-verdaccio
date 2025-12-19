@@ -26,8 +26,8 @@ describe('runKillProcessExecutor', () => {
     .mockImplementation(vi.fn());
 
   beforeEach(() => {
-    killSpy.mockReset();
-    killProcessFromPidSpy.mockReset();
+    killSpy.mockClear();
+    killProcessFromPidSpy.mockClear();
   });
 
   it('should kill process by pid', async () => {

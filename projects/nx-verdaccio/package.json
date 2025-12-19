@@ -14,8 +14,8 @@
     "directory": "projects/nx-verdaccio"
   },
   "dependencies": {
-    "nx": "21.4.1",
-    "@nx/plugin": "21.4.1",
+    "nx": "22.3.1",
+    "@nx/plugin": "22.3.1",
     "tslib": "2.8.1"
   },
   "optionalDependencies": {},
