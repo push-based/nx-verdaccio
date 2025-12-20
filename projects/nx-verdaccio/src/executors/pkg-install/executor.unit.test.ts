@@ -32,6 +32,7 @@ describe('runNpmInstallExecutor', () => {
     executeProcessSpy.mockReset();
     readTargetOptionsSpy.mockReset();
 
+    executeProcessSpy.mockResolvedValue({ stdout: '', stderr: '', code: 0 });
     readTargetOptionsSpy.mockReturnValue({
       outputPath: 'dist/projects/my-lib',
       main: 'libs/my-lib/src/index.ts',

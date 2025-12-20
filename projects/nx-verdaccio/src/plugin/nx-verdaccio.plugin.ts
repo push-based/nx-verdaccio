@@ -1,13 +1,9 @@
 import {
-  type CreateNodes,
   type CreateNodesContextV2,
   createNodesFromFiles,
   type CreateNodesV2,
-  logger,
-  type ProjectConfiguration,
-  readJsonFile,
 } from '@nx/devkit';
-import { dirname, join } from 'node:path';
+import { dirname } from 'node:path';
 import { normalizeCreateNodesOptions } from './normalize-create-nodes-options';
 import type { NxVerdaccioCreateNodeOptions } from './schema';
 import { createProjectConfiguration } from './targets/create-targets';
@@ -45,26 +41,5 @@ export const createNodesV2: CreateNodesV2<NxVerdaccioCreateNodeOptions> = [
       options,
       context
     );
-  },
-];
-
-export const createNodes: CreateNodes<NxVerdaccioCreateNodeOptions> = [
-  PROJECT_JSON_FILE_GLOB,
-  (projectConfigurationFile, options) => {
-    logger.info(
-      '`createNodes` is deprecated. Update Nx utilize createNodesV2 instead.'
-    );
-    const projectRoot = dirname(projectConfigurationFile);
-    const projectConfiguration: ProjectConfiguration = readJsonFile(
-      join(process.cwd(), projectConfigurationFile)
-    );
-    return {
-      projects: {
-        [projectRoot]: {
-          targets: createProjectConfiguration(projectConfiguration, options)
-            .targets,
-        },
-      },
-    };
   },
 ];

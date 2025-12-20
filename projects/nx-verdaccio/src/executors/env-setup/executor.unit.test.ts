@@ -34,12 +34,16 @@ vi.mock('fs/promises', async () => {
 
 describe('runSetupEnvironmentExecutor', () => {
   const runExecutorSpy = vi.spyOn(devkit, 'runExecutor');
-  const executeProcessSpy = vi.spyOn(executeProcessModule, 'executeProcess');
-  const setupNpmWorkspaceSpy = vi.spyOn(npmModule, 'setupNpmWorkspace');
+  const executeProcessSpy = vi
+    .spyOn(executeProcessModule, 'executeProcess')
+    .mockResolvedValue({ stdout: '', stderr: '', code: 0 });
+  const setupNpmWorkspaceSpy = vi
+    .spyOn(npmModule, 'setupNpmWorkspace')
+    .mockResolvedValue(undefined);
 
   beforeEach(() => {
-    runExecutorSpy.mockReset();
-    executeProcessSpy.mockReset();
+    runExecutorSpy.mockClear();
+    executeProcessSpy.mockClear();
   });
 
   it('should env-setup environment correctly', async () => {

@@ -19,7 +19,7 @@ export const DEFAULT_ENVIRONMENT_TARGETS = {
   setup: 'nxv-env-setup',
   teardown: 'nxv-env-teardown',
   e2e: 'nxv-e2e',
-  verdaccioStart: 'nxv-verdaccio-start',
+  verdaccioStart: 'local-registry',
   verdaccioStop: 'nxv-verdaccio-stop',
 } as const;
 

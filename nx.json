@@ -6,30 +6,89 @@
   },
   "namedInputs": {
     "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "os": [
+      {
+        "runtime": "node -e \"console.log(require('os').platform())\""
+      }
+    ],
     "production": [
       "default",
-      "!{projectRoot}/.eslintrc.json",
-      "!{projectRoot}/eslint.config.js",
-      "!{projectRoot}/**/?(*.)+(unit-test|spec|test).[jt]s?(x)?(.snap)",
-      "!{projectRoot}/tsconfig.spec.json",
-      "!{projectRoot}/jest.config.[jt]s",
-      "!{projectRoot}/src/test-setup.[jt]s",
-      "!{projectRoot}/test-setup.[jt]s",
-      "!{projectRoot}/vite.config.[jt]s"
+      "!{projectRoot}/README.md",
+      "!{projectRoot}/CHANGELOG.md",
+      "!{projectRoot}/perf/**/*",
+      "!{projectRoot}/tools/**/*",
+      "!{projectRoot}/zod2md.config.ts",
+      "!{projectRoot}/eslint.config.?(c)js",
+      "!{workspaceRoot}/**/.code-pushup/**/*",
+      "!{projectRoot}/code-pushup.config.?(m)[jt]s",
+      "!{projectRoot}/code-pushup.config.bundled_*.mjs",
+      "!{projectRoot}/@(test|mocks|mock)/**/*",
+      "!{projectRoot}/**/?(*.)test.[jt]s?(x)?(.snap)",
+      "!{projectRoot}/**/?(*.)mocks.[jt]s?(x)",
+      "!{projectRoot}/**/?(*.)mock.[jt]s?(x)",
+      "!{projectRoot}/vitest.@(unit|int|e2e).config.[jt]s",
+      "!{projectRoot}/dist/**/*",
+      "!{projectRoot}/tsconfig.@(test|tools).json",
+      "!{workspaceRoot}/**/(*.)coverage/**/*"
+    ],
+    "test-vitest-inputs": [
+      "os",
+      {
+        "env": "NX_VERBOSE_LOGGING"
+      },
+      {
+        "externalDependencies": ["vitest"]
+      }
+    ],
+    "lint-eslint-inputs": [
+      "{workspaceRoot}/eslint.config.js",
+      {
+        "externalDependencies": ["eslint"]
+      }
+    ],
+    "typecheck-typescript-inputs": [
+      "{workspaceRoot}/tsconfig.base.json",
+      {
+        "externalDependencies": ["typescript"]
+      }
+    ],
+    "code-pushup-inputs": [
+      "{workspaceRoot}/code-pushup.preset.ts",
+      {
+        "env": "NODE_OPTIONS"
+      },
+      {
+        "env": "TSX_TSCONFIG_PATH"
+      }
     ],
     "sharedGlobals": [
       {
-        "runtime": "node -e \"console.log(require('os').platform())\""
+        "runtime": "node -v"
       },
       {
-        "runtime": "node --version"
-      },
-      {
-        "runtime": "npm --version"
+        "runtime": "npm -v"
       }
     ]
   },
   "targetDefaults": {
+    "lint": {
+      "dependsOn": ["eslint-formatter-multi:build"],
+      "inputs": ["default", "lint-eslint-inputs"],
+      "outputs": ["{projectRoot}/.eslint/**/*"],
+      "cache": true,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "eslint",
+        "args": [
+          "'{projectRoot}/**/*.ts'",
+          "{projectRoot}/package.json",
+          "--config={projectRoot}/eslint.config.js",
+          "--max-warnings=0",
+          "--no-warn-ignored",
+          "--error-on-unmatched-pattern=false"
+        ]
+      }
+    },
     "@nx/esbuild:esbuild": {
       "cache": true,
       "dependsOn": ["^build"],
@@ -43,10 +102,30 @@
         "format": ["esm"]
       }
     },
-    "@nx/vite:test": {
+    "code-pushup": {
+      "inputs": ["default", "^production", "code-pushup-inputs"]
+    },
+    "unit-test": {
       "cache": true,
-      "inputs": ["default", "^production"],
+      "inputs": ["default", "^production", "test-vitest-inputs"],
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectName}/unit-tests/lcov.info"
+      ],
+      "executor": "@nx/vite:test",
       "options": {
+        "configFile": "{projectRoot}/vitest.unit.config.ts",
+        "coverage": {
+          "enabled": true
+        }
+      }
+    },
+    "int-test": {
+      "cache": true,
+      "inputs": ["default", "^production", "test-vitest-inputs"],
+      "outputs": ["{workspaceRoot}/coverage/{projectName}/int-tests/lcov.info"],
+      "executor": "@nx/vite:test",
+      "options": {
+        "configFile": "{projectRoot}/vitest.int.config.ts",
         "coverage": {
           "enabled": true
         }
@@ -136,12 +215,6 @@
     },
     {
       "plugin": "./examples/e2e/cli-e2e-original/tooling/original.plugin.ts"
-    },
-    {
-      "plugin": "@nx/eslint/plugin",
-      "options": {
-        "targetName": "lint"
-      }
     }
   ],
   "pluginsConfig": {

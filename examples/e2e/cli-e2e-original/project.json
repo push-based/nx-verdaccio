@@ -9,7 +9,7 @@
     "lint": {},
     "original-e2e": {
       "dependsOn": ["^build"],
-      "executor": "@nx/vite:test",
+      "executor": "@nx/vitest:test",
       "options": {
         "coverage": false
       }

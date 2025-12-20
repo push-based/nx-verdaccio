@@ -41,19 +41,7 @@
         ]
       }
     },
-    "unit-test": {
-      "executor": "@nx/vite:test",
-      "outputs": ["{projectRoot}/coverage/unit-tests/*.lcov"],
-      "options": {
-        "configFile": "{projectRoot}/vite.config.ts"
-      }
-    },
-    "integration-test": {
-      "executor": "@nx/vite:test",
-      "outputs": ["{projectRoot}/coverage/int-tests/*.lcov"],
-      "options": {
-        "configFile": "{projectRoot}/vite.integration.config.ts"
-      }
-    }
+    "unit-test": {},
+    "int-test": {}
   }
 }
