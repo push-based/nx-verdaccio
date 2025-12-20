@@ -1,6 +1,6 @@
 import ansis from 'ansis';
 import { mkdir, readdir, rename, rm, stat } from 'node:fs/promises';
-import path from 'node:path';
+import * as path from 'node:path';
 
 export async function cleanTestFolder(dirName: string) {
   await teardownTestFolder(dirName);
