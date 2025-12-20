@@ -92,6 +92,6 @@ jobs:
       - name: Set base and head for Nx affected commands
         uses: nrwl/nx-set-shas@v4
       - name: Install dependencies
-        run: npm i
+        run: npm ci
       - name: E2E test affected projects
         run: npx nx affected -t nxv-e2e --exclude="tag:type:example" --skipNxCache --verbose
