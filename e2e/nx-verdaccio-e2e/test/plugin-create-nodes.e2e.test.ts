@@ -187,7 +187,7 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
         'nxv-env-bootstrap': expect.objectContaining({
           executor: '@push-based/nx-verdaccio:env-bootstrap',
           options: {
-            verdaccioStartTarget: 'nxv-verdaccio-start',
+            verdaccioStartTarget: 'local-registry',
             verdaccioStopTarget: 'nxv-verdaccio-stop',
           },
         }),
@@ -236,7 +236,7 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
             '{options.environmentRoot}/node_modules',
           ],
         }),
-        'nxv-verdaccio-start': expect.objectContaining({
+        'local-registry': expect.objectContaining({
           executor: '@nx/js:verdaccio',
           options: expect.objectContaining({
             clear: true,
@@ -290,7 +290,7 @@ describe('nx-verdaccio plugin create-nodes-v2', () => {
         'nxv-env-bootstrap': expect.any(Object),
         'nxv-env-install': expect.any(Object),
         'nxv-env-setup': expect.any(Object),
-        'nxv-verdaccio-start': expect.any(Object),
+        'local-registry': expect.any(Object),
         'nxv-verdaccio-stop': expect.any(Object),
       })
     );
