@@ -1,3 +1,16 @@
+## 0.0.7 (2025-12-20)
+
+### 🩹 Fixes
+
+- wip ([ee65045](https://github.com/push-based/nx-verdaccio/commit/ee65045))
+- env setup in nxV22 ([#95](https://github.com/push-based/nx-verdaccio/pull/95))
+- import ([980bb0a](https://github.com/push-based/nx-verdaccio/commit/980bb0a))
+
+### ❤️ Thank You
+
+- Michael @rx-angular
+- Michael Hladky @BioPhoton
+
 ## 0.0.6 (2025-08-24)
 
 ### 🚀 Features
