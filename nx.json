@@ -71,6 +71,24 @@
     ]
   },
   "targetDefaults": {
+    "lint": {
+      "dependsOn": ["eslint-formatter-multi:build"],
+      "inputs": ["default", "lint-eslint-inputs"],
+      "outputs": ["{projectRoot}/.eslint/**/*"],
+      "cache": true,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "eslint",
+        "args": [
+          "'{projectRoot}/**/*.ts'",
+          "{projectRoot}/package.json",
+          "--config={projectRoot}/eslint.config.js",
+          "--max-warnings=0",
+          "--no-warn-ignored",
+          "--error-on-unmatched-pattern=false"
+        ]
+      }
+    },
     "@nx/esbuild:esbuild": {
       "cache": true,
       "dependsOn": ["^build"],
@@ -194,12 +212,6 @@
     },
     {
       "plugin": "./examples/e2e/cli-e2e-original/tooling/original.plugin.ts"
-    },
-    {
-      "plugin": "@nx/eslint/plugin",
-      "options": {
-        "targetName": "lint"
-      }
     }
   ],
   "pluginsConfig": {
