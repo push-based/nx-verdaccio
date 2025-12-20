@@ -69,7 +69,6 @@ export function verdaccioTargets(
         clear: true,
         environmentDir,
         projectName: envProject,
-        verbose: true, // @TODO: make executor also work without verbose true. (needed to check if server is running)
       },
     },
     [inferredTargets.verdaccioStop]: {
