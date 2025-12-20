@@ -5,16 +5,17 @@
     "types": ["vitest/globals", "vitest/importMeta", "vite/client", "node"]
   },
   "include": [
-    "vite.config.ts",
-    "vite.integration.config.ts",
+    "vitest.unit.config.ts",
+    "vitest.int.config.ts",
     "mock/**/*.ts",
     "src/**/*.test.ts",
     "src/**/*.unit-test.ts",
-    "src/**/*.integration-test.ts",
+    "src/**/*.int-test.ts",
     "src/**/*.spec.ts",
     "src/**/*.test.tsx",
     "src/**/*.test.js",
     "src/**/*.test.jsx",
-    "src/**/*.d.ts"
+    "src/**/*.d.ts",
+    "../../testing/test-setup/src/"
   ]
 }

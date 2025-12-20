@@ -1,0 +1,145 @@
+[
+  {
+    "filePath": "/Users/michael_hladky/WebstormProjects/cli/testing/test-setup-config/eslint.config.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/michael_hladky/WebstormProjects/cli/testing/test-setup-config/src/index.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/michael_hladky/WebstormProjects/cli/testing/test-setup-config/src/lib/vitest-config-factory.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/michael_hladky/WebstormProjects/cli/testing/test-setup-config/src/lib/vitest-config-factory.unit.test.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": [
+      {
+        "ruleId": "vitest/no-done-callback",
+        "replacedBy": []
+      }
+    ]
+  },
+  {
+    "filePath": "/Users/michael_hladky/WebstormProjects/cli/testing/test-setup-config/src/lib/vitest-setup-files.ts",
+    "messages": [],
+    "suppressedMessages": [
+      {
+        "ruleId": "sonarjs/no-duplicate-string",
+        "severity": 1,
+        "message": "Define a constant instead of duplicating this literal 3 times.",
+        "line": 23,
+        "column": 3,
+        "nodeType": "Literal",
+        "messageId": "defineConstant",
+        "endLine": 23,
+        "endColumn": 52,
+        "suppressions": [
+          {
+            "kind": "directive",
+            "justification": ""
+          }
+        ]
+      }
+    ],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/michael_hladky/WebstormProjects/cli/testing/test-setup-config/src/lib/vitest-setup-files.unit.test.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": [
+      {
+        "ruleId": "vitest/no-done-callback",
+        "replacedBy": []
+      }
+    ]
+  },
+  {
+    "filePath": "/Users/michael_hladky/WebstormProjects/cli/testing/test-setup-config/src/lib/vitest-setup-presets.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/michael_hladky/WebstormProjects/cli/testing/test-setup-config/src/lib/vitest-setup-presets.unit.test.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": [
+      {
+        "ruleId": "vitest/no-done-callback",
+        "replacedBy": []
+      }
+    ]
+  },
+  {
+    "filePath": "/Users/michael_hladky/WebstormProjects/cli/testing/test-setup-config/src/lib/vitest-tsconfig-path-aliases.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/michael_hladky/WebstormProjects/cli/testing/test-setup-config/vitest.unit.config.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  }
+]
