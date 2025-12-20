@@ -215,12 +215,6 @@
     },
     {
       "plugin": "./examples/e2e/cli-e2e-original/tooling/original.plugin.ts"
-    },
-    {
-      "plugin": "@code-pushup/nx-plugin",
-      "options": {
-
-      }
     }
   ],
   "pluginsConfig": {
